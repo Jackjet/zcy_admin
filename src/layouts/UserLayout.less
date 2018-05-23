@@ -1,0 +1,103 @@
+@import '~antd/lib/style/themes/default.less';
+
+.container {
+  /*display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #f0f2f5;*/
+  height: 100%;
+  background: /*url(./login-bg.png)*/ #f5f5f5 no-repeat;
+  background-size: 100% 100%;
+}
+
+.content {
+  padding: 32px 0;
+  flex: 1;
+  background: #fff;
+  background-size: 100% 100%;
+  border-radius: 0px;
+  position: relative;
+}
+
+@media (min-width: @screen-md-min) {
+  .container {
+    // background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+    background-repeat: no-repeat;
+    background-position: center 110px;
+    background-size: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .content,
+    .login-footer {
+      padding: 70px 8px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .content,
+    .login-footer {
+      //padding: 125px 8px;
+      margin: 0px auto;
+      width: 854px;
+    }
+  }
+
+  .content {
+    padding: 112px 0 24px 0;
+  }
+}
+
+.top {
+  text-align: center;
+}
+
+.header {
+  height: 44px;
+  line-height: 44px;
+  a {
+    text-decoration: none;
+  }
+}
+
+.head {
+  text-align: center;
+
+  h3 {
+    font-size: 28px;
+    color: #424242;
+    font-weight: normal;
+    padding-top: 18px;
+  }
+}
+
+.logo {
+  height: 44px;
+  vertical-align: top;
+  margin-right: 16px;
+}
+
+.title {
+  font-size: 33px;
+  color: @heading-color;
+  font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  position: relative;
+  top: 2px;
+}
+
+.desc {
+  font-size: @font-size-base;
+  color: @text-color-secondary;
+  margin-top: 12px;
+  margin-bottom: 40px;
+}
+
+.login-footer {
+  padding: 0px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+  p {
+    line-height: 24px;
+  }
+}
