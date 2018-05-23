@@ -235,14 +235,14 @@ class BasicLayout extends React.PureComponent {
               links={[
                 {
                   key: '技术支持：',
-                  title: '技术支持：', //   杭州至诚云软件技术有限公司 和浙江至诚会计师事务所有限公司版权所有
+                  title: '技术支持：杭州至诚云软件技术有限公司', //   杭州至诚云软件技术有限公司 和浙江至诚会计师事务所有限公司版权所有
                   href: 'http://pro.ant.design',
                   blankTarget: true,
                 },
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018
+                  Copyright <Icon type="copyright" /> 2018 杭州至诚云软件技术有限公司
                 </Fragment>
               }
             />
