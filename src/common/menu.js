@@ -112,6 +112,18 @@ const menuData = [
     ],
   },
   {
+    name: '日程管理',
+    icon: 'user',
+    path: 'schedule',
+    children: [
+      {
+        key: 'owenschedule',
+        name: '我的日程',
+        path: 'schedulelist',
+      },
+    ],
+  },
+  {
     name: '知识库管理',
     icon: 'setting',
     path: 'zhiku',
