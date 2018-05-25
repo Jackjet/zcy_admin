@@ -9,9 +9,8 @@ import EditableLinkGroup from 'components/EditableLinkGroup';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './Workplace.less';
-import './calendarAll';
 import groupBy from 'lodash/groupBy';
-import calendarAll from './calendarAll';
+
 
 const TabPane = Tabs.TabPane;
 

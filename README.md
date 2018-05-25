@@ -56,8 +56,12 @@ routes：每个路由对应的页面组件文件。主要定义具体页面的�
  utils/authority.js   控制 权限 登录用户名
  
   redux  和 dva 
-
- 
+  
+  import createHistory from 'history/createHashHistory';  引入后  可以让url中多出#  比如：http://localhost:8000/#/?_k=gebc0m
+  import createHistory from 'history/createBrowserHistory';  引入后  可以让url 中去掉#，形如restfulurl 方式的 url 
+  在页面index.js 中  初始化dva  
+  
+  
 ```
 
 ## 模板
