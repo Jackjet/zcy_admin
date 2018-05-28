@@ -78,10 +78,6 @@ export const getRouterData = app => {
     '/workplace': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
     },
-
-    '/crm/customerAdd': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/crm/add/CustomerAdd')),
-    },
     '/crm/customer': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/customerList')),
     },
@@ -91,7 +87,7 @@ export const getRouterData = app => {
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
-    '/notice/noticelist': {
+    '/schedule/notice': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/notice/NoticeList')),
     },
     '/dashboard/analysis': {

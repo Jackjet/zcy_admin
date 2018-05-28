@@ -142,7 +142,7 @@ const remarkcol = {
 const demandcol = {
   wrapperCol: {
     style: {
-      width: '78%',
+      width: '69%',
     },
   },
   style: {
@@ -175,10 +175,22 @@ const statuscol = {
   },
 };
 
+const formhz12 = {
+  wrapperCol: {
+    style: {
+      width: '92%',
+    },
+  },
+  style: {
+    width: '96.66666667%',
+  },
+};
+
+
 const formhz11 = {
   wrapperCol: {
     style: {
-      width: '91.66666667%',
+      width: '90.2%',
     },
   },
   style: {
@@ -474,7 +486,7 @@ class projectAdd2 extends PureComponent {
             </Row>
             <Row className={styles['fn-mb-15']}>
               <Col>
-                <Form.Item {...formhz11} label={fieldLabels.content}>
+                <Form.Item {...formhz12} label={fieldLabels.content}>
                   {getFieldDecorator('content')(<TextArea placeholder="请输入项目内容" rows={4} />)}
                 </Form.Item>
               </Col>

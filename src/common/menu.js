@@ -13,11 +13,6 @@ const menuData = [
     path: 'crm',
     children: [
       {
-        key: 'customerAdd',
-        name: '客户新增',
-        path: 'customerAdd',
-      },
-      {
         key: 'customerList',
         name: '客户信息管理',
         path: 'customer',
@@ -48,45 +43,104 @@ const menuData = [
       },
       {
         key: 'contractList',
-        name: '合同信息管理',
+        name: '协议（合同）管理',
         path: 'contract',
       },
       {
         key: 'workplanList',
-        name: '项目工作计划',
+        name: '工时计划管理',
         path: 'workplan',
+        children: [
+          {
+            key: 'workplanlist1',
+            name: '项目计划',
+            path: 'workplan12',
+          },
+          {
+            key: 'pworkquery',
+            name: '项目工时查询',
+            path: 'workquery',
+          },
+          ],
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        key: 'workrocord',
+        name: '项目工作记录',
+        path: 'workplan1',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        key: 'kaopingp',
+        name: '项目考评管理',
+        path: 'workplan2',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
     ],
   },
   {
-    name: '公告管理',
-    icon: 'notification',
-    path: 'notice',
-    children: [
-      {
-        key: 'noticeList',
-        name: '公告列表',
-        path: 'noticelist',
-      },
-    ],
-  },
-  {
-    name: '财务核算',
+    name: '项目财务',
     icon: 'red-envelope',
     path: 'fi',
     children: [
       {
-        key: 'invoiceList',
-        name: '发票管理',
-        path: 'invoice',
+        key: 'xmfy',
+        name: '项目费用',
+        path: 'xmfy',
       },
       {
-        key: 'commissionList',
+        key: 'xmsk',
+        name: '项目收款',
+        path: 'xmsk',
+      },
+      {
+        key: 'xmzc',
+        name: '项目支出',
+        path: 'xmzc',
+      },
+      {
+        key: 'xmjk',
+        name: '项目借款',
+        path: 'xmjk',
+      },
+
+      {
+        name: '发票管理',
+        path: 'fiinvoice',
+        children: [
+          {
+            key: 'invoiceList',
+            name: '开票管理',
+            path: 'invoice',
+          },
+
+        ],
+      },
+      {
         name: '提成管理',
         path: 'commission',
+        children: [
+          {
+            key: 'tijfa',
+            name: '提成计发',
+            path: 'tichengjf01',
+          },
+          {
+            key: 'ticquery',
+            name: '提成查询',
+            path: 'tiquery01',
+          },
+          {
+            key: 'tichesetting',
+            name: '提成比例设置',
+            path: 'tichengseting01',
+          },
+        ],
       },
+
     ],
   },
   {
@@ -112,23 +166,86 @@ const menuData = [
     ],
   },
   {
-    name: '日程管理',
+    name: '日常管理',
     icon: 'user',
     path: 'schedule',
     children: [
       {
         key: 'owenschedule',
-        name: '我的日程',
+        name: '日程管理',
         path: 'schedulelist',
       },
+      {
+        key: 'noticelist',
+        name: '公告管理',
+        path: 'notice',
+      },
     ],
+
   },
   {
     name: '知识库管理',
     icon: 'setting',
     path: 'zhiku',
-    children: [],
+    children: [
+      {
+        key: 'pzskm',
+        name: '项目知识库管理',
+        path: 'zskgl',
+      },
+      {
+        key: 'zskjfm',
+        name: '知识库积分管理',
+        path: 'zskjfma',
+      },
+    ],
   },
+  {
+    name: '档案管理',
+    icon: 'setting',
+    path: 'dangan',
+    children: [
+      {
+        key: 'danganjyue',
+        name: '档案借阅管理',
+        path: 'dajym',
+      },
+      {
+        key: 'danganyij',
+        name: '档案入库',
+        path: 'dazyj',
+      },
+      {
+        key: 'guihuandj',
+        name: '归还登记',
+        path: 'ghdj',
+      },
+      {
+        key: 'dangankujabq',
+        name: '档案标签库架',
+        path: 'danbqkuj',
+      },
+    ],
+  },
+
+  {
+    name: '合伙人管理',
+    icon: 'setting',
+    path: 'hehuorenmanager',
+    children: [
+      {
+        key: 'hehuorenseting',
+        name: '合伙人设置',
+        path: 'hehuorsetting',
+      },
+      {
+        key: 'fenxipingtai',
+        name: '分析平台',
+        path: 'fxpt',
+      },
+    ],
+  },
+
   {
     name: '系统管理',
     icon: 'setting',

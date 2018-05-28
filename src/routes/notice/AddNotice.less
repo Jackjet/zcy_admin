@@ -82,13 +82,6 @@
       transition: none !important;
     }
 
-    .ant-modal-footer {
-      border-top: 1px solid #e8e8e8;
-      padding: 10px 16px;
-      text-align: center;
-      border-radius: 0 0 4px 4px;
-    }
-
     .upload-list-inline .ant-upload-list-item {
       float: left;
       width: 60px;
@@ -108,5 +101,19 @@
 .optional {
   color: @text-color-secondary;
   font-style: normal;
+}
+
+:global {
+  .ant-modal-footer {
+    border-top: 0 solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: center;
+    border-radius: 0 0 4px 4px;
+  }
+
+}
+
+.ant-card-bordered{
+  border: 0 solid #e8e8e8;
 }
 

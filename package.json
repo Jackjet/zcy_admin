@@ -1,7 +1,7 @@
 {
-  "name": "ant-design-pro",
+  "name": "至诚云软件",
   "version": "1.0.0",
-  "description": "An out-of-box UI solution for enterprise applications",
+  "description": "会计师事务所项目系统",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
