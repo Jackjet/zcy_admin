@@ -90,6 +90,18 @@ export const getRouterData = app => {
     '/schedule/notice': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/notice/NoticeList')),
     },
+    '/HR/orgunit': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/org/list/orgUnitList')),
+    },
+    '/HR/department': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/depList')),
+    },
+    '/HR/department': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/depList')),
+    },
+    '/HR/staff': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/staff/userList')),
+    },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },

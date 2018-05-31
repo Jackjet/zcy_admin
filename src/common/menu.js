@@ -146,7 +146,7 @@ const menuData = [
   {
     name: '人事管理',
     icon: 'user',
-    path: 'person',
+    path: 'HR',
     children: [
       {
         key: 'orgunitList',
@@ -161,7 +161,7 @@ const menuData = [
       {
         key: 'personnelList',
         name: '人员管理',
-        path: 'personnel',
+        path: 'staff',
       },
     ],
   },

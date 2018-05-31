@@ -1,11 +1,11 @@
 {
-  "name": "至诚云软件",
+  "name": "zccpa",
   "version": "1.0.0",
   "description": "会计师事务所项目系统",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
-    "start": "cross-env PORT=8080 ESLINT=none HOST=192.168.0.105 roadhog dev",
+    "start": "cross-env ESLINT=none roadhog dev",
     "start:no-proxy": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "build": "cross-env ESLINT=none roadhog build",
     "site": "roadhog-api-doc static && gh-pages -d dist",

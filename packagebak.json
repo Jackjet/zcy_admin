@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
+    //"start": "cross-env PORT=8080 ESLINT=none HOST=192.168.0.105 roadhog dev",
     "start": "cross-env ESLINT=none roadhog dev",
     "start:no-proxy": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "build": "cross-env ESLINT=none roadhog build",
