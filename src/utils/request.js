@@ -1,4 +1,5 @@
 import fetch from 'dva/fetch';
+import fetchJsonp from 'fetch-jsonp';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
@@ -46,6 +47,7 @@ export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
   };
+
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     if (!(newOptions.body instanceof FormData)) {
@@ -63,7 +65,6 @@ export default function request(url, options) {
       };
     }
   }
-
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {

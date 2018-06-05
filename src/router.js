@@ -7,6 +7,10 @@ import { getRouterData } from './common/router';
 import Authorized from './utils/Authorized';
 import styles from './index.less';
 
+
+//const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+
+
 const { ConnectedRouter } = routerRedux;
 const { AuthorizedRoute } = Authorized;
 dynamic.setDefaultLoadingComponent(() => {

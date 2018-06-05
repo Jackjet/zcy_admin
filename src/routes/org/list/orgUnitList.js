@@ -25,6 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/orgUnitList.less';
 import OrgUnitAdd from '../add/OrgUnitAdd2';
+import BasicForm from '../../Forms/BasicForm'
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -55,7 +56,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <OrgUnitAdd />
+      <BasicForm />
     </Modal>
   );
 });
