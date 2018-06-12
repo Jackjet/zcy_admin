@@ -68,7 +68,7 @@ const menuData = [
       {
         key: 'workrocord',
         name: '项目工作记录',
-        path: 'workplan1',
+        path: 'workRecord',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },

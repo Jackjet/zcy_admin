@@ -9,6 +9,7 @@ export default {
 
   effects: {
     *fetchNotice(_, { call, put }) {
+      console.log("fetchNotice");
       const response = yield call(queryProjectNotice);
       yield put({
         type: 'saveNotice',
