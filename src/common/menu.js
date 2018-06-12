@@ -61,7 +61,7 @@ const menuData = [
             name: '项目工时查询',
             path: 'workquery',
           },
-          ],
+        ],
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -116,7 +116,6 @@ const menuData = [
             name: '开票管理',
             path: 'invoice',
           },
-
         ],
       },
       {
@@ -140,7 +139,6 @@ const menuData = [
           },
         ],
       },
-
     ],
   },
   {
@@ -181,7 +179,6 @@ const menuData = [
         path: 'notice',
       },
     ],
-
   },
   {
     name: '知识库管理',
@@ -254,12 +251,12 @@ const menuData = [
       {
         key: 'dictList',
         name: '数据字典管理',
-        path: 'dict',
+        path: 'dictManage',
       },
       {
         key: 'dicttypeList',
         name: '字典类型管理',
-        path: 'dicttype',
+        path: 'dictType',
       },
       {
         key: 'promissionList',

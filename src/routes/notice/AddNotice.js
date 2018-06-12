@@ -60,7 +60,7 @@ export default class AddNotice extends PureComponent {
         xs: { span: 24 },
         sm: { span: 12 },
         md: { span: 10 },
-        style:{width:'70%'}
+        style: { width: '70%' },
       },
     };
 
@@ -71,25 +71,28 @@ export default class AddNotice extends PureComponent {
       },
     };
 
-    const fileList = [{
-      uid: -1,
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }, {
-      uid: -2,
-      name: 'yyy.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }];
+    const fileList = [
+      {
+        uid: -1,
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+      {
+        uid: -2,
+        name: 'yyy.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+    ];
 
     const props2 = {
       action: '//jsonplaceholder.typicode.com/posts/',
       listType: 'picture',
       defaultFileList: [...fileList],
-      className : styles["upload-list-inline"]
+      className: styles['upload-list-inline'],
     };
 
     return (
@@ -133,16 +136,10 @@ export default class AddNotice extends PureComponent {
                 选择部门或者员工
               </Button>
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="公告详情" >
-              {getFieldDecorator('client')(
-                <Input placeholder="富文本框" />
-              )}
+            <FormItem {...formItemLayout} label="公告详情">
+              {getFieldDecorator('client')(<Input placeholder="富文本框" />)}
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="公告排序" >
+            <FormItem {...formItemLayout} label="公告排序">
               {getFieldDecorator('public', {
                 initialValue: '2',
               })(
@@ -152,9 +149,7 @@ export default class AddNotice extends PureComponent {
                 </Radio.Group>
               )}
             </FormItem>
-            <FormItem
-              {...formItemLayoutwidth}
-              label="公告附件">
+            <FormItem {...formItemLayoutwidth} label="公告附件">
               {getFieldDecorator('Attachment ', {
                 initialValue: '2',
               })(
@@ -162,12 +157,12 @@ export default class AddNotice extends PureComponent {
                   <Button type="primary">
                     <Icon type="upload" /> 上传附件
                   </Button>
-                  <span>*只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件</span>
+                  <span>
+                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                  </span>
                 </Upload>
               )}
             </FormItem>
-
-
           </Form>
         </Card>
       </div>

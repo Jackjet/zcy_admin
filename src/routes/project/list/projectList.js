@@ -25,6 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './projectList.less';
 import ProjectAdd from '../add/ProjectAdd2.js';
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -73,7 +74,6 @@ export default class projectList extends PureComponent {
     formValues: {},
     openKeys: ['sub1'],
   };
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -91,8 +91,6 @@ export default class projectList extends PureComponent {
       });
     }
   };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;

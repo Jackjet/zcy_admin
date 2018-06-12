@@ -22,7 +22,6 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-
 function onChange(value) {
   console.log(value);
 }
@@ -113,22 +112,21 @@ class departmentAdd2 extends PureComponent {
       <div>
         <Card>
           <Form layout="inline">
-
             <Row className={styles['row-h']}>
               <Col span={12}>
-                 <Form.Item  label="部门名称">
+                <Form.Item label="部门名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入部门名称' }],
-                  })(<Input placeholder="请输入部门名称"  style={{width:200}} />)}
+                  })(<Input placeholder="请输入部门名称" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item label="上级部门" style={{paddingLeft:12}}>
+                <Form.Item label="上级部门" style={{ paddingLeft: 12 }}>
                   {getFieldDecorator('parentOrg', {
                     rules: [{ required: true, message: '请选择上级部门' }],
                   })(
-                    <Select  style={{ width: 200 }}>
+                    <Select style={{ width: 200 }}>
                       <Option value="0">请选择</Option>
                       <Option value="g">至诚</Option>
                       <Option value="y">事务所有限公司</Option>
@@ -140,19 +138,19 @@ class departmentAdd2 extends PureComponent {
 
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="部门编码">
+                <Form.Item label="部门编码">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '请输入部门编码' }],
-                  })(<Input placeholder="请输入部门编码"  style={{width:200}}/>)}
+                  })(<Input placeholder="请输入部门编码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item  label="所属组织" style={{paddingLeft:12}}>
+                <Form.Item label="所属组织" style={{ paddingLeft: 12 }}>
                   {getFieldDecorator('orgunit', {
                     rules: [{ required: true, message: '所属组织' }],
                   })(
-                    <Select  style={{ width: 200 }}>
+                    <Select style={{ width: 200 }}>
                       <Option value="0">否</Option>
                       <Option value="1">是</Option>
                     </Select>
@@ -162,120 +160,119 @@ class departmentAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="简称" style={{paddingLeft:35}}>
+                <Form.Item label="简称" style={{ paddingLeft: 35 }}>
                   {getFieldDecorator('simpleName', {
                     rules: [{ required: false, message: '请输入简称' }],
-                  })(<Input placeholder="请输入简称"  style={{width:200}} />)}
+                  })(<Input placeholder="请输入简称" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="英文名称"  style={{paddingLeft:22}}>
+                <Form.Item label="英文名称" style={{ paddingLeft: 22 }}>
                   {getFieldDecorator('englishName', {
                     rules: [{ required: false, message: '请输入英文名称' }],
-                  })(<Input placeholder="请输入英文名称" style={{width:200}} />)}
+                  })(<Input placeholder="请输入英文名称" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="负责人" style={{paddingLeft:24}}>
+                <Form.Item label="负责人" style={{ paddingLeft: 24 }}>
                   {getFieldDecorator('principal', {
                     rules: [{ required: false, message: '请选择负责人' }],
                   })(
-                    <Select  style={{ width: 200 }}>
+                    <Select style={{ width: 200 }}>
                       <Option value="0">员工A</Option>
                       <Option value="1">员工B</Option>
                     </Select>
                   )}
                 </Form.Item>
-
               </Col>
 
               <Col span={12}>
-                <Form.Item  label="联系人" style={{paddingLeft:35}}>
+                <Form.Item label="联系人" style={{ paddingLeft: 35 }}>
                   {getFieldDecorator('linkMan', {
                     rules: [{ required: false, message: '请输入联系人' }],
-                  })(<Input placeholder="请输入联系人" style={{width:200}}  />)}
+                  })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="移动电话" style={{paddingLeft:13}}>
+                <Form.Item label="移动电话" style={{ paddingLeft: 13 }}>
                   {getFieldDecorator('mobilePhone', {
                     rules: [{ required: false, message: '请输入移动电话' }],
-                  })(<Input placeholder="请输入移动电话" style={{width:200}}  />)}
+                  })(<Input placeholder="请输入移动电话" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="电话"  style={{paddingLeft:47}}>
+                <Form.Item label="电话" style={{ paddingLeft: 47 }}>
                   {getFieldDecorator('phone', {
                     rules: [{ required: false, message: '请输入电话' }],
-                  })(<Input placeholder="请输入电话"  style={{width:200}}  />)}
+                  })(<Input placeholder="请输入电话" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="电子邮箱"  style={{paddingLeft:15}}>
+                <Form.Item label="电子邮箱" style={{ paddingLeft: 15 }}>
                   {getFieldDecorator('email', {
                     rules: [{ required: false, message: '请输入电子邮箱' }],
-                  })(<Input placeholder="请输入电子邮箱"  style={{width:200}}  />)}
+                  })(<Input placeholder="请输入电子邮箱" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="邮政编码"  style={{paddingLeft:25}}>
+                <Form.Item label="邮政编码" style={{ paddingLeft: 25 }}>
                   {getFieldDecorator('postalCode', {
                     rules: [{ required: false, message: '请输入邮政编码' }],
-                  })(<Input placeholder="请输入邮政编码" style={{width:200}}   />)}
+                  })(<Input placeholder="请输入邮政编码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="传真"  style={{paddingLeft:39}}>
+                <Form.Item label="传真" style={{ paddingLeft: 39 }}>
                   {getFieldDecorator('fax', {
                     rules: [{ required: false, message: '请输入传真' }],
-                  })(<Input placeholder="请输入传真"  style={{width:200}}  />)}
+                  })(<Input placeholder="请输入传真" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="海关编码"  style={{paddingLeft:25}}>
+                <Form.Item label="海关编码" style={{ paddingLeft: 25 }}>
                   {getFieldDecorator('customsCode', {
                     rules: [{ required: false, message: '请输入海关编码' }],
-                  })(<Input placeholder="请输入海关编码"  style={{width:200}}  />)}
+                  })(<Input placeholder="请输入海关编码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="EDI编码"  style={{paddingLeft:22}}>
+                <Form.Item label="EDI编码" style={{ paddingLeft: 22 }}>
                   {getFieldDecorator('ediCode', {
                     rules: [{ required: false, message: '请输入EDI编码' }],
-                  })(<Input placeholder="请输入EDI编码"  style={{width:200}}  />)}
+                  })(<Input placeholder="请输入EDI编码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="税务编码"  style={{paddingLeft:25}}>
+                <Form.Item label="税务编码" style={{ paddingLeft: 25 }}>
                   {getFieldDecorator('taxCode', {
                     rules: [{ required: false, message: '请输入税务编码' }],
-                  })(<Input placeholder="请输入税务编码" style={{width:200}}  />)}
+                  })(<Input placeholder="请输入税务编码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item  label="详细地址"  style={{paddingLeft:15}} >
+                <Form.Item label="详细地址" style={{ paddingLeft: 15 }}>
                   {getFieldDecorator('address', {
                     rules: [{ required: false, message: '请输入详细地址' }],
-                  })(<Input placeholder="请输入详细地址" style={{width:200}}   />)}
+                  })(<Input placeholder="请输入详细地址" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item  label="网站首页"  style={{paddingLeft:25}}>
+                <Form.Item label="网站首页" style={{ paddingLeft: 25 }}>
                   {getFieldDecorator('url', {
                     rules: [{ required: false, message: '请输入网站首页' }],
-                  })(<Input placeholder="请输入网站首页" style={{width:200}}   />)}
+                  })(<Input placeholder="请输入网站首页" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>

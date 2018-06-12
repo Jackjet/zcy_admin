@@ -178,7 +178,6 @@ export default class AddSchedule extends PureComponent {
                 </FormItem>
               </div>
             </FormItem>
-
           </Form>
         </Card>
       </div>

@@ -25,7 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/orgUnitList.less';
 import OrgUnitAdd from '../add/OrgUnitAdd2';
-import BasicForm from '../../Forms/BasicForm'
+import BasicForm from '../../Forms/BasicForm';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -260,9 +260,13 @@ export default class orgUnitList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-
             </span>
-            <Button className={styles.buttonadd} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+            <Button
+              className={styles.buttonadd}
+              icon="plus"
+              type="primary"
+              onClick={() => this.handleModalVisible(true)}
+            >
               新建
             </Button>
           </Col>
@@ -271,7 +275,7 @@ export default class orgUnitList extends PureComponent {
     );
   }
   renderForm() {
-    return  this.renderSimpleForm();
+    return this.renderSimpleForm();
   }
 
   render() {

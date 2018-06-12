@@ -4,14 +4,12 @@ import dva from 'dva';
 
 //import createHistory from 'history/createHashHistory';
 // user BrowserHistory
- import createHistory from 'history/createBrowserHistory';
+import createHistory from 'history/createBrowserHistory';
 import createLoading from 'dva-loading';
 import 'moment/locale/zh-cn';
 import './rollbar';
 
 import './index.less';
-
-
 
 // 1. Initialize  dva初始化
 const app = dva({
