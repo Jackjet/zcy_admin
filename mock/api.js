@@ -130,7 +130,7 @@ export const getNotice = [
     id: 'xxx1',
     title: titles[0],
     logo: avatars[0],
-    description: '那是一种内在的东西，他们到达不了，也无法触及的',
+    description: '那是一种内在的东西，他们到达不了，也无法触及的12345677',
     updatedAt: new Date(),
     member: '科学搬砖组',
     href: '',
