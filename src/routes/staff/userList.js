@@ -260,9 +260,13 @@ export default class userList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-
             </span>
-            <Button className={styles.buttonadd} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+            <Button
+              className={styles.buttonadd}
+              icon="plus"
+              type="primary"
+              onClick={() => this.handleModalVisible(true)}
+            >
               新建
             </Button>
           </Col>
@@ -271,7 +275,7 @@ export default class userList extends PureComponent {
     );
   }
   renderForm() {
-    return  this.renderSimpleForm();
+    return this.renderSimpleForm();
   }
 
   render() {

@@ -186,7 +186,6 @@ const formhz12 = {
   },
 };
 
-
 const formhz11 = {
   wrapperCol: {
     style: {

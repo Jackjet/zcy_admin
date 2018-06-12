@@ -84,6 +84,14 @@ export const getRouterData = app => {
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
     },
+    // 数据字典类型管理
+    '/system/dictType': {
+      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
+    },
+    // 数据字典管理
+    '/system/dictManage': {
+      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
+    },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
@@ -92,9 +100,6 @@ export const getRouterData = app => {
     },
     '/HR/orgunit': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/org/list/orgUnitList')),
-    },
-    '/HR/department': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/depList')),
     },
     '/HR/department': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/depList')),

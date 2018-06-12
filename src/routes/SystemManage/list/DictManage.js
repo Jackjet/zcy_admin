@@ -1,8 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
-import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -21,20 +18,20 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './customerList.less';
-import CustomerAdd from '../add/CustomerAdd2.js';
+import styles from './DictManage.less';
+import DictTypeAdd from '../add/DictTypeAdd';
 
+const SubMenu = Menu.SubMenu;
+const statusMap = ['success', 'error'];
+const status = ['启用', '停用'];
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -45,49 +42,18 @@ const CreateForm = Form.create()(props => {
       handleAdd(fieldsValue);
     });
   };
-
   return (
     <Modal
       title="客户基本信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
       mask={'true'}
-      width={'90%'}
+      width={'60%'}
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <CustomerAdd />
-    </Modal>
-  );
-});
-
-const CreateForm2 = Form.create()(props => {
-  const { modalVisibleContact, form, handleAddContact, handleModalVisibleContact } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAddContact(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      title="联系人基本信息新增"
-      style={{ top: 20 }}
-      visible={modalVisibleContact}
-      mask={'true'}
-      width={'90%'}
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisibleContact()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: 'Please input some description...' }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+      <DictTypeAdd />
     </Modal>
   );
 });
@@ -97,10 +63,9 @@ const CreateForm2 = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class customerList extends PureComponent {
+export default class TableList extends PureComponent {
   state = {
     modalVisible: false,
-    modalVisibleContact: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -124,8 +89,6 @@ export default class customerList extends PureComponent {
       });
     }
   };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -191,9 +154,6 @@ export default class customerList extends PureComponent {
           },
         });
         break;
-      case 'addContact':
-        this.handleModalVisibleContact(true);
-        break;
       default:
         break;
     }
@@ -234,11 +194,6 @@ export default class customerList extends PureComponent {
       modalVisible: !!flag,
     });
   };
-  handleModalVisibleContact = flag => {
-    this.setState({
-      modalVisibleContact: !!flag,
-    });
-  };
 
   handleAdd = fields => {
     this.props.dispatch({
@@ -254,81 +209,43 @@ export default class customerList extends PureComponent {
     });
   };
 
-  handleAddContact = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisibleContact: false,
-    });
-  };
-
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
-    const SubMenu = Menu.SubMenu;
+  treeMenu() {
     return (
       <Menu
         mode="inline"
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
+        style={{ width: 140 }}
       >
         <SubMenu
           key="sub1"
           title={
             <span>
-              <span>客户等级</span>
+              <span>字典类别</span>
             </span>
           }
         >
-          <Menu.Item key="1">贵宾客户</Menu.Item>
-          <Menu.Item key="2">一般客户</Menu.Item>
-          <Menu.Item key="3">重要客户</Menu.Item>
+          <Menu.Item key="1">学习</Menu.Item>
+          <Menu.Item key="2">项目</Menu.Item>
+          <Menu.Item key="3">工作</Menu.Item>
+          <Menu.Item key="4">放假</Menu.Item>
         </SubMenu>
       </Menu>
     );
   }
-
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={5} sm={24}>
-            <FormItem label="客户编码">
-              {getFieldDecorator('no')(<Input placeholder="请输入客户编码" />)}
+          <Col md={12} sm={24}>
+            <FormItem label="关键字">
+              {getFieldDecorator('no')(<Input placeholder="编码名称模糊搜索" />)}
             </FormItem>
           </Col>
-          <Col md={5} sm={24}>
-            <FormItem label="客户名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入客户名称" />)}
-            </FormItem>
-          </Col>
-          <Col md={5} sm={24}>
-            <FormItem label="行业">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">制造业</Option>
-                  <Option value="f">服务业</Option>
-                  <Option value="fd">房地产建筑</Option>
-                  <Option value="sn">三农业务</Option>
-                  <Option value="zf">政府购买</Option>
-                  <Option value="sy">商业</Option>
-                  <Option value="jr">金融</Option>
-                  <Option value="fyl">非营利组织</Option>
-                  <Option value="other">其他</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
+          <Col md={12} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 搜索
@@ -336,8 +253,8 @@ export default class customerList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+                新建
               </Button>
             </span>
           </Col>
@@ -352,62 +269,52 @@ export default class customerList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="编码名称">
+            <FormItem label="规则编号">
               {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="拼音码">
-              {getFieldDecorator('pinyin')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={8} sm={24}>
-            <FormItem label="电话号码">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="行业">
+            <FormItem label="使用状态">
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">制造业</Option>
-                  <Option value="f">服务业</Option>
-                  <Option value="fd">房地产建筑</Option>
-                  <Option value="sn">三农业务</Option>
-                  <Option value="zf">政府购买</Option>
-                  <Option value="sy">商业</Option>
-                  <Option value="jr">金融</Option>
-                  <Option value="fyl">非营利组织</Option>
-                  <Option value="other">其他</Option>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address')(<Input placeholder="请输入" />)}
+            <FormItem label="调用次数">
+              {getFieldDecorator('number')(<InputNumber style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={16} sm={24}>
-            <FormItem label="创建日期">
-              {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择创建日期' }],
-              })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
+          <Col md={8} sm={24}>
+            <FormItem label="更新日期">
+              {getFieldDecorator('date')(
+                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="使用状态">
+              {getFieldDecorator('status3')(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="使用状态">
+              {getFieldDecorator('status4')(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="0">关闭</Option>
+                  <Option value="1">运行中</Option>
+                </Select>
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -419,9 +326,9 @@ export default class customerList extends PureComponent {
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
               重置
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起
-            </Button>
+            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+              收起 <Icon type="up" />
+            </a>
           </span>
         </div>
       </Form>
@@ -434,33 +341,20 @@ export default class customerList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, modalVisibleContact } = this.state;
+    const { selectedRows, modalVisible } = this.state;
 
     const columns = [
       {
-        title: '编号',
-        dataIndex: 'no',
+        title: '编码',
+        dataIndex: 'dictID',
       },
       {
         title: '名称',
         dataIndex: 'name',
       },
       {
-        title: '联系人',
-        dataIndex: 'linkman',
-      },
-
-      {
-        title: '所属公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '行业',
-        dataIndex: 'instruty',
-      },
-      {
-        title: '手机',
-        dataIndex: 'mobile',
+        title: '备注',
+        dataIndex: 'remarks',
       },
       {
         title: '状态',
@@ -474,14 +368,6 @@ export default class customerList extends PureComponent {
             text: status[1],
             value: 1,
           },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
@@ -492,60 +378,42 @@ export default class customerList extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
+            <a href="">查看</a>
+            <Divider type="vertical" />
             <a href="">编辑</a>
             <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
+            <a href="">删除</a>
+            <Divider type="vertical" />
+            <a href="">停用</a>
           </Fragment>
         ),
       },
     ];
 
-    const downhz = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
-      </Menu>
-    );
-
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="addContact">新建联系人</Menu.Item>
         <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
 
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleAddContact: this.handleAddContact,
       handleModalVisible: this.handleModalVisible,
-      handleModalVisibleContact: this.handleModalVisibleContact,
     };
 
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <div>
+          <div className={styles.leftBlock}>{this.treeMenu()}</div>
+          <div className={styles.rightBlock}>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                  新建客户
-                </Button>
                 {selectedRows.length > 0 && (
                   <span>
                     <Dropdown overlay={menu}>
                       <Button>
-                        批量操作 <Icon type="down" />
+                        批量删除 <Icon type="down" />
                       </Button>
                     </Dropdown>
                   </span>
@@ -563,7 +431,6 @@ export default class customerList extends PureComponent {
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
       </PageHeaderLayout>
     );
   }

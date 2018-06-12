@@ -11,7 +11,6 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Workplace.less';
 import groupBy from 'lodash/groupBy';
 
-
 const TabPane = Tabs.TabPane;
 
 function callback(key) {
