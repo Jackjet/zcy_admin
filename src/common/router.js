@@ -84,6 +84,10 @@ export const getRouterData = app => {
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
     },
+    // 项目工作记录
+    '/project/workRecord': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
+    },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
