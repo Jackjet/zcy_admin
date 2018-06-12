@@ -81,6 +81,14 @@ export const getRouterData = app => {
     '/crm/customer': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/customerList')),
     },
+    // 数据字典类型管理
+    '/system/dictType': {
+      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
+    },
+    // 数据字典管理
+    '/system/dictManage': {
+      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
+    },
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
     },
