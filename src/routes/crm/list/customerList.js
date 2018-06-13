@@ -25,6 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './customerList.less';
 import CustomerAdd from '../add/CustomerAdd2.js';
+import ConstactsAdd from '../add/ContactsAdd.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -78,16 +79,12 @@ const CreateForm2 = Form.create()(props => {
       style={{ top: 20 }}
       visible={modalVisibleContact}
       mask={'true'}
-      width={'90%'}
+      width={'45%'}
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisibleContact()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: 'Please input some description...' }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+      <ConstactsAdd />
     </Modal>
   );
 });
@@ -124,8 +121,6 @@ export default class customerList extends PureComponent {
       });
     }
   };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -270,7 +265,7 @@ export default class customerList extends PureComponent {
 
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
+  treeMenu() {
     const SubMenu = Menu.SubMenu;
     return (
       <Menu
@@ -290,6 +285,7 @@ export default class customerList extends PureComponent {
           <Menu.Item key="1">贵宾客户</Menu.Item>
           <Menu.Item key="2">一般客户</Menu.Item>
           <Menu.Item key="3">重要客户</Menu.Item>
+          <Menu.Item key="4">潜在客户</Menu.Item>
         </SubMenu>
       </Menu>
     );
@@ -536,6 +532,8 @@ export default class customerList extends PureComponent {
         <Card bordered={false}>
           <div>
             <div className={styles.tableList}>
+              <div className={styles.leftBlock}>{this.treeMenu()}</div>
+              <div className={styles.rightBlock}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
                 <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
@@ -559,6 +557,7 @@ export default class customerList extends PureComponent {
                 onSelectRow={this.handleSelectRows}
                 onChange={this.handleStandardTableChange}
               />
+            </div>
             </div>
           </div>
         </Card>
