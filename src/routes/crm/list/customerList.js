@@ -26,6 +26,7 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './customerList.less';
 import CustomerAdd from '../add/CustomerAdd2.js';
 import ConstactsAdd from '../add/ContactsAdd.js';
+import CheckTabs from './CheckTabs.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -89,6 +90,28 @@ const CreateForm2 = Form.create()(props => {
   );
 });
 
+const CreateFormCheck = Form.create()(props => {
+  const { checkVisible, form, handleCheckVisible } = props;
+  const okHandle = () => handleCheckVisible();
+  const cancelHandle = () => handleCheckVisible();
+  return (
+    <Modal
+      title="查看"
+      style={{ top: 60 }}
+      visible={checkVisible}
+      mask={'true'}
+      width={'60%'}
+      maskClosable={false}
+      onOk={okHandle}
+      footer={null,
+        <Button onClick={okHandle} type="primary" >知道了</Button>
+      }
+    >
+      <CheckTabs />
+    </Modal>
+  );
+});
+
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -98,6 +121,7 @@ export default class customerList extends PureComponent {
   state = {
     modalVisible: false,
     modalVisibleContact: false,
+    checkVisible:false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -186,6 +210,9 @@ export default class customerList extends PureComponent {
           },
         });
         break;
+      case 'check':
+        this.handleCheckVisible(true);
+        break;
       case 'addContact':
         this.handleModalVisibleContact(true);
         break;
@@ -223,7 +250,7 @@ export default class customerList extends PureComponent {
       });
     });
   };
-
+  // 隐藏和显示
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
@@ -234,7 +261,12 @@ export default class customerList extends PureComponent {
       modalVisibleContact: !!flag,
     });
   };
-
+  handleCheckVisible = flag => {
+    this.setState({
+      checkVisible: !!flag,
+    });
+  };
+  // 添加表单数据
   handleAdd = fields => {
     this.props.dispatch({
       type: 'rule/add',
@@ -248,7 +280,6 @@ export default class customerList extends PureComponent {
       modalVisible: false,
     });
   };
-
   handleAddContact = fields => {
     this.props.dispatch({
       type: 'rule/add',
@@ -263,8 +294,8 @@ export default class customerList extends PureComponent {
     });
   };
 
+  // 左边菜单树
   rootSubmenuKeys = ['sub1'];
-
   treeMenu() {
     const SubMenu = Menu.SubMenu;
     return (
@@ -291,6 +322,7 @@ export default class customerList extends PureComponent {
     );
   }
 
+  // 简单查询
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -342,6 +374,7 @@ export default class customerList extends PureComponent {
     );
   }
 
+  //高级搜索
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -424,13 +457,14 @@ export default class customerList extends PureComponent {
     );
   }
 
+  // 判断简单 还是 高级搜索
   renderForm() {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, modalVisibleContact } = this.state;
+    const { selectedRows, modalVisible, modalVisibleContact,checkVisible } = this.state;
 
     const columns = [
       {
@@ -505,7 +539,7 @@ export default class customerList extends PureComponent {
 
     const downhz = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
+        <Menu.Item key="check">查看</Menu.Item>
         <Menu.Item key="del">删除</Menu.Item>
         <Menu.Item key="cancel">停用</Menu.Item>
         <Menu.Item key="cancelcancel">启用</Menu.Item>
@@ -525,6 +559,7 @@ export default class customerList extends PureComponent {
       handleAddContact: this.handleAddContact,
       handleModalVisible: this.handleModalVisible,
       handleModalVisibleContact: this.handleModalVisibleContact,
+      handleCheckVisible:this.handleCheckVisible,
     };
 
     return (
@@ -563,6 +598,7 @@ export default class customerList extends PureComponent {
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
         <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
+        <CreateFormCheck {...parentMethods} checkVisible={checkVisible}/>
       </PageHeaderLayout>
     );
   }
