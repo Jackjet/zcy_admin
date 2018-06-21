@@ -1,8 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
-import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -14,7 +11,6 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
   Modal,
   message,
@@ -35,8 +31,8 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+const statusMap = ['success', 'error'];
+const status = ['启用', '停用'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -53,15 +49,14 @@ const CreateForm = Form.create()(props => {
       title="客户基本信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
-      mask={'true'}
-      width={'90%'}
+      width='90%'
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
       <CustomerAdd />
     </Modal>
-  );
+);
 });
 
 const CreateForm2 = Form.create()(props => {
@@ -79,37 +74,32 @@ const CreateForm2 = Form.create()(props => {
       title="联系人基本信息新增"
       style={{ top: 20 }}
       visible={modalVisibleContact}
-      mask={'true'}
-      width={'45%'}
+      width='45%'
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisibleContact()}
     >
       <ConstactsAdd />
     </Modal>
-  );
+);
 });
 
 const CreateFormCheck = Form.create()(props => {
-  const { checkVisible, form, handleCheckVisible } = props;
+  const { checkVisible, handleCheckVisible } = props;
   const okHandle = () => handleCheckVisible();
-  const cancelHandle = () => handleCheckVisible();
   return (
     <Modal
       title="查看"
       style={{ top: 60 }}
       visible={checkVisible}
-      mask={'true'}
-      width={'60%'}
+      width='60%'
       maskClosable={false}
       onOk={okHandle}
-      footer={null,
-        <Button onClick={okHandle} type="primary" >知道了</Button>
-      }
+      footer={null, <Button onClick={okHandle} type="primary" >知道了</Button>}
     >
       <CheckTabs />
     </Modal>
-  );
+);
 });
 
 @connect(({ rule, loading }) => ({
@@ -173,14 +163,10 @@ export default class customerList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const { form } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
-    });
-    dispatch({
-      type: 'rule/fetch',
-      payload: {},
     });
   };
 
@@ -234,7 +220,6 @@ export default class customerList extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
@@ -297,7 +282,7 @@ export default class customerList extends PureComponent {
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
-    const SubMenu = Menu.SubMenu;
+    const SubMenuTree = Menu.SubMenu;
     return (
       <Menu
         mode="inline"
@@ -305,21 +290,21 @@ export default class customerList extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 130 }}
       >
-        <SubMenu
+        <SubMenuTree
           key="sub1"
           title={
             <span>
               <span>客户等级</span>
             </span>
-          }
+  }
         >
           <Menu.Item key="1">贵宾客户</Menu.Item>
           <Menu.Item key="2">一般客户</Menu.Item>
           <Menu.Item key="3">重要客户</Menu.Item>
           <Menu.Item key="4">潜在客户</Menu.Item>
-        </SubMenu>
+        </SubMenuTree>
       </Menu>
-    );
+  );
   }
 
   // 简单查询
@@ -374,7 +359,7 @@ export default class customerList extends PureComponent {
     );
   }
 
-  //高级搜索
+  // 高级搜索
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -451,155 +436,153 @@ export default class customerList extends PureComponent {
             <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
               收起
             </Button>
+
           </span>
         </div>
       </Form>
     );
   }
 
-  // 判断简单 还是 高级搜索
-  renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-  }
+    // 判断简单 还是 高级搜索
+    renderForm() {
+      return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    }
 
-  render() {
-    const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, modalVisibleContact,checkVisible } = this.state;
+    render() {
+      const { rule: { data }, loading } = this.props;
+      const { selectedRows, modalVisible, modalVisibleContact,checkVisible } = this.state;
 
-    const columns = [
-      {
-        title: '编号',
-        dataIndex: 'no',
-      },
-      {
-        title: '名称',
-        dataIndex: 'name',
-      },
-      {
-        title: '联系人',
-        dataIndex: 'linkman',
-      },
-
-      {
-        title: '所属公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '行业',
-        dataIndex: 'instruty',
-      },
-      {
-        title: '手机',
-        dataIndex: 'mobile',
-      },
-      {
-        title: '状态',
-        dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
+      const columns = [
+        {
+          title: '编号',
+          dataIndex: 'no',
         },
-      },
-      {
-        title: '操作',
-        render: () => (
-          <Fragment>
-            <a href="">编辑</a>
-            <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
-          </Fragment>
-        ),
-      },
+        {
+          title: '名称',
+          dataIndex: 'name',
+        },
+        {
+          title: '联系人',
+          dataIndex: 'linkman',
+        },
+
+        {
+          title: '所属公司',
+          dataIndex: 'company',
+        },
+        {
+          title: '行业',
+          dataIndex: 'instruty',
+        },
+        {
+          title: '手机',
+          dataIndex: 'mobile',
+        },
+        {
+          title: '状态',
+          dataIndex: 'status',
+          filters: [
+            {
+              text: status[0],
+              value: 0,
+            },
+            {
+              text: status[1],
+              value: 1,
+            },
+            {
+              text: status[2],
+              value: 2,
+            },
+            {
+              text: status[3],
+              value: 3,
+            },
+          ],
+          onFilter: (value, record) => record.status.toString() === value,
+          render(val) {
+            return <Badge status={statusMap[val]} text={status[val]} />;
+          },
+        },
+        {
+          title: '操作',
+          render: () => (
+            <Fragment>
+              <a href="">编辑</a>
+              <Divider type="vertical" />
+              <Dropdown overlay={downhz}>
+                <a>
+                  更多 <Icon type="down" />
+                </a>
+              </Dropdown>
+            </Fragment>
+    ),
+    },
     ];
 
-    const downhz = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="check">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
-      </Menu>
+      const downhz = (
+        <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+          <Menu.Item key="check">查看</Menu.Item>
+          <Menu.Item key="del">删除</Menu.Item>
+          <Menu.Item key="cancel">停用</Menu.Item>
+          <Menu.Item key="cancelcancel">启用</Menu.Item>
+        </Menu>
     );
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="addContact">新建联系人</Menu.Item>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
+      const menu = (
+        <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+          <Menu.Item key="addContact">新建联系人</Menu.Item>
+          <Menu.Item key="remove">删除</Menu.Item>
+          <Menu.Item key="approval">批量审批</Menu.Item>
+        </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleAddContact: this.handleAddContact,
-      handleModalVisible: this.handleModalVisible,
-      handleModalVisibleContact: this.handleModalVisibleContact,
-      handleCheckVisible:this.handleCheckVisible,
-    };
+      const parentMethods = {
+        handleAdd: this.handleAdd,
+        handleAddContact: this.handleAddContact,
+        handleModalVisible: this.handleModalVisible,
+        handleModalVisibleContact: this.handleModalVisibleContact,
+        handleCheckVisible:this.handleCheckVisible,
+      };
 
-    return (
-      <PageHeaderLayout>
-        <Card bordered={false}>
-          <div>
-            <div className={styles.tableList}>
-              <div className={styles.leftBlock}>{this.treeMenu()}</div>
-              <div className={styles.rightBlock}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                  新建客户
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
+      return (
+        <PageHeaderLayout>
+          <Card bordered={false}>
+            <div>
+              <div className={styles.tableList}>
+                <div className={styles.leftBlock}>{this.treeMenu()}</div>
+                <div className={styles.rightBlock}>
+                  <div className={styles.tableListForm}>{this.renderForm()}</div>
+                  <div className={styles.tableListOperator}>
+                    <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                      新建客户
+                    </Button>
+                    {selectedRows.length > 0 && (
+                      <span>
+                        <Dropdown overlay={menu}>
+                          <Button>
+                            批量操作 <Icon type="down" />
+                          </Button>
+                        </Dropdown>
+                      </span>
+                    )}
+                  </div>
+                  <StandardTable
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
+                </div>
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
             </div>
-            </div>
-          </div>
-        </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
-        <CreateFormCheck {...parentMethods} checkVisible={checkVisible}/>
-      </PageHeaderLayout>
-    );
+          </Card>
+          <CreateForm {...parentMethods} modalVisible={modalVisible} />
+          <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
+          <CreateFormCheck {...parentMethods} checkVisible={checkVisible} />
+        </PageHeaderLayout>
+      );
   }
 }

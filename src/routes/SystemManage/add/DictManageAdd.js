@@ -15,21 +15,15 @@ const fieldLabels = {
   status: '状态',
 };
 
-const codeSpace = {
-  style: {
-    paddingLeft: 62,
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-};
-
-const dictTypeNameSpace = {
-  style: {
-    paddingLeft: 12,
-  },
-};
-
-const remarksSpace = {
-  style: {
-    paddingLeft: 70,
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+    md: { span: 10 },
   },
 };
 
@@ -56,41 +50,41 @@ class DictTypeAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="inline">
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...codeSpace} label={fieldLabels.code}>
+          <Form layout="horizontal" >
+            <Row>
+              <Col lg={24} md={24} sm={24}>
+                <Form.Item {...formItemLayout} label={fieldLabels.code}>
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '请输入编码' }],
-                  })(<Input placeholder="请输入编码" style={{ width: 200 }} />)}
+                  })(<Input placeholder="请输入编码" />)}
                 </Form.Item>
               </Col>
             </Row>
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...dictTypeNameSpace} label={fieldLabels.dictType}>
+            <Row>
+              <Col lg={24} md={24} sm={24}>
+                <Form.Item {...formItemLayout} label={fieldLabels.dictType}>
                   {getFieldDecorator('dictType', {
                     rules: [{ required: true, message: '请选择字典类别' }],
-                  })(<Input placeholder="请选择字典类别" style={{ width: 200 }} />)}
+                  })(<Input placeholder="请选择字典类别" />)}
                 </Form.Item>
               </Col>
             </Row>
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...remarksSpace} label={fieldLabels.dictName}>
+            <Row>
+              <Col lg={24} md={24} sm={24}>
+                <Form.Item {...formItemLayout} label={fieldLabels.dictName}>
                   {getFieldDecorator('dictName', {
                     rules: [{ required: true, message: '请输入字典名称' }],
                   })(
-                    <Input placeholder="请输入字典名称" style={{ width: 200 }} />
+                    <Input placeholder="请输入字典名称" />
                   )}
                 </Form.Item>
               </Col>
             </Row>
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...remarksSpace} label={fieldLabels.remarks}>
+            <Row>
+              <Col lg={24} md={24} sm={24}>
+                <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                   {getFieldDecorator('remarks')(
-                    <TextArea placeholder="请输入备注" style={{ width: 200, height: 100 }} />
+                    <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
                   )}
                 </Form.Item>
               </Col>
