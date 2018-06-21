@@ -21,10 +21,11 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../components/StandardTable';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import styles from '../staff/userList.less';
-import OrgUnitAdd from '../org/add/OrgUnitAdd2';
+import StandardTable from '../../../components/StandardTable/index';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import styles from './userList.less';
+import UserListAdd from '../../staff/add/UserListAdd';
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -50,13 +51,12 @@ const CreateForm = Form.create()(props => {
       title="新增员工信息"
       style={{ top: 20 }}
       visible={modalVisible}
-      mask={'true'}
-      width={'60%'}
+      width='55%'
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <OrgUnitAdd />
+      <UserListAdd />
     </Modal>
   );
 });
