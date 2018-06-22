@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Tabs, Icon, Form } from 'antd';
 import { connect } from 'dva';
+import ContractCheck from '../../project/select/ContractCheck.js';
+import ProjectCheck from '../../project/select/ProjectCheck.js';
+import CustomerCheck from '../../crm/select/CustomerCheck.js';
 
 class CheckTabs extends PureComponent {
   state = {
@@ -28,7 +31,7 @@ class CheckTabs extends PureComponent {
         }
           key="1"
         >
-          Tab 1
+          <CustomerCheck />
         </TabPane>
         <TabPane
           tab={
@@ -36,7 +39,7 @@ class CheckTabs extends PureComponent {
         }
           key="2"
         >
-          Tab 2
+          <ProjectCheck />
         </TabPane>
         <TabPane
           tab={
@@ -44,7 +47,7 @@ class CheckTabs extends PureComponent {
         }
           key="3"
         >
-          Tab 1
+          <ContractCheck />
         </TabPane>
         <TabPane
           tab={

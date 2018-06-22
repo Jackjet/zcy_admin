@@ -92,6 +92,9 @@ export const getRouterData = app => {
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
     },
+    '/project/contract': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/Contract')),
+    },
     // 项目工作记录
     '/project/workRecord': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
