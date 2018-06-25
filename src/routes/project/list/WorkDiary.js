@@ -199,17 +199,14 @@ export default class WorkDiary extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
-            <FormItem label="拜访对象">
+            <FormItem label="项目名称">
               {getFieldDecorator('no')(
-                <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
+                <Select placeholder="请选择项目名称" style={{ width: 200 }}>
                   <Option value="0">请选择</Option>
-                  <Option value="1">初期沟通</Option>
-                  <Option value="2">立项评估</Option>
-                  <Option value="3">需求分析</Option>
-                  <Option value="4">方案制定</Option>
-                  <Option value="5">招投标/竞争</Option>
-                  <Option value="6">商务谈判</Option>
-                  <Option value="7">合同签约</Option>
+                  <Option value="1">项目A</Option>
+                  <Option value="2">项目B</Option>
+                  <Option value="3">项目C</Option>
+                  <Option value="4">项目D</Option>
                 </Select>
               )}
             </FormItem>
