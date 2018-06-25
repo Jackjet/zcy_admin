@@ -4,6 +4,10 @@ import { connect } from 'dva';
 import ContractCheck from '../../project/select/ContractCheck.js';
 import ProjectCheck from '../../project/select/ProjectCheck.js';
 import CustomerCheck from '../../crm/select/CustomerCheck.js';
+import BusinessOpportunityCheck from '../../crm/select/BusinessOpportunityCheck.js';
+import VisitListCheck from '../../crm/select/VisitListCheck.js';
+
+
 
 class CheckTabs extends PureComponent {
   state = {
@@ -23,7 +27,7 @@ class CheckTabs extends PureComponent {
     }
   };
   render() {
-    const TabPane = Tabs.TabPane;
+    const { TabPane } = Tabs;
     return (
       <Tabs defaultActiveKey="1">
         <TabPane
@@ -55,7 +59,7 @@ class CheckTabs extends PureComponent {
         }
           key="4"
         >
-          Tab 1
+          <BusinessOpportunityCheck />
         </TabPane>
         <TabPane
           tab={
@@ -63,7 +67,7 @@ class CheckTabs extends PureComponent {
         }
           key="5"
         >
-          Tab 1
+          <VisitListCheck />
         </TabPane>
       </Tabs>
     );

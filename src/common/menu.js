@@ -121,6 +121,11 @@ const menuData = [
             name: '开票管理',
             path: 'invoice',
           },
+          {
+            key: 'circulation',
+            name: '业务流转',
+            path: 'businessCirculation',
+          },
         ],
       },
       {

@@ -95,6 +95,7 @@ const CreateFormCheck = Form.create()(props => {
       width='60%'
       maskClosable={false}
       onOk={okHandle}
+      onCancel={() => handleCheckVisible()}
       footer={null, <Button onClick={okHandle} type="primary" >知道了</Button>}
     >
       <CheckTabs />

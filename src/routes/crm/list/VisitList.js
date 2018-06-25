@@ -43,7 +43,7 @@ const CreateForm = Form.create()(props => {
       style={{ top: 150 }}
       // 对话框是否可见
       visible={modalVisible}
-      width="80%"
+      width="60%"
       // 点击蒙层是否允许关闭
       maskClosable={false}
       onOk={okHandle}

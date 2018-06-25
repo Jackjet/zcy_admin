@@ -115,6 +115,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
       name:'项目工作记录',
     },
+    '/fi/fiinvoice/businessCirculation': {
+    component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
+      name:'业务流转',
+  },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Select,DatePicker, Transfer } from 'antd';
 import { connect } from 'dva';
-import styles from './VisitListAdd.less';
+import styles from './style.less';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -27,7 +27,7 @@ const formItemLayout = {
   },
 };
 
-class DictTypeAdd extends PureComponent {
+class VisitListCheck extends PureComponent {
   state = {
     width: '90%',
     mockData: [],
@@ -167,6 +167,7 @@ class DictTypeAdd extends PureComponent {
                         width: 150,
                         height: 150,
                       }}
+
                       // 显示在右侧框数据的key集合
                       targetKeys={this.state.targetKeys}
                       // 选项在两栏之间转移时的回调函数
@@ -199,4 +200,4 @@ class DictTypeAdd extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DictTypeAdd));
+}))(Form.create()(VisitListCheck));
