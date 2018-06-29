@@ -13,6 +13,7 @@ import {
   Select,
   Popover,
   Cascader,
+  Checkbox,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -263,14 +264,14 @@ class ContactsAdd2 extends PureComponent {
               </Col>
               <Col span={8}>
                 <Form.Item>
-                  {getFieldDecorator({
+                  {getFieldDecorator('lagalperson',{
                     rules: [{ required: true, message: '请选择是否法人' }],
                   })(<Checkbox>是否法人</Checkbox>)}
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item>
-                  {getFieldDecorator({
+                  {getFieldDecorator('mainperson',{
                     rules: [{ required: true, message: '请选择是否主联系人' }],
                   })(<Checkbox>是否主联系人</Checkbox>)}
                 </Form.Item>
