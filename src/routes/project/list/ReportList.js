@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -16,12 +15,14 @@ import {
   DatePicker,
   Modal,
   message,
+  Badge,
   Divider,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './Contract.less';
-import ContractAdd from '../add/ContractAdd.js';
+import styles from './projectList.less';
+import ReportAdd from '../add/ReportAdd.js';
+import ReportView from '../select/ReportView.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -30,6 +31,8 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+const statusMap = ['default', 'processing', 'success', 'error'];
+const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -43,32 +46,31 @@ const CreateForm = Form.create()(props => {
 
   return (
     <Modal
-      title="合同基本信息新增"
+      title="报告基本信息新增"
       visible={modalVisible}
-      width='90%'
+      width="90%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ContractAdd />
+      <ReportAdd />
     </Modal>
   );
 });
-
-const CheckContractForm = Form.create()(props => {
-  const { checkContractVisible, handleCheckContractVisible } = props;
-  const okHandle = () => handleCheckContractVisible();
-
+const CheckProjectList = Form.create()(props => {
+  const { checkVisible, handleCheckVisible } = props;
+  const okHandle = () => handleCheckVisible();
   return (
     <Modal
-      title="合同基本信息查看"
-      visible={checkContractVisible}
-      width='90%'
+      title="报告信息查看"
+      visible={checkVisible}
+      width="90%"
       maskClosable={false}
-      onCancel={() => handleCheckContractVisible()}
-      footer={null, <Button onClick={okHandle} type="primary" >知道了</Button>}
+      onOk={okHandle}
+      onCancel={() => handleCheckVisible()}
+      footer={null}
     >
-      <ContractAdd />
+      <ReportView />
     </Modal>
   );
 });
@@ -78,10 +80,10 @@ const CheckContractForm = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class projectList extends PureComponent {
+export default class ReportList extends PureComponent {
   state = {
     modalVisible: false,
-    checkContractVisible: false,
+    checkVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -93,6 +95,7 @@ export default class projectList extends PureComponent {
       type: 'rule/fetch',
     });
   }
+
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -103,6 +106,7 @@ export default class projectList extends PureComponent {
       });
     }
   };
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -128,18 +132,25 @@ export default class projectList extends PureComponent {
       payload: params,
     });
   };
+
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
     });
+    dispatch({
+      type: 'rule/fetch',
+      payload: {},
+    });
   };
+
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
   };
+
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -160,15 +171,20 @@ export default class projectList extends PureComponent {
           },
         });
         break;
+      case 'check':
+        this.handleCheckVisible(true);
+        break;
       default:
         break;
     }
   };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
+
   handleSearch = e => {
     e.preventDefault();
 
@@ -192,15 +208,16 @@ export default class projectList extends PureComponent {
       });
     });
   };
+
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
     });
   };
 
-  handleCheckContractVisible = flag => {
+  handleCheckVisible = flag => {
     this.setState({
-      checkContractVisible: !!flag,
+      checkVisible: !!flag,
     });
   };
 
@@ -221,7 +238,7 @@ export default class projectList extends PureComponent {
   rootSubmenuKeys = ['sub1'];
 
   treemenu() {
-    const SubMenuTree = Menu.SubMenu;
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -229,11 +246,11 @@ export default class projectList extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
       >
-        <SubMenuTree
+        <SubMenu
           key="sub1"
           title={
             <span>
-              <span>合同类别</span>
+              <span>项目类别</span>
             </span>
           }
         >
@@ -242,7 +259,7 @@ export default class projectList extends PureComponent {
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
           <Menu.Item key="4">打包项目</Menu.Item>
           <Menu.Item key="5">2010年免审批工程造价、招投标项目</Menu.Item>
-        </SubMenuTree>
+        </SubMenu>
       </Menu>
     );
   }
@@ -252,43 +269,40 @@ export default class projectList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
-            <FormItem label="合同编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入合同编码" />)}
+          <Col md={8} sm={24}>
+            <FormItem label="编号名称">
+              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="合同名称">
-              {getFieldDecorator('contractName')(<Input placeholder="合同名称" />)}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="项目">
-              {getFieldDecorator('project', {
-                rules: [{ required: true, message: '请输入项目' }],
+          <Col md={8} sm={24}>
+            <FormItem label="年度">
+              {getFieldDecorator('years', {
+                rules: [{ required: true, message: '请选择年度' }],
               })(
-                <Select placeholder="请输入" style={{ width: 200 }}>
+                <Select placeholder="请选择年度" style={{ width: 200 }}>
                   <Option value="xiao">请选择</Option>
-                  <Option value="z">工程造价业务项目</Option>
-                  <Option value="f">招标代理业务项目</Option>
-                  <Option value="fd">打包项目</Option>
-                  <Option value="sn">2010年免审批工程造价、招投标项目</Option>
+                  <Option value="z">2018</Option>
+                  <Option value="f">2019</Option>
+                  <Option value="fd">2020</Option>
+                  <Option value="sn">2021</Option>
+                  <Option value="zf">2022</Option>
+                  <Option value="sy">2023</Option>
+                  <Option value="jr">2024</Option>
                 </Select>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
-                搜索
+                查询
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                清空
+                重置
               </Button>
-
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
-              </Button>
+              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                更多 <Icon type="down" />
+              </a>
             </span>
           </Col>
         </Row>
@@ -302,13 +316,13 @@ export default class projectList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="合同编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入" />)}
+            <FormItem label="编码名称">
+              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="合同名称">
-              {getFieldDecorator('contractName')(<Input placeholder="请输入" />)}
+            <FormItem label="负责人">
+              {getFieldDecorator('pinyin')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
 
@@ -380,67 +394,65 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, checkContractVisible } = this.state;
-
+    const { selectedRows, modalVisible, checkVisible } = this.state;
     const columns = [
       {
-        title: '合同编码',
-        dataIndex: 'contractCode',
+        title: '报告编号',
+        dataIndex: 'no',
+        render: text => (
+          <a className={styles.a} onClick={() => this.handleModalVisible(true)}>
+            {text}
+          </a>
+        ),
       },
       {
-        title: '合同标题',
-        dataIndex: 'contractName',
+        title: '报告性质',
+        dataIndex: 'name',
       },
       {
-        title: '对方企业',
-        dataIndex: 'partnerEnterprise',
-      },
-      {
-        title: '负责人',
+        title: '报告类别',
         dataIndex: 'linkman',
       },
       {
-        title: '业务类别',
-        dataIndex: 'businessType',
+        title: '名称',
+        dataIndex: 'status',
       },
       {
-        title: '签订时间',
-        dataIndex: 'signTime',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '文件类型',
+        dataIndex: 'company',
       },
       {
-        title: '开始时间',
-        dataIndex: 'startTime',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '出具时间',
+        dataIndex: 'fee',
       },
       {
-        title: '结束时间',
-        dataIndex: 'endTime',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        title: '备注',
+        dataIndex: 'cusname',
       },
-
-      {
-        title: '总金额',
-        dataIndex: 'totalAmount',
-      },
-
       {
         title: '操作',
         render: () => (
           <Fragment>
-            <a onClick={()=>this.handleCheckContractVisible(true)} >查看</a>
+            <a href="">编辑</a>
             <Divider type="vertical" />
-            <a onClick={()=>this.handleCheckContractVisible(true)} >编辑</a>
-            <Divider type="vertical" />
-            <a href="">删除</a>
-            <Divider type="vertical" />
+            <Dropdown overlay={downhz}>
+              <a>
+                更多 <Icon type="down" />
+              </a>
+            </Dropdown>
           </Fragment>
         ),
       },
     ];
+
+    const downhz = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="check">查看</Menu.Item>
+        <Menu.Item key="del">删除</Menu.Item>
+        <Menu.Item key="cancel">停用</Menu.Item>
+        <Menu.Item key="cancelcancel">启用</Menu.Item>
+      </Menu>
+    );
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
@@ -452,16 +464,14 @@ export default class projectList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
-      handleCheckContractVisible: this.handleCheckContractVisible,
+      handleCheckVisible: this.handleCheckVisible,
     };
 
     return (
-      <PageHeaderLayout>
+      <div>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
           <div className={styles.rightBlock}>
             <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
                 <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
                   新建
@@ -488,8 +498,8 @@ export default class projectList extends PureComponent {
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CheckContractForm {...parentMethods} checkContractVisible={checkContractVisible} />
-      </PageHeaderLayout>
+        <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
+      </div>
     );
   }
 }

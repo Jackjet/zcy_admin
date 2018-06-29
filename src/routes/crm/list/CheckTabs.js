@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
 import { Tabs, Icon, Form } from 'antd';
 import { connect } from 'dva';
-import ContractCheck from '../../project/select/ContractCheck.js';
-import ProjectCheck from '../../project/select/ProjectCheck.js';
 import CustomerCheck from '../../crm/select/CustomerCheck.js';
-import BusinessOpportunityCheck from '../../crm/select/BusinessOpportunityCheck.js';
+import ContractView from '../../project/select/ContractView.js';
 import VisitListCheck from '../../crm/select/VisitListCheck.js';
-
-
+import ContactsView from '../../crm/select/ContactsView.js';
+import Salesman from '../../crm/select/Salesman.js';
+import ProjectListView from '../../project/ContractSelect/ProjectListView.js';
 
 class CheckTabs extends PureComponent {
   state = {
@@ -31,47 +30,70 @@ class CheckTabs extends PureComponent {
     return (
       <Tabs defaultActiveKey="1">
         <TabPane
-          tab={<span><Icon type="team" />客户</span>
-        }
+          tab={
+            <span>
+              <Icon type="team" />基本信息
+            </span>
+          }
           key="1"
         >
           <CustomerCheck />
+          <Tabs defaultActiveKey="1">
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="api" />客户联系人
+                </span>
+              }
+              key="1"
+            >
+              <ContactsView />
+            </TabPane>
+          </Tabs>
         </TabPane>
         <TabPane
           tab={
-            <span><Icon type="api" />项目</span>
-        }
+            <span>
+              <Icon type="api" />所属业务员
+            </span>
+          }
           key="2"
         >
-          <ProjectCheck />
+          <Salesman />
         </TabPane>
         <TabPane
           tab={
-            <span><Icon type="switcher" />合同</span>
-        }
+            <span>
+              <Icon type="switcher" />所属项目
+            </span>
+          }
           key="3"
         >
-          <ContractCheck />
+          <ProjectListView />
         </TabPane>
         <TabPane
           tab={
-            <span><Icon type="line-chart" />商机</span>
-        }
+            <span>
+              <Icon type="line-chart" />所属合同
+            </span>
+          }
           key="4"
         >
-          <BusinessOpportunityCheck />
+          <ContractView />
         </TabPane>
         <TabPane
           tab={
-            <span><Icon type="eye" />拜访</span>
-        }
+            <span>
+              <Icon type="eye" />客户拜访信息
+            </span>
+          }
           key="5"
         >
           <VisitListCheck />
         </TabPane>
       </Tabs>
     );
-  };
+  }
 }
 
 export default connect(({ global, loading }) => ({

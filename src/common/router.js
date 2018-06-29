@@ -82,29 +82,31 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/customerList')),
     },
     '/crm/business': {
-    component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/BusinessOpportunity')),
-      },
+      component: dynamicWrapper(app, ['list'], () =>
+        import('../routes/crm/list/BusinessOpportunity')
+      ),
+    },
     '/crm/visit': {
-    component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/VisitList')),
-  },
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/VisitList')),
+    },
     '/system/dictType': {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
-      name:'数据字典类型管理',
+      name: '数据字典类型管理',
     },
     '/system/dictManage': {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
-      name:'数据字典管理',
+      name: '数据字典管理',
     },
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
-      name:'项目信息管理',
+      name: '项目信息管理',
     },
     '/project/contract': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/Contract')),
-      name:'协议（合同）管理',
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
+      name: '协议（合同）管理',
     },
     '/project/workPlanManage/workPlan': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/Contract')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
       name: '项目计划',
     },
     '/project/workPlanManage/workDiary': {
@@ -113,12 +115,12 @@ export const getRouterData = app => {
     },
     '/project/workRecord': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
-      name:'项目工作记录',
+      name: '项目工作记录',
     },
     '/fi/fiinvoice/businessCirculation': {
-    component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
-      name:'业务流转',
-  },
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
+      name: '业务流转',
+    },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },

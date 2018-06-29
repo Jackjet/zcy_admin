@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select,DatePicker, Transfer } from 'antd';
+import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer } from 'antd';
 import { connect } from 'dva';
 import styles from './VisitListAdd.less';
 
@@ -10,7 +10,7 @@ const fieldLabels = {
   visitType: '拜访方式',
   connectBusiness: '关联商机',
   visitDate: '拜访日期',
-  communication : '交流内容',
+  communication: '交流内容',
   participants: '参与人员',
   remarks: '备注',
 };
@@ -27,7 +27,7 @@ const formItemLayout = {
   },
 };
 
-class DictTypeAdd extends PureComponent {
+class VisitListAdd extends PureComponent {
   state = {
     width: '90%',
     mockData: [],
@@ -57,13 +57,13 @@ class DictTypeAdd extends PureComponent {
       mockData.push(data);
     }
     this.setState({ mockData, targetKeys });
-  }
+  };
   filterOption = (inputValue, option) => {
     return option.description.indexOf(inputValue) > -1;
-  }
-  handleChange = (targetKeys) => {
+  };
+  handleChange = targetKeys => {
     this.setState({ targetKeys });
-  }
+  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -79,7 +79,7 @@ class DictTypeAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="horizontal" >
+          <Form layout="horizontal">
             <Row>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
@@ -121,9 +121,7 @@ class DictTypeAdd extends PureComponent {
                 <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                   {getFieldDecorator('visitDate', {
                     rules: [{ required: true, message: '请选择拜访日期' }],
-                  })(
-                    <DatePicker placeholder="请选择拜访日期"  />
-                  )}
+                  })(<DatePicker placeholder="请选择拜访日期" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -162,7 +160,6 @@ class DictTypeAdd extends PureComponent {
                       dataSource={this.state.mockData}
                       // 接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false。
                       filterOption={this.filterOption}
-
                       listStyle={{
                         width: 150,
                         height: 150,
@@ -199,4 +196,4 @@ class DictTypeAdd extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DictTypeAdd));
+}))(Form.create()(VisitListAdd));

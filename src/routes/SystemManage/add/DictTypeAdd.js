@@ -49,7 +49,7 @@ class DictTypeAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="horizontal" >
+          <Form layout="horizontal">
             <Row className={styles['row-h']}>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.code}>

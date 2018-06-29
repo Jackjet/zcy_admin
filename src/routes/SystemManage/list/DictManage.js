@@ -47,7 +47,7 @@ const CreateForm = Form.create()(props => {
       title="数据字典信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
-      width='30%'
+      width="30%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}

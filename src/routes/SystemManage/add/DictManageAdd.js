@@ -50,7 +50,7 @@ class DictTypeAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="horizontal" >
+          <Form layout="horizontal">
             <Row>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.code}>
@@ -74,9 +74,7 @@ class DictTypeAdd extends PureComponent {
                 <Form.Item {...formItemLayout} label={fieldLabels.dictName}>
                   {getFieldDecorator('dictName', {
                     rules: [{ required: true, message: '请输入字典名称' }],
-                  })(
-                    <Input placeholder="请输入字典名称" />
-                  )}
+                  })(<Input placeholder="请输入字典名称" />)}
                 </Form.Item>
               </Col>
             </Row>

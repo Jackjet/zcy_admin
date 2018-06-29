@@ -1,25 +1,9 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Button,
-  Form,
-  Icon,
-  Col,
-  Row,
-  DatePicker,
-  Input,
-  InputNumber,
-  Select,
-  Popover,
-  Cascader,
-  Checkbox,
-} from 'antd';
+import { Card, Form, Row, Col, Input, Select, Cascader, Checkbox } from 'antd';
 import { connect } from 'dva';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 
 const { Option } = Select;
-const { RangePicker } = DatePicker;
 const optionshz = [
   {
     value: 'zhejiang',
@@ -68,7 +52,7 @@ const fieldLabels = {
   region: '所在区域',
   remark: '备注',
   status: '状态',
-  mailBox:'电子邮箱',
+  mailBox: '电子邮箱',
 };
 
 const cnumcol = {
@@ -107,6 +91,17 @@ const formhz11 = {
   },
 };
 
+const formhz12 = {
+  wrapperCol: {
+    style: {
+      width: '50%',
+    },
+  },
+  style: {
+    width: '80%',
+  },
+};
+
 class ContactsAdd extends PureComponent {
   state = {
     width: '100%',
@@ -125,58 +120,8 @@ class ContactsAdd extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const validate = () => {
-      validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          // submit the values
-          dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
-          });
-        }
-      });
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
-    };
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     return (
       <div>
         <Card>
@@ -193,26 +138,35 @@ class ContactsAdd extends PureComponent {
                 <Form.Item {...formhz11} label={fieldLabels.affiliatedCustomers}>
                   {getFieldDecorator('affiliatedCustomers', {
                     rules: [{ required: true, message: '请输入所属客户' }],
-                  })(<Select placeholder="请输入所属客户" style={{ width: 200 }}>
-                    <Option value="0">杭州客户</Option>
-                    <Option value="g">新昌客户</Option>
-                    <Option value="y">诸暨客户</Option>
-                    <Option value="q">河南客户</Option>
-                  </Select>)}
+                  })(
+                    <Select placeholder="请输入所属客户" style={{ width: 200 }}>
+                      <Option value="0">杭州客户</Option>
+                      <Option value="g">新昌客户</Option>
+                      <Option value="y">诸暨客户</Option>
+                      <Option value="q">河南客户</Option>
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['row-h']}>
-              <Col span={12}>
-                <Form.Item label={fieldLabels.contactName}>
+              <Col span={8}>
+                <Form.Item {...formhz12} label={fieldLabels.contactName}>
                   {getFieldDecorator('contactName', {
                     rules: [{ required: true, message: '请选择客户名称' }],
                   })(<Input placeholder="请选择客户名称" className={styles['ant-input-lg']} />)}
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item label={fieldLabels.industy}>
-                  {getFieldDecorator('industy', {
+              <Col span={8}>
+                <Form.Item>
+                  {getFieldDecorator({
+                    rules: [{ required: true, message: '请选择是否法人' }],
+                  })(<Checkbox>是否法人</Checkbox>)}
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item>
+                  {getFieldDecorator({
                     rules: [{ required: true, message: '请选择是否主联系人' }],
                   })(<Checkbox>是否主联系人</Checkbox>)}
                 </Form.Item>

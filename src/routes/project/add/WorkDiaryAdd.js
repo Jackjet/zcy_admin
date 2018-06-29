@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Select, DatePicker } from 'antd';
 import { connect } from 'dva';
 
-
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -10,7 +9,7 @@ const fieldLabels = {
   projectName: '项目名称',
   workStep: '工作步骤',
   logContent: '日志内容',
-  workDate : '工作日期',
+  workDate: '工作日期',
   lengthTime: '时长',
   noteTaker: '记录人',
 };
@@ -50,7 +49,7 @@ class WorkDiaryAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="horizontal" >
+          <Form layout="horizontal">
             <Row>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.projectCode}>
@@ -72,9 +71,7 @@ class WorkDiaryAdd extends PureComponent {
                 <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
                   {getFieldDecorator('projectName', {
                     rules: [{ required: true, message: '请选择输入项目名称' }],
-                  })(
-                    <Input placeholder="自动带出名称" style={{ width: 200 }} />
-                  )}
+                  })(<Input placeholder="自动带出名称" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -105,9 +102,7 @@ class WorkDiaryAdd extends PureComponent {
                 <Form.Item {...formItemLayout} label={fieldLabels.logContent}>
                   {getFieldDecorator('logContent', {
                     rules: [{ required: true, message: '请输入日志内容' }],
-                  })(
-                    <TextArea placeholder="请输入日志内容" style={{ minHeight: 32 }} rows={4} />
-                  )}
+                  })(<TextArea placeholder="请输入日志内容" style={{ minHeight: 32 }} rows={4} />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -115,9 +110,7 @@ class WorkDiaryAdd extends PureComponent {
             <Row>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.workDate}>
-                  {getFieldDecorator('workDate')(
-                    <DatePicker placeholder="请选择工作日期"  />
-                  )}
+                  {getFieldDecorator('workDate')(<DatePicker placeholder="请选择工作日期" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -146,9 +139,7 @@ class WorkDiaryAdd extends PureComponent {
             <Row>
               <Col lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.noteTaker}>
-                  {getFieldDecorator('noteTaker')(
-                    <Input placeholder="请输入记录人" />
-                  )}
+                  {getFieldDecorator('noteTaker')(<Input placeholder="请输入记录人" />)}
                 </Form.Item>
               </Col>
             </Row>

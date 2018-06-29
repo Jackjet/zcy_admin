@@ -21,8 +21,11 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './customerList.less';
 import CustomerAdd from '../add/CustomerAdd2.js';
-import ConstactsAdd from '../add/ContactsAdd.js';
 import CheckTabs from './CheckTabs.js';
+import EditableTable from '../../../components/EditableTable/EditableTable';
+import ContactsAdd from '../add/ContactsAdd';
+import BusinessAdd from '../add/BusinessAdd';
+import ContactsAdd2 from '../add/ContactsAdd2';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -49,39 +52,35 @@ const CreateForm = Form.create()(props => {
       title="客户基本信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
-      width='90%'
+      width="90%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
       <CustomerAdd />
     </Modal>
-);
+  );
 });
 
 const CreateForm2 = Form.create()(props => {
-  const { modalVisibleContact, form, handleAddContact, handleModalVisibleContact } = props;
+  const { modalVisibleContact, handleModalVisibleContact } = props;
   const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAddContact(fieldsValue);
-    });
+    handleModalVisibleContact();
   };
 
   return (
     <Modal
-      title="联系人基本信息新增"
+      title="联系人基本信息设置"
       style={{ top: 20 }}
       visible={modalVisibleContact}
-      width='45%'
+      width="45%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisibleContact()}
     >
-      <ConstactsAdd />
+      <ContactsAdd />
     </Modal>
-);
+  );
 });
 
 const CreateFormCheck = Form.create()(props => {
@@ -92,15 +91,57 @@ const CreateFormCheck = Form.create()(props => {
       title="查看"
       style={{ top: 60 }}
       visible={checkVisible}
-      width='60%'
+      width="80%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleCheckVisible()}
-      footer={null, <Button onClick={okHandle} type="primary" >知道了</Button>}
+      footer={null}
     >
       <CheckTabs />
     </Modal>
-);
+  );
+});
+
+const SalesManage = Form.create()(props => {
+  const { salesVisible, handleSalesVisible } = props;
+  const okHandle = () => {
+    handleSalesVisible();
+  };
+
+  return (
+    <Modal
+      title="业务员基本信息管理"
+      style={{ top: 20 }}
+      visible={salesVisible}
+      width="40%"
+      maskClosable={false}
+      onOk={okHandle}
+      onCancel={() => handleSalesVisible()}
+    >
+      <EditableTable />
+    </Modal>
+  );
+});
+
+const ContactPerson = Form.create()(props => {
+  const { contactVisible, handleContactVisible } = props;
+  const okHandle = () => {
+    handleContactVisible();
+  };
+
+  return (
+    <Modal
+      title="联系人基本信息管理"
+      style={{ top: 20 }}
+      visible={contactVisible}
+      width="40%"
+      maskClosable={false}
+      onOk={okHandle}
+      onCancel={() => handleContactVisible()}
+    >
+      <ContactsAdd2 />
+    </Modal>
+  );
 });
 
 @connect(({ rule, loading }) => ({
@@ -112,7 +153,9 @@ export default class customerList extends PureComponent {
   state = {
     modalVisible: false,
     modalVisibleContact: false,
-    checkVisible:false,
+    contactVisible: false,
+    checkVisible: false,
+    salesVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -177,6 +220,25 @@ export default class customerList extends PureComponent {
     });
   };
 
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -199,9 +261,6 @@ export default class customerList extends PureComponent {
         break;
       case 'check':
         this.handleCheckVisible(true);
-        break;
-      case 'addContact':
-        this.handleModalVisibleContact(true);
         break;
       default:
         break;
@@ -252,6 +311,17 @@ export default class customerList extends PureComponent {
       checkVisible: !!flag,
     });
   };
+  handleSalesVisible = flag => {
+    this.setState({
+      salesVisible: !!flag,
+    });
+  };
+  handleContactVisible = flag => {
+    this.setState({
+      contactVisible: !!flag,
+    });
+  };
+
   // 添加表单数据
   handleAdd = fields => {
     this.props.dispatch({
@@ -297,7 +367,7 @@ export default class customerList extends PureComponent {
             <span>
               <span>客户等级</span>
             </span>
-  }
+          }
         >
           <Menu.Item key="1">贵宾客户</Menu.Item>
           <Menu.Item key="2">一般客户</Menu.Item>
@@ -305,7 +375,7 @@ export default class customerList extends PureComponent {
           <Menu.Item key="4">潜在客户</Menu.Item>
         </SubMenuTree>
       </Menu>
-  );
+    );
   }
 
   // 简单查询
@@ -437,153 +507,172 @@ export default class customerList extends PureComponent {
             <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
               收起
             </Button>
-
           </span>
         </div>
       </Form>
     );
   }
 
-    // 判断简单 还是 高级搜索
-    renderForm() {
-      return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-    }
+  // 判断简单 还是 高级搜索
+  renderForm() {
+    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+  }
 
-    render() {
-      const { rule: { data }, loading } = this.props;
-      const { selectedRows, modalVisible, modalVisibleContact,checkVisible } = this.state;
+  render() {
+    const { rule: { data }, loading } = this.props;
+    const {
+      selectedRows,
+      modalVisible,
+      modalVisibleContact,
+      checkVisible,
+      salesVisible,
+      contactVisible,
+    } = this.state;
 
-      const columns = [
-        {
-          title: '编号',
-          dataIndex: 'no',
-        },
-        {
-          title: '名称',
-          dataIndex: 'name',
-        },
-        {
-          title: '联系人',
-          dataIndex: 'linkman',
-        },
+    const columns = [
+      {
+        title: '编号',
+        dataIndex: 'no',
+      },
+      {
+        title: '名称',
+        dataIndex: 'name',
+      },
+      {
+        title: '联系人',
+        dataIndex: 'linkman',
+      },
 
-        {
-          title: '所属公司',
-          dataIndex: 'company',
-        },
-        {
-          title: '行业',
-          dataIndex: 'instruty',
-        },
-        {
-          title: '手机',
-          dataIndex: 'mobile',
-        },
-        {
-          title: '状态',
-          dataIndex: 'status',
-          filters: [
-            {
-              text: status[0],
-              value: 0,
-            },
-            {
-              text: status[1],
-              value: 1,
-            },
-            {
-              text: status[2],
-              value: 2,
-            },
-            {
-              text: status[3],
-              value: 3,
-            },
-          ],
-          onFilter: (value, record) => record.status.toString() === value,
-          render(val) {
-            return <Badge status={statusMap[val]} text={status[val]} />;
+      {
+        title: '所属公司',
+        dataIndex: 'company',
+      },
+      {
+        title: '行业',
+        dataIndex: 'instruty',
+      },
+      {
+        title: '手机',
+        dataIndex: 'mobile',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        filters: [
+          {
+            text: status[0],
+            value: 0,
           },
+          {
+            text: status[1],
+            value: 1,
+          },
+          {
+            text: status[2],
+            value: 2,
+          },
+          {
+            text: status[3],
+            value: 3,
+          },
+        ],
+        onFilter: (value, record) => record.status.toString() === value,
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
         },
-        {
-          title: '操作',
-          render: () => (
-            <Fragment>
-              <a href="">编辑</a>
-              <Divider type="vertical" />
-              <Dropdown overlay={downhz}>
-                <a>
-                  更多 <Icon type="down" />
-                </a>
-              </Dropdown>
-            </Fragment>
-    ),
-    },
+      },
+      {
+        title: '操作',
+        render: () => (
+          <Fragment>
+            <a href="">编辑</a>
+            <Divider type="vertical" />
+            <Dropdown overlay={downhz}>
+              <a>
+                更多 <Icon type="down" />
+              </a>
+            </Dropdown>
+          </Fragment>
+        ),
+      },
     ];
 
-      const downhz = (
-        <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-          <Menu.Item key="check">查看</Menu.Item>
-          <Menu.Item key="del">删除</Menu.Item>
-          <Menu.Item key="cancel">停用</Menu.Item>
-          <Menu.Item key="cancelcancel">启用</Menu.Item>
-        </Menu>
+    const downhz = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="check">查看</Menu.Item>
+        <Menu.Item key="del">删除</Menu.Item>
+        <Menu.Item key="cancel">停用</Menu.Item>
+        <Menu.Item key="cancelcancel">启用</Menu.Item>
+      </Menu>
     );
 
-      const menu = (
-        <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-          <Menu.Item key="addContact">新建联系人</Menu.Item>
-          <Menu.Item key="remove">删除</Menu.Item>
-          <Menu.Item key="approval">批量审批</Menu.Item>
-        </Menu>
-    );
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleAddContact: this.handleAddContact,
+      handleModalVisible: this.handleModalVisible,
+      handleModalVisibleContact: this.handleModalVisibleContact,
+      handleCheckVisible: this.handleCheckVisible,
+      handleSalesVisible: this.handleSalesVisible,
+      handleContactVisible: this.handleContactVisible,
+    };
 
-      const parentMethods = {
-        handleAdd: this.handleAdd,
-        handleAddContact: this.handleAddContact,
-        handleModalVisible: this.handleModalVisible,
-        handleModalVisibleContact: this.handleModalVisibleContact,
-        handleCheckVisible:this.handleCheckVisible,
-      };
+    return (
+      <PageHeaderLayout>
+        <Card bordered={false}>
+          <div>
+            <div className={styles.tableList}>
+              <div className={styles.leftBlock}>{this.treeMenu()}</div>
+              <div className={styles.rightBlock}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                    新建客户
+                  </Button>
 
-      return (
-        <PageHeaderLayout>
-          <Card bordered={false}>
-            <div>
-              <div className={styles.tableList}>
-                <div className={styles.leftBlock}>{this.treeMenu()}</div>
-                <div className={styles.rightBlock}>
-                  <div className={styles.tableListForm}>{this.renderForm()}</div>
-                  <div className={styles.tableListOperator}>
-                    <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                      新建客户
-                    </Button>
-                    {selectedRows.length > 0 && (
-                      <span>
-                        <Dropdown overlay={menu}>
-                          <Button>
-                            批量操作 <Icon type="down" />
-                          </Button>
-                        </Dropdown>
-                      </span>
-                    )}
-                  </div>
-                  <StandardTable
-                    selectedRows={selectedRows}
-                    loading={loading}
-                    data={data}
-                    columns={columns}
-                    onSelectRow={this.handleSelectRows}
-                    onChange={this.handleStandardTableChange}
-                  />
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Button
+                        icon="plus"
+                        type="primary"
+                        onClick={() => this.handleSalesVisible(true)}
+                      >
+                        设置业务员
+                      </Button>
+                      <Button
+                        icon="plus"
+                        type="primary"
+                        onClick={() => this.handleContactVisible(true)}
+                      >
+                        设置联系人
+                      </Button>
+                      <Button
+                        icon="plus"
+                        type="primary"
+                        onClick={() => this.handleDeleteClick(true)}
+                      >
+                        批量删除
+                      </Button>
+                    </span>
+                  )}
                 </div>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
             </div>
-          </Card>
-          <CreateForm {...parentMethods} modalVisible={modalVisible} />
-          <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
-          <CreateFormCheck {...parentMethods} checkVisible={checkVisible} />
-        </PageHeaderLayout>
-      );
+          </div>
+        </Card>
+        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <CreateForm2 {...parentMethods} modalVisibleContact={modalVisibleContact} />
+        <CreateFormCheck {...parentMethods} checkVisible={checkVisible} />
+        <SalesManage {...parentMethods} salesVisible={salesVisible} />
+        <ContactPerson {...parentMethods} contactVisible={contactVisible} />
+      </PageHeaderLayout>
+    );
   }
 }

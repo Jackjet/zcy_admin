@@ -18,33 +18,33 @@ import styles from './UserListAdd.less';
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
-  account:'帐号',
-  employeeNumber:'工号',
-  name:'姓名',
-  branchOffice:'所属分公司',
-  department:'部门',
-  station:'岗位',
-  rank:'职级',
-  sex:'性别',
-  nation:'民族',
-  workingCondition:'工作状态',
-  nativePlace:'籍贯',
-  health:'健康状况',
-  maritalStatus:'婚姻情况',
-  education:'最高学历',
-  politicalStatus:'政治面貌',
-  hiredate:'入职时间',
-  identityCard:'身份证',
-  birthday:'生日',
-  photo:'上传照片',
-  fax:'传真',
-  mailBox:'电子邮箱',
-  homePhone:'住宅电话',
-  officePhone:'办公电话',
-  mobilePhone:'移动电话',
-  virtualTelephone:'虚拟短号',
-  address:'地址',
-  remarks:'备注',
+  account: '帐号',
+  employeeNumber: '工号',
+  name: '姓名',
+  branchOffice: '所属分公司',
+  department: '部门',
+  station: '岗位',
+  rank: '职级',
+  sex: '性别',
+  nation: '民族',
+  workingCondition: '工作状态',
+  nativePlace: '籍贯',
+  health: '健康状况',
+  maritalStatus: '婚姻情况',
+  education: '最高学历',
+  politicalStatus: '政治面貌',
+  hiredate: '入职时间',
+  identityCard: '身份证',
+  birthday: '生日',
+  photo: '上传照片',
+  fax: '传真',
+  mailBox: '电子邮箱',
+  homePhone: '住宅电话',
+  officePhone: '办公电话',
+  mobilePhone: '移动电话',
+  virtualTelephone: '虚拟短号',
+  address: '地址',
+  remarks: '备注',
 };
 
 // 照片上传方法明细
@@ -100,9 +100,8 @@ class UserListAdd extends PureComponent {
     return (
       <div>
         <Card>
-          <Form layout="inline" >
-
-            <Row className={styles['row-h']} >
+          <Form layout="inline">
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.account}>
                   {getFieldDecorator('account', {
@@ -119,7 +118,6 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-
             <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.name}>
@@ -133,7 +131,7 @@ class UserListAdd extends PureComponent {
                   {getFieldDecorator('branchOffice', {
                     rules: [{ required: true, message: '请选择所属分公司' }],
                   })(
-                    <Select placeholder="请选择所属分公司" style={{ width: 200 }} >
+                    <Select placeholder="请选择所属分公司" style={{ width: 200 }}>
                       <Option value="g">至诚</Option>
                       <Option value="y">事务所有限公司</Option>
                     </Select>
@@ -141,7 +139,6 @@ class UserListAdd extends PureComponent {
                 </Form.Item>
               </Col>
             </Row>
-
 
             <Row className={styles['row-h']}>
               <Col span={12}>
@@ -156,12 +153,12 @@ class UserListAdd extends PureComponent {
                   {getFieldDecorator('station', {
                     rules: [{ required: true, message: '请选择所属岗位' }],
                   })(
-                    <Select placeholder="请选择所属岗位" style={{ width: 200 }} >
+                    <Select placeholder="请选择所属岗位" style={{ width: 200 }}>
                       <Option value="g">总经理</Option>
                       <Option value="y">开发部</Option>
                       <Option value="s">审计部</Option>
                     </Select>
-                    )}
+                  )}
                 </Form.Item>
               </Col>
             </Row>
@@ -172,7 +169,7 @@ class UserListAdd extends PureComponent {
                   {getFieldDecorator('rank', {
                     rules: [{ required: true, message: '请选择职级' }],
                   })(
-                    <Select placeholder="请选择职级" style={{ width: 200 }} >
+                    <Select placeholder="请选择职级" style={{ width: 200 }}>
                       <Option value="1">合伙人1</Option>
                       <Option value="2">合伙人2</Option>
                       <Option value="3">合伙人3</Option>
@@ -182,17 +179,17 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.sex}>
                   {getFieldDecorator('sex', {
                     rules: [{ required: true, message: '请选择性别' }],
                   })(
-                    <Select placeholder="请选择性别" style={{ width: 200 }} >
+                    <Select placeholder="请选择性别" style={{ width: 200 }}>
                       <Option value="1">男</Option>
                       <Option value="2">女</Option>
                     </Select>
-                    )}
+                  )}
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -204,13 +201,13 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.workingCondition}>
                   {getFieldDecorator('workingCondition', {
                     rules: [{ required: true, message: '请选择工作状态' }],
                   })(
-                    <Select placeholder="请选择工作状态" style={{ width: 200 }} >
+                    <Select placeholder="请选择工作状态" style={{ width: 200 }}>
                       <Option value="1">在职</Option>
                       <Option value="2">外派</Option>
                       <Option value="3">请假</Option>
@@ -227,13 +224,13 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.health}>
                   {getFieldDecorator('health', {
                     rules: [{ required: true, message: '请输入健康状态' }],
                   })(
-                    <Select placeholder="请输入健康状态" style={{ width: 200 }} >
+                    <Select placeholder="请输入健康状态" style={{ width: 200 }}>
                       <Option value="1">良好</Option>
                       <Option value="2">一般</Option>
                       <Option value="3">体质差</Option>
@@ -246,7 +243,7 @@ class UserListAdd extends PureComponent {
                   {getFieldDecorator('maritalStatus', {
                     rules: [{ required: true, message: '请输入婚姻状况' }],
                   })(
-                    <Select placeholder="请输入婚姻状况" style={{ width: 200 }} >
+                    <Select placeholder="请输入婚姻状况" style={{ width: 200 }}>
                       <Option value="1">已婚</Option>
                       <Option value="2">未婚</Option>
                     </Select>
@@ -255,13 +252,13 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.education}>
                   {getFieldDecorator('education', {
                     rules: [{ required: true, message: '请输入健最高学历' }],
                   })(
-                    <Select placeholder="请输入健最高学历" style={{ width: 200 }} >
+                    <Select placeholder="请输入健最高学历" style={{ width: 200 }}>
                       <Option value="1">博士后</Option>
                       <Option value="2">博士</Option>
                       <Option value="3">硕士</Option>
@@ -280,7 +277,7 @@ class UserListAdd extends PureComponent {
                   {getFieldDecorator('politicalStatus', {
                     rules: [{ required: true, message: '请输入政治面貌' }],
                   })(
-                    <Select placeholder="请输入政治面貌" style={{ width: 200 }} >
+                    <Select placeholder="请输入政治面貌" style={{ width: 200 }}>
                       <Option value="1">党员</Option>
                       <Option value="2">共青团员</Option>
                       <Option value="3">群众</Option>
@@ -290,7 +287,7 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.hiredate}>
                   {getFieldDecorator('hiredate', {
@@ -307,7 +304,7 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.birthday}>
                   {getFieldDecorator('birthday', {
@@ -321,16 +318,16 @@ class UserListAdd extends PureComponent {
                     rules: [{ required: true, message: '请上传照片' }],
                   })(
                     <Upload {...props} style={{ width: 200 }}>
-                      <Button >
+                      <Button>
                         <Icon type="upload" /> 请上传照片
                       </Button>
                     </Upload>
-                    )}
+                  )}
                 </Form.Item>
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.fax}>
                   {getFieldDecorator('fax', {
@@ -347,7 +344,7 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.homePhone}>
                   {getFieldDecorator('homePhone', {
@@ -364,7 +361,7 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.homePhone}>
                   {getFieldDecorator('homePhone', {
@@ -381,28 +378,24 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                   {getFieldDecorator('mobilePhone', {
                     rules: [{ required: true, message: '请输入移动电话' }],
-                  })(
-                    <Input placeholder="请输入移动电话" style={{ width: 200 }} />
-                  )}
+                  })(<Input placeholder="请输入移动电话" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label={fieldLabels.virtualTelephone}>
                   {getFieldDecorator('virtualTelephone', {
                     rules: [{ required: true, message: '请输入虚拟短号' }],
-                  })(
-                    <Input placeholder="请输入虚拟短号" style={{ width: 200 }} />
-                  )}
+                  })(<Input placeholder="请输入虚拟短号" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.address}>
                   {getFieldDecorator('address')(
@@ -412,7 +405,7 @@ class UserListAdd extends PureComponent {
               </Col>
             </Row>
 
-            <Row className={styles['row-h']} >
+            <Row className={styles['row-h']}>
               <Col span={24}>
                 <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                   {getFieldDecorator('remarks')(

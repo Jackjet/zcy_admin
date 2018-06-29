@@ -43,7 +43,7 @@ const CreateForm = Form.create()(props => {
       title="商机基本信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
-      width='90%'
+      width="90%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -61,10 +61,17 @@ const CreateFormCheck = Form.create()(props => {
       title="查看"
       style={{ top: 60 }}
       visible={checkVisible}
-      width='60%'
+      width="60%"
       maskClosable={false}
       onOk={okHandle}
-      footer={null, <Button onClick={okHandle} type="primary" >知道了</Button>}
+      footer={
+        (null,
+        (
+          <Button onClick={okHandle} type="primary">
+            知道了
+          </Button>
+        ))
+      }
     >
       <CheckTabs />
     </Modal>
@@ -79,7 +86,7 @@ const CreateFormCheck = Form.create()(props => {
 export default class customerList extends PureComponent {
   state = {
     modalVisible: false,
-    checkVisible:false,
+    checkVisible: false,
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
@@ -348,7 +355,7 @@ export default class customerList extends PureComponent {
       handleAdd: this.handleAdd,
       handleAddContact: this.handleAddContact,
       handleModalVisible: this.handleModalVisible,
-      handleCheckVisible:this.handleCheckVisible,
+      handleCheckVisible: this.handleCheckVisible,
     };
 
     return (

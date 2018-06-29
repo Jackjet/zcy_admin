@@ -51,7 +51,7 @@ const CreateForm = Form.create()(props => {
       title="新增员工信息"
       style={{ top: 20 }}
       visible={modalVisible}
-      width='55%'
+      width="55%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}

@@ -1,14 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Col,
-  Row,
-  DatePicker,
-  Input,
-  Select,
-  Checkbox,
-} from 'antd';
+import { Card, Form, Col, Row, DatePicker, Input, Select, Checkbox } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
@@ -16,29 +7,28 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
-  contractCode:'合同编码',
-  contractType:'合同类别',
-  years:'年度',
-  projectName:'项目名称',
-  projectStatus:'项目状态',
-  contractTitle:'合同标题',
-  dfCompany:'对方公司',
-  authorizedAgent:'客户授权代理人',
-  PartyAcompany:'甲方公司',
-  PartyBcompany:'乙方公司',
-  fatherContract:'父合同',
-  signDate:'签订日期',
-  paymentMethod:'付款方式',
-  businessType:'业务类别',
-  contractSignPlace:'合同签订地点',
-  contractSubject:'合同标的',
+  contractCode: '合同编码',
+  contractType: '合同类别',
+  years: '年度',
+  projectName: '项目名称',
+  projectStatus: '项目状态',
+  contractTitle: '合同标题',
+  dfCompany: '对方公司',
+  authorizedAgent: '客户授权代理人',
+  PartyAcompany: '甲方公司',
+  PartyBcompany: '乙方公司',
+  fatherContract: '父合同',
+  signDate: '签订日期',
+  paymentMethod: '付款方式',
+  businessType: '业务类别',
+  contractSignPlace: '合同签订地点',
+  contractSubject: '合同标的',
   startDate: '开始日期',
   endDate: '结束日期',
   totalAmount: '总金额',
   fzperson: '项目负责人',
   remark: '备注',
 };
-
 
 const remarkcol = {
   wrapperCol: {
@@ -51,12 +41,10 @@ const remarkcol = {
   },
 };
 const formhz13 = {
-  labelCol:{
-
+  labelCol: {
     style: {
       marginBottom: 17,
     },
-
   },
   wrapperCol: {
     style: {
@@ -78,7 +66,6 @@ const formhz12 = {
     width: '96.66666667%',
   },
 };
-
 
 const formhz11 = {
   wrapperCol: {
@@ -115,7 +102,6 @@ class ContractCheck extends PureComponent {
         <Card>
           <Form layout="inline">
             <Row className={styles['row-h']}>
-
               <Col span={8}>
                 <Form.Item {...formhz11} label={fieldLabels.contractCode}>
                   {getFieldDecorator('contractCode', {
@@ -157,11 +143,9 @@ class ContractCheck extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-
             </Row>
 
             <Row className={styles['row-h']}>
-
               <Col span={8}>
                 <Form.Item {...formhz11} label={fieldLabels.projectName}>
                   {getFieldDecorator('projectName', {
@@ -236,11 +220,9 @@ class ContractCheck extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-
             </Row>
 
             <Row className={styles['row-h']}>
-
               <Col span={8}>
                 <Form.Item {...formhz11} label={fieldLabels.PartyAcompany}>
                   {getFieldDecorator('PartyAcompany', {
@@ -281,7 +263,6 @@ class ContractCheck extends PureComponent {
             </Row>
 
             <Row className={styles['row-h']}>
-
               <Col span={8}>
                 <Form.Item {...formhz11} label={fieldLabels.fatherContract}>
                   {getFieldDecorator('fatherContract', {
@@ -336,7 +317,6 @@ class ContractCheck extends PureComponent {
               </Col>
             </Row>
 
-
             <Row className={styles['fn-mb-15']}>
               <Col>
                 <Form.Item {...formhz13} label={fieldLabels.businessType}>
@@ -376,7 +356,9 @@ class ContractCheck extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col>
                 <Form.Item {...formhz12} label={fieldLabels.contractSignPlace}>
-                  {getFieldDecorator('contractSignPlace')(<Input placeholder="请输入合同签订地点" />)}
+                  {getFieldDecorator('contractSignPlace')(
+                    <Input placeholder="请输入合同签订地点" />
+                  )}
                 </Form.Item>
               </Col>
             </Row>
@@ -394,13 +376,14 @@ class ContractCheck extends PureComponent {
                 <Form.Item label="项目日期">
                   {getFieldDecorator('date', {
                     rules: [{ required: false, message: '请选择日期' }],
-                  })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
+                  })(
+                    <RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />
+                  )}
                 </Form.Item>
               </Col>
             </Row>
 
             <Row className={styles['row-h']}>
-
               <Col span={12}>
                 <Form.Item label={fieldLabels.totalAmount}>
                   {getFieldDecorator('totalAmount', {
@@ -430,7 +413,6 @@ class ContractCheck extends PureComponent {
                 </Form.Item>
               </Col>
             </Row>
-
           </Form>
         </Card>
       </div>

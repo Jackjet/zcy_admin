@@ -1,8 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
 import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -14,7 +12,6 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
   Modal,
   message,
@@ -25,6 +22,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './projectList.less';
 import ProjectAdd from '../add/ProjectAdd2.js';
+import ProjectCheckTabs from '../list/ProjectCheckTabs.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -50,13 +48,29 @@ const CreateForm = Form.create()(props => {
     <Modal
       title="项目基本信息新增"
       visible={modalVisible}
-      mask={'true'}
-      width={'90%'}
+      width="90%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
       <ProjectAdd />
+    </Modal>
+  );
+});
+const CheckProjectList = Form.create()(props => {
+  const { checkVisible, handleCheckVisible } = props;
+  const okHandle = () => handleCheckVisible();
+  return (
+    <Modal
+      title="项目基本信息新增"
+      visible={checkVisible}
+      width="90%"
+      maskClosable={false}
+      onOk={okHandle}
+      onCancel={() => handleCheckVisible()}
+      footer={null}
+    >
+      <ProjectCheckTabs />
     </Modal>
   );
 });
@@ -69,6 +83,7 @@ const CreateForm = Form.create()(props => {
 export default class projectList extends PureComponent {
   state = {
     modalVisible: false,
+    checkVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -156,6 +171,9 @@ export default class projectList extends PureComponent {
           },
         });
         break;
+      case 'check':
+        this.handleCheckVisible(true);
+        break;
       default:
         break;
     }
@@ -197,6 +215,12 @@ export default class projectList extends PureComponent {
     });
   };
 
+  handleCheckVisible = flag => {
+    this.setState({
+      checkVisible: !!flag,
+    });
+  };
+
   handleAdd = fields => {
     this.props.dispatch({
       type: 'rule/add',
@@ -214,7 +238,7 @@ export default class projectList extends PureComponent {
   rootSubmenuKeys = ['sub1'];
 
   treemenu() {
-    const SubMenu = Menu.SubMenu;
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -370,8 +394,7 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
-
+    const { selectedRows, modalVisible, checkVisible } = this.state;
     const columns = [
       {
         title: '项目编号',
@@ -433,7 +456,6 @@ export default class projectList extends PureComponent {
         sorter: true,
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
-
       {
         title: '操作',
         render: () => (
@@ -441,9 +463,6 @@ export default class projectList extends PureComponent {
             <a href="">编辑</a>
             <Divider type="vertical" />
             <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
               <a>
                 更多 <Icon type="down" />
               </a>
@@ -455,7 +474,7 @@ export default class projectList extends PureComponent {
 
     const downhz = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
+        <Menu.Item key="check">查看</Menu.Item>
         <Menu.Item key="del">删除</Menu.Item>
         <Menu.Item key="cancel">停用</Menu.Item>
         <Menu.Item key="cancelcancel">启用</Menu.Item>
@@ -472,6 +491,7 @@ export default class projectList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      handleCheckVisible: this.handleCheckVisible,
     };
 
     return (
@@ -507,6 +527,7 @@ export default class projectList extends PureComponent {
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
       </PageHeaderLayout>
     );
   }

@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -62,9 +62,9 @@ function onChange(value) {
 
 const fieldLabels = {
   name: '项目名称',
-  recordTitle:'日志标题',
-  category:'类别',
-  contactTime:'联系时间'
+  recordTitle: '日志标题',
+  category: '类别',
+  contactTime: '联系时间',
 };
 
 const cnumcol = {
@@ -165,7 +165,6 @@ const formhz12 = {
     width: '96.66666667%',
   },
 };
-
 
 const formhz11 = {
   wrapperCol: {
@@ -268,7 +267,7 @@ class workRecordAdd extends PureComponent {
                 <Form.Item {...formhz11} label={fieldLabels.name}>
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入项目名称' }],
-                  })(<Input placeholder="请输入项目名称"/>)}
+                  })(<Input placeholder="请输入项目名称" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -277,7 +276,7 @@ class workRecordAdd extends PureComponent {
                 <Form.Item {...formhz11} label={fieldLabels.recordTitle}>
                   {getFieldDecorator('recordTitle', {
                     rules: [{ required: true, message: '请选择日志标题' }],
-                  })(<Input placeholder="请选择日志标题"/>)}
+                  })(<Input placeholder="请选择日志标题" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -308,9 +307,7 @@ class workRecordAdd extends PureComponent {
             <Row className={styles['row-h']}>
               <Col>
                 <Form.Item {...startdatecol}>
-                  {getFieldDecorator('textAreaInput')(
-                    <textarea></textarea>
-                  )}
+                  {getFieldDecorator('textAreaInput')(<textarea />)}
                 </Form.Item>
               </Col>
             </Row>

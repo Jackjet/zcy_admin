@@ -60,7 +60,7 @@ const CreateForm = Form.create()(props => {
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class  extends PureComponent {
+export default class extends PureComponent {
   state = {
     modalVisible: false,
     selectedRows: [],
