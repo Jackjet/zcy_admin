@@ -366,12 +366,12 @@ export default class customerList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col >
+          <Col md={8} sm={24}>
             <FormItem label="关键字">
               {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
             </FormItem>
           </Col>
-          <Col >
+          <Col md={8} sm={24}>
             <FormItem label="行业">
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
