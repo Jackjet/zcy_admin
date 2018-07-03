@@ -23,9 +23,9 @@ const menuData = [
         path: 'business',
       },
       {
-        key: 'visitList',
+        key: 'workplaceList',
         name: '拜访管理',
-        path: 'visit',
+        path: 'workplace',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -49,22 +49,17 @@ const menuData = [
       {
         key: 'workplanList',
         name: '工时计划管理',
-        path: 'workPlanManage',
+        path: 'workplan',
         children: [
           {
             key: 'workplanlist1',
             name: '项目计划',
-            path: 'workPlan',
+            path: 'workplan12',
           },
           {
-            key: 'workquery',
+            key: 'pworkquery',
             name: '项目工时查询',
             path: 'workquery',
-          },
-          {
-            key: 'workDiaryList',
-            name: '工作日记',
-            path: 'workDiary',
           },
         ],
         // hideInBreadcrumb: true,
@@ -73,7 +68,7 @@ const menuData = [
       {
         key: 'workrocord',
         name: '项目工作记录',
-        path: 'workRecord',
+        path: 'workplan1',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -120,11 +115,6 @@ const menuData = [
             key: 'invoiceList',
             name: '开票管理',
             path: 'invoice',
-          },
-          {
-            key: 'circulation',
-            name: '业务流转',
-            path: 'businessCirculation',
           },
         ],
       },

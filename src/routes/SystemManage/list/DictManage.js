@@ -21,7 +21,7 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './DictManage.less';
-import DictManageAdd from '../add/DictManageAdd';
+import DictTypeAdd from '../add/DictTypeAdd';
 
 const SubMenu = Menu.SubMenu;
 const statusMap = ['success', 'error'];
@@ -44,15 +44,16 @@ const CreateForm = Form.create()(props => {
   };
   return (
     <Modal
-      title="数据字典信息新增"
+      title="客户基本信息新增"
       style={{ top: 20 }}
       visible={modalVisible}
-      width="30%"
+      mask={'true'}
+      width={'60%'}
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <DictManageAdd />
+      <DictTypeAdd />
     </Modal>
   );
 });
