@@ -367,13 +367,8 @@ export default class customerList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={5} sm={24}>
-            <FormItem label="客户编码">
-              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码" />)}
-            </FormItem>
-          </Col>
-          <Col md={5} sm={24}>
-            <FormItem label="客户名称">
-              {getFieldDecorator('customerName')(<Input placeholder="请输入客户名称" />)}
+            <FormItem label="关键字">
+              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
             </FormItem>
           </Col>
           <Col md={5} sm={24}>
