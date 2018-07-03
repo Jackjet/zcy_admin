@@ -79,7 +79,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
     },
     '/crm/customer': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/customerList')),
     },
     '/crm/business': {
       component: dynamicWrapper(app, ['list'], () =>
@@ -102,7 +102,7 @@ export const getRouterData = app => {
       name: '数据字典管理',
     },
     '/project/projectinfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ProjectList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
       name: '项目信息管理',
     },
     '/project/contract': {
@@ -118,7 +118,7 @@ export const getRouterData = app => {
       name: '工作日记',
     },
     '/project/workRecord': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/WorkRecord')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
       name: '项目工作记录',
     },
     '/fi/fiinvoice/businessCirculation': {
