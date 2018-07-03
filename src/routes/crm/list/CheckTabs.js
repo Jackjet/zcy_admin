@@ -84,7 +84,7 @@ class CheckTabs extends PureComponent {
         <TabPane
           tab={
             <span>
-              <Icon type="eye" />客户拜访信息
+              <Icon type="eye" />客户拜访的信息
             </span>
           }
           key="5"
