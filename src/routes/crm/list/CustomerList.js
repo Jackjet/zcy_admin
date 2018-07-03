@@ -37,14 +37,18 @@ const getValue = obj =>
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
 
+
 // 添加客户
 const AddCustomer = Form.create()(props => {
   const { customerVisible, form, handleCustomerAdd, handleCustomerVisible } = props;
   const okHandle = () => {
-    form.validateFieldsAndScroll((err, fieldsValue) => {
+    form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
       handleCustomerAdd(fieldsValue);
+
+      console.log(  " fieldsValue: " + Object.keys(fieldsValue));
+
     });
   };
 
@@ -58,6 +62,11 @@ const AddCustomer = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleCustomerVisible()}
     >
+      {/*<Form.Item label="客户名称">
+        {form.getFieldDecorator('customerCode', {
+          rules: [{ required: true, message: '请输入客户编码' }],
+        })(<Input placeholder="请输入客户编码" className={styles['ant-input-lg']} />)}
+      </Form.Item>*/}
       <CustomerAdd />
     </Modal>
   );
@@ -271,6 +280,8 @@ export default class CustomerList extends PureComponent {
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
 
+      console.log(fieldsValue);
+
       this.setState({
         formValues: values,
       });
@@ -372,18 +383,17 @@ export default class CustomerList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="行业">
-              {getFieldDecorator('status')(
+              {getFieldDecorator('industry')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">制造业</Option>
-                  <Option value="f">服务业</Option>
-                  <Option value="fd">房地产建筑</Option>
-                  <Option value="sn">三农业务</Option>
-                  <Option value="zf">政府购买</Option>
-                  <Option value="sy">商业</Option>
-                  <Option value="jr">金融</Option>
-                  <Option value="fyl">非营利组织</Option>
-                  <Option value="other">其他</Option>
+                  <Option value="制造业">制造业</Option>
+                  <Option value="服务业">服务业</Option>
+                  <Option value="房地产建筑">房地产建筑</Option>
+                  <Option value="三农业务">三农业务</Option>
+                  <Option value="政府购买">政府购买</Option>
+                  <Option value="商业">商业</Option>
+                  <Option value="金融">金融</Option>
+                  <Option value="非营利组织">非营利组织</Option>
+                  <Option value="其他">其他</Option>
                 </Select>
               )}
             </FormItem>

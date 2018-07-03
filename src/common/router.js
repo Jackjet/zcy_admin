@@ -93,10 +93,6 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
       name: '数据字典类型管理',
     },
-    '/cus': {
-      component: dynamicWrapper(app, [], () => import('../routes/crm/add/CustomerAdd')),
-      name: '数据字典类型管理',
-    },
     '/system/dictManage': {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
       name: '数据字典管理',
