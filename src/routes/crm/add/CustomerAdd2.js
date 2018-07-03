@@ -1,9 +1,27 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Col, Row, Input, Select, Popover, Cascader } from 'antd';
+import {
+  Card,
+  Button,
+  Form,
+  Icon,
+  Col,
+  Row,
+  DatePicker,
+  // TimePicker,
+  Input,
+  InputNumber,
+  Select,
+  Popover,
+  Cascader,
+} from 'antd';
 import { connect } from 'dva';
+// import FooterToolbar from 'components/FooterToolbar';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+// import TableForm from './TableForm';
 import styles from './style.less';
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 const optionshz = [
   {
     value: 'zhejiang',
@@ -44,21 +62,21 @@ function onChange(value) {
 }
 
 const fieldLabels = {
-  customerCode: '客户编码',
-  customerLevel: '客户等级',
-  industry: '所属行业',
-  customerName: '客户名称',
+  number: '客户编码',
+  level: '客户等级',
+  industy: '所属行业',
+  name: '客户名称',
   dateRange: '生效日期',
-  simpleName: '简称',
+  simplename: '简称',
   pinyin: ' 拼 音 码 ',
   url: '网站主页',
-  taxCode: '税务登记号',
-  mobilePhone: '移动手机',
-  email: '电子邮箱',
-  companyPhone: '公司电话',
-  postalCode: '邮政编码',
+  taxcode: '税务登记号',
+  mobilephone: '移动手机',
+  emial: '电子邮箱',
+  phone: '公司电话',
+  postalcode: '邮政编码',
   region: '所在区域',
-  incomeTax: '所得税征收方式',
+  incometax: '所得税征收方式',
   company: '所属公司',
   address: '详细地址',
   remark: '备注',
@@ -94,7 +112,6 @@ const addresscol = {
     paddingLeft: 10,
   },
 };
-
 const urlcol = {
   style: {
     paddingLeft: 10,
@@ -217,8 +234,8 @@ class customerAdd2 extends PureComponent {
           <Form layout="inline">
             <Row className={styles['fn-mb-15']}>
               <Col>
-                <Form.Item {...formhz11} label={fieldLabels.customerName}>
-                  {getFieldDecorator('customerName', {
+                <Form.Item {...formhz11} label={fieldLabels.name}>
+                  {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入客户名称' }],
                   })(<Input placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
                 </Form.Item>
@@ -226,8 +243,8 @@ class customerAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.customerLevel}>
-                  {getFieldDecorator('customerLevel', {
+                <Form.Item label={fieldLabels.level}>
+                  {getFieldDecorator('level', {
                     rules: [{ required: true, message: '请选择客户等级' }],
                   })(
                     <Select placeholder="请选择客户等级" style={{ width: 200 }}>
@@ -240,8 +257,8 @@ class customerAdd2 extends PureComponent {
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={fieldLabels.industry}>
-                  {getFieldDecorator('industry', {
+                <Form.Item label={fieldLabels.industy}>
+                  {getFieldDecorator('industy', {
                     rules: [{ required: true, message: '请选择行业' }],
                   })(
                     <Select placeholder="请选择行业" style={{ width: 200 }}>
@@ -260,8 +277,8 @@ class customerAdd2 extends PureComponent {
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={fieldLabels.incomeTax}>
-                  {getFieldDecorator('incomeTax', {
+                <Form.Item label={fieldLabels.incometax}>
+                  {getFieldDecorator('incometax', {
                     rules: [{ required: true, message: '请选择所得税征收方式' }],
                   })(
                     <Select placeholder="请选择所得税征收方式" style={{ width: 200 }}>
@@ -274,8 +291,8 @@ class customerAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item {...cnumcol} label={fieldLabels.customerCode}>
-                  {getFieldDecorator('customerCode', {
+                <Form.Item {...cnumcol} label={fieldLabels.number}>
+                  {getFieldDecorator('number', {
                     rules: [{ required: false, message: '请输入客户编码' }],
                   })(<Input placeholder="请输入客户编码" style={{ width: 200 }} />)}
                 </Form.Item>
@@ -288,8 +305,8 @@ class customerAdd2 extends PureComponent {
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item {...simplenamecol} label={fieldLabels.simpleName}>
-                  {getFieldDecorator('simpleName', {
+                <Form.Item {...simplenamecol} label={fieldLabels.simplename}>
+                  {getFieldDecorator('simplename', {
                     rules: [{ required: false, message: '请输入简称' }],
                   })(<Input placeholder="请输入简称" style={{ width: 200 }} />)}
                 </Form.Item>
@@ -298,22 +315,22 @@ class customerAdd2 extends PureComponent {
 
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.mobilePhone}>
-                  {getFieldDecorator('mobilePhone', {
+                <Form.Item label={fieldLabels.mobilephone}>
+                  {getFieldDecorator('mobilephone', {
                     rules: [{ required: true, message: '请输入手机号码' }],
                   })(<Input placeholder="请输入手机号码" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={fieldLabels.email}>
-                  {getFieldDecorator('email', {
+                <Form.Item label={fieldLabels.emial}>
+                  {getFieldDecorator('emial', {
                     rules: [{ required: true, message: '请输入电子邮箱' }],
                   })(<Input placeholder="请输入电子邮箱" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item {...companyphonecol} label={fieldLabels.companyPhone}>
-                  {getFieldDecorator('companyPhone', {
+                <Form.Item {...companyphonecol} label={fieldLabels.phone}>
+                  {getFieldDecorator('phone', {
                     rules: [{ required: true, message: '请输入公司电话' }],
                   })(<Input placeholder="请输入公司电话" style={{ width: 200 }} />)}
                 </Form.Item>
@@ -322,8 +339,8 @@ class customerAdd2 extends PureComponent {
 
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.postalCode}>
-                  {getFieldDecorator('postalCode', {
+                <Form.Item label={fieldLabels.postalcode}>
+                  {getFieldDecorator('postalcode', {
                     rules: [{ required: true, message: '请输入邮政编码' }],
                   })(<Input placeholder="请输入邮政编码" style={{ width: 200 }} />)}
                 </Form.Item>
@@ -361,8 +378,8 @@ class customerAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.taxCode}>
-                  {getFieldDecorator('taxCode', {
+                <Form.Item label={fieldLabels.taxcode}>
+                  {getFieldDecorator('taxcode', {
                     rules: [{ required: false, message: '请输入税务登记号' }],
                   })(<Input placeholder="请输入税务登记号" style={{ width: 200 }} />)}
                 </Form.Item>

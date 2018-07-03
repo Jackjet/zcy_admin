@@ -1,4 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
+
 import { connect } from 'dva';
 import moment from 'moment';
 
@@ -24,7 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/orgUnitList.less';
 import OrgUnitAdd from '../add/OrgUnitAdd2';
-
+import BasicForm from '../../Forms/BasicForm';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -32,6 +33,7 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+const statusMap = ['default', 'processing', 'success', 'error'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -54,7 +56,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <OrgUnitAdd />
+      <BasicForm />
     </Modal>
   );
 });
@@ -91,9 +93,12 @@ export default class orgUnitList extends PureComponent {
     }
   };
 
+  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -137,7 +142,9 @@ export default class orgUnitList extends PureComponent {
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
+
     if (!selectedRows) return;
+
     switch (e.key) {
       case 'remove':
         dispatch({
@@ -274,6 +281,7 @@ export default class orgUnitList extends PureComponent {
   render() {
     const { rule: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
+
     const columns = [
       {
         title: '组织编号',
@@ -322,7 +330,7 @@ export default class orgUnitList extends PureComponent {
 
     const downhz = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="check">查看</Menu.Item>
+        <Menu.Item key="edit">查看</Menu.Item>
         <Menu.Item key="del">删除</Menu.Item>
         <Menu.Item key="cancel">停用</Menu.Item>
         <Menu.Item key="cancelcancel">启用</Menu.Item>

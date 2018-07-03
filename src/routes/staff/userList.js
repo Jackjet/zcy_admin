@@ -21,11 +21,10 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './projectList.less';
-import ProjectAdd from '../add/ProjectAdd2.js';
-
+import StandardTable from '../../components/StandardTable';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import styles from '../staff/userList.less';
+import OrgUnitAdd from '../org/add/OrgUnitAdd2';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -34,7 +33,7 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+const status = ['离职', '在职', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -48,15 +47,16 @@ const CreateForm = Form.create()(props => {
 
   return (
     <Modal
-      title="项目基本信息新增"
+      title="新增员工信息"
+      style={{ top: 20 }}
       visible={modalVisible}
       mask={'true'}
-      width={'90%'}
+      width={'60%'}
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ProjectAdd />
+      <OrgUnitAdd />
     </Modal>
   );
 });
@@ -66,7 +66,7 @@ const CreateForm = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class projectList extends PureComponent {
+export default class userList extends PureComponent {
   state = {
     modalVisible: false,
     expandForm: false,
@@ -74,6 +74,7 @@ export default class projectList extends PureComponent {
     formValues: {},
     openKeys: ['sub1'],
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -91,6 +92,8 @@ export default class projectList extends PureComponent {
       });
     }
   };
+
+  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -220,21 +223,19 @@ export default class projectList extends PureComponent {
         mode="inline"
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
-        style={{ width: 140 }}
+        style={{ width: 130 }}
       >
         <SubMenu
           key="sub1"
           title={
             <span>
-              <span>项目类别</span>
+              <span>至诚</span>
             </span>
           }
         >
-          <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">咨询报告</Menu.Item>
-          <Menu.Item key="3">招标代理业务项目</Menu.Item>
-          <Menu.Item key="4">打包项目</Menu.Item>
-          <Menu.Item key="5">2010年免审批工程造价、招投标项目</Menu.Item>
+          <Menu.Item key="1">浙江至诚会计师事务所有限公司</Menu.Item>
+          <Menu.Item key="2">杭州至诚税务师事务所有限公司</Menu.Item>
+          <Menu.Item key="3">浙江中嘉资产评估有限公司</Menu.Item>
         </SubMenu>
       </Menu>
     );
@@ -246,28 +247,11 @@ export default class projectList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="编号名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
+            <FormItem label="关键字">
+              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="年度">
-              {getFieldDecorator('years', {
-                rules: [{ required: true, message: '请选择年度' }],
-              })(
-                <Select placeholder="请选择年度" style={{ width: 200 }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">2018</Option>
-                  <Option value="f">2019</Option>
-                  <Option value="fd">2020</Option>
-                  <Option value="sn">2021</Option>
-                  <Option value="zf">2022</Option>
-                  <Option value="sy">2023</Option>
-                  <Option value="jr">2024</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
+
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
@@ -276,96 +260,22 @@ export default class projectList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                更多 <Icon type="down" />
-              </a>
             </span>
+            <Button
+              className={styles.buttonadd}
+              icon="plus"
+              type="primary"
+              onClick={() => this.handleModalVisible(true)}
+            >
+              新建
+            </Button>
           </Col>
         </Row>
       </Form>
     );
   }
-
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="编码名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="负责人">
-              {getFieldDecorator('pinyin')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={8} sm={24}>
-            <FormItem label="负责公司">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="客户">
-              {getFieldDecorator('customer')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">制造业</Option>
-                  <Option value="f">服务业</Option>
-                  <Option value="fd">房地产建筑</Option>
-                  <Option value="sn">三农业务</Option>
-                  <Option value="zf">政府购买</Option>
-                  <Option value="sy">商业</Option>
-                  <Option value="jr">金融</Option>
-                  <Option value="fyl">非营利组织</Option>
-                  <Option value="other">其他</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24} />
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={16} sm={24}>
-            <FormItem label="项目日期">
-              {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择日期' }],
-              })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </span>
-        </div>
-      </Form>
-    );
-  }
-
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    return this.renderSimpleForm();
   }
 
   render() {
@@ -374,19 +284,32 @@ export default class projectList extends PureComponent {
 
     const columns = [
       {
-        title: '项目编号',
+        title: '工号',
         dataIndex: 'no',
       },
       {
-        title: '项目名称',
+        title: '姓名',
         dataIndex: 'name',
       },
       {
-        title: '负责人',
-        dataIndex: 'linkman',
+        title: '性别',
+        dataIndex: 'phone',
+      },
+
+      {
+        title: '岗位',
+        dataIndex: 'fzperson',
       },
       {
-        title: '项目状态',
+        title: '移动电话',
+        dataIndex: 'company',
+      },
+      {
+        title: '办公电话',
+        dataIndex: 'address',
+      },
+      {
+        title: '状态',
         dataIndex: 'status',
         filters: [
           {
@@ -411,29 +334,6 @@ export default class projectList extends PureComponent {
           return <Badge status={statusMap[val]} text={status[val]} />;
         },
       },
-      {
-        title: '负责公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '项目费用',
-        dataIndex: 'fee',
-      },
-      {
-        title: '客户名称',
-        dataIndex: 'cusname',
-      },
-      {
-        title: '客户联系人',
-        dataIndex: 'cuslinkmen',
-      },
-      {
-        title: '执行时间',
-        dataIndex: 'updatedAt',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-
       {
         title: '操作',
         render: () => (
@@ -482,9 +382,6 @@ export default class projectList extends PureComponent {
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                  新建
-                </Button>
                 {selectedRows.length > 0 && (
                   <span>
                     <Dropdown overlay={menu}>
