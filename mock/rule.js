@@ -5,6 +5,7 @@ let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
     key: i,
+    // 数据不能选中
     disabled: i % 6 === 0,
     href: 'https://ant.design',
     avatar: [
@@ -25,6 +26,8 @@ for (let i = 0; i < 46; i += 1) {
     updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
+    customerCode:`CMD ${i}`,
+    customerName:`优酸乳 ${i}`,
   });
 }
 
@@ -59,8 +62,9 @@ export function getRule(req, res, u) {
     dataSource = filterDataSource;
   }
 
-  if (params.no) {
-    dataSource = dataSource.filter(data => data.no.indexOf(params.no) > -1);
+  // 过滤搜索的字段
+  if (params.customerCode) {
+    dataSource = dataSource.filter(data => data.customerCode.indexOf(params.customerCode) > -1);
   }
 
   let pageSize = 10;
@@ -109,6 +113,7 @@ export function postRule(req, res, u, b) {
         ][i % 2],
         no: `TradeCode ${i}`,
         title: `一个任务名称 ${i}`,
+        customerName: `大新昌`,
         owner: '曲丽丽',
         linkman: '汪工',
         company: '至诚云',

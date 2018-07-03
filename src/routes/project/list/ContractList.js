@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ContractList.less';
+import styles from './Style.less';
 import ContractAdd from '../add/ContractAdd.js';
 import ContractViewTabs from '../list/ContractViewTabs.js';
 

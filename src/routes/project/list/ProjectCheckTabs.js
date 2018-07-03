@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Tabs, Icon, Form } from 'antd';
 import { connect } from 'dva';
-import ProjectCheck from '../select/ProjectInfo.js';
+import ProjectInfo from '../select/ProjectInfo.js';
 import ProjectPlanList from '../../project/ProjecetPlan/ProjectPlanList.js';
 import WorkDiaryView from '../select/WorkDiaryView.js';
-import ContractListView from '../select/ContractListView.js';
+import ContractForProject from '../select/ContractForProject.js';
 import ReportList from '../list/ReportList.js';
 import ProcedureList from '../procedure/ProcedureList.js';
 import ProjectMemberList from '../projectMember/ProjectMemberList.js';
@@ -38,7 +38,7 @@ class ProjectCheckTabs extends PureComponent {
           }
           key="1"
         >
-          <ProjectCheck />
+          <ProjectInfo />
         </TabPane>
         <TabPane
           tab={
@@ -63,12 +63,12 @@ class ProjectCheckTabs extends PureComponent {
         <TabPane
           tab={
             <span>
-              <Icon type="switcher" />合同
+              <Icon type="switcher" />所属合同
             </span>
           }
           key="4"
         >
-          <ContractListView />
+          <ContractForProject />
         </TabPane>
         <TabPane
           tab={

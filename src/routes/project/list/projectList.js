@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './projectList.less';
+import styles from './Style.less';
 import ProjectAdd from '../add/ProjectAdd2.js';
 import ProjectCheckTabs from '../list/ProjectCheckTabs.js';
 
@@ -34,7 +34,7 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-const CreateForm = Form.create()(props => {
+const AddProject = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -57,12 +57,12 @@ const CreateForm = Form.create()(props => {
     </Modal>
   );
 });
-const CheckProjectList = Form.create()(props => {
+const ViewProjectTabs = Form.create()(props => {
   const { checkVisible, handleCheckVisible } = props;
   const okHandle = () => handleCheckVisible();
   return (
     <Modal
-      title="项目基本信息新增"
+      title="项目信息查看"
       visible={checkVisible}
       width="90%"
       maskClosable={false}
@@ -526,8 +526,8 @@ export default class projectList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
+        <AddProject {...parentMethods} modalVisible={modalVisible} />
+        <ViewProjectTabs {...parentMethods} checkVisible={checkVisible} />
       </PageHeaderLayout>
     );
   }

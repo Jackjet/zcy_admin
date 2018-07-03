@@ -17,9 +17,9 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './customerList.less';
+import styles from './style.less';
 import BusinessAdd from '../add/BusinessAdd.js';
-import CheckTabs from './CheckTabs.js';
+import CheckTabs from './CustomerViewTabs.js';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -83,7 +83,7 @@ const CreateFormCheck = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class customerList extends PureComponent {
+export default class BusinessOpportunity extends PureComponent {
   state = {
     modalVisible: false,
     checkVisible: false,

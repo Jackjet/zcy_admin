@@ -16,17 +16,6 @@ import { connect } from 'dva';
 import styles from './style.less';
 
 const { Option } = Select;
-const cnumcol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-
-const remarkcol = {
-  style: {
-    paddingLeft: 34,
-  },
-};
 
 const formhz11 = {
   wrapperCol: {
@@ -36,7 +25,6 @@ const formhz11 = {
   },
   style: {
     width: '80%',
-    paddingLeft: 24,
   },
 };
 
@@ -160,21 +148,21 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.standardCharge}>
+                <Form.Item {...formhz11} label={fieldLabels.standardCharge}>
                   {getFieldDecorator('standardCharge', {
                     rules: [{ required: true, message: '请输入标准收费' }],
                   })(<Input placeholder="请输入标准收费" className={styles['ant-input-lg']} />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={fieldLabels.realCharge}>
+                <Form.Item {...formhz11} label={fieldLabels.realCharge}>
                   {getFieldDecorator('realCharge', {
                     rules: [{ required: true, message: '请输入实际收费' }],
                   })(<Input placeholder="请输入实际收费" className={styles['ant-input-lg']} />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={fieldLabels.discountRate}>
+                <Form.Item {...formhz11} label={fieldLabels.discountRate}>
                   {getFieldDecorator('discountRate', {
                     rules: [{ required: true, message: '请输入折扣率' }],
                   })(<Input placeholder="请输入折扣率" className={styles['ant-input-lg']} />)}
@@ -183,7 +171,7 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col>
-                <Form.Item {...cnumcol} label={fieldLabels.entrustType}>
+                <Form.Item {...formhz11} label={fieldLabels.entrustType}>
                   {getFieldDecorator('entrustType', {
                     rules: [{ required: false, message: '请选择委托类型' }],
                   })(
@@ -199,28 +187,28 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={6}>
-                <Form.Item label={fieldLabels.acceptancePerson}>
+                <Form.Item {...formhz11} label={fieldLabels.acceptancePerson}>
                   {getFieldDecorator('acceptancePerson', {
                     rules: [{ required: true, message: '请输入承接人' }],
                   })(<Input placeholder="请输入承接人" />)}
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label={fieldLabels.acceptanceDate}>
+                <Form.Item {...formhz11} label={fieldLabels.acceptanceDate}>
                   {getFieldDecorator('acceptanceDate', {
                     rules: [{ required: true, message: '请选择承接日期' }],
                   })(<DatePicker placeholder="请选择承接日期" />)}
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label={fieldLabels.acceptanceDepartment}>
+                <Form.Item {...formhz11} label={fieldLabels.acceptanceDepartment}>
                   {getFieldDecorator('acceptanceDepartment', {
                     rules: [{ required: true, message: '请输入承接部门' }],
                   })(<Input placeholder="请输入承接部门" />)}
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label={fieldLabels.businessSource}>
+                <Form.Item {...formhz11} label={fieldLabels.businessSource}>
                   {getFieldDecorator('businessSource', {
                     rules: [{ required: true, message: '请输入业务来源' }],
                   })(<Input placeholder="请输入业务来源" />)}
@@ -229,14 +217,14 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item label={fieldLabels.planedProjectImplementationDate}>
+                <Form.Item {...formhz11} label={fieldLabels.planedProjectImplementationDate}>
                   {getFieldDecorator('planedProjectImplementationDate', {
                     rules: [{ required: true, message: '请选择计划项目实施时间' }],
                   })(<DatePicker placeholder="请选择计划项目实施时间" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label={fieldLabels.planedIssueReportingDate}>
+                <Form.Item {...formhz11} label={fieldLabels.planedIssueReportingDate}>
                   {getFieldDecorator('planedIssueReportingDate', {
                     rules: [{ required: true, message: '请选择计划出具报告时间' }],
                   })(<DatePicker placeholder="请选择计划出具报告时间" />)}
@@ -245,7 +233,7 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col>
-                <Form.Item {...remarkcol} label={fieldLabels.competentPartnerApproval}>
+                <Form.Item {...formhz11} label={fieldLabels.competentPartnerApproval}>
                   {getFieldDecorator('competentPartnerApproval', {
                     rules: [{ required: false, message: '请输入主管合伙人审批' }],
                   })(<Input placeholder="请输入主管合伙人审批" style={{ width: 200 }} />)}
@@ -254,14 +242,14 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item {...remarkcol} label={fieldLabels.ImplementSignature}>
+                <Form.Item {...formhz11} label={fieldLabels.ImplementSignature}>
                   {getFieldDecorator('ImplementSignature', {
                     rules: [{ required: false, message: '请输入项目实施部门负责人签名' }],
                   })(<Input placeholder="请输入项目实施部门负责人签名" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item {...remarkcol} label={fieldLabels.pursuitSignature}>
+                <Form.Item {...formhz11} label={fieldLabels.pursuitSignature}>
                   {getFieldDecorator('pursuitSignature', {
                     rules: [{ required: false, message: '请输入落实项目负责人签名' }],
                   })(<Input placeholder="请输入落实项目负责人签名" style={{ width: 200 }} />)}
@@ -270,14 +258,14 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item {...remarkcol} label={fieldLabels.projectMembers}>
+                <Form.Item {...formhz11} label={fieldLabels.projectMembers}>
                   {getFieldDecorator('projectMembers', {
                     rules: [{ required: false, message: '请输入计划项目组成员' }],
                   })(<Input placeholder="请输入计划项目组成员" style={{ width: 200 }} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item {...remarkcol} label={fieldLabels.technicalSupervisionSignature}>
+                <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionSignature}>
                   {getFieldDecorator('technicalSupervisionSignature', {
                     rules: [{ required: false, message: '请输入负责项目技术督导人签名' }],
                   })(<Input placeholder="请输入负责项目技术督导人签名" style={{ width: 200 }} />)}
@@ -305,7 +293,7 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col>
-                <Form.Item label={fieldLabels.planChangeReason}>
+                <Form.Item {...formhz11} label={fieldLabels.planChangeReason}>
                   {getFieldDecorator('planChangeReason', {
                     rules: [{ required: true, message: '请输入计划调整理由' }],
                   })(<Input placeholder="请输入计划调整理由" className={styles['ant-input-lg']} />)}
@@ -314,7 +302,7 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col>
-                <Form.Item {...cnumcol} label={fieldLabels.technicalSupervisionOpinion}>
+                <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionOpinion}>
                   {getFieldDecorator('technicalSupervisionOpinion', {
                     rules: [{ required: false, message: '请输入项目实施部门负责人意见' }],
                   })(<Input placeholder="请输入项目实施部门负责人意见" style={{ width: 200 }} />)}
@@ -323,7 +311,7 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col>
-                <Form.Item label={fieldLabels.technicalSupervisionOpinion}>
+                <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionOpinion}>
                   {getFieldDecorator('technicalSupervisionOpinion', {
                     rules: [{ required: true, message: '请输入负责项目技术督导人意见' }],
                   })(<Input placeholder="请输入负责项目技术督导人意见" />)}
@@ -365,14 +353,14 @@ class Circulation extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item label={fieldLabels.auditOpinion}>
+                <Form.Item {...formhz11} label={fieldLabels.auditOpinion}>
                   {getFieldDecorator('auditOpinion', {
                     rules: [{ required: true, message: '请输入审计意见' }],
                   })(<Input placeholder="请输入审计意见" className={styles['ant-input-lg']} />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label={fieldLabels.CPA_Signature}>
+                <Form.Item {...formhz11} label={fieldLabels.CPA_Signature}>
                   {getFieldDecorator('CPA_Signature', {
                     rules: [{ required: true, message: '请输入签字注册会计师' }],
                   })(

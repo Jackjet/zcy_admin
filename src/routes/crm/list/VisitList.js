@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './VisitList.less';
+import styles from './style.less';
 import VisitListAdd from '../add/VisitListAdd';
 
 const { Option } = Select;

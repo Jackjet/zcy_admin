@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './projectList.less';
+import styles from './Style.less';
 import ReportAdd from '../add/ReportAdd.js';
 import ReportView from '../select/ReportView.js';
 
@@ -31,8 +31,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -400,7 +398,7 @@ export default class ReportList extends PureComponent {
         title: '报告编号',
         dataIndex: 'no',
         render: text => (
-          <a className={styles.a} onClick={() => this.handleModalVisible(true)}>
+          <a className={styles.a} onClick={() => this.handleCheckVisible(true)}>
             {text}
           </a>
         ),
@@ -470,31 +468,29 @@ export default class ReportList extends PureComponent {
     return (
       <div>
         <Card bordered={false}>
-          <div className={styles.rightBlock}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
-              </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
+          <div className={styles.tableList}>
+            <div className={styles.tableListOperator}>
+              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                新建
+              </Button>
+              {selectedRows.length > 0 && (
+                <span>
+                  <Dropdown overlay={menu}>
+                    <Button>
+                      批量操作 <Icon type="down" />
+                    </Button>
+                  </Dropdown>
+                </span>
+              )}
             </div>
+            <StandardTable
+              selectedRows={selectedRows}
+              loading={loading}
+              data={data}
+              columns={columns}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+            />
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />

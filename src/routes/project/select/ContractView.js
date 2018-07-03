@@ -20,9 +20,9 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ContractListView.less';
+import styles from './style.less';
 import ContractAdd from '../add/ContractAdd.js';
-import ContractInfo from '../../project/ContractSelect/ContractInfo.js';
+import ContractInfo from './ContractInfo.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { Tabs, Icon, Form } from 'antd';
 import { connect } from 'dva';
 import VisitListCheck from '../../crm/select/VisitListCheck.js';
-import ContractInfo from '../ContractSelect/ContractInfo.js';
-import ProjectListView from '../ContractSelect/ProjectListView.js';
+import ContractInfo from '../select/ContractInfo.js';
+import ProjectForContract from '../select/ProjectForContract.js';
 import ReceivablesPlanList from '../Receivables/ReceivablesPlanList.js';
 import ReceivablesManageList from '../Receivables/ReceivablesManageList.js';
 import InvoiceManageList from '../invoice/InvoiceManageList.js';
@@ -58,7 +58,7 @@ class ContractViewTabs extends PureComponent {
           }
           key="2"
         >
-          <ProjectListView />
+          <ProjectForContract />
         </TabPane>
         <TabPane
           tab={

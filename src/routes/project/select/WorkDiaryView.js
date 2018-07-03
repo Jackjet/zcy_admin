@@ -15,7 +15,7 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import styles from './WorkDiaryView.less';
+import styles from './style.less';
 import ProjectInfo from '../select/ProjectInfo';
 
 const { Option } = Select;
@@ -235,11 +235,6 @@ export default class WorkDiaryView extends PureComponent {
       {
         title: '项目编码',
         dataIndex: 'dictID',
-        render: text => (
-          <a className={styles.a} onClick={() => this.handleModalVisible(true)}>
-            {text}
-          </a>
-        ),
       },
       {
         title: '项目名称',

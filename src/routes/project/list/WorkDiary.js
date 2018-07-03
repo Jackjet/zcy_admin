@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './WorkDiary.less';
+import styles from './Style.less';
 import WorkDiaryAdd from '../add/WorkDiaryAdd';
 
 const { Option } = Select;
