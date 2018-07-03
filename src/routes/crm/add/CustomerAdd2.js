@@ -62,21 +62,21 @@ function onChange(value) {
 }
 
 const fieldLabels = {
-  number: '客户编码',
-  level: '客户等级',
-  industy: '所属行业',
-  name: '客户名称',
+  customerCode: '客户编码',
+  customerLevel: '客户等级',
+  industry: '所属行业',
+  customerName: '客户名称',
   dateRange: '生效日期',
-  simplename: '简称',
+  simpleName: '简称',
   pinyin: ' 拼 音 码 ',
   url: '网站主页',
-  taxcode: '税务登记号',
-  mobilephone: '移动手机',
-  emial: '电子邮箱',
+  taxCode: '税务登记号',
+  mobilePhone: '移动手机',
+  email: '电子邮箱',
   phone: '公司电话',
-  postalcode: '邮政编码',
+  postalCode: '邮政编码',
   region: '所在区域',
-  incometax: '所得税征收方式',
+  incomeTax: '所得税征收方式',
   company: '所属公司',
   address: '详细地址',
   remark: '备注',
@@ -234,8 +234,8 @@ class customerAdd2 extends PureComponent {
           <Form layout="inline">
             <Row className={styles['fn-mb-15']}>
               <Col>
-                <Form.Item {...formhz11} label={fieldLabels.name}>
-                  {getFieldDecorator('name', {
+                <Form.Item {...formhz11} label={fieldLabels.customerName}>
+                  {getFieldDecorator('customerName', {
                     rules: [{ required: true, message: '请输入客户名称' }],
                   })(<Input placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
                 </Form.Item>
@@ -243,7 +243,7 @@ class customerAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={8}>
-                <Form.Item label={fieldLabels.level}>
+                <Form.Item label={fieldLabels.customerLevel}>
                   {getFieldDecorator('level', {
                     rules: [{ required: true, message: '请选择客户等级' }],
                   })(
@@ -424,5 +424,5 @@ class customerAdd2 extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+  submitting: loading.effects['rule/add'],
 }))(Form.create()(customerAdd2));

@@ -28,6 +28,7 @@ for (let i = 0; i < 46; i += 1) {
     progress: Math.ceil(Math.random() * 100),
     customerCode:`CMD ${i}`,
     customerName:`优酸乳 ${i}`,
+    industry: `制造业`,
   });
 }
 
@@ -63,6 +64,10 @@ export function getRule(req, res, u) {
   }
 
   // 过滤搜索的字段
+  if (params.industry) {
+    dataSource = dataSource.filter(data => data.industry.indexOf(params.industry) > -1);
+  }
+
   if (params.customerCode) {
     dataSource = dataSource.filter(data => data.customerCode.indexOf(params.customerCode) > -1);
   }
@@ -95,7 +100,7 @@ export function postRule(req, res, u, b) {
   }
 
   const body = (b && b.body) || req.body;
-  const { method, no, description } = body;
+  const { method, no, description, customerCode } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
@@ -124,6 +129,7 @@ export function postRule(req, res, u, b) {
         updatedAt: new Date(),
         createdAt: new Date(),
         progress: Math.ceil(Math.random() * 100),
+        customerCode: ` ${customerCode} `,
       });
       break;
     default:
