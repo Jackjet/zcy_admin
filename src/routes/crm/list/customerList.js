@@ -111,7 +111,6 @@ const SalesManage = Form.create()(props => {
   const okHandle = () => {
     handleSalesVisible();
   };
-
   return (
     <Modal
       title="业务员基本信息管理"
