@@ -21,6 +21,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import CustomerAdd from '../add/CustomerAdd2.js';
+import CustomerAddmodal from '../add/CustomerAddmodal';
 import CustomerViewTabs from './CustomerViewTabs.js';
 import EditableTable from '../../../components/EditableTable/EditableTable';
 import ContactsAdd2 from '../add/ContactsAdd2';
@@ -636,7 +637,7 @@ export default class customerList extends PureComponent {
             </div>
           </div>
         </Card>
-        <AddCustomer {...parentMethods} customerVisible={customerVisible} />
+        <CustomerAddmodal {...parentMethods} customerVisible={customerVisible} />
         <AddContacts {...parentMethods} contactsVisible={contactsVisible} />
         <ViewTabs {...parentMethods} checkVisible={checkVisible} />
         <SalesManage {...parentMethods} salesVisible={salesVisible} />
