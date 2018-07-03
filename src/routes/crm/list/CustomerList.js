@@ -131,7 +131,7 @@ const SalesManage = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class customerList extends PureComponent {
+export default class CustomerList extends PureComponent {
   state = {
     customerVisible: false,
     contactsVisible: false,

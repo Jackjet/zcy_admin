@@ -79,7 +79,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
     },
     '/crm/customer': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/customerList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerList')),
     },
     '/crm/business': {
       component: dynamicWrapper(app, ['list'], () =>
