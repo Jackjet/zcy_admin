@@ -164,7 +164,6 @@ class CustomerAddmodal extends PureComponent {
 
   state = {
     width: '100%',
-    customerVisible : false,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -180,12 +179,7 @@ class CustomerAddmodal extends PureComponent {
     }
   };
 
-  // 隐藏和显示
-  handleCustomerVisible = flag => {
-    this.setState({
-      customerVisible: !!flag,
-    });
-  };
+
   render() {
     const { form, dispatch, submitting , customerVisible, handleCustomerVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
@@ -197,11 +191,12 @@ class CustomerAddmodal extends PureComponent {
             type: 'form/submitAdvancedForm',
             payload: values,
           });
+
+          handleCustomerVisible(false);
+
         }
       });
-      this.setState({
-        customerVisible: false,
-      });
+
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -250,7 +245,7 @@ class CustomerAddmodal extends PureComponent {
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleCustomerVisible()}
+        onCancel={() => handleCustomerVisible(false)}
       >
       <div>
         <Card>
