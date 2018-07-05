@@ -159,9 +159,7 @@ const formItemLayout = {
   },
 };
 
-class CustomerAddmodal extends PureComponent {
-
-
+class CustomerEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -181,7 +179,7 @@ class CustomerAddmodal extends PureComponent {
 
 
   render() {
-    const { form, dispatch, submitting , customerVisible, handleCustomerVisible} = this.props;
+    const { form, dispatch, submitting , customerEditVisible, handleCustomerEditVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -191,7 +189,7 @@ class CustomerAddmodal extends PureComponent {
             type: 'form/submitAdvancedForm',
             payload: values,
           });
-          handleCustomerVisible(false);
+          customerEditVisible(false);
         }
       });
 
@@ -237,13 +235,13 @@ class CustomerAddmodal extends PureComponent {
     };
     return (
       <Modal
-        title="客户基本信息新增"
-        style={{ top: 20 }}
-        visible={customerVisible}
+        title="客户基本信息编辑"
+        style={{ top: 80 }}
+        visible={customerEditVisible}
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleCustomerVisible(false)}
+        onCancel={() => handleCustomerEditVisible(false)}
       >
         <div>
           <Card>
@@ -442,4 +440,4 @@ class CustomerAddmodal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(CustomerAddmodal));
+}))(Form.create()(CustomerEditModal));

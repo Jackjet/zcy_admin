@@ -17,42 +17,18 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ContactsView.less';
-import VisitListAddModal from '../add/VisitListAddModal';
+import styles from './style.less';
+import InvoiceListApplyModal from '../add/InvoiceListApplyModal';
+import SearchForm from "../select/SearchForm";
+import IncomeConfirmModal from '../add/IncomeConfirmModal';
 
 const { Option } = Select;
-const { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="拜访新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="60%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <VisitListAddModal />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -60,9 +36,11 @@ const CreateForm = Form.create()(props => {
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class Salesman extends PureComponent {
+export default class ReceivablesInfoList  extends PureComponent {
   state = {
-    modalVisible: false,
+    invoiceApplyVisible: false,
+    searchFormVisible: false,
+    incomeConfirmVisible:false,
     selectedRows: [],
     formValues: {},
   };
@@ -172,10 +150,22 @@ export default class Salesman extends PureComponent {
     });
   };
 
-  // 点击新增显示弹窗
-  handleModalVisible = flag => {
+  // 点击新增显示弹窗handleInvoiceTabsVisible
+  handleInvoiceApplyVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      invoiceApplyVisible: !!flag,
+    });
+  };
+
+  handleIncomeConfirmVisible = flag => {
+    this.setState({
+      incomeConfirmVisible: !!flag,
+    });
+  };
+
+  handleSearchFormVisible = flag => {
+    this.setState({
+      searchFormVisible: !!flag,
     });
   };
 
@@ -188,9 +178,9 @@ export default class Salesman extends PureComponent {
       },
     });
 
-    message.success('添加成功');
+    message.success('添加成功111');
     this.setState({
-      modalVisible: false,
+      invoiceApplyVisible: false,
     });
   };
 
@@ -237,7 +227,7 @@ export default class Salesman extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleInvoiceApplyVisible}>
                 新建
               </Button>
             </span>
@@ -249,31 +239,107 @@ export default class Salesman extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, invoiceApplyVisible, searchFormVisible, incomeConfirmVisible } = this.state;
+
+    const IncomeConfirmMethods ={
+      handleIncomeConfirmVisible:this.handleIncomeConfirmVisible,
+    };
+
     const columns = [
       {
-        title: '姓名',
-        dataIndex: 'dictID',
+        title: '发票号码',
+        dataIndex: 'invoiceNumber',
       },
       {
-        title: '手机',
-        dataIndex: 'code',
+        title: '开票名称',
+        dataIndex: 'invoiceName',
       },
       {
-        title: '备注',
-        dataIndex: 'dictTypeName',
+        title: '发票金额（元）',
+        dataIndex: 'invoiceMoney',
       },
+      {
+        title: '已收入金额（元）',
+        dataIndex: 'incomeMoneyAlready',
+      },
+      {
+        title: '开票时间',
+        dataIndex: 'invoiceDate',
+      },
+      {
+        title: '收款完成',
+        dataIndex: 'status',
+      },
+      {
+        title: '开票人员',
+        dataIndex: 'invoiceP',
+      },
+      {
+        title: '对方企业',
+        dataIndex: 'enterprise',
+      },
+      {
+        title: '客户授权你代理人',
+        dataIndex: 'agent',
+      },
+      {
+        title: '开票公司',
+        dataIndex: 'invoiceCompany',
+      },
+      {
+        title: '开票人员',
+        dataIndex: 'invoiceP',
+      },
+      /*{
+        title: '操作',
+        render: () => (
+          <Fragment>
+            <Button type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
+              编辑
+            </Button>
+            <Divider type="vertical" />
+            <Button type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
+              作废
+            </Button>
+            <Divider type="vertical" />
+            <Button type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
+              查看
+            </Button>
+            <Divider type="vertical" />
+            <Button type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
+              开票
+            </Button>
+          </Fragment>
+        ),
+      },*/
     ];
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    const menu = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="remove">删除</Menu.Item>
+      </Menu>
+    );
+
+    const SearchFormMethods = {
+      handleSearchFormVisible: this.handleSearchFormVisible,
+    };
+
+    const InvoiceApplyMethods = {
+      handleInvoiceApplyVisible: this.handleInvoiceApplyVisible,
     };
 
     return (
-      <div>
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
+            <div className={styles.tableListOperator}>
+              <Button type="primary" onClick={() => this.handleIncomeConfirmVisible(true)}>
+                收入确认
+              </Button>
+              <Button type="primary" onClick={() => this.handleSearchFormVisible(true)}>
+                高级搜索
+              </Button>
+            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
@@ -284,8 +350,10 @@ export default class Salesman extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-      </div>
+        <SearchForm {...SearchFormMethods} searchFormVisible={searchFormVisible} />
+        <InvoiceListApplyModal {...InvoiceApplyMethods} invoiceApplyVisible={invoiceApplyVisible} />
+        <IncomeConfirmModal {...IncomeConfirmMethods} incomeConfirmVisible={incomeConfirmVisible} />
+      </PageHeaderLayout>
     );
   }
 }

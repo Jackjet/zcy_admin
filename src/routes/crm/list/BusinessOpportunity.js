@@ -18,8 +18,8 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import BusinessAdd from '../add/BusinessAdd.js';
-import CheckTabs from './CustomerViewTabs.js';
+import BusinessAddModal from '../add/BusinessAddModal.js';
+import BusinessOppView from '../select/BusinessOppView.js';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -28,56 +28,6 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      title="商机基本信息新增"
-      style={{ top: 20 }}
-      visible={modalVisible}
-      width="90%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <BusinessAdd />
-    </Modal>
-  );
-});
-
-const CreateFormCheck = Form.create()(props => {
-  const { checkVisible, handleCheckVisible } = props;
-  const okHandle = () => handleCheckVisible();
-  return (
-    <Modal
-      title="查看"
-      style={{ top: 60 }}
-      visible={checkVisible}
-      width="60%"
-      maskClosable={false}
-      onOk={okHandle}
-      footer={
-        (null,
-        (
-          <Button onClick={okHandle} type="primary">
-            知道了
-          </Button>
-        ))
-      }
-    >
-      <CheckTabs />
-    </Modal>
-  );
-});
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -85,8 +35,8 @@ const CreateFormCheck = Form.create()(props => {
 @Form.create()
 export default class BusinessOpportunity extends PureComponent {
   state = {
-    modalVisible: false,
-    checkVisible: false,
+    businessOppVisible: false,
+    businessViewVisible: false,
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
@@ -165,7 +115,7 @@ export default class BusinessOpportunity extends PureComponent {
         });
         break;
       case 'check':
-        this.handleCheckVisible(true);
+        this.handleBusinessViewVisible(true);
         break;
       default:
         break;
@@ -201,14 +151,14 @@ export default class BusinessOpportunity extends PureComponent {
     });
   };
   // 隐藏和显示
-  handleModalVisible = flag => {
+  handleBusinessOppVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      businessOppVisible: !!flag,
     });
   };
-  handleCheckVisible = flag => {
+  handleBusinessViewVisible = flag => {
     this.setState({
-      checkVisible: !!flag,
+      businessViewVisible: !!flag,
     });
   };
   // 添加表单数据
@@ -222,7 +172,7 @@ export default class BusinessOpportunity extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      businessOppVisible: false,
     });
   };
 
@@ -302,7 +252,7 @@ export default class BusinessOpportunity extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, checkVisible } = this.state;
+    const { selectedRows, businessOppVisible, businessViewVisible } = this.state;
 
     const columns = [
       {
@@ -334,7 +284,7 @@ export default class BusinessOpportunity extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
-            <a href="">查看</a>
+            <a onClick={() => this.handleBusinessViewVisible(true)}>查看</a>
             <Divider type="vertical" />
             <a href="">编辑</a>
             <Divider type="vertical" />
@@ -352,10 +302,8 @@ export default class BusinessOpportunity extends PureComponent {
     );
 
     const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleAddContact: this.handleAddContact,
-      handleModalVisible: this.handleModalVisible,
-      handleCheckVisible: this.handleCheckVisible,
+      handleBusinessOppVisible: this.handleBusinessOppVisible,
+      handleBusinessViewVisible: this.handleBusinessViewVisible,
     };
 
     return (
@@ -367,7 +315,7 @@ export default class BusinessOpportunity extends PureComponent {
               <div className={styles.rightBlock}>
                 <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
                     新建
                   </Button>
                   {selectedRows.length > 0 && (
@@ -392,8 +340,8 @@ export default class BusinessOpportunity extends PureComponent {
             </div>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CreateFormCheck {...parentMethods} checkVisible={checkVisible} />
+        <BusinessAddModal {...parentMethods} businessOppVisible={businessOppVisible} />
+        <BusinessOppView {...parentMethods} businessViewVisible={businessViewVisible} />
       </PageHeaderLayout>
     );
   }

@@ -25,7 +25,7 @@ const menuData = [
       {
         key: 'workplaceList',
         name: '拜访管理',
-        path: 'workplace',
+        path: 'visit',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -109,12 +109,17 @@ const menuData = [
 
       {
         name: '发票管理',
-        path: 'fiinvoice',
+        path: 'fiInvoice',
         children: [
           {
-            key: 'invoiceList',
+            key: 'invoiceManage',
             name: '开票管理',
-            path: 'invoice',
+            path: 'invoiceManage',
+          },
+          {
+            key: 'receivablesMessage',
+            name: '收款信息',
+            path: 'receivablesMessage',
           },
         ],
       },

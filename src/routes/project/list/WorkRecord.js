@@ -23,7 +23,6 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
-import ProjectAdd from '../add/workRecordAdd.js';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -34,30 +33,6 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      title="增加工作记录"
-      visible={modalVisible}
-      mask={true}
-      width="50%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <ProjectAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -66,7 +41,7 @@ const CreateForm = Form.create()(props => {
 @Form.create()
 export default class projectList extends PureComponent {
   state = {
-    modalVisible: false,
+    workRecordVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -190,9 +165,9 @@ export default class projectList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleWorkRecordVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      workRecordVisible: !!flag,
     });
   };
 
@@ -206,7 +181,7 @@ export default class projectList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      workRecordVisible: false,
     });
   };
 
@@ -271,7 +246,7 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, workRecordVisible } = this.state;
 
     const columns = [
       {
@@ -311,7 +286,7 @@ export default class projectList extends PureComponent {
     ];
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+      handleWorkRecordVisible: this.handleWorkRecordVisible,
     };
 
     return (
@@ -322,7 +297,7 @@ export default class projectList extends PureComponent {
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                <Button icon="plus" type="primary" onClick={() => this.handleWorkRecordVisible(true)}>
                   新建
                 </Button>
               </div>
@@ -337,7 +312,7 @@ export default class projectList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <WorkRecordAddModal {...parentMethods} workRecordVisible={workRecordVisible} />
       </PageHeaderLayout>
     );
   }

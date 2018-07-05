@@ -17,7 +17,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
-import WorkDiaryAdd from '../add/WorkDiaryAdd';
+import WorkDiaryAddModal from '../add/WorkDiaryAddModal';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -25,32 +25,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="工作日记新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="30%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <WorkDiaryAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -60,7 +34,7 @@ const CreateForm = Form.create()(props => {
 // PureComponent优化Component的性能
 export default class WorkDiary extends PureComponent {
   state = {
-    modalVisible: false,
+    workDiaryVisible: false,
     selectedRows: [],
     formValues: {},
   };
@@ -171,9 +145,9 @@ export default class WorkDiary extends PureComponent {
   };
 
   // 点击新增显示弹窗
-  handleModalVisible = flag => {
+  handleWorkDiaryVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      workDiaryVisible: !!flag,
     });
   };
 
@@ -188,7 +162,7 @@ export default class WorkDiary extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      workDiaryVisible: false,
     });
   };
 
@@ -219,7 +193,7 @@ export default class WorkDiary extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleWorkDiaryVisible}>
                 新建
               </Button>
             </span>
@@ -231,7 +205,7 @@ export default class WorkDiary extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, workDiaryVisible } = this.state;
     const columns = [
       {
         title: '项目编码',
@@ -283,7 +257,7 @@ export default class WorkDiary extends PureComponent {
 
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+      handleWorkDiaryVisible: this.handleWorkDiaryVisible,
     };
 
     return (
@@ -312,7 +286,7 @@ export default class WorkDiary extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <WorkDiaryAddModal {...parentMethods} workDiaryVisible={workDiaryVisible} />
       </PageHeaderLayout>
     );
   }

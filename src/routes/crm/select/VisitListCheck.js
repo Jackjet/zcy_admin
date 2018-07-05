@@ -18,7 +18,7 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './VisitListcheck.less';
-import VisitListAdd from '../add/VisitListAdd';
+import VisitListAddModal from '../add/VisitListAddModal';
 
 const { Option } = Select;
 const confirm = Modal.confirm;
@@ -49,7 +49,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <VisitListAdd />
+      <VisitListAddModal />
     </Modal>
   );
 });

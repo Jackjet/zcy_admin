@@ -19,9 +19,8 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
-import ReportAdd from '../add/ReportAdd.js';
+import ReportAddModal from '../add/ReportAddModal.js';
 import ReportView from '../select/ReportView.js';
 
 const FormItem = Form.Item;
@@ -33,7 +32,7 @@ const getValue = obj =>
     .join(',');
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { reportVisible, form, handleAdd, handleReportVisible } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -45,13 +44,13 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       title="报告基本信息新增"
-      visible={modalVisible}
+      visible={reportVisible}
       width="90%"
       maskClosable={false}
       onOk={okHandle}
-      onCancel={() => handleModalVisible()}
+      onCancel={() => handleReportVisible()}
     >
-      <ReportAdd />
+      <ReportAddModal />
     </Modal>
   );
 });
@@ -80,7 +79,7 @@ const CheckProjectList = Form.create()(props => {
 @Form.create()
 export default class ReportList extends PureComponent {
   state = {
-    modalVisible: false,
+    reportVisible: false,
     checkVisible: false,
     expandForm: false,
     selectedRows: [],
@@ -207,9 +206,9 @@ export default class ReportList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleReportVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      reportVisible: !!flag,
     });
   };
 
@@ -229,7 +228,7 @@ export default class ReportList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      reportVisible: false,
     });
   };
 
@@ -392,7 +391,7 @@ export default class ReportList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, checkVisible } = this.state;
+    const { selectedRows, reportVisible, checkVisible } = this.state;
     const columns = [
       {
         title: '报告编号',
@@ -461,7 +460,7 @@ export default class ReportList extends PureComponent {
 
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+      handleReportVisible: this.handleReportVisible,
       handleCheckVisible: this.handleCheckVisible,
     };
 
@@ -470,7 +469,7 @@ export default class ReportList extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+              <Button icon="plus" type="primary" onClick={() => this.handleReportVisible(true)}>
                 新建
               </Button>
               {selectedRows.length > 0 && (
@@ -493,7 +492,7 @@ export default class ReportList extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <CreateForm {...parentMethods} reportVisible={reportVisible} />
         <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
       </div>
     );

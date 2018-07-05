@@ -18,7 +18,7 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ContactsView.less';
-import VisitListAdd from '../add/VisitListAdd';
+import VisitListAddModal from '../add/VisitListAddModal';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -49,7 +49,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <VisitListAdd />
+      <VisitListAddModal />
     </Modal>
   );
 });
@@ -300,7 +300,7 @@ export default class ContactsView extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <VisitListAddModal {...parentMethods} modalVisible={modalVisible} />
       </div>
     );
   }

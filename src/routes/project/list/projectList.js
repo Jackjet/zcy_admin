@@ -23,8 +23,8 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './projectList.less';
-import ProjectAdd from '../add/ProjectAdd2.js';
+import styles from './Style.less';
+import ProjectAddModal from '../add/ProjectAddModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -36,30 +36,7 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
 
-  return (
-    <Modal
-      title="项目基本信息新增"
-      visible={modalVisible}
-      mask={'true'}
-      width={'90%'}
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <ProjectAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -68,7 +45,7 @@ const CreateForm = Form.create()(props => {
 @Form.create()
 export default class projectList extends PureComponent {
   state = {
-    modalVisible: false,
+    projectVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -191,9 +168,9 @@ export default class projectList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleProjectVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      projectVisible: !!flag,
     });
   };
 
@@ -207,7 +184,7 @@ export default class projectList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      projectVisible: false,
     });
   };
 
@@ -370,7 +347,7 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, projectVisible } = this.state;
 
     const columns = [
       {
@@ -471,7 +448,7 @@ export default class projectList extends PureComponent {
 
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+      handleProjectVisible: this.handleProjectVisible,
     };
 
     return (
@@ -482,7 +459,7 @@ export default class projectList extends PureComponent {
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
                   新建
                 </Button>
                 {selectedRows.length > 0 && (
@@ -506,7 +483,7 @@ export default class projectList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} />
       </PageHeaderLayout>
     );
   }

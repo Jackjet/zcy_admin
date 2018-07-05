@@ -21,7 +21,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ProjectListView.less';
-import ProjectAdd from '../add/ProjectAdd2.js';
+import ProjectAddModal from '../add/ProjectAddModal.js';
 import ProjectCheckTabs from '../list/ProjectCheckTabs.js';
 import ProjectInfo from '../select/ProjectInfo.js';
 
@@ -54,7 +54,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ProjectAdd />
+      <ProjectAddModal />
     </Modal>
   );
 });

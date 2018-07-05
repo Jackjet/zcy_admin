@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable/index';
 import styles from '../select/style.less';
-import ProjectAdd from '../add/ProjectAdd2.js';
+import ProjectAddModal from '../add/ProjectAddModal.js';
 import ProjectCheckTabs from '../list/ProjectCheckTabs.js';
 import ProjectInfo from './ProjectInfo.js';
 
@@ -53,7 +53,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ProjectAdd />
+      <ProjectAddModal />
     </Modal>
   );
 });

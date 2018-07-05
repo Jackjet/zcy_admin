@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import styles from '../list/Style.less';
-import ContractAdd from '../add/ContractAdd.js';
+import ContractAddModal from '../add/ContractAddModal.js';
 import ContractViewTabs from '../../project/list/ContractViewTabs.js';
 
 const FormItem = Form.Item;
@@ -50,7 +50,7 @@ const AddContract = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ContractAdd />
+      <ContractAddModal />
     </Modal>
   );
 });

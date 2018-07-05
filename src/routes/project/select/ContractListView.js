@@ -21,7 +21,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ContractListView.less';
-import ContractAdd from '../add/ContractAdd.js';
+import ContractAddModal from '../add/ContractAddModal.js';
 import ProjectCheckTabs from '../../project/list/ProjectCheckTabs.js';
 
 const FormItem = Form.Item;
@@ -51,7 +51,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ContractAdd />
+      <ContractAddModal />
     </Modal>
   );
 });

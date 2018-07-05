@@ -6,7 +6,7 @@ for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
     key: i,
     // 数据不能选中
-    disabled: i % 6 === 0,
+    /*disabled: i % 6 === 0,*/
     href: 'https://ant.design',
     avatar: [
       'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
@@ -29,6 +29,7 @@ for (let i = 0; i < 46; i += 1) {
     customerCode:`CMD ${i}`,
     customerName:`优酸乳 ${i}`,
     industry: `制造业`,
+    contractTitle:`这个字段是合同标题 ${i}`,
   });
 }
 
@@ -130,6 +131,7 @@ export function postRule(req, res, u, b) {
         createdAt: new Date(),
         progress: Math.ceil(Math.random() * 100),
         customerCode: ` ${customerCode} `,
+        contractTitle:`这个字段是合同标题 ${i}`,
       });
       break;
     default:

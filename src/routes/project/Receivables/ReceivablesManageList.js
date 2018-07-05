@@ -21,7 +21,6 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ReceivablesPlanList.less';
-import ProjectAdd from '../add/ProjectAdd2.js';
 import ReceivablesManageAdd from '../Receivables/ReceivablesManageAdd.js';
 
 const FormItem = Form.Item;

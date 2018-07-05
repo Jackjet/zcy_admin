@@ -6,9 +6,7 @@ import {
   Card,
   Form,
   Input,
-  Icon,
   Button,
-  Dropdown,
   Menu,
   Modal,
   message,
@@ -17,42 +15,18 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ContactsView.less';
-import VisitListAddModal from '../add/VisitListAddModal';
+import styles from './style.less';
+import InvoiceTabs from '../list/InvoiceTabs';
+import InvoiceListApplyModal from '../add/InvoiceListApplyModal';
+import InvoiceEditList from '../edit/InvoiceEditList';
+import InvoiceViewList from '../select/InvoiceViewList';
+import Invoicing from '../edit/Invoicing';
 
-const { Option } = Select;
-const { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="拜访新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="60%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <VisitListAddModal />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -60,9 +34,13 @@ const CreateForm = Form.create()(props => {
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class Salesman extends PureComponent {
+export default class InvoiceApplyList  extends PureComponent {
   state = {
-    modalVisible: false,
+    invoiceApplyVisible: false,
+    invoiceTabsVisible: false,
+    invoiceEditVisible: false,
+    invoiceViewVisible: false,
+    invoicingVisible: false,
     selectedRows: [],
     formValues: {},
   };
@@ -172,13 +150,32 @@ export default class Salesman extends PureComponent {
     });
   };
 
-  // 点击新增显示弹窗
-  handleModalVisible = flag => {
+  // 点击新增显示弹窗handleInvoiceTabsVisible
+  handleInvoiceApplyVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      invoiceApplyVisible: !!flag,
     });
   };
-
+  handleInvoiceTabsVisible = flag => {
+    this.setState({
+      invoiceTabsVisible: !!flag,
+    });
+  };
+  handleInvoiceEditVisible = flag => {
+    this.setState({
+      invoiceEditVisible: !!flag,
+    });
+  };
+  handleInvoiceViewVisible = flag => {
+    this.setState({
+      invoiceViewVisible: !!flag,
+    });
+  };
+  handleInvoicingVisible = flag => {
+    this.setState({
+      invoicingVisible: !!flag,
+    });
+  };
   // 新增功能实现
   handleAdd = fields => {
     this.props.dispatch({
@@ -188,9 +185,9 @@ export default class Salesman extends PureComponent {
       },
     });
 
-    message.success('添加成功');
+    message.success('添加成功111');
     this.setState({
-      modalVisible: false,
+      invoiceApplyVisible: false,
     });
   };
 
@@ -214,18 +211,9 @@ export default class Salesman extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
-            <FormItem label="拜访对象">
+            <FormItem label="开票名称">
               {getFieldDecorator('no')(
-                <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
-                  <Option value="0">请选择</Option>
-                  <Option value="1">初期沟通</Option>
-                  <Option value="2">立项评估</Option>
-                  <Option value="3">需求分析</Option>
-                  <Option value="4">方案制定</Option>
-                  <Option value="5">招投标/竞争</Option>
-                  <Option value="6">商务谈判</Option>
-                  <Option value="7">合同签约</Option>
-                </Select>
+                <Input placeholder="请选择开票名称" style={{ width: 200 }} />
               )}
             </FormItem>
           </Col>
@@ -237,7 +225,7 @@ export default class Salesman extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleInvoiceApplyVisible}>
                 新建
               </Button>
             </span>
@@ -249,31 +237,95 @@ export default class Salesman extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, invoiceApplyVisible, invoiceTabsVisible, invoiceEditVisible, invoiceViewVisible, invoicingVisible } = this.state;
     const columns = [
       {
-        title: '姓名',
-        dataIndex: 'dictID',
+        title: '开票名称',
+        dataIndex: 'invoiceName',
       },
       {
-        title: '手机',
-        dataIndex: 'code',
+        title: '发票号码',
+        dataIndex: 'invoiceNumber',
       },
       {
-        title: '备注',
-        dataIndex: 'dictTypeName',
+        title: '发票金额（元）',
+        dataIndex: 'invoiceMoney',
+      },
+      {
+        title: '开票时间',
+        dataIndex: 'invoiceDate',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+      },
+      {
+        title: '开票公司',
+        dataIndex: 'invoiceCompany',
+      },
+      {
+        title: '开票人员',
+        dataIndex: 'invoiceP',
+      },
+      {
+        title: '操作',
+        render: () => (
+          <Fragment>
+            <a type="primary" onClick={() => this.handleInvoiceEditVisible(true)}>
+              编辑
+            </a>
+            <Divider type="vertical" />
+            <a type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
+              作废
+            </a>
+            <Divider type="vertical" />
+            <a type="primary" onClick={() => this.handleInvoiceViewVisible(true)}>
+              查看
+            </a>
+            <Divider type="vertical" />
+            <a type="primary" onClick={() => this.handleInvoicingVisible(true)}>
+              开票
+            </a>
+          </Fragment>
+        ),
       },
     ];
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    const menu = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="remove">删除</Menu.Item>
+      </Menu>
+    );
+
+    const InvoiceTabsMethods = {
+      handleInvoiceTabsVisible: this.handleInvoiceTabsVisible,
     };
 
+    const InvoiceApplyMethods = {
+      handleInvoiceApplyVisible: this.handleInvoiceApplyVisible,
+    };
+
+    const InvoiceEditMethods = {
+      handleInvoiceEditVisible: this.handleInvoiceEditVisible,
+    };
+    const InvoiceViewMethods = {
+      handleInvoiceViewVisible: this.handleInvoiceViewVisible,
+    };
+    const InvoicingMethods = {
+      handleInvoicingVisible: this.handleInvoicingVisible,
+    };
+
+
     return (
-      <div>
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <div className={styles.tableListOperator}>
+              <Button type="primary" onClick={() => this.handleInvoiceTabsVisible(true)}>
+                申请开票
+              </Button>
+            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
@@ -284,8 +336,12 @@ export default class Salesman extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-      </div>
+        <InvoiceTabs {...InvoiceTabsMethods} invoiceTabsVisible={invoiceTabsVisible} />
+        <InvoiceListApplyModal {...InvoiceApplyMethods} invoiceApplyVisible={invoiceApplyVisible} />
+        <InvoiceEditList {...InvoiceEditMethods} invoiceEditVisible={invoiceEditVisible} />
+        <InvoiceViewList {...InvoiceViewMethods} invoiceViewVisible={invoiceViewVisible} />
+        <Invoicing {...InvoicingMethods} invoicingVisible={invoicingVisible} />
+      </PageHeaderLayout>
     );
   }
 }

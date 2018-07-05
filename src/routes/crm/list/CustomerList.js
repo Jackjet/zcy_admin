@@ -20,11 +20,13 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAdd from '../add/CustomerAdd2.js';
 import CustomerAddmodal from '../add/CustomerAddmodal';
 import CustomerViewTabs from './CustomerViewTabs.js';
 import EditableTable from '../../../components/EditableTable/EditableTable';
-import ContactsAdd2 from '../add/ContactsAdd2';
+import ContactsAddModal from '../add/ContactsAddModal';
+import CustomerEditModal from '../edit/CustomerEditModal';
+
+
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -38,82 +40,6 @@ const getValue = obj =>
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
 
-
-// 添加客户
-const AddCustomer = Form.create()(props => {
-  const { customerVisible, form, handleCustomerAdd, handleCustomerVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleCustomerAdd(fieldsValue);
-
-      console.log(  " fieldsValue: " + Object.keys(fieldsValue));
-
-    });
-  };
-
-  return (
-    <Modal
-      title="客户基本信息新增"
-      style={{ top: 20 }}
-      visible={customerVisible}
-      width="90%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleCustomerVisible()}
-    >
-      {/*<Form.Item label="客户名称">
-        {form.getFieldDecorator('customerCode', {
-          rules: [{ required: true, message: '请输入客户编码' }],
-        })(<Input placeholder="请输入客户编码" className={styles['ant-input-lg']} />)}
-      </Form.Item>*/}
-      <CustomerAdd />
-    </Modal>
-  );
-});
-
-// 添加联系人
-const AddContacts = Form.create()(props => {
-  const { contactsVisible, handleContactsVisible } = props;
-  const okHandle = () => {
-    handleContactsVisible();
-  };
-
-  return (
-    <Modal
-      title="联系人基本信息设置"
-      style={{ top: 20 }}
-      visible={contactsVisible}
-      width="45%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleContactsVisible()}
-    >
-      <ContactsAdd2 />
-    </Modal>
-  );
-});
-
-// 操作更多查看功能
-const ViewTabs = Form.create()(props => {
-  const { checkVisible, handleCheckVisible } = props;
-  const okHandle = () => handleCheckVisible();
-  return (
-    <Modal
-      title="查看"
-      style={{ top: 60 }}
-      visible={checkVisible}
-      width="80%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleCheckVisible()}
-      footer={null}
-    >
-      <CustomerViewTabs />
-    </Modal>
-  );
-});
 
 // 设置业务员
 const SalesManage = Form.create()(props => {
@@ -143,9 +69,10 @@ const SalesManage = Form.create()(props => {
 @Form.create()
 export default class CustomerList extends PureComponent {
   state = {
-    customerVisible: false,
+    customerAddVisible: false,
+    customerEditVisible: false,
     contactsVisible: false,
-    checkVisible: false,
+    tabsViewVisible: false,
     salesVisible: false,
     expandForm: false,
     selectedRows: [],
@@ -234,6 +161,25 @@ export default class CustomerList extends PureComponent {
     });
   };
 
+  handleEditClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -241,7 +187,7 @@ export default class CustomerList extends PureComponent {
     if (!selectedRows) return;
 
     switch (e.key) {
-      case 'remove':
+      case 'del':
         dispatch({
           type: 'rule/remove',
           payload: {
@@ -255,7 +201,7 @@ export default class CustomerList extends PureComponent {
         });
         break;
       case 'check':
-        this.handleCheckVisible(true);
+        this.handleTabsViewVisible(true);
         break;
       default:
         break;
@@ -294,9 +240,14 @@ export default class CustomerList extends PureComponent {
     });
   };
   // 隐藏和显示
-  handleCustomerVisible = flag => {
+  handleCustomerAddVisible = flag => {
     this.setState({
-      customerVisible: !!flag,
+      customerAddVisible: !!flag,
+    });
+  };
+  handleCustomerEditVisible = flag => {
+    this.setState({
+      customerEditVisible: !!flag,
     });
   };
   handleContactsVisible = flag => {
@@ -304,9 +255,9 @@ export default class CustomerList extends PureComponent {
       contactsVisible: !!flag,
     });
   };
-  handleCheckVisible = flag => {
+  handleTabsViewVisible = flag => {
     this.setState({
-      checkVisible: !!flag,
+      tabsViewVisible: !!flag,
     });
   };
   handleSalesVisible = flag => {
@@ -326,7 +277,7 @@ export default class CustomerList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      customerVisible: false,
+      customerAddVisible: false,
     });
   };
   handleAddContact = fields => {
@@ -336,7 +287,6 @@ export default class CustomerList extends PureComponent {
         description: fields.desc,
       },
     });
-
     message.success('添加成功');
     this.setState({
       contactsVisible: false,
@@ -509,9 +459,10 @@ export default class CustomerList extends PureComponent {
     const { rule: { data }, loading } = this.props;
     const {
       selectedRows,
-      customerVisible,
+      customerAddVisible,
+      customerEditVisible,
       contactsVisible,
-      checkVisible,
+      tabsViewVisible,
       salesVisible,
     } = this.state;
 
@@ -574,7 +525,7 @@ export default class CustomerList extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
-            <a href="">编辑</a>
+            <a onClick={this.handleEditClick} >编辑</a>
             <Divider type="vertical" />
             <Dropdown overlay={downhz}>
               <a>
@@ -595,12 +546,18 @@ export default class CustomerList extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
+    const CustomerAddMethods = {
+      handleCustomerAddVisible: this.handleCustomerAddVisible,
       handleCustomerAdd: this.handleCustomerAdd,
-      handleAddContact: this.handleAddContact,
-      handleCustomerVisible: this.handleCustomerVisible,
+    };
+    const CustomerEditMethods = {
+      handleCustomerEditVisible: this.handleCustomerEditVisible,
+    };
+    const ContactsAddMethods = {
       handleContactsVisible: this.handleContactsVisible,
-      handleCheckVisible: this.handleCheckVisible,
+    };
+    const parentMethods = {
+      handleTabsViewVisible: this.handleTabsViewVisible,
       handleSalesVisible: this.handleSalesVisible,
     };
 
@@ -616,7 +573,7 @@ export default class CustomerList extends PureComponent {
                   <Button
                     icon="plus"
                     type="primary"
-                    onClick={() => this.handleCustomerVisible(true)}
+                    onClick={() => this.handleCustomerAddVisible(true)}
                   >
                     新建客户
                   </Button>
@@ -646,9 +603,10 @@ export default class CustomerList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CustomerAddmodal {...parentMethods} customerVisible={customerVisible} />
-        <AddContacts {...parentMethods} contactsVisible={contactsVisible} />
-        <ViewTabs {...parentMethods} checkVisible={checkVisible} />
+        <CustomerAddmodal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
+        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} />
+        <ContactsAddModal {...ContactsAddMethods} contactsVisible={contactsVisible} />
+        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} />
         <SalesManage {...parentMethods} salesVisible={salesVisible} />
       </PageHeaderLayout>
     );

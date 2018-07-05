@@ -114,12 +114,20 @@ export const getRouterData = app => {
       name: '工作日记',
     },
     '/project/workRecord': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/workRecord')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/WorkRecord')),
       name: '项目工作记录',
     },
-    '/fi/fiinvoice/businessCirculation': {
+    '/fi/fiInvoice/businessCirculation': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
       name: '业务流转',
+    },
+    '/fi/fiInvoice/invoiceManage': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/InvoiceApplyList')),
+      name: '开票管理',
+    },
+    '/fi/fiInvoice/receivablesMessage': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/ReceivablesInfoList')),
+      name: '收款信息',
     },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),

@@ -18,7 +18,7 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import VisitListAdd from '../add/VisitListAdd';
+import VisitListAddModal from '../add/VisitListAddModal';
 
 const { Option } = Select;
 const confirm = Modal.confirm;
@@ -28,41 +28,15 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="拜访新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="60%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <VisitListAdd />
-    </Modal>
-  );
-});
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class extends PureComponent {
+export default class VisitList  extends PureComponent {
   state = {
-    modalVisible: false,
+    visitVisible: false,
     selectedRows: [],
     formValues: {},
   };
@@ -173,9 +147,9 @@ export default class extends PureComponent {
   };
 
   // 点击新增显示弹窗
-  handleModalVisible = flag => {
+  handleVisitVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      visitVisible: !!flag,
     });
   };
 
@@ -188,9 +162,9 @@ export default class extends PureComponent {
       },
     });
 
-    message.success('添加成功');
+    message.success('添加成功111');
     this.setState({
-      modalVisible: false,
+      visitVisible: false,
     });
   };
 
@@ -237,7 +211,7 @@ export default class extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitVisible}>
                 新建
               </Button>
             </span>
@@ -249,7 +223,7 @@ export default class extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, visitVisible } = this.state;
     const columns = [
       {
         title: '拜访对象',
@@ -295,7 +269,7 @@ export default class extends PureComponent {
 
     const parentMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+      handleVisitVisible: this.handleVisitVisible,
     };
 
     return (
@@ -324,7 +298,7 @@ export default class extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <VisitListAddModal {...parentMethods} visitVisible={visitVisible} />
       </PageHeaderLayout>
     );
   }

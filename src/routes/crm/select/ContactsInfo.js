@@ -63,7 +63,7 @@ const fieldLabels = {
   affiliatedCustomers: '所属客户',
   contactName: '客户名称',
   code: '编号',
-  mobilephone: '移动手机',
+  mobilePhone: '移动手机',
   phoneNumber: '手机号码',
   region: '所在区域',
   remark: '备注',
@@ -240,8 +240,8 @@ class ContactsInfo extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item {...cnumcol} label={fieldLabels.phoneNumber}>
-                  {getFieldDecorator('phoneNumber', {
+                <Form.Item {...cnumcol} label={fieldLabels.mobilePhone}>
+                  {getFieldDecorator('mobilePhone', {
                     rules: [{ required: false, message: '请输入移动手机' }],
                   })(<Input placeholder="请输入移动手机" style={{ width: 200 }} />)}
                 </Form.Item>
@@ -304,4 +304,4 @@ class ContactsInfo extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ContactsAdd));
+}))(Form.create()(ContactsInfo));
