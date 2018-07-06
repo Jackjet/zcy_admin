@@ -63,21 +63,21 @@ function onChange(value) {
 }
 
 const fieldLabels = {
-  number: '客户编码',
-  level: '客户等级',
-  industy: '所属行业',
-  name: '客户名称',
+  customerCode: '客户编码',
+  customerLevel: '客户等级',
+  industry: '所属行业',
+  customerName: '客户名称',
   dateRange: '生效日期',
-  simplename: '简称',
+  simpleName: '简称',
   pinyin: ' 拼 音 码 ',
   url: '网站主页',
-  taxcode: '税务登记号',
-  mobilephone: '移动手机',
-  emial: '电子邮箱',
-  phone: '公司电话',
-  postalcode: '邮政编码',
+  taxCode: '税务登记号',
+  mobilePhone: '移动手机',
+  email: '电子邮箱',
+  companyPhone: '公司电话',
+  postalCode: '邮政编码',
   region: '所在区域',
-  incometax: '所得税征收方式',
+  incomeTax: '所得税征收方式',
   company: '所属公司',
   address: '详细地址',
   remark: '备注',
@@ -181,17 +181,18 @@ class CustomerAddmodal extends PureComponent {
 
 
   render() {
-    const { form, dispatch, submitting , customerVisible, handleCustomerVisible} = this.props;
+    const { form, dispatch, submitting , customerAddVisible, handleCustomerAddVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
+          form.resetFields();
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
+            type: 'rule/add',
             payload: values,
           });
-          handleCustomerVisible(false);
+          handleCustomerAddVisible(false);
         }
       });
 
@@ -239,19 +240,19 @@ class CustomerAddmodal extends PureComponent {
       <Modal
         title="客户基本信息新增"
         style={{ top: 20 }}
-        visible={customerVisible}
+        visible={customerAddVisible}
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleCustomerVisible(false)}
+        onCancel={() => handleCustomerAddVisible(false)}
       >
         <div>
           <Card>
             <Form layout="inline">
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.name}>
-                    {getFieldDecorator('name', {
+                  <Form.Item {...formhz11} label={fieldLabels.customerName}>
+                    {getFieldDecorator('customerName', {
                       rules: [{ required: true, message: '请输入客户名称' }],
                     })(<Input placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
                   </Form.Item>
@@ -259,8 +260,8 @@ class CustomerAddmodal extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.level}>
-                    {getFieldDecorator('level', {
+                  <Form.Item label={fieldLabels.customerLevel}>
+                    {getFieldDecorator('customerLevel', {
                       rules: [{ required: false, message: '请选择客户等级' }],
                     })(
                       <Select placeholder="请选择客户等级" style={{ width: 200 }}>
@@ -273,8 +274,8 @@ class CustomerAddmodal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.industy}>
-                    {getFieldDecorator('industy', {
+                  <Form.Item label={fieldLabels.industry}>
+                    {getFieldDecorator('industry', {
                       rules: [{ required: false, message: '请选择行业' }],
                     })(
                       <Select placeholder="请选择行业" style={{ width: 200 }}>
@@ -293,8 +294,8 @@ class CustomerAddmodal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.incometax}>
-                    {getFieldDecorator('incometax', {
+                  <Form.Item label={fieldLabels.incomeTax}>
+                    {getFieldDecorator('incomeTax', {
                       rules: [{ required: false, message: '请选择所得税征收方式' }],
                     })(
                       <Select placeholder="请选择所得税征收方式" style={{ width: 200 }}>
@@ -307,8 +308,8 @@ class CustomerAddmodal extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item {...cnumcol} label={fieldLabels.number}>
-                    {getFieldDecorator('number', {
+                  <Form.Item {...cnumcol} label={fieldLabels.customerCode}>
+                    {getFieldDecorator('customerCode', {
                       rules: [{ required: false, message: '请输入客户编码' }],
                     })(<Input placeholder="请输入客户编码" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -321,8 +322,8 @@ class CustomerAddmodal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...simplenamecol} label={fieldLabels.simplename}>
-                    {getFieldDecorator('simplename', {
+                  <Form.Item {...simplenamecol} label={fieldLabels.simpleName}>
+                    {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '请输入简称' }],
                     })(<Input placeholder="请输入简称" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -331,22 +332,22 @@ class CustomerAddmodal extends PureComponent {
 
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.mobilephone}>
-                    {getFieldDecorator('mobilephone', {
+                  <Form.Item label={fieldLabels.mobilePhone}>
+                    {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入手机号码' }],
                     })(<Input placeholder="请输入手机号码" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.emial}>
-                    {getFieldDecorator('emial', {
+                  <Form.Item label={fieldLabels.email}>
+                    {getFieldDecorator('email', {
                       rules: [{ required: false, message: '请输入电子邮箱' }],
                     })(<Input placeholder="请输入电子邮箱" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...companyphonecol} label={fieldLabels.phone}>
-                    {getFieldDecorator('phone', {
+                  <Form.Item {...companyphonecol} label={fieldLabels.companyPhone}>
+                    {getFieldDecorator('companyPhone', {
                       rules: [{ required: false, message: '请输入公司电话' }],
                     })(<Input placeholder="请输入公司电话" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -355,8 +356,8 @@ class CustomerAddmodal extends PureComponent {
 
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.postalcode}>
-                    {getFieldDecorator('postalcode', {
+                  <Form.Item label={fieldLabels.postalCode}>
+                    {getFieldDecorator('postalCode', {
                       rules: [{ required: false, message: '请输入邮政编码' }],
                     })(<Input placeholder="请输入邮政编码" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -394,8 +395,8 @@ class CustomerAddmodal extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item label={fieldLabels.taxcode}>
-                    {getFieldDecorator('taxcode', {
+                  <Form.Item label={fieldLabels.taxCode}>
+                    {getFieldDecorator('taxCode', {
                       rules: [{ required: false, message: '请输入税务登记号' }],
                     })(<Input placeholder="请输入税务登记号" style={{ width: 200 }} />)}
                   </Form.Item>

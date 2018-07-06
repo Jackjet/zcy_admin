@@ -87,27 +87,6 @@ const menuData = [
     path: 'fi',
     children: [
       {
-        key: 'xmfy',
-        name: '项目费用',
-        path: 'xmfy',
-      },
-      {
-        key: 'xmsk',
-        name: '项目收款',
-        path: 'xmsk',
-      },
-      {
-        key: 'xmzc',
-        name: '项目支出',
-        path: 'xmzc',
-      },
-      {
-        key: 'xmjk',
-        name: '项目借款',
-        path: 'xmjk',
-      },
-
-      {
         name: '发票管理',
         path: 'fiInvoice',
         children: [

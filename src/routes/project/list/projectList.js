@@ -25,6 +25,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
 import ProjectAddModal from '../add/ProjectAddModal.js';
+import ProjectCheckTabs from './ProjectCheckTabs.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -46,6 +47,7 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 export default class projectList extends PureComponent {
   state = {
     projectVisible: false,
+    projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -133,6 +135,9 @@ export default class projectList extends PureComponent {
           },
         });
         break;
+      case 'view':
+        this.handleProjectViewVisible(true);
+        break;
       default:
         break;
     }
@@ -171,6 +176,11 @@ export default class projectList extends PureComponent {
   handleProjectVisible = flag => {
     this.setState({
       projectVisible: !!flag,
+    });
+  };
+  handleProjectTabsVisible = flag => {
+    this.setState({
+      projectTabsVisible: !!flag,
     });
   };
 
@@ -347,7 +357,7 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, projectVisible } = this.state;
+    const { selectedRows, projectVisible, projectTabsVisible } = this.state;
 
     const columns = [
       {
@@ -432,7 +442,7 @@ export default class projectList extends PureComponent {
 
     const downhz = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
+        <Menu.Item key="view">查看</Menu.Item>
         <Menu.Item key="del">删除</Menu.Item>
         <Menu.Item key="cancel">停用</Menu.Item>
         <Menu.Item key="cancelcancel">启用</Menu.Item>
@@ -449,6 +459,10 @@ export default class projectList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleProjectVisible: this.handleProjectVisible,
+    };
+
+    const tabsMethods = {
+      handleProjectTabsVisible: this.handleProjectTabsVisible,
     };
 
     return (
@@ -484,6 +498,7 @@ export default class projectList extends PureComponent {
           </div>
         </Card>
         <ProjectAddModal {...parentMethods} projectVisible={projectVisible} />
+        <ProjectCheckTabs {...tabsMethods} projectTabsVisible={projectTabsVisible} />
       </PageHeaderLayout>
     );
   }

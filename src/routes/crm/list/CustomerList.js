@@ -7,9 +7,7 @@ import {
   Form,
   Input,
   Select,
-  Icon,
   Button,
-  Dropdown,
   Menu,
   DatePicker,
   Modal,
@@ -20,9 +18,9 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddmodal from '../add/CustomerAddmodal';
+import CustomerAddModal from '../add/CustomerAddModal';
 import CustomerViewTabs from './CustomerViewTabs.js';
-import EditableTable from '../../../components/EditableTable/EditableTable';
+import EditableTable from '../EditableTable/EditableTable';
 import ContactsAddModal from '../add/ContactsAddModal';
 import CustomerEditModal from '../edit/CustomerEditModal';
 
@@ -69,17 +67,37 @@ const SalesManage = Form.create()(props => {
 @Form.create()
 export default class CustomerList extends PureComponent {
   state = {
+    // 客户增加状态
     customerAddVisible: false,
+
+    // 客户编辑状态
     customerEditVisible: false,
+
+    // 联系人状态
     contactsVisible: false,
+
+    // 客户查看状态
     tabsViewVisible: false,
+
+    // 业务员状态
     salesVisible: false,
+
+    // 高级搜索是否隐藏状态
     expandForm: false,
+
+    // 选中的行
     selectedRows: [],
+
     formValues: {},
+
+    // 当前操作行的数据
+    rowInfo:{},
+
+    // 左边菜单树的起始状态
     openKeys: ['sub1'],
   };
 
+  // 生命周期方法 加载页面
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -98,6 +116,7 @@ export default class CustomerList extends PureComponent {
     }
   };
 
+  // 分页
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -124,6 +143,7 @@ export default class CustomerList extends PureComponent {
     });
   };
 
+  // 搜索重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -136,12 +156,14 @@ export default class CustomerList extends PureComponent {
     });
   };
 
+  // 展开高级搜索方法
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
   };
 
+  // 选中行删除方法
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -161,59 +183,14 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  handleEditClick = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    dispatch({
-      type: 'rule/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
-  };
-
-  handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'del':
-        dispatch({
-          type: 'rule/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      case 'check':
-        this.handleTabsViewVisible(true);
-        break;
-      default:
-        break;
-    }
-  };
-
+  // 获取选中的行
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
 
+  // 查询方法
   handleSearch = e => {
     e.preventDefault();
 
@@ -239,22 +216,29 @@ export default class CustomerList extends PureComponent {
       });
     });
   };
-  // 隐藏和显示
+
+  // 隐藏和显示客户增加界面
   handleCustomerAddVisible = flag => {
     this.setState({
       customerAddVisible: !!flag,
     });
   };
-  handleCustomerEditVisible = flag => {
+
+  // 隐藏和显示客户编辑界面
+  handleCustomerEditVisible = (flag) => {
     this.setState({
       customerEditVisible: !!flag,
     });
   };
+
+  // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
     this.setState({
       contactsVisible: !!flag,
     });
   };
+
+
   handleTabsViewVisible = flag => {
     this.setState({
       tabsViewVisible: !!flag,
@@ -293,6 +277,7 @@ export default class CustomerList extends PureComponent {
     });
   };
 
+
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
@@ -321,51 +306,21 @@ export default class CustomerList extends PureComponent {
     );
   }
 
-  // 简单查询
-  renderSimpleForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="关键字">
-              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="行业">
-              {getFieldDecorator('industry')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="制造业">制造业</Option>
-                  <Option value="服务业">服务业</Option>
-                  <Option value="房地产建筑">房地产建筑</Option>
-                  <Option value="三农业务">三农业务</Option>
-                  <Option value="政府购买">政府购买</Option>
-                  <Option value="商业">商业</Option>
-                  <Option value="金融">金融</Option>
-                  <Option value="非营利组织">非营利组织</Option>
-                  <Option value="其他">其他</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                搜索
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
-              </Button>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
+  // 弹窗展示当前行的数据
+  showCurRowMessage =(flag, record)=> {
+    this.setState({
+      customerEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showCurRowMessage2 =(flag, record)=> {
+    this.setState({
+      tabsViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
 
   // 高级搜索
   renderAdvancedForm() {
@@ -455,6 +410,52 @@ export default class CustomerList extends PureComponent {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
+  // 简单查询
+  renderSimpleForm() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
+            <FormItem label="关键字">
+              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="行业">
+              {getFieldDecorator('industry')(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="制造业">制造业</Option>
+                  <Option value="服务业">服务业</Option>
+                  <Option value="房地产建筑">房地产建筑</Option>
+                  <Option value="三农业务">三农业务</Option>
+                  <Option value="政府购买">政府购买</Option>
+                  <Option value="商业">商业</Option>
+                  <Option value="金融">金融</Option>
+                  <Option value="非营利组织">非营利组织</Option>
+                  <Option value="其他">其他</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                高级搜索
+              </Button>
+            </span>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+
   render() {
     const { rule: { data }, loading } = this.props;
     const {
@@ -464,6 +465,7 @@ export default class CustomerList extends PureComponent {
       contactsVisible,
       tabsViewVisible,
       salesVisible,
+      rowInfo,
     } = this.state;
 
     const columns = [
@@ -523,28 +525,17 @@ export default class CustomerList extends PureComponent {
       },
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={this.handleEditClick} >编辑</a>
+            <a onClick={() =>this.showCurRowMessage2(true, record)} >查看</a>
             <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
+            <a onClick={() =>this.showCurRowMessage(true, record)} >编辑</a>
+            <Divider type="vertical" />
+            <a onClick={() =>this.showCurRowMessage(true, record)} >删除</a>
           </Fragment>
         ),
       },
     ];
-
-    const downhz = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="check">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
-      </Menu>
-    );
 
     const CustomerAddMethods = {
       handleCustomerAddVisible: this.handleCustomerAddVisible,
@@ -603,10 +594,10 @@ export default class CustomerList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CustomerAddmodal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} />
+        <CustomerAddModal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
+        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
         <ContactsAddModal {...ContactsAddMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} />
+        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
         <SalesManage {...parentMethods} salesVisible={salesVisible} />
       </PageHeaderLayout>
     );

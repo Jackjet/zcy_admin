@@ -11,10 +11,11 @@ import {
   Cascader,
   Checkbox,
   Modal,
+  message,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
-import {message} from "antd/lib/index";
+
 
 const { Option } = Select;
 const optionshz = [
@@ -117,7 +118,6 @@ const formhz12 = {
 class ContactsAddModal extends PureComponent {
   state = {
     width: '100%',
-    contactsVisible: false,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -144,9 +144,7 @@ class ContactsAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          this.setState({
-            contactsVisible: false,
-          });
+          handleContactsVisible(false);
         }
       });
     };
@@ -207,7 +205,7 @@ class ContactsAddModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.code}>
                     {getFieldDecorator('code', {
                       rules: [{ required: true, message: '请输入编号' }],
-                    })(<Input placeholder="请输入编号" className={styles['ant-input-lg']} />)}
+                    })(<Input placeholder="请输入编号" style={{ width: 200 }}  />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -227,21 +225,21 @@ class ContactsAddModal extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={8}>
-                  <Form.Item {...formhz12} label={fieldLabels.contactName}>
+                  <Form.Item {...formhz11} label={fieldLabels.contactName}>
                     {getFieldDecorator('contactName', {
                       rules: [{ required: false, message: '请选择客户名称' }],
                     })(<Input placeholder="请选择客户名称" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item>
+                  <Form.Item {...formhz11} >
                     {getFieldDecorator('lagalperson', {
                       rules: [{ required: false, message: '请选择是否法人' }],
                     })(<Checkbox>是否法人</Checkbox>)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item>
+                  <Form.Item {...formhz11} >
                     {getFieldDecorator('mainperson', {
                       rules: [{ required: false, message: '请选择是否主联系人' }],
                     })(<Checkbox>是否主联系人</Checkbox>)}
@@ -298,7 +296,7 @@ class ContactsAddModal extends PureComponent {
                         <Option value="cancel" selected>
                           启用
                         </Option>
-                        <Option value="delete">删除</Option>
+                        <Option value="禁用">禁用</Option>
                       </Select>
                     )}
                   </Form.Item>
