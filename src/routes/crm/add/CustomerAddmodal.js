@@ -101,13 +101,11 @@ const simplenamecol = {
     paddingLeft: 72,
   },
 };
-
 const companyphonecol = {
   style: {
     paddingLeft: 37,
   },
 };
-
 const addresscol = {
   style: {
     paddingLeft: 10,
@@ -118,25 +116,21 @@ const urlcol = {
     paddingLeft: 10,
   },
 };
-
 const remarkcol = {
   style: {
     paddingLeft: 34,
   },
 };
-
 const companycol = {
   style: {
     paddingLeft: 10,
   },
 };
-
 const statuscol = {
   style: {
     paddingLeft: 27,
   },
 };
-
 const formhz11 = {
   wrapperCol: {
     style: {
@@ -147,7 +141,6 @@ const formhz11 = {
     width: '105%',
   },
 };
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -160,8 +153,6 @@ const formItemLayout = {
 };
 
 class CustomerAddmodal extends PureComponent {
-
-
   state = {
     width: '100%',
   };
@@ -178,8 +169,6 @@ class CustomerAddmodal extends PureComponent {
       this.setState({ width });
     }
   };
-
-
   render() {
     const { form, dispatch, submitting , customerAddVisible, handleCustomerAddVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
@@ -195,7 +184,6 @@ class CustomerAddmodal extends PureComponent {
           handleCustomerAddVisible(false);
         }
       });
-
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -439,7 +427,6 @@ class CustomerAddmodal extends PureComponent {
     );
   }
 }
-
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
