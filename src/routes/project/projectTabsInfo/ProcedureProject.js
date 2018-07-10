@@ -19,9 +19,8 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ReceivablesPlanList.less';
-import ReceivablesManageAdd from '../Receivables/ReceivablesManageAdd.js';
+import styles from './style.less';
+import picture from './test.png';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -42,14 +41,14 @@ const CreateForm = Form.create()(props => {
 
   return (
     <Modal
-      title="收款信息基本信息新增"
+      title="收款计划基本信息新增"
       visible={modalVisible}
       width="50%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ReceivablesManageAdd />
+      a
     </Modal>
   );
 });
@@ -58,7 +57,7 @@ const CheckProjectList = Form.create()(props => {
   const okHandle = () => handleCheckVisible();
   return (
     <Modal
-      title="收款信息基本信息查看"
+      title="收款计划基本信息查看"
       visible={checkVisible}
       width="50%"
       maskClosable={false}
@@ -66,7 +65,7 @@ const CheckProjectList = Form.create()(props => {
       onCancel={() => handleCheckVisible()}
       footer={null}
     >
-      <ReceivablesManageAdd />
+      a
     </Modal>
   );
 });
@@ -76,7 +75,7 @@ const CheckProjectList = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class ReceivablesManageList extends PureComponent {
+export default class ProcedureList extends PureComponent {
   state = {
     modalVisible: false,
     checkVisible: false,
@@ -393,31 +392,31 @@ export default class ReceivablesManageList extends PureComponent {
     const { selectedRows, modalVisible, checkVisible } = this.state;
     const columns = [
       {
-        title: '合同标题',
+        title: '编号',
         dataIndex: 'no',
       },
       {
-        title: '开票金额（元）',
+        title: '环节名称',
         dataIndex: 'name',
       },
       {
-        title: '收款金额（元）',
+        title: '执行人',
         dataIndex: 'linkman',
       },
       {
-        title: '收款时间',
+        title: '审批意见',
         dataIndex: 'status',
       },
       {
-        title: '收款类型',
+        title: '创建时间',
         dataIndex: 'company',
       },
       {
-        title: '承办人',
+        title: '完成时间',
         dataIndex: 'fee',
       },
       {
-        title: '备注',
+        title: '消耗时间',
         dataIndex: 'fee',
       },
     ];
@@ -456,6 +455,9 @@ export default class ReceivablesManageList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+          </div>
+          <div>
+            <img src={picture} alt="流程图" />
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />

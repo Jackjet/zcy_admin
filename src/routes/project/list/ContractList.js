@@ -22,7 +22,8 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
 import ContractAddModal from '../add/ContractAddModal.js';
-import ContractViewTabs from '../list/ContractViewTabs.js';
+import ContractViewTabs from '../contractTabsInfo/ContractViewTabs.js';
+import ContractEditModal from '../edit/ContractEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -32,31 +33,6 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-const CheckContractForm = Form.create()(props => {
-  const { checkContractVisible, handleCheckContractVisible } = props;
-  const okHandle = () => handleCheckContractVisible();
-
-  return (
-    <Modal
-      title="合同基本信息查看"
-      visible={checkContractVisible}
-      width="90%"
-      maskClosable={false}
-      onCancel={() => handleCheckContractVisible()}
-      footer={
-        (null,
-        (
-          <Button onClick={okHandle} type="primary">
-            知道了
-          </Button>
-        ))
-      }
-    >
-      <ContractViewTabs />
-    </Modal>
-  );
-});
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -65,9 +41,11 @@ const CheckContractForm = Form.create()(props => {
 export default class Contract extends PureComponent {
   state = {
     contractVisible: false,
-    checkContractVisible: false,
+    contractEditVisible: false,
+    contractTabsVisible: false,
     expandForm: false,
     selectedRows: [],
+    rowInfo:{},
     formValues: {},
     openKeys: ['sub1'],
   };
@@ -176,18 +154,41 @@ export default class Contract extends PureComponent {
       });
     });
   };
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
   handleContractVisible = flag => {
     this.setState({
       contractVisible: !!flag,
     });
   };
 
-  handleCheckContractVisible = flag => {
+  handleContractEditVisible = flag => {
     this.setState({
-      checkContractVisible: !!flag,
+      contractEditVisible: !!flag,
     });
   };
 
+  handleContractTabsVisible = flag => {
+    this.setState({
+      contractTabsVisible: !!flag,
+    });
+  };
   handleAdd = fields => {
     this.props.dispatch({
       type: 'rule/add',
@@ -201,8 +202,21 @@ export default class Contract extends PureComponent {
       contractVisible: false,
     });
   };
-
   rootSubmenuKeys = ['sub1'];
+
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      contractTabsVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      contractEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
 
   treemenu() {
     const SubMenuTree = Menu.SubMenu;
@@ -230,7 +244,6 @@ export default class Contract extends PureComponent {
       </Menu>
     );
   }
-
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -279,7 +292,6 @@ export default class Contract extends PureComponent {
       </Form>
     );
   }
-
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -357,14 +369,13 @@ export default class Contract extends PureComponent {
       </Form>
     );
   }
-
   renderForm() {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, contractVisible, checkContractVisible } = this.state;
+    const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo } = this.state;
 
     const columns = [
       {
@@ -413,13 +424,13 @@ export default class Contract extends PureComponent {
 
       {
         title: '操作',
-        render: () => (
+        render: (text,record) => (
           <Fragment>
-            <a onClick={() => this.handleCheckContractVisible(true)}>查看</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.handleCheckContractVisible(true)}>编辑</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
-            <a href="">删除</a>
+            <a onClick={this.handleDeleteClick} >删除</a>
             <Divider type="vertical" />
           </Fragment>
         ),
@@ -433,10 +444,15 @@ export default class Contract extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
+    const contractTabsMethods = {
+      handleContractTabsVisible: this.handleContractTabsVisible,
+    };
+    const contractAddMethods = {
       handleAdd: this.handleAdd,
       handleContractVisible: this.handleContractVisible,
-      handleCheckContractVisible: this.handleCheckContractVisible,
+    };
+    const contractEditMethods = {
+      handleContractEditVisible: this.handleContractEditVisible,
     };
 
     return (
@@ -471,8 +487,9 @@ export default class Contract extends PureComponent {
             </div>
           </div>
         </Card>
-        <ContractAddModal {...parentMethods} contractVisible={contractVisible} />
-        <CheckContractForm {...parentMethods} checkContractVisible={checkContractVisible} />
+        <ContractAddModal {...contractAddMethods} contractVisible={contractVisible} />
+        <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
+        <ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

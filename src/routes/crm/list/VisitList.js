@@ -19,6 +19,9 @@ import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import VisitListAddModal from '../add/VisitListAddModal';
+import VisitListViewModal from '../select/VisitListViewModal';
+import VisitListEditModal from '../edit/VisitListEditModal';
+
 
 const { Option } = Select;
 const confirm = Modal.confirm;
@@ -36,7 +39,10 @@ const getValue = obj =>
 // PureComponent优化Component的性能
 export default class VisitList  extends PureComponent {
   state = {
-    visitVisible: false,
+    visitAddVisible: false,
+    visitViewVisible: false,
+    visitEditVisible: false,
+    rowInfo:{},
     selectedRows: [],
     formValues: {},
   };
@@ -147,9 +153,21 @@ export default class VisitList  extends PureComponent {
   };
 
   // 点击新增显示弹窗
-  handleVisitVisible = flag => {
+  handleVisitAddVisible = flag => {
     this.setState({
-      visitVisible: !!flag,
+      visitAddVisible: !!flag,
+    });
+  };
+
+  handleVisitViewVisible = flag => {
+    this.setState({
+      visitViewVisible: !!flag,
+    });
+  };
+
+  handleVisitEditVisible = flag => {
+    this.setState({
+      visitEditVisible: !!flag,
     });
   };
 
@@ -164,7 +182,7 @@ export default class VisitList  extends PureComponent {
 
     message.success('添加成功111');
     this.setState({
-      visitVisible: false,
+      visitAddVisible: false,
     });
   };
 
@@ -180,6 +198,20 @@ export default class VisitList  extends PureComponent {
       },
     });
   };
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      visitViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      visitEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
 
   // 查询表单
   renderSimpleForm() {
@@ -211,7 +243,7 @@ export default class VisitList  extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitAddVisible}>
                 新建
               </Button>
             </span>
@@ -223,7 +255,7 @@ export default class VisitList  extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, visitVisible } = this.state;
+    const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, rowInfo } = this.state;
     const columns = [
       {
         title: '拜访对象',
@@ -251,11 +283,11 @@ export default class VisitList  extends PureComponent {
       },
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
-            <a href="">查看</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a href="">编辑</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
           </Fragment>
         ),
       },
@@ -267,9 +299,16 @@ export default class VisitList  extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleVisitVisible: this.handleVisitVisible,
+    const visitAddMethods = {
+      handleVisitAddVisible: this.handleVisitAddVisible,
+    };
+
+    const visitViewMethods = {
+      handleVisitViewVisible: this.handleVisitViewVisible,
+    };
+
+    const visitEditMethods = {
+      handleVisitEditVisible: this.handleVisitEditVisible,
     };
 
     return (
@@ -298,7 +337,9 @@ export default class VisitList  extends PureComponent {
             />
           </div>
         </Card>
-        <VisitListAddModal {...parentMethods} visitVisible={visitVisible} />
+        <VisitListAddModal {...visitAddMethods} visitAddVisible={visitAddVisible} />
+        <VisitListViewModal {...visitViewMethods} visitViewVisible={visitViewVisible} rowInfo={rowInfo} />
+        <VisitListEditModal {...visitEditMethods} visitEditVisible={visitEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

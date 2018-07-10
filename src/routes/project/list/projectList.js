@@ -1,8 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
 import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -12,11 +10,8 @@ import {
   Select,
   Icon,
   Button,
-  Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
-  Modal,
   message,
   Badge,
   Divider,
@@ -25,7 +20,8 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
 import ProjectAddModal from '../add/ProjectAddModal.js';
-import ProjectCheckTabs from './ProjectCheckTabs.js';
+import ProjectViewTabs from '../projectTabsInfo/ProjectCheckTabs.js';
+import ProjectEditModal from '../edit/ProjectEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -38,7 +34,6 @@ const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
 
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -47,12 +42,15 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 export default class projectList extends PureComponent {
   state = {
     projectVisible: false,
+    projectEditVisible: false,
     projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
+    rowInfo:{},
     formValues: {},
     openKeys: ['sub1'],
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -178,6 +176,13 @@ export default class projectList extends PureComponent {
       projectVisible: !!flag,
     });
   };
+
+  handleProjectEditVisible = flag => {
+    this.setState({
+      projectEditVisible: !!flag,
+    });
+  };
+
   handleProjectTabsVisible = flag => {
     this.setState({
       projectTabsVisible: !!flag,
@@ -201,7 +206,7 @@ export default class projectList extends PureComponent {
   rootSubmenuKeys = ['sub1'];
 
   treemenu() {
-    const SubMenu = Menu.SubMenu;
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -226,6 +231,39 @@ export default class projectList extends PureComponent {
       </Menu>
     );
   }
+
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      projectTabsVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      projectEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -258,14 +296,14 @@ export default class projectList extends PureComponent {
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
-                查询
+                搜索
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+                清空
               </Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                更多 <Icon type="down" />
-              </a>
+              <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                高级搜索
+              </Button>
             </span>
           </Col>
         </Row>
@@ -357,7 +395,7 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, projectVisible, projectTabsVisible } = this.state;
+    const { selectedRows, projectVisible, projectTabsVisible, rowInfo, projectEditVisible } = this.state;
 
     const columns = [
       {
@@ -423,46 +461,30 @@ export default class projectList extends PureComponent {
 
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
-            <a href="">编辑</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <Divider type="vertical" />
+            <a onClick={this.handleDeleteClick} >删除</a>
+            <Divider type="vertical" />
           </Fragment>
         ),
       },
     ];
 
-    const downhz = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="view">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
-      </Menu>
-    );
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
-
-    const parentMethods = {
+    const projectAddMethods = {
       handleAdd: this.handleAdd,
       handleProjectVisible: this.handleProjectVisible,
     };
 
-    const tabsMethods = {
+    const projectTabsMethods = {
       handleProjectTabsVisible: this.handleProjectTabsVisible,
+    };
+    const projectEditMethods = {
+      handleProjectEditVisible: this.handleProjectEditVisible,
     };
 
     return (
@@ -476,15 +498,6 @@ export default class projectList extends PureComponent {
                 <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
                   新建
                 </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
               </div>
               <StandardTable
                 selectedRows={selectedRows}
@@ -497,8 +510,9 @@ export default class projectList extends PureComponent {
             </div>
           </div>
         </Card>
-        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} />
-        <ProjectCheckTabs {...tabsMethods} projectTabsVisible={projectTabsVisible} />
+        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} />
+        <ProjectViewTabs {...projectTabsMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
+        <ProjectEditModal {...projectEditMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

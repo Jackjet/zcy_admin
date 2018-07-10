@@ -27,7 +27,7 @@ const formItemLayout = {
   },
 };
 
-class VisitListAddModal extends PureComponent {
+class VisitListEditModal extends PureComponent {
   state = {
     width: '90%',
     mockData: [],
@@ -74,7 +74,7 @@ class VisitListAddModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, visitAddVisible, handleVisitAddVisible } = this.props;
+    const { form, dispatch, submitting, visitEditVisible, handleVisitEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -85,7 +85,7 @@ class VisitListAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功bbb');
-          handleVisitAddVisible(false);
+          handleVisitEditVisible(false);
         }
       });
     };
@@ -133,12 +133,12 @@ class VisitListAddModal extends PureComponent {
         title="拜访新增"
         style={{ top: 150 }}
         // 对话框是否可见
-        visible={visitAddVisible}
+        visible={visitEditVisible}
         width="60%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleVisitAddVisible()}
+        onCancel={() => handleVisitEditVisible()}
       >
         <div>
           <Card>
@@ -148,8 +148,9 @@ class VisitListAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '请选择拜访对象' }],
+                      initialValue:`${rowInfo.dictID}`,
                     })(
-                      <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
+                      <Select  placeholder="请选择拜访对象" style={{ width: 200 }}>
                         <Option value="0">电话来访</Option>
                         <Option value="1">客户介绍</Option>
                         <Option value="2">老客户</Option>
@@ -261,4 +262,4 @@ class VisitListAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(VisitListAddModal));
+}))(Form.create()(VisitListEditModal));

@@ -18,8 +18,8 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import styles from './InvoiceManageList.less';
+import StandardTable from '../../../components/StandardTable/index';
+import styles from './style.less';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

@@ -81,7 +81,7 @@ const formhz11 = {
   },
 };
 
-class ReportAddModal extends PureComponent {
+class ReportEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -99,7 +99,7 @@ class ReportAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, reportAddVisible, handleReportAddVisible } = this.props;
+    const { form, dispatch, submitting, reportEditVisible, handleReportEditVisible, rowInfoCurrent } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -110,7 +110,7 @@ class ReportAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleReportAddVisible(false);
+          handleReportEditVisible(false);
         }
       });
     };
@@ -172,12 +172,12 @@ class ReportAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="报告基本信息新增"
-        visible={reportAddVisible}
+        title="报告基本信息编辑"
+        visible={reportEditVisible}
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleReportAddVisible()}
+        onCancel={() => handleReportEditVisible()}
       >
         <div>
           <Card>
@@ -187,6 +187,7 @@ class ReportAddModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入报告编号' }],
+                      initialValue: `${rowInfoCurrent.no}`,
                     })(<Input placeholder="请输入报告编号" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
@@ -279,4 +280,4 @@ class ReportAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ReportAddModal));
+}))(Form.create()(ReportEditModal));

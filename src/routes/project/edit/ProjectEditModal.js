@@ -209,7 +209,7 @@ const formItemLayout = {
   },
 };
 
-class ProjectAddModal extends PureComponent {
+class ProjectEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -227,26 +227,20 @@ class ProjectAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectVisible, handleProjectVisible  } = this.props;
+    const { form, dispatch, submitting, projectEditVisible, handleProjectEditVisible, rowInfo  } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
-
           dispatch({
             type: 'form/submitAdvancedForm',
             payload: values,
           });
-          form.resetFields();
-          handleProjectVisible(false);
+          handleProjectEditVisible(false);
         }
       });
     };
-    const onCan = () => {
-      form.resetFields();
-      handleProjectVisible(false);
-    }
     const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
@@ -288,12 +282,12 @@ class ProjectAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="项目基本信息新增"
-        visible={projectVisible}
+        title="项目基本信息编辑"
+        visible={projectEditVisible}
         width='90%'
         maskClosable={false}
         onOk={validate}
-        onCancel={onCan}
+        onCancel={() => handleProjectEditVisible()}
       >
         <div>
           <Card>
@@ -303,6 +297,7 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
+                      initialValue:`${rowInfo.name}`,
                     })(<Input placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
@@ -541,4 +536,4 @@ class ProjectAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ProjectAddModal));
+}))(Form.create()(ProjectEditModal));

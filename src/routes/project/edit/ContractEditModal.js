@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, DatePicker, Input, Select, Checkbox, Modal } from 'antd';
+import { Card, Form, Col, Row, DatePicker, Input, Select, Checkbox, Modal, message, Icon, Popover } from 'antd';
 import { connect } from 'dva';
-import styles from '../select/style.less';
+import styles from './style.less';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -77,7 +77,7 @@ const formhz11 = {
     width: '96.66666667%',
   },
 };
-class ContractInfo extends PureComponent {
+class ContractEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -95,17 +95,18 @@ class ContractInfo extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, handleContractViewVisible, contractViewVisible, rowInfoCurrent } = this.props;
+    const { form, dispatch, submitting, contractEditVisible, handleContractEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
+            type: 'rule/add',
             payload: values,
           });
-          handleContractViewVisible(false);
+          message.success('添加成功');
+          handleContractEditVisible(false);
         }
       });
     };
@@ -150,13 +151,12 @@ class ContractInfo extends PureComponent {
     };
     return (
       <Modal
-        title="合同基本信息查看"
-        style={{ top: 20 }}
-        visible={contractViewVisible}
+        title="合同基本信息新增"
+        visible={contractEditVisible}
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleContractViewVisible()}
+        onCancel={() => handleContractEditVisible()}
       >
         <div>
           <Card>
@@ -166,7 +166,7 @@ class ContractInfo extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
-                      initialValue:`${rowInfoCurrent.contractCode}`,
+                      initialValue: `${rowInfo.contractCode}`,
                     })(<Input placeholder="请输入合同编码" />)}
                   </Form.Item>
                 </Col>
@@ -478,6 +478,7 @@ class ContractInfo extends PureComponent {
           </Card>
         </div>
       </Modal>
+
     );
   }
 }
@@ -485,4 +486,4 @@ class ContractInfo extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ContractInfo));
+}))(Form.create()(ContractEditModal));

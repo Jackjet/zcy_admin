@@ -19,6 +19,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import BusinessAddModal from '../add/BusinessAddModal.js';
+import BusinessEditModal from '../edit/BusinessEditModal.js';
 import BusinessOppView from '../select/BusinessOppView.js';
 
 const FormItem = Form.Item;
@@ -37,8 +38,10 @@ export default class BusinessOpportunity extends PureComponent {
   state = {
     businessOppVisible: false,
     businessViewVisible: false,
+    businessEditVisible: false,
     selectedRows: [],
     formValues: {},
+    rowInfo:{},
     openKeys: ['sub1'],
   };
 
@@ -122,6 +125,25 @@ export default class BusinessOpportunity extends PureComponent {
     }
   };
 
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -159,6 +181,12 @@ export default class BusinessOpportunity extends PureComponent {
   handleBusinessViewVisible = flag => {
     this.setState({
       businessViewVisible: !!flag,
+    });
+  };
+
+  handleBusinessEditVisible = flag => {
+    this.setState({
+      businessEditVisible: !!flag,
     });
   };
   // 添加表单数据
@@ -207,6 +235,20 @@ export default class BusinessOpportunity extends PureComponent {
     );
   }
 
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      businessViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      businessEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
   // 简单查询
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -250,9 +292,11 @@ export default class BusinessOpportunity extends PureComponent {
     );
   }
 
+
+
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, businessOppVisible, businessViewVisible } = this.state;
+    const { selectedRows, businessOppVisible, businessViewVisible, businessEditVisible, rowInfo } = this.state;
 
     const columns = [
       {
@@ -272,6 +316,12 @@ export default class BusinessOpportunity extends PureComponent {
         title: '联系人',
         dataIndex: 'contacts',
       },
+
+      {
+        title: '分配人',
+        dataIndex: 'assignor',
+      },
+
       {
         title: '商机来源',
         dataIndex: 'businessSource',
@@ -282,13 +332,13 @@ export default class BusinessOpportunity extends PureComponent {
       },
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.handleBusinessViewVisible(true)}>查看</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a href="">编辑</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
-            <a href="">删除</a>
+            <a onClick={this.handleDeleteClick} >删除</a>
           </Fragment>
         ),
       },
@@ -301,9 +351,16 @@ export default class BusinessOpportunity extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
+    const businessAddMethods = {
       handleBusinessOppVisible: this.handleBusinessOppVisible,
+    };
+
+    const businessViewMethods = {
       handleBusinessViewVisible: this.handleBusinessViewVisible,
+    };
+
+    const businessEditMethods = {
+      handleBusinessEditVisible: this.handleBusinessEditVisible,
     };
 
     return (
@@ -340,8 +397,9 @@ export default class BusinessOpportunity extends PureComponent {
             </div>
           </div>
         </Card>
-        <BusinessAddModal {...parentMethods} businessOppVisible={businessOppVisible} />
-        <BusinessOppView {...parentMethods} businessViewVisible={businessViewVisible} />
+        <BusinessAddModal {...businessAddMethods} businessOppVisible={businessOppVisible} />
+        <BusinessOppView {...businessViewMethods} businessViewVisible={businessViewVisible} rowInfo={rowInfo} />
+        <BusinessEditModal {...businessEditMethods} businessEditVisible={businessEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

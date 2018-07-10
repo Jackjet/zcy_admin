@@ -130,7 +130,7 @@ export function postRule(req, res, u, b) {
         updatedAt: new Date(),
         createdAt: new Date(),
         progress: Math.ceil(Math.random() * 100),
-        customerCode: ` ${customerCode} `,
+        customerCode: ` 客户编码${i} `,
         contractTitle:`这个字段是合同标题 ${i}`,
       });
       break;

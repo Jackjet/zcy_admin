@@ -18,7 +18,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddModal from '../add/CustomerAddModal';
+import CustomerAddModal from '../add/CustomerAddmodal';
 import CustomerViewTabs from './CustomerViewTabs.js';
 import EditableTable from '../EditableTable/EditableTable';
 import ContactsAddModal from '../add/ContactsAddModal';
@@ -219,6 +219,7 @@ export default class CustomerList extends PureComponent {
 
   // 隐藏和显示客户增加界面
   handleCustomerAddVisible = flag => {
+    this.props.form.setFields();
     this.setState({
       customerAddVisible: !!flag,
     });
@@ -307,14 +308,14 @@ export default class CustomerList extends PureComponent {
   }
 
   // 弹窗展示当前行的数据
-  showCurRowMessage =(flag, record)=> {
+  showEditMessage =(flag, record)=> {
     this.setState({
       customerEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showCurRowMessage2 =(flag, record)=> {
+  showViewMessage =(flag, record)=> {
     this.setState({
       tabsViewVisible: !!flag,
       rowInfo: record,
@@ -527,11 +528,11 @@ export default class CustomerList extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showCurRowMessage2(true, record)} >查看</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showCurRowMessage(true, record)} >编辑</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showCurRowMessage(true, record)} >删除</a>
+            <a onClick={this.handleDeleteClick} >删除</a>
           </Fragment>
         ),
       },

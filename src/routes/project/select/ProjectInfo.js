@@ -14,6 +14,7 @@ import {
   Popover,
   Cascader,
   Checkbox,
+  Modal,
 } from 'antd';
 import { connect } from 'dva';
 // import FooterToolbar from 'components/FooterToolbar';
@@ -226,7 +227,7 @@ class ProjectCheck extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting } = this.props;
+    const { form, dispatch, submitting, projectViewVisible, handleProjectViewVisible, rowInfoCurrent  } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -236,6 +237,7 @@ class ProjectCheck extends PureComponent {
             type: 'form/submitAdvancedForm',
             payload: values,
           });
+          handleProjectViewVisible(false);
         }
       });
     };
@@ -279,243 +281,256 @@ class ProjectCheck extends PureComponent {
       );
     };
     return (
-      <div>
-        <Card>
-          <Form layout="inline">
-            <Row className={styles['fn-mb-15']}>
-              <Col>
-                <Form.Item {...formhz11} label={fieldLabels.name}>
-                  {getFieldDecorator('name', {
-                    rules: [{ required: true, message: '请输入项目名称' }],
-                  })(<Input placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['row-h']}>
-              <Col span={8}>
-                <Form.Item label={fieldLabels.type}>
-                  {getFieldDecorator('type', {
-                    rules: [{ required: true, message: '请选择项目类别' }],
-                  })(
-                    <Select placeholder="请选择项目类别" style={{ width: 200 }}>
-                      <Option value="0">请选择</Option>
-                      <Option value="g">工程造价业务项目</Option>
-                      <Option value="y">咨询报告</Option>
-                      <Option value="q">招标</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item {...yearscol} label={fieldLabels.years}>
-                  {getFieldDecorator('years', {
-                    rules: [{ required: true, message: '请选择年度' }],
-                  })(
-                    <Select placeholder="请选择年度" style={{ width: 200 }}>
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">2018</Option>
-                      <Option value="f">2019</Option>
-                      <Option value="fd">2020</Option>
-                      <Option value="sn">2021</Option>
-                      <Option value="zf">2022</Option>
-                      <Option value="sy">2023</Option>
-                      <Option value="jr">2024</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item {...statuscol} label={fieldLabels.status}>
-                  {getFieldDecorator('status', {
-                    rules: [{ required: true, message: '请选择项目状态' }],
-                  })(
-                    <Select placeholder="请选择项目状态" style={{ width: 200 }}>
-                      <Option value="c">启用</Option>
-                      <Option value="h">禁用</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['row-h']}>
-              <Col span={8}>
-                <Form.Item {...cnumcol} label={fieldLabels.number}>
-                  {getFieldDecorator('number', {
-                    rules: [{ required: false, message: '请输入项目编码' }],
-                  })(<Input placeholder="请输入项目编码" style={{ width: 200 }} />)}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item {...customercol} label={fieldLabels.customer}>
-                  {getFieldDecorator('customer', {
-                    rules: [{ required: true, message: '请选择客户' }],
-                  })(
-                    <Select placeholder="请选择客户" style={{ width: 200 }}>
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">客户A</Option>
-                      <Option value="f">客户B</Option>
-                      <Option value="fd">客户C</Option>
-                      <Option value="sn">客户D</Option>
-                      <Option value="zf">客户E</Option>
-                      <Option value="sy">客户F</Option>
-                      <Option value="jr">客户H</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item label={fieldLabels.cuslink}>
-                  {getFieldDecorator('cuslink', {
-                    rules: [{ required: true, message: '请选择客户联系人' }],
-                  })(
-                    <Select placeholder="请选择客户联系人" style={{ width: 200 }}>
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">客户联系人A</Option>
-                      <Option value="f">客户联系人B</Option>
-                      <Option value="fd">客户联系人C</Option>
-                      <Option value="sn">客户联系人D</Option>
-                      <Option value="zf">客户联系人E</Option>
-                      <Option value="sy">客户联系人F</Option>
-                      <Option value="jr">客户联系人H</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
 
-            <Row className={styles['row-h']}>
-              <Col span={8}>
-                <Form.Item label={fieldLabels.fzcompany}>
-                  {getFieldDecorator('fzcompany', {
-                    rules: [{ required: true, message: '负责公司' }],
-                  })(
-                    <Select placeholder="负责公司" style={{ width: 200 }}>
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">公司A</Option>
-                      <Option value="f">公司B</Option>
-                      <Option value="fd">公司C</Option>
-                      <Option value="sn">公司D</Option>
-                      <Option value="zf">公司E</Option>
-                      <Option value="sy">公司F</Option>
-                      <Option value="jr">公司H</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item label={fieldLabels.fzperson}>
-                  {getFieldDecorator('fzperson', {
-                    rules: [{ required: true, message: '项目负责人' }],
-                  })(
-                    <Select placeholder="负责公司" style={{ width: 200 }}>
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">公司A</Option>
-                      <Option value="f">公司B</Option>
-                      <Option value="fd">公司C</Option>
-                      <Option value="sn">公司D</Option>
-                      <Option value="zf">公司E</Option>
-                      <Option value="sy">公司F</Option>
-                      <Option value="jr">公司H</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item {...feecol} label={fieldLabels.fee}>
-                  {getFieldDecorator('fee', {
-                    rules: [{ required: true, message: '请输入项目费用' }],
-                  })(<Input placeholder="请输入项目费用" style={{ width: 200 }} />)}
-                </Form.Item>
-              </Col>
-            </Row>
+      <Modal
+        title="商机基本信息新增"
+        style={{ top: 20 }}
+        visible={projectViewVisible}
+        width="90%"
+        maskClosable={false}
+        onOk={validate}
+        onCancel={() => handleProjectViewVisible()}
+      >
+        <div>
+          <Card>
+            <Form layout="inline">
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formhz11} label={fieldLabels.name}>
+                    {getFieldDecorator('name', {
+                      rules: [{ required: true, message: '请输入项目名称' }],
+                      initialValue:`${rowInfoCurrent.name}`,
+                    })(<Input placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['row-h']}>
+                <Col span={8}>
+                  <Form.Item label={fieldLabels.type}>
+                    {getFieldDecorator('type', {
+                      rules: [{ required: true, message: '请选择项目类别' }],
+                    })(
+                      <Select placeholder="请选择项目类别" style={{ width: 200 }}>
+                        <Option value="0">请选择</Option>
+                        <Option value="g">工程造价业务项目</Option>
+                        <Option value="y">咨询报告</Option>
+                        <Option value="q">招标</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...yearscol} label={fieldLabels.years}>
+                    {getFieldDecorator('years', {
+                      rules: [{ required: true, message: '请选择年度' }],
+                    })(
+                      <Select placeholder="请选择年度" style={{ width: 200 }}>
+                        <Option value="xiao">请选择</Option>
+                        <Option value="z">2018</Option>
+                        <Option value="f">2019</Option>
+                        <Option value="fd">2020</Option>
+                        <Option value="sn">2021</Option>
+                        <Option value="zf">2022</Option>
+                        <Option value="sy">2023</Option>
+                        <Option value="jr">2024</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...statuscol} label={fieldLabels.status}>
+                    {getFieldDecorator('status', {
+                      rules: [{ required: true, message: '请选择项目状态' }],
+                    })(
+                      <Select placeholder="请选择项目状态" style={{ width: 200 }}>
+                        <Option value="c">启用</Option>
+                        <Option value="h">禁用</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['row-h']}>
+                <Col span={8}>
+                  <Form.Item {...cnumcol} label={fieldLabels.number}>
+                    {getFieldDecorator('number', {
+                      rules: [{ required: false, message: '请输入项目编码' }],
+                    })(<Input placeholder="请输入项目编码" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...customercol} label={fieldLabels.customer}>
+                    {getFieldDecorator('customer', {
+                      rules: [{ required: true, message: '请选择客户' }],
+                    })(
+                      <Select placeholder="请选择客户" style={{ width: 200 }}>
+                        <Option value="xiao">请选择</Option>
+                        <Option value="z">客户A</Option>
+                        <Option value="f">客户B</Option>
+                        <Option value="fd">客户C</Option>
+                        <Option value="sn">客户D</Option>
+                        <Option value="zf">客户E</Option>
+                        <Option value="sy">客户F</Option>
+                        <Option value="jr">客户H</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label={fieldLabels.cuslink}>
+                    {getFieldDecorator('cuslink', {
+                      rules: [{ required: true, message: '请选择客户联系人' }],
+                    })(
+                      <Select placeholder="请选择客户联系人" style={{ width: 200 }}>
+                        <Option value="xiao">请选择</Option>
+                        <Option value="z">客户联系人A</Option>
+                        <Option value="f">客户联系人B</Option>
+                        <Option value="fd">客户联系人C</Option>
+                        <Option value="sn">客户联系人D</Option>
+                        <Option value="zf">客户联系人E</Option>
+                        <Option value="sy">客户联系人F</Option>
+                        <Option value="jr">客户联系人H</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row className={styles['row-h']}>
-              <Col span={8}>
-                <Form.Item {...startdatecol} label={fieldLabels.startdate}>
-                  {getFieldDecorator('startdate')(
-                    <DatePicker style={{ width: 200 }} placeholder="请输入开始日期" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item {...enddatecol} label={fieldLabels.enddate}>
-                  {getFieldDecorator('enddate')(
-                    <DatePicker style={{ width: 200 }} placeholder="请输入结束日期" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8} />
-            </Row>
+              <Row className={styles['row-h']}>
+                <Col span={8}>
+                  <Form.Item label={fieldLabels.fzcompany}>
+                    {getFieldDecorator('fzcompany', {
+                      rules: [{ required: true, message: '负责公司' }],
+                    })(
+                      <Select placeholder="负责公司" style={{ width: 200 }}>
+                        <Option value="xiao">请选择</Option>
+                        <Option value="z">公司A</Option>
+                        <Option value="f">公司B</Option>
+                        <Option value="fd">公司C</Option>
+                        <Option value="sn">公司D</Option>
+                        <Option value="zf">公司E</Option>
+                        <Option value="sy">公司F</Option>
+                        <Option value="jr">公司H</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label={fieldLabels.fzperson}>
+                    {getFieldDecorator('fzperson', {
+                      rules: [{ required: true, message: '项目负责人' }],
+                    })(
+                      <Select placeholder="负责公司" style={{ width: 200 }}>
+                        <Option value="xiao">请选择</Option>
+                        <Option value="z">公司A</Option>
+                        <Option value="f">公司B</Option>
+                        <Option value="fd">公司C</Option>
+                        <Option value="sn">公司D</Option>
+                        <Option value="zf">公司E</Option>
+                        <Option value="sy">公司F</Option>
+                        <Option value="jr">公司H</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...feecol} label={fieldLabels.fee}>
+                    {getFieldDecorator('fee', {
+                      rules: [{ required: true, message: '请输入项目费用' }],
+                    })(<Input placeholder="请输入项目费用" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row className={styles['fn-mb-15']}>
-              <Col>
-                <Form.Item {...formhz11} label={fieldLabels.biztype}>
-                  {getFieldDecorator('biztype')(
-                    <Checkbox.Group style={{ width: '100%' }}>
-                      <Row>
-                        <Col span={8}>
-                          <Checkbox value="A">预算编制</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="B">结算编制</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="C">建设工程招标代理</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="D">咨询审核</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="E">预算审核</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="F">结算审核</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="G">政府采购招标代理</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="H">咨询报告</Checkbox>
-                        </Col>
-                      </Row>
-                    </Checkbox.Group>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col>
-                <Form.Item {...formhz12} label={fieldLabels.content}>
-                  {getFieldDecorator('content')(<TextArea placeholder="请输入项目内容" rows={4} />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row className={styles['row-h']}>
+                <Col span={8}>
+                  <Form.Item {...startdatecol} label={fieldLabels.startdate}>
+                    {getFieldDecorator('startdate')(
+                      <DatePicker style={{ width: 200 }} placeholder="请输入开始日期" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...enddatecol} label={fieldLabels.enddate}>
+                    {getFieldDecorator('enddate')(
+                      <DatePicker style={{ width: 200 }} placeholder="请输入结束日期" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} />
+              </Row>
 
-            <Row className={styles['row-h']}>
-              <Col span={12}>
-                <Form.Item {...jfwcol} label={fieldLabels.jfw}>
-                  {getFieldDecorator('jfw')(
-                    <TextArea placeholder="请输入项目结束时的交付物" rows={4} />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item {...demandcol} label={fieldLabels.demand}>
-                  {getFieldDecorator('demand')(<TextArea placeholder="请输入客户需求" rows={4} />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formhz11} label={fieldLabels.biztype}>
+                    {getFieldDecorator('biztype')(
+                      <Checkbox.Group style={{ width: '100%' }}>
+                        <Row>
+                          <Col span={8}>
+                            <Checkbox value="A">预算编制</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="B">结算编制</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="C">建设工程招标代理</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="D">咨询审核</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="E">预算审核</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="F">结算审核</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="G">政府采购招标代理</Checkbox>
+                          </Col>
+                          <Col span={8}>
+                            <Checkbox value="H">咨询报告</Checkbox>
+                          </Col>
+                        </Row>
+                      </Checkbox.Group>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formhz12} label={fieldLabels.content}>
+                    {getFieldDecorator('content')(<TextArea placeholder="请输入项目内容" rows={4} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row className={styles['fn-mb-15']}>
-              <Col>
-                <Form.Item {...remarkcol} label={fieldLabels.remark}>
-                  {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} />)}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Card>
-      </div>
+              <Row className={styles['row-h']}>
+                <Col span={12}>
+                  <Form.Item {...jfwcol} label={fieldLabels.jfw}>
+                    {getFieldDecorator('jfw')(
+                      <TextArea placeholder="请输入项目结束时的交付物" rows={4} />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item {...demandcol} label={fieldLabels.demand}>
+                    {getFieldDecorator('demand')(<TextArea placeholder="请输入客户需求" rows={4} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...remarkcol} label={fieldLabels.remark}>
+                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        </div>
+      </Modal>
+
     );
   }
 }

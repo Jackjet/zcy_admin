@@ -22,7 +22,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ProjectListView.less';
 import ProjectAddModal from '../add/ProjectAddModal.js';
-import ProjectCheckTabs from '../list/ProjectCheckTabs.js';
+import ProjectCheckTabs from '../projectTabsInfo/ProjectCheckTabs.js';
 import ProjectInfo from '../select/ProjectInfo.js';
 
 const FormItem = Form.Item;

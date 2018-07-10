@@ -74,7 +74,7 @@ class VisitListAddModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, visitAddVisible, handleVisitAddVisible } = this.props;
+    const { form, dispatch, submitting, visitViewVisible, handleVisitViewVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -85,7 +85,7 @@ class VisitListAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功bbb');
-          handleVisitAddVisible(false);
+          handleVisitViewVisible(false);
         }
       });
     };
@@ -133,12 +133,12 @@ class VisitListAddModal extends PureComponent {
         title="拜访新增"
         style={{ top: 150 }}
         // 对话框是否可见
-        visible={visitAddVisible}
+        visible={visitViewVisible}
         width="60%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleVisitAddVisible()}
+        onCancel={() => handleVisitViewVisible()}
       >
         <div>
           <Card>
@@ -148,8 +148,9 @@ class VisitListAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '请选择拜访对象' }],
+                      initialValue:`${rowInfo.dictID}`,
                     })(
-                      <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
+                      <Select disabled placeholder="请选择拜访对象" style={{ width: 200 }}>
                         <Option value="0">电话来访</Option>
                         <Option value="1">客户介绍</Option>
                         <Option value="2">老客户</Option>
@@ -170,7 +171,7 @@ class VisitListAddModal extends PureComponent {
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '请选择拜访方式' }],
                     })(
-                      <Select placeholder="请选择拜访方式" style={{ width: 200 }}>
+                      <Select disabled placeholder="请选择拜访方式" style={{ width: 200 }}>
                         <Option value="0">电话来访</Option>
                         <Option value="1">现场拜访</Option>
                         <Option value="8">其他</Option>
@@ -184,7 +185,7 @@ class VisitListAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(<DatePicker placeholder="请选择拜访日期" />)}
+                    })(<DatePicker disabled placeholder="请选择拜访日期" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -194,7 +195,7 @@ class VisitListAddModal extends PureComponent {
                     {getFieldDecorator('connectBusiness', {
                       rules: [{ required: false, message: '请选择关联商机' }],
                     })(
-                      <Select placeholder="请选择关联商机" style={{ width: 200 }}>
+                      <Select disabled placeholder="请选择关联商机" style={{ width: 200 }}>
                         <Option value="0">电话来访</Option>
                         <Option value="1">现场拜访</Option>
                         <Option value="8">其他</Option>
@@ -208,7 +209,7 @@ class VisitListAddModal extends PureComponent {
                 <Col lg={24} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.communication}>
                     {getFieldDecorator('communication')(
-                      <TextArea placeholder="请输入交流内容" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea disabled placeholder="请输入交流内容" style={{ minHeight: 32 }} rows={4} />
                     )}
                   </Form.Item>
                 </Col>
@@ -244,7 +245,7 @@ class VisitListAddModal extends PureComponent {
                 <Col lg={24} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(
-                      <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea disabled placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
                     )}
                   </Form.Item>
                 </Col>

@@ -64,6 +64,7 @@ const fieldLabels = {
   businessName: '商机名称',
   customerName: '客户名称',
   customerContact: '客户联系人',
+  assignor: '分配人',
   customerSource: '客户来源',
   businessState: '商机状态',
   customerDemand: '客户需求',
@@ -260,7 +261,7 @@ class BusinessAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['row-h']}>
-                <Col span={16}>
+                <Col span={8}>
                   <Form.Item {...cnumcol} label={fieldLabels.customerName}>
                     {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
@@ -268,10 +269,17 @@ class BusinessAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
+                  <Form.Item {...cnumcol} label={fieldLabels.assignor}>
+                    {getFieldDecorator('assignor', {
+                      rules: [{ required: false, message: '请输入分配人' }],
+                    })(<Input placeholder="请输入分配人" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
                   <Form.Item {...cpinyincol} label={fieldLabels.customerContact}>
                     {getFieldDecorator('customerContact', {
                       rules: [{ required: false, message: '请输入客户联系人' }],
-                    })(<Input placeholder="请输入客户联系人" style={{ width: 200 }} />)}
+                    })(<Input placeholder="自动带出联系人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>

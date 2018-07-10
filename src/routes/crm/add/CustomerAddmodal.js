@@ -185,6 +185,10 @@ class CustomerAddmodal extends PureComponent {
         }
       });
     };
+    const onCancel = () => {
+      form.resetFields();
+      handleCustomerAddVisible(false);
+    };
     const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
@@ -232,7 +236,7 @@ class CustomerAddmodal extends PureComponent {
         width="90%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleCustomerAddVisible(false)}
+        onCancel={onCancel}
       >
         <div>
           <Card>

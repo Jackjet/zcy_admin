@@ -68,7 +68,7 @@ const formhz13 = {
   },
 };
 
-class BusinessOppView extends PureComponent {
+class BusinessEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -86,9 +86,9 @@ class BusinessOppView extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, handleBusinessViewVisible, businessViewVisible, rowInfo } = this.props;
+    const { form, dispatch, submitting, handleBusinessEditVisible, businessEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const okHandle = () => handleBusinessViewVisible();
+    const okHandle = () => handleBusinessEditVisible();
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -97,6 +97,7 @@ class BusinessOppView extends PureComponent {
             type: 'form/submitAdvancedForm',
             payload: values,
           });
+          handleBusinessEditVisible(false);
         }
       });
     };
@@ -141,13 +142,13 @@ class BusinessOppView extends PureComponent {
     };
     return (
       <Modal
-        title="查看"
+        title="编辑"
         style={{ top: 60 }}
-        visible={businessViewVisible}
+        visible={businessEditVisible}
         width="80%"
         maskClosable={false}
         onOk={okHandle}
-        onCancel={() => handleBusinessViewVisible()}
+        onCancel={() => handleBusinessEditVisible()}
         footer={
           (null,
             (
@@ -166,14 +167,14 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                       initialValue: `${rowInfo.no}`,
-                    })(<Input disabled placeholder="不重复的数字" className={styles['ant-input-lg']} />)}
+                    })(<Input  placeholder="不重复的数字" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
                 <Col span={16}>
                   <Form.Item {...formhz12} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                    })(<Input disabled placeholder="商机描述" className={styles['ant-input-lg']} />)}
+                    })(<Input  placeholder="商机描述" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -182,21 +183,21 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formhz13} label={fieldLabels.customerName}>
                     {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
-                    })(<Input disabled placeholder="请输入客户名称" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入客户名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formhz13} label={fieldLabels.assignor}>
                     {getFieldDecorator('assignor', {
                       rules: [{ required: false, message: '请输入分配人' }],
-                    })(<Input disabled placeholder="请输入分配人" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入分配人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item label={fieldLabels.customerContact}>
                     {getFieldDecorator('customerContact', {
                       rules: [{ required: false, message: '请输入客户联系人' }],
-                    })(<Input disabled placeholder="请输入客户联系人" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入客户联系人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -207,7 +208,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('customerSource', {
                       rules: [{ required: true, message: '请选择商机来源' }],
                     })(
-                      <Select disabled placeholder="请选择商机来源" style={{ width: 200 }}>
+                      <Select  placeholder="请选择商机来源" style={{ width: 200 }}>
                         <Option value="0">电话来访</Option>
                         <Option value="1">客户介绍</Option>
                         <Option value="2">老客户</Option>
@@ -226,7 +227,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
                     })(
-                      <Select disabled placeholder="请选择商机状态" style={{ width: 200 }}>
+                      <Select  placeholder="请选择商机状态" style={{ width: 200 }}>
                         <Option value="0">请选择</Option>
                         <Option value="1">初期沟通</Option>
                         <Option value="2">立项评估</Option>
@@ -246,7 +247,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item label={fieldLabels.customerDemand}>
                     {getFieldDecorator('customerDemand', {
                       rules: [{ required: true, message: '请输入客户需求' }],
-                    })(<TextArea disabled placeholder="请输入客户需求" style={{ width: 1000 }} />)}
+                    })(<TextArea  placeholder="请输入客户需求" style={{ width: 1000 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -255,21 +256,21 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.expectDealDate}>
                     {getFieldDecorator('expectDealDate', {
                       rules: [{ required: false, message: '请输入预计成交日期' }],
-                    })(<Input disabled placeholder="请输入预计成交日期" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入预计成交日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formhz13} label={fieldLabels.offer}>
                     {getFieldDecorator('offer', {
                       rules: [{ required: false, message: '请输入报价' }],
-                    })(<Input disabled placeholder="请输入报价" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入报价" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formhz11} label={fieldLabels.expectTransactionPrice}>
                     {getFieldDecorator('expectTransactionPrice', {
                       rules: [{ required: false, message: '请输入预计成交价' }],
-                    })(<Input disabled placeholder="请输入预计成交价" style={{ width: 200 }} />)}
+                    })(<Input  placeholder="请输入预计成交价" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -278,7 +279,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(<TextArea disabled placeholder="请输入备注" style={{ width: 1000 }} />)}
+                    })(<TextArea  placeholder="请输入备注" style={{ width: 1000 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -293,4 +294,4 @@ class BusinessOppView extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(BusinessOppView));
+}))(Form.create()(BusinessEditModal));

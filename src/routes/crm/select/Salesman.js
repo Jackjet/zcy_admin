@@ -16,7 +16,6 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ContactsView.less';
 import VisitListAddModal from '../add/VisitListAddModal';
 
