@@ -493,7 +493,7 @@ class CustomerViewTabs extends PureComponent {
             }
             key="1"
           >
-            <Collapse defaultActiveKey={['1']}>
+            <Collapse defaultActiveKey={['1','2']}>
               <Panel header="客户基本信息" key="1">
                 <div>
                   <Card>
@@ -514,12 +514,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('customerLevel', {
                               rules: [{ required: true, message: '请选择客户等级' }],
                             })(
-                              <Select placeholder="请选择客户等级" style={{ width: 200 }}>
-                                <Option value="0">请选择</Option>
-                                <Option value="g">贵宾</Option>
-                                <Option value="y">一般客户</Option>
-                                <Option value="q">潜在客户</Option>
-                              </Select>
+                              <Input disabled placeholder="请选择客户等级" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -528,18 +523,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('industry', {
                               rules: [{ required: true, message: '请选择行业' }],
                             })(
-                              <Select placeholder="请选择行业" style={{ width: 200 }}>
-                                <Option value="xiao">请选择</Option>
-                                <Option value="z">制造业</Option>
-                                <Option value="f">服务业</Option>
-                                <Option value="fd">房地产建筑</Option>
-                                <Option value="sn">三农业务</Option>
-                                <Option value="zf">政府购买</Option>
-                                <Option value="sy">商业</Option>
-                                <Option value="jr">金融</Option>
-                                <Option value="fyl">非营利组织</Option>
-                                <Option value="other">其他</Option>
-                              </Select>
+                              <Input disabled placeholder="请选择行业" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -548,10 +532,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('incomeTax', {
                               rules: [{ required: true, message: '请选择所得税征收方式' }],
                             })(
-                              <Select placeholder="请选择所得税征收方式" style={{ width: 200 }}>
-                                <Option value="c">查账征收</Option>
-                                <Option value="h">核定征收</Option>
-                              </Select>
+                              <Input disabled placeholder="请选择所得税征收方式" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -562,21 +543,26 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('customerCode', {
                               rules: [{ required: false, message: '请输入客户编码' }],
                               initialValue:`${rowInfo.customerCode}`,
-                            })(<Input disabled placeholder="请输入客户编码" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入客户编码" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
                           <Form.Item {...cpinyincol} label={fieldLabels.pinyin}>
                             {getFieldDecorator('pinyin', {
                               rules: [{ required: false, message: '请输入拼音码' }],
-                            })(<Input placeholder="请输入拼音码" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入拼音码" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
                           <Form.Item {...simplenamecol} label={fieldLabels.simpleName}>
                             {getFieldDecorator('simpleName', {
                               rules: [{ required: false, message: '请输入简称' }],
-                            })(<Input placeholder="请输入简称" style={{ width: 200 }} />)}
+                            })(<Input disabled placeholder="请输入简称" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -586,21 +572,27 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item label={fieldLabels.mobilePhone}>
                             {getFieldDecorator('mobilepPhone', {
                               rules: [{ required: true, message: '请输入手机号码' }],
-                            })(<Input placeholder="请输入手机号码" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入手机号码" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
                           <Form.Item label={fieldLabels.email}>
                             {getFieldDecorator('email', {
                               rules: [{ required: true, message: '请输入电子邮箱' }],
-                            })(<Input placeholder="请输入电子邮箱" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入电子邮箱" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
                           <Form.Item {...companyphonecol} label={fieldLabels.companyPhone}>
                             {getFieldDecorator('companyPhone', {
                               rules: [{ required: true, message: '请输入公司电话' }],
-                            })(<Input placeholder="请输入公司电话" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入公司电话" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -610,7 +602,9 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item label={fieldLabels.postalCode}>
                             {getFieldDecorator('postalCode', {
                               rules: [{ required: true, message: '请输入邮政编码' }],
-                            })(<Input placeholder="请输入邮政编码" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入邮政编码" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
@@ -619,6 +613,7 @@ class CustomerViewTabs extends PureComponent {
                               rules: [{ required: true, message: '请选择所在区域' }],
                             })(
                               <Cascader
+                                disabled
                                 options={optionshz}
                                 onChange={onChange}
                                 placeholder="请选择所在区域"
@@ -633,14 +628,18 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item {...urlcol} label={fieldLabels.url}>
                             {getFieldDecorator('url', {
                               rules: [{ required: false, message: '请输入网站主页' }],
-                            })(<Input placeholder="请输入网站主页" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入网站主页" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
                           <Form.Item {...addresscol} label={fieldLabels.address}>
                             {getFieldDecorator('address', {
                               rules: [{ required: false, message: '请输入详细地址' }],
-                            })(<Input placeholder="请输入详细地址" style={{ width: 603 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入详细地址" style={{ width: 603 }} />
+                            )}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -649,14 +648,18 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item label={fieldLabels.taxCode}>
                             {getFieldDecorator('taxCode', {
                               rules: [{ required: false, message: '请输入税务登记号' }],
-                            })(<Input placeholder="请输入税务登记号" style={{ width: 200 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入税务登记号" style={{ width: 200 }} />
+                            )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
                           <Form.Item {...remarkcol} label={fieldLabels.remark}>
                             {getFieldDecorator('remark', {
                               rules: [{ required: false, message: '请输入备注' }],
-                            })(<Input placeholder="请输入备注" style={{ width: 603 }} />)}
+                            })(
+                              <Input disabled placeholder="请输入备注" style={{ width: 603 }} />
+                            )}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -666,19 +669,16 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('status', {
                               rules: [{ required: true, message: '状态' }],
                             })(
-                              <Select placeholder="请选择状态" disable style={{ width: 200 }}>
-                                <Option value="cancel" selected>
-                                  启用
-                                </Option>
-                                <Option value="delete">删除</Option>
-                              </Select>
+                              <Input disabled placeholder="请选择状态" disable style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
                           <Form.Item {...companycol} label={fieldLabels.company}>
-                            {getFieldDecorator('company', {})(
-                              <Input placeholder="所属公司" style={{ width: 603 }} />
+                            {getFieldDecorator('company', {
+                              rules: [{ required: true, message: '状态' }],
+                            })(
+                              <Input disabled placeholder="所属公司" style={{ width: 603 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -687,36 +687,23 @@ class CustomerViewTabs extends PureComponent {
                   </Card>
                 </div>
               </Panel>
-            </Collapse>
-            <Tabs defaultActiveKey="1">
-              <TabPane
-                tab={
-                  <span>
-                    <Icon type="api" />客户联系人
-                  </span>
-                }
-                key="1"
-              >
-                <Collapse defaultActiveKey={['1']}>
-                  <Panel header="客户联系人" key="1">
-                    <div>
-                      <Card bordered={false}>
-                        <div className={styles.tableList}>
-                          <StandardTable
-                            selectedRows={selectedRows}
-                            loading={loading}
-                            data={data}
-                            columns={columnsContacts}
-                            onSelectRow={this.handleSelectRows}
-                            onChange={this.handleStandardTableChange}
-                          />
-                        </div>
-                      </Card>
+              <Panel header="客户联系人" key="2">
+                <div>
+                  <Card bordered={false}>
+                    <div className={styles.tableList}>
+                      <StandardTable
+                        selectedRows={selectedRows}
+                        loading={loading}
+                        data={data}
+                        columns={columnsContacts}
+                        onSelectRow={this.handleSelectRows}
+                        onChange={this.handleStandardTableChange}
+                      />
                     </div>
-                  </Panel>
-                </Collapse>
-              </TabPane>
-            </Tabs>
+                  </Card>
+                </div>
+              </Panel>
+            </Collapse>
           </TabPane>
           <TabPane
             tab={

@@ -16,9 +16,6 @@ import {
   Cascader,
 } from 'antd';
 import { connect } from 'dva';
-// import FooterToolbar from 'components/FooterToolbar';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-// import TableForm from './TableForm';
 import styles from './style.less';
 
 const { Option } = Select;
@@ -57,10 +54,11 @@ const optionshz = [
     ],
   },
 ];
+const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
+const IndustryOption = ['制造业','服务业','房地产建筑','三农业务','政府购买','商业','金融','非营利组织','其他'];
+const IncomeTaxOption = ['查账征收','核定征收'];
+const statusOption = ['启用','禁用'];
 
-function onChange(value) {
-  console.log(value);
-}
 
 const fieldLabels = {
   customerCode: '客户编码',
@@ -83,19 +81,16 @@ const fieldLabels = {
   remark: '备注',
   status: '状态',
 };
-
 const cnumcol = {
   style: {
     paddingLeft: 10,
   },
 };
-
 const cpinyincol = {
   style: {
     paddingLeft: 13,
   },
 };
-
 const simplenamecol = {
   style: {
     paddingLeft: 72,
@@ -151,10 +146,18 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+function onChange(value) {
+  console.log(value);
+}
+
 
 class CustomerAddmodal extends PureComponent {
   state = {
     width: '100%',
+    levelOptionData: [],
+    industryOptionData:[],
+    incomeTaxOptionData:[],
+    statusOptionData:[],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -162,6 +165,43 @@ class CustomerAddmodal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleLevelChange = () => {
+    this.setState({
+      levelOptionData: CustomerOption.map((data) => {
+        const value = `${data}`;
+        return <Option value={value}>{value}</Option>;
+      }),
+    });
+  };
+
+  handleIndustryChange = () => {
+    this.setState({
+      industryOptionData: IndustryOption.map((data) => {
+        const value = `${data}`;
+        return <Option value={value}>{value}</Option>;
+      }),
+    });
+  };
+
+  handleIncomeTaxChange = () => {
+    this.setState({
+      incomeTaxOptionData: IncomeTaxOption.map((data) => {
+        const value = `${data}`;
+        return <Option value={value}>{value}</Option>;
+      }),
+    });
+  };
+
+  handleStatusChange = () => {
+    this.setState({
+      statusOptionData: statusOption.map((data) => {
+        const value = `${data}`;
+        return <Option value={value}>{value}</Option>;
+      }),
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -172,6 +212,7 @@ class CustomerAddmodal extends PureComponent {
   render() {
     const { form, dispatch, submitting , customerAddVisible, handleCustomerAddVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { levelOptionData, industryOptionData, incomeTaxOptionData, statusOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -256,11 +297,8 @@ class CustomerAddmodal extends PureComponent {
                     {getFieldDecorator('customerLevel', {
                       rules: [{ required: false, message: '请选择客户等级' }],
                     })(
-                      <Select placeholder="请选择客户等级" style={{ width: 200 }}>
-                        <Option value="0">请选择</Option>
-                        <Option value="g">贵宾</Option>
-                        <Option value="y">一般客户</Option>
-                        <Option value="q">潜在客户</Option>
+                      <Select onMouseEnter={this.handleLevelChange} placeholder="请选择客户等级" style={{ width: 200 }}>
+                        {levelOptionData}
                       </Select>
                     )}
                   </Form.Item>
@@ -270,17 +308,8 @@ class CustomerAddmodal extends PureComponent {
                     {getFieldDecorator('industry', {
                       rules: [{ required: false, message: '请选择行业' }],
                     })(
-                      <Select placeholder="请选择行业" style={{ width: 200 }}>
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">制造业</Option>
-                        <Option value="f">服务业</Option>
-                        <Option value="fd">房地产建筑</Option>
-                        <Option value="sn">三农业务</Option>
-                        <Option value="zf">政府购买</Option>
-                        <Option value="sy">商业</Option>
-                        <Option value="jr">金融</Option>
-                        <Option value="fyl">非营利组织</Option>
-                        <Option value="other">其他</Option>
+                      <Select onMouseEnter={this.handleIndustryChange} placeholder="请选择行业" style={{ width: 200 }}>
+                        {industryOptionData}
                       </Select>
                     )}
                   </Form.Item>
@@ -290,9 +319,8 @@ class CustomerAddmodal extends PureComponent {
                     {getFieldDecorator('incomeTax', {
                       rules: [{ required: false, message: '请选择所得税征收方式' }],
                     })(
-                      <Select placeholder="请选择所得税征收方式" style={{ width: 200 }}>
-                        <Option value="c">查账征收</Option>
-                        <Option value="h">核定征收</Option>
+                      <Select onMouseEnter={this.handleIncomeTaxChange} placeholder="请选择所得税征收方式" style={{ width: 200 }}>
+                        {incomeTaxOptionData}
                       </Select>
                     )}
                   </Form.Item>
@@ -405,21 +433,20 @@ class CustomerAddmodal extends PureComponent {
                 <Col span={8}>
                   <Form.Item {...statuscol} label={fieldLabels.status}>
                     {getFieldDecorator('status', {
-                      rules: [{ required: false, message: '状态' }],
+                      rules: [{ required: false, message: '请选择状态' }],
                     })(
-                      <Select placeholder="请选择状态" disable style={{ width: 200 }}>
-                        <Option value="cancel" selected>
-                          启用
-                        </Option>
-                        <Option value="delete">删除</Option>
+                      <Select onMouseEnter={this.handleStatusChange} placeholder="请选择状态" disable style={{ width: 200 }}>
+                        {statusOptionData}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={16}>
                   <Form.Item {...companycol} label={fieldLabels.company}>
-                    {getFieldDecorator('company', {})(
-                      <Input placeholder="所属公司" style={{ width: 603 }} />
+                    {getFieldDecorator('company', {
+                      rules: [{ required: false, message: '请输出所属公司' }],
+                    })(
+                      <Input placeholder="请输出所属公司" style={{ width: 603 }} />
                     )}
                   </Form.Item>
                 </Col>

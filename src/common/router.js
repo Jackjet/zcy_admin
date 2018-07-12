@@ -129,6 +129,14 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/ReceivablesInfoList')),
       name: '收款信息',
     },
+    '/fi/commission/commissionQuery': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/CommissionQuery')),
+      name: '提成查询',
+    },
+    '/fi/commission/commissionSetting': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/CommissionSetting')),
+      name: '提成比例设置',
+    },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
@@ -240,8 +248,8 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
-    '/demo/test': {
-      component: dynamicWrapper(app, [], () => import('../routes/Test/TableGetValue')),
+    '/test': {
+      component: dynamicWrapper(app, [], () => import('../routes/Test/SelectDemo')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

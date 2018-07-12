@@ -15,21 +15,29 @@ for (let i = 0; i < 46; i += 1) {
     dictID: `这个字段是ID ${i}`,
     dictTypeName: `一个任务名称 ${i}`,
     code: '小杨',
-    linkman: '汪工',
     remarks: '这是一段描述',
     name: '这个字段是名字',
     no: `AAA ${i}`,
-    company: '至诚云',
+
     contractCode: '这个字段是合同编码',
     callNo: Math.floor(Math.random() * 1000),
-    status: Math.floor(Math.random() * 10) % 4,
+
     updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
-    customerCode:`CMD ${i}`,
-    customerName:`优酸乳 ${i}`,
-    industry: `制造业`,
+
     contractTitle:`这个字段是合同标题 ${i}`,
+    customerCode:`CMD ${i}`,
+    customerName:`杭州至诚 ${i}`,
+    linkman: `汪工${i}`,
+    address:`清泰街${i}`,
+    company: `至诚云${i}`,
+    mobilePhone: `手机号码${i}`,
+    industry: Math.floor(Math.random() * 10) % 8,
+    status: Math.floor(Math.random() * 10) % 2,
+
+    invoiceNumber:`发票号码${i}`,
+
   });
 }
 

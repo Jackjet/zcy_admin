@@ -112,14 +112,14 @@ const menuData = [
             path: 'tichengjf01',
           },
           {
-            key: 'ticquery',
+            key: 'commissionQuery',
             name: '提成查询',
-            path: 'tiquery01',
+            path: 'commissionQuery',
           },
           {
-            key: 'tichesetting',
+            key: 'commissionSetting',
             name: '提成比例设置',
-            path: 'tichengseting01',
+            path: 'commissionSetting',
           },
         ],
       },

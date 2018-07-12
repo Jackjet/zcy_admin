@@ -306,7 +306,7 @@ export default class VisitListCheck extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建客户
+                拜访新增
               </Button>
               {selectedRows.length > 0 && (
                 <span>

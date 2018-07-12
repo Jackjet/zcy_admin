@@ -17,9 +17,6 @@ import {
   Modal,
 } from 'antd';
 import { connect } from 'dva';
-// import FooterToolbar from 'components/FooterToolbar';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-// import TableForm from './TableForm';
 import styles from './style.less';
 
 const { Option } = Select;
@@ -60,9 +57,9 @@ const optionshz = [
   },
 ];
 
-function onChange(value) {
-  console.log(value);
-}
+
+const ProjectTypeOption = ['工程造价业务项目', '咨询报告', '招标'];
+
 
 const fieldLabels = {
   number: '项目编码',
@@ -212,6 +209,8 @@ const formItemLayout = {
 class ProjectAddModal extends PureComponent {
   state = {
     width: '100%',
+    projectOptionData:[],
+    choiceCheckBox:``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -219,6 +218,22 @@ class ProjectAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+  handleProjectChange = () => {
+    const dataDemo = ProjectTypeOption.map((data, index,) => {
+        const value = `${data}`;
+        return <Option value={value}>{value}</Option>;
+      });
+    this.setState({
+      projectOptionData: dataDemo,
+    });
+  };
+
+  handleGetOptionValue=(value)=>{
+    this.setState({
+      choiceCheckBox:`${value}`,
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -229,6 +244,7 @@ class ProjectAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, projectVisible, handleProjectVisible  } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { projectOptionData, choiceCheckBox } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -246,7 +262,7 @@ class ProjectAddModal extends PureComponent {
     const onCan = () => {
       form.resetFields();
       handleProjectVisible(false);
-    }
+    };
     const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
@@ -286,6 +302,9 @@ class ProjectAddModal extends PureComponent {
         </span>
       );
     };
+    const testDemo = projectOptionData.map((data, index) => {
+      return index;
+    });
     return (
       <Modal
         title="项目基本信息新增"
@@ -313,11 +332,8 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('type', {
                       rules: [{ required: true, message: '请选择项目类别' }],
                     })(
-                      <Select placeholder="请选择项目类别" style={{ width: 200 }}>
-                        <Option value="0">请选择</Option>
-                        <Option value="g">工程造价业务项目</Option>
-                        <Option value="y">咨询报告</Option>
-                        <Option value="q">招标</Option>
+                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleProjectChange} placeholder="请选择项目类别" style={{ width: 200 }}>
+                        {projectOptionData}
                       </Select>
                     )}
                   </Form.Item>
@@ -469,30 +485,42 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('biztype')(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
-                          <Col span={8}>
-                            <Checkbox value="A">预算编制</Checkbox>
-                          </Col>
-                          <Col span={8}>
-                            <Checkbox value="B">结算编制</Checkbox>
-                          </Col>
-                          <Col span={8}>
-                            <Checkbox value="C">建设工程招标代理</Checkbox>
-                          </Col>
-                          <Col span={8}>
-                            <Checkbox value="D">咨询审核</Checkbox>
-                          </Col>
-                          <Col span={8}>
-                            <Checkbox value="E">预算审核</Checkbox>
-                          </Col>
-                          <Col span={8}>
-                            <Checkbox value="F">结算审核</Checkbox>
-                          </Col>
-                          <Col span={8}>
+                          { choiceCheckBox === `工程造价业务项目` && (
+                            <span>
+                              <Col span={8}>
+                                <Checkbox value="A">预算编制</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="B">结算编制</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="D">咨询审核</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="E">预算审核</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="F">结算审核</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="H">咨询报告</Checkbox>
+                              </Col>
+                            </span>
+                          )}
+
+                          { choiceCheckBox === `咨询报告` && (
+                            <span>
+                               <Col span={8}>
                             <Checkbox value="G">政府采购招标代理</Checkbox>
                           </Col>
-                          <Col span={8}>
-                            <Checkbox value="H">咨询报告</Checkbox>
-                          </Col>
+                               <Col span={8}>
+                                <Checkbox value="C">建设工程招标代理</Checkbox>
+                              </Col>
+                            </span>
+                          )}
+
+
+
                         </Row>
                       </Checkbox.Group>
                     )}

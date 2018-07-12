@@ -18,11 +18,11 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddModal from '../add/CustomerAddmodal';
-import CustomerViewTabs from './CustomerViewTabs.js';
-import EditableTable from '../EditableTable/EditableTable';
-import ContactsAddModal from '../add/ContactsAddModal';
-import CustomerEditModal from '../edit/CustomerEditModal';
+import CommissionSettingAddModal from '../add/CommissionSettingAddModal';
+import CommissionSettingViewModal from '../select/CommissionSettingViewModal';
+import CommissionSettingEditModal from '../edit/CommissionSettingEditModal';
+
+
 
 
 
@@ -30,69 +30,37 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
+const statusMap = ['success', 'error'];
+const status = ['启用', '停用'];
+
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const statusMap = ['success', 'error'];
-const status = ['启用', '停用'];
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
-
-
-// 设置业务员
-const SalesManage = Form.create()(props => {
-  const { salesVisible, handleSalesVisible } = props;
-  const okHandle = () => {
-    handleSalesVisible();
-  };
-  return (
-    <Modal
-      title="业务员基本信息管理"
-      style={{ top: 20 }}
-      visible={salesVisible}
-      width="40%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleSalesVisible()}
-    >
-      <EditableTable />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class CustomerList extends PureComponent {
+export default class CommissionSetting extends PureComponent {
   state = {
     // 客户增加状态
-    customerAddVisible: false,
+    commissionSetAddVisible: false,
 
-    // 客户编辑状态
-    customerEditVisible: false,
+    commissionSetViewVisible: false,
 
-    // 联系人状态
-    contactsVisible: false,
-
-    // 客户查看状态
-    tabsViewVisible: false,
-
-    // 业务员状态
-    salesVisible: false,
+    commissionSetEditVisible: false,
 
     // 高级搜索是否隐藏状态
     expandForm: false,
+
+    rowInfo:{},
 
     // 选中的行
     selectedRows: [],
 
     formValues: {},
-
-    // 当前操作行的数据
-    rowInfo:{},
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
@@ -164,7 +132,13 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 选中行删除方法
+  // 获取选中的行
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
+    });
+  };
+
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -181,13 +155,6 @@ export default class CustomerList extends PureComponent {
           selectedRows: [],
         });
       },
-    });
-  };
-
-  // 获取选中的行
-  handleSelectRows = rows => {
-    this.setState({
-      selectedRows: rows,
     });
   };
 
@@ -217,109 +184,37 @@ export default class CustomerList extends PureComponent {
   };
 
   // 隐藏和显示客户增加界面
-  handleCustomerAddVisible = flag => {
-    this.props.form.setFields();
+  handleCommissionSetAddVisible = flag => {
     this.setState({
-      customerAddVisible: !!flag,
+      commissionSetAddVisible: !!flag,
     });
   };
-
-  // 隐藏和显示客户编辑界面
-  handleCustomerEditVisible = (flag) => {
+  handleCommissionSetEditVisible = flag => {
     this.setState({
-      customerEditVisible: !!flag,
+      commissionSetEditVisible: !!flag,
     });
   };
-
-  // 隐藏和显示联系人增加界面
-  handleContactsVisible = flag => {
+  handleCommissionSetViewVisible = flag => {
     this.setState({
-      contactsVisible: !!flag,
+      commissionSetViewVisible: !!flag,
     });
   };
-
-
-  handleTabsViewVisible = flag => {
-    this.setState({
-      tabsViewVisible: !!flag,
-    });
-  };
-  handleSalesVisible = flag => {
-    this.setState({
-      salesVisible: !!flag,
-    });
-  };
-
-  // 添加表单数据
-  handleCustomerAdd = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      customerAddVisible: false,
-    });
-  };
-  handleAddContact = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-    message.success('添加成功');
-    this.setState({
-      contactsVisible: false,
-    });
-  };
-
-
-  // 左边菜单树
-  rootSubmenuKeys = ['sub1'];
-  treeMenu() {
-    const SubMenuTree = Menu.SubMenu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenuTree
-          key="sub1"
-          title={
-            <span>
-              <span>客户等级</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">贵宾客户</Menu.Item>
-          <Menu.Item key="2">一般客户</Menu.Item>
-          <Menu.Item key="3">重要客户</Menu.Item>
-          <Menu.Item key="4">潜在客户</Menu.Item>
-        </SubMenuTree>
-      </Menu>
-    );
-  }
 
   // 弹窗展示当前行的数据
   showEditMessage =(flag, record)=> {
     this.setState({
-      customerEditVisible: !!flag,
+      commissionSetEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showViewMessage =(flag, text, record, index)=> {
+  showViewMessage =(flag, text, record)=> {
     this.setState({
-      tabsViewVisible: !!flag,
+      commissionSetViewVisible: !!flag,
       rowInfo: record,
     });
   };
+
 
 
   // 高级搜索
@@ -452,80 +347,24 @@ export default class CustomerList extends PureComponent {
     const { rule: { data }, loading } = this.props;
     const {
       selectedRows,
-      customerAddVisible,
-      customerEditVisible,
-      contactsVisible,
-      tabsViewVisible,
-      salesVisible,
+      commissionSetAddVisible,
+      commissionSetEditVisible,
+      commissionSetViewVisible,
       rowInfo,
     } = this.state;
 
     const columns = [
       {
-        title: '客户编码',
-        dataIndex: 'customerCode',
+        title: '提成比例类别',
+        dataIndex: 'invoiceNumber',
       },
       {
-        title: '客户名称',
-        dataIndex: 'customerName',
+        title: '提成比例系数',
+        dataIndex: 'invoiceName',
       },
       {
-        title: '联系人',
-        dataIndex: 'linkman',
-      },
-      {
-        title: '地址',
-        dataIndex: 'address',
-      },
-      {
-        title: '所属公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '手机',
-        dataIndex: 'mobilePhone',
-      },
-      {
-        title: '行业',
-        dataIndex: 'industry',
-        filters: [
-          {
-            text: industry[0],
-            value: 0,
-          },
-          {
-            text: industry[1],
-            value: 1,
-          },
-          {
-            text: industry[2],
-            value: 2,
-          },
-          {
-            text: industry[3],
-            value: 3,
-          },
-          {
-            text: industry[4],
-            value: 4,
-          },
-          {
-            text: industry[5],
-            value: 5,
-          },
-          {
-            text: industry[6],
-            value: 6,
-          },
-          {
-            text: industry[7],
-            value: 7,
-          },
-        ],
-        onFilter: (value, record) => record.industry.toString() === value,
-        render(val) {
-          return <Badge status text={industry[val]} />;
-        },
+        title: '所属单位',
+        dataIndex: 'invoicePerson',
       },
       {
         title: '状态',
@@ -546,32 +385,66 @@ export default class CustomerList extends PureComponent {
         },
       },
       {
+        title: '备注',
+        dataIndex: 'remarks',
+      },
+      {
         title: '操作',
         render: (text, record, index) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
+
+            {record.status ===1 && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() =>this.showEditMessage(true, record)} >
+                  编辑
+                </a>
+              </span>
+            )}
+
+
+            {record.status ===1 && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={this.handleDeleteClick}>
+                  启用
+                </a>
+              </span>
+
+            )}
+
+            {record.status ===1 && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={this.handleDeleteClick} >
+                  删除
+                </a>
+              </span>
+            )}
+
+
+            {record.status ===0 && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={this.handleDeleteClick}>
+                  禁用
+                </a>
+              </span>
+            )}
           </Fragment>
         ),
       },
     ];
 
-    const CustomerAddMethods = {
-      handleCustomerAddVisible: this.handleCustomerAddVisible,
-      handleCustomerAdd: this.handleCustomerAdd,
+    const commissionSetAddMethods = {
+      handleCommissionSetAddVisible: this.handleCommissionSetAddVisible,
     };
-    const CustomerEditMethods = {
-      handleCustomerEditVisible: this.handleCustomerEditVisible,
+    const commissionSetEditMethods = {
+      handleCommissionSetEditVisible: this.handleCommissionSetEditVisible,
     };
-    const ContactsAddMethods = {
-      handleContactsVisible: this.handleContactsVisible,
-    };
-    const parentMethods = {
-      handleTabsViewVisible: this.handleTabsViewVisible,
-      handleSalesVisible: this.handleSalesVisible,
+    const commissionSetViewMethods = {
+      handleCommissionSetViewVisible: this.handleCommissionSetViewVisible,
     };
 
     return (
@@ -579,48 +452,28 @@ export default class CustomerList extends PureComponent {
         <Card bordered={false}>
           <div>
             <div className={styles.tableList}>
-              <div className={styles.leftBlock}>{this.treeMenu()}</div>
-              <div className={styles.rightBlock}>
-                <div className={styles.tableListForm}>{this.renderForm()}</div>
-                <div className={styles.tableListOperator}>
-                  <Button
-                    icon="plus"
-                    type="primary"
-                    onClick={() => this.handleCustomerAddVisible(true)}
-                  >
-                    新建客户
-                  </Button>
-                  {selectedRows.length > 0 && (
-                    <span>
-                      <Button type="primary" onClick={() => this.handleSalesVisible(true)}>
-                        设置业务员
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
-                        设置联系人
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleDeleteClick(true)}>
-                        批量删除
-                      </Button>
-                    </span>
-                  )}
-                </div>
-                <StandardTable
-                  selectedRows={selectedRows}
-                  loading={loading}
-                  data={data}
-                  columns={columns}
-                  onSelectRow={this.handleSelectRows}
-                  onChange={this.handleStandardTableChange}
-                />
+              <div className={styles.tableListOperator}>
+                <Button
+                  type="primary"
+                  onClick={() => this.handleCommissionSetAddVisible(true)}
+                >
+                  新增类型比例
+                </Button>
               </div>
+              <StandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
             </div>
           </div>
         </Card>
-        <CustomerAddModal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ContactsAddMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
-        <SalesManage {...parentMethods} salesVisible={salesVisible} />
+        <CommissionSettingAddModal {...commissionSetAddMethods} commissionSetAddVisible={commissionSetAddVisible} />
+        <CommissionSettingEditModal {...commissionSetEditMethods} commissionSetEditVisible={commissionSetEditVisible} rowInfo={rowInfo} />
+        <CommissionSettingViewModal {...commissionSetViewMethods} commissionSetViewVisible={commissionSetViewVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

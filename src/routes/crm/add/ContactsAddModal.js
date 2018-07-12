@@ -292,8 +292,8 @@ class ContactsAddModal extends PureComponent {
                     {getFieldDecorator('status', {
                       rules: [{ required: false, message: '状态' }],
                     })(
-                      <Select placeholder="请选择状态" disable style={{ width: 200 }}>
-                        <Option value="cancel" selected>
+                      <Select defaultValue="启用" placeholder="请选择状态" disable style={{ width: 200 }}>
+                        <Option value="启用">
                           启用
                         </Option>
                         <Option value="禁用">禁用</Option>
