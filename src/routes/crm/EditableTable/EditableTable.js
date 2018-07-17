@@ -3,45 +3,7 @@ import { Table, Button, Popconfirm } from 'antd';
 import EditableCell from './EditableCell';
 
 class EditableTable extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.columns = [
-      {
-        title: '业务员',
-        dataIndex: 'name',
-        width: '30%',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
-        ),
-      },
-      {
-        title: '电话',
-        dataIndex: 'phone',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'phone')} />
-        ),
-      },
-      {
-        title: '备注',
-        dataIndex: 'remarks',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
-        ),
-      },
-      {
-        title: '操作',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          return this.state.dataSource.length > 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-              <a href=" ">Delete</a>
-            </Popconfirm>
-          ) : null;
-        },
-      },
-    ];
-
-    this.state = {
+    state = {
       dataSource: [
         {
           key: '0',
@@ -58,7 +20,6 @@ class EditableTable extends PureComponent {
       ],
       count: 2,
     };
-  }
   onCellChange = (key, dataIndex) => {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -88,13 +49,51 @@ class EditableTable extends PureComponent {
   };
   render() {
     const { dataSource } = this.state;
-    const columns = this.columns;
+    const columns = [
+      {
+        title: '业务员',
+        dataIndex: 'name',
+        width: '30%',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
+        ),
+      },
+      {
+        title: '电话',
+        dataIndex: 'phone',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'phone')} />
+        ),
+      },
+      {
+        title: '备注',
+        dataIndex: 'remarks',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
+        ),
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return this.state.dataSource.length > 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+              <a href=" ">Delete</a>
+              <a>编辑</a>
+            </Popconfirm>
+          ) : null;
+        },
+      },
+    ];
     return (
       <div>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           设置业务员
         </Button>
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+        />
       </div>
     );
   }

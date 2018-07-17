@@ -31,9 +31,7 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
+  Object.keys(obj).map(key => obj[key]).join(',');
 
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
@@ -56,7 +54,10 @@ const SalesManage = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleSalesVisible()}
     >
-      <EditableTable />
+      <div className={styles.editPerson}>
+        <EditableTable />
+      </div>
+
     </Modal>
   );
 });
@@ -233,6 +234,10 @@ export default class CustomerList extends PureComponent {
 
   // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
+    if(this.state.selectedRows.length>1){
+      message.warning('不支持多行选择');
+      return false;
+    }
     this.setState({
       contactsVisible: !!flag,
     });
@@ -245,6 +250,11 @@ export default class CustomerList extends PureComponent {
     });
   };
   handleSalesVisible = flag => {
+    if(this.state.selectedRows.length>1){
+      message.warning('不支持多行选择');
+      return false;
+    }
+
     this.setState({
       salesVisible: !!flag,
     });
@@ -336,16 +346,15 @@ export default class CustomerList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="拼音码">
-              {getFieldDecorator('pinyin',{
+            <FormItem label="移动电话">
+              {getFieldDecorator('phone',{
 
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-
           <Col md={8} sm={24}>
-            <FormItem label="电话号码">
-              {getFieldDecorator('phone',{
+            <FormItem label="联系人">
+              {getFieldDecorator('contract',{
 
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -438,15 +447,6 @@ export default class CustomerList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="key">
-              {getFieldDecorator('key',{
-
-              })(
-                <Input placeholder="请输入key" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 搜索
@@ -478,11 +478,11 @@ export default class CustomerList extends PureComponent {
 
     const columns = [
       {
-        title: '客户编码',
+        title: '编码',
         dataIndex: 'customerCode',
       },
       {
-        title: '客户名称',
+        title: '名称',
         dataIndex: 'customerName',
       },
       {
@@ -490,16 +490,8 @@ export default class CustomerList extends PureComponent {
         dataIndex: 'linkman',
       },
       {
-        title: '地址',
-        dataIndex: 'address',
-      },
-      {
         title: '所属公司',
         dataIndex: 'company',
-      },
-      {
-        title: '手机',
-        dataIndex: 'mobilePhone',
       },
       {
         title: '行业',
@@ -542,6 +534,10 @@ export default class CustomerList extends PureComponent {
         render(val) {
           return <Badge status text={industry[val]} />;
         },
+      },
+      {
+        title: '手机',
+        dataIndex: 'mobilePhone',
       },
       {
         title: '状态',

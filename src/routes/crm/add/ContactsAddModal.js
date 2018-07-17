@@ -58,9 +58,9 @@ function onChange(value) {
 }
 
 const fieldLabels = {
-  affiliatedCustomers: '所属客户',
+  affiliatedCustomers: '客户名称',
   contactName: '客户名称',
-  code: '编号',
+  code: '客户编号',
   mobilephone: '移动手机',
   phoneNumber: '手机号码',
   region: '所在区域',
@@ -68,52 +68,16 @@ const fieldLabels = {
   status: '状态',
   mailBox: '电子邮箱',
 };
-
-const cnumcol = {
-  style: {
-    paddingLeft: 10,
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-};
-
-const cpinyincol = {
-  style: {
-    paddingLeft: 13,
-  },
-};
-const remarkcol = {
-  style: {
-    paddingLeft: 34,
-  },
-};
-
-const statuscol = {
-  style: {
-    paddingLeft: 27,
-  },
-};
-
-const formhz11 = {
   wrapperCol: {
-    style: {
-      width: '60%',
-    },
-  },
-  style: {
-    width: '50%',
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
-
-const formhz12 = {
-  wrapperCol: {
-    style: {
-      width: '60%',
-    },
-  },
-  style: {
-    width: '120%',
-  },
-};
-
 
 class ContactsAddModal extends PureComponent {
   state = {
@@ -199,21 +163,21 @@ class ContactsAddModal extends PureComponent {
       >
         <div>
           <Card>
-            <Form layout="inline">
+            {/*<Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.code}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.code}>
                     {getFieldDecorator('code', {
                       rules: [{ required: true, message: '请输入编号' }],
-                    })(<Input placeholder="请输入编号" style={{ width: 200 }}  />)}
+                    })(<Input placeholder="自动带出编号" style={{ width: 200 }}  />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.affiliatedCustomers}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.affiliatedCustomers}>
                     {getFieldDecorator('affiliatedCustomers', {
                       rules: [{ required: false, message: '请输入所属客户' }],
                     })(
-                      <Select placeholder="请输入所属客户" style={{ width: 200 }}>
+                      <Select placeholder="自动带出名称" style={{ width: 200 }}>
                         <Option value="0">杭州客户</Option>
                         <Option value="g">新昌客户</Option>
                         <Option value="y">诸暨客户</Option>
@@ -223,39 +187,32 @@ class ContactsAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
-                <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.contactName}>
-                    {getFieldDecorator('contactName', {
-                      rules: [{ required: false, message: '请选择客户名称' }],
-                    })(<Input placeholder="请选择客户名称" className={styles['ant-input-lg']} />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formhz11} >
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} >
                     {getFieldDecorator('lagalperson', {
                       rules: [{ required: false, message: '请选择是否法人' }],
                     })(<Checkbox>是否法人</Checkbox>)}
                   </Form.Item>
                 </Col>
-                <Col span={8}>
-                  <Form.Item {...formhz11} >
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} >
                     {getFieldDecorator('mainperson', {
                       rules: [{ required: false, message: '请选择是否主联系人' }],
                     })(<Checkbox>是否主联系人</Checkbox>)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...cnumcol} label={fieldLabels.phoneNumber}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.phoneNumber}>
                     {getFieldDecorator('phoneNumber', {
                       rules: [{ required: false, message: '请输入移动手机' }],
                     })(<Input placeholder="请输入移动手机" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...cpinyincol} label={fieldLabels.mailBox}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.mailBox}>
                     {getFieldDecorator('mailBox', {
                       rules: [{ required: false, message: '请输入电子邮箱' }],
                     })(<Input placeholder="请输入电子邮箱" style={{ width: 200 }} />)}
@@ -263,9 +220,9 @@ class ContactsAddModal extends PureComponent {
                 </Col>
               </Row>
 
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item label={fieldLabels.region}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.region}>
                     {getFieldDecorator('region', {
                       rules: [{ required: false, message: '请选择所在区域' }],
                     })(
@@ -279,16 +236,16 @@ class ContactsAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...remarkcol} label={fieldLabels.remark}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                     {getFieldDecorator('remark', {
                       rules: [{ required: false, message: '请输入备注' }],
                     })(<Input placeholder="请输入备注" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...statuscol} label={fieldLabels.status}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.status}>
                     {getFieldDecorator('status', {
                       rules: [{ required: false, message: '状态' }],
                       initialValue:'启用',
@@ -303,7 +260,7 @@ class ContactsAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-            </Form>
+            </Form>*/}
           </Card>
         </div>
       </Modal>
