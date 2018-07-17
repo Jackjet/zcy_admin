@@ -223,10 +223,8 @@ export default class projectList extends PureComponent {
           }
         >
           <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">咨询报告</Menu.Item>
+          <Menu.Item key="2">可研报告</Menu.Item>
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
-          <Menu.Item key="4">打包项目</Menu.Item>
-          <Menu.Item key="5">2010年免审批工程造价、招投标项目</Menu.Item>
         </SubMenu>
       </Menu>
     );

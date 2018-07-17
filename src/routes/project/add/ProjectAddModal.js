@@ -219,12 +219,12 @@ class ProjectAddModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
   handleProjectChange = () => {
-    const dataDemo = ProjectTypeOption.map((data, index,) => {
+    const optionData = ProjectTypeOption.map((data, index) => {
         const value = `${data}`;
         return <Option value={value}>{value}</Option>;
       });
     this.setState({
-      projectOptionData: dataDemo,
+      projectOptionData: optionData,
     });
   };
 
@@ -485,7 +485,7 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('biztype')(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
-                          { choiceCheckBox === `工程造价业务项目` && (
+                          { ( choiceCheckBox === `工程造价业务项目`|| choiceCheckBox===`咨询报告` ) && (
                             <span>
                               <Col span={8}>
                                 <Checkbox value="A">预算编制</Checkbox>
@@ -508,12 +508,12 @@ class ProjectAddModal extends PureComponent {
                             </span>
                           )}
 
-                          { choiceCheckBox === `咨询报告` && (
+                          { ( choiceCheckBox === `招标`|| choiceCheckBox===`咨询报告` ) && (
                             <span>
-                               <Col span={8}>
-                            <Checkbox value="G">政府采购招标代理</Checkbox>
-                          </Col>
-                               <Col span={8}>
+                              <Col span={8}>
+                                <Checkbox value="G">政府采购招标代理</Checkbox>
+                              </Col>
+                              <Col span={8}>
                                 <Checkbox value="C">建设工程招标代理</Checkbox>
                               </Col>
                             </span>

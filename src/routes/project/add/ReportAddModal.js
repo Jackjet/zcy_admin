@@ -70,14 +70,14 @@ const columns = [
   },
 ];
 
-const formhz11 = {
-  wrapperCol: {
-    style: {
-      width: '90.2%',
-    },
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-  style: {
-    width: '96.66666667%',
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
 
@@ -174,24 +174,24 @@ class ReportAddModal extends PureComponent {
       <Modal
         title="报告基本信息新增"
         visible={reportAddVisible}
-        width="90%"
+        width="55%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleReportAddVisible()}
       >
         <div>
           <Card>
-            <Form layout="inline">
+            <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.number}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入报告编号' }],
-                    })(<Input placeholder="请输入报告编号" className={styles['ant-input-lg']} />)}
+                    })(<Input placeholder="请输入报告编号" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.type}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.type}>
                     {getFieldDecorator('type', {
                       rules: [{ required: true, message: '请选择业务类别' }],
                     })(
@@ -205,18 +205,18 @@ class ReportAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.years}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请输入名称' }],
                     })(<Input placeholder="请输入名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.name}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择报告性质' }],
                     })(
@@ -230,7 +230,7 @@ class ReportAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.dateRange}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.dateRange}>
                     {getFieldDecorator('dateRange', {
                       rules: [{ required: false, message: '请输入出具时间' }],
                     })(<DatePicker style={{ width: 200 }} placeholder="请输入出具时间" />)}
@@ -238,17 +238,17 @@ class ReportAddModal extends PureComponent {
                 </Col>
               </Row>
 
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.cuslink}>
-                    {getFieldDecorator('cuslink')(<TextArea placeholder="请输入备注信息" rows={4} />)}
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
+                    {getFieldDecorator('cuslink')(<TextArea placeholder="请输入备注信息" rows={4} style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
 
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.customer}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.customer}>
                     {getFieldDecorator('customer')(
                       <Upload {...FiledInfo}>
                         <Button type="primary">上传附件</Button>
@@ -260,10 +260,12 @@ class ReportAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formhz11}>
-                    {getFieldDecorator('customer')(<Table columns={columns} dataSource={data} />)}
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('customer')(
+                      <Table columns={columns} dataSource={data}  />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>

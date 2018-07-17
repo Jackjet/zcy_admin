@@ -240,51 +240,39 @@ export default class InvoiceApplyList  extends PureComponent {
     const { selectedRows, invoiceApplyVisible, invoiceTabsVisible, invoiceEditVisible, invoiceViewVisible, invoicingVisible } = this.state;
     const columns = [
       {
-        title: '开票名称',
-        dataIndex: 'invoiceName',
+        title: '申请单号',
+        dataIndex: 'applicationNumber',
       },
       {
-        title: '发票号码',
-        dataIndex: 'invoiceNumber',
+        title: '申请时间',
+        dataIndex: 'applyData',
       },
       {
-        title: '发票金额（元）',
+        title: '开票金额（元）',
         dataIndex: 'invoiceMoney',
       },
       {
-        title: '开票时间',
-        dataIndex: 'invoiceDate',
+        title: '项目名称',
+        dataIndex: 'projectName',
       },
       {
         title: '状态',
         dataIndex: 'status',
       },
       {
-        title: '开票公司',
-        dataIndex: 'invoiceCompany',
-      },
-      {
-        title: '开票人员',
-        dataIndex: 'invoiceP',
-      },
-      {
         title: '操作',
         render: () => (
           <Fragment>
-            <a type="primary" onClick={() => this.handleInvoiceEditVisible(true)}>
-              编辑
-            </a>
-            <Divider type="vertical" />
-            <a type="primary" onClick={() => this.handleInvoiceApplyVisible(true)}>
-              作废
-            </a>
-            <Divider type="vertical" />
             <a type="primary" onClick={() => this.handleInvoiceViewVisible(true)}>
               查看
             </a>
             <Divider type="vertical" />
+            <a type="primary" onClick={() => this.handleInvoiceEditVisible(true)}>
+              编辑
+            </a>
+            <Divider type="vertical" />
             <a type="primary" onClick={() => this.handleInvoicingVisible(true)}>
-              开票
+              删除
             </a>
           </Fragment>
         ),
@@ -320,7 +308,6 @@ export default class InvoiceApplyList  extends PureComponent {
       <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
               <Button type="primary" onClick={() => this.handleInvoiceTabsVisible(true)}>
                 申请开票

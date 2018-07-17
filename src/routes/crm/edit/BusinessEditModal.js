@@ -14,63 +14,82 @@ import {
   Popover,
   Cascader,
   Modal,
+  Transfer,
+  Menu,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const { SubMenu, MenuItemGroup } = Menu;
 const { TextArea } = Input;
 const { Option } = Select;
+
+const mockData = [];
+for (let i = 0; i < 10; i++) {
+  mockData.push({
+    key: i.toString(),
+    title: `人员${i + 1}`,
+  });
+};
 const fieldLabels = {
   number: '编码',
   businessName: '商机名称',
   customerName: '客户名称',
   customerContact: '客户联系人',
-  customerSource: '客户来源',
+  mobilePhone: '联系电话',
   businessState: '商机状态',
   customerDemand: '客户需求',
-  expectDealDate: '预计成交日期',
-  offer: '报价',
-  expectTransactionPrice: '预计成交价',
   remarks: '备注',
-  assignor: '分配人',
+  platform:'商机平台',
+  submissionPerson:'商机提供人',
+  executor:'执行人',
 };
-
-const formhz11 = {
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
   wrapperCol: {
-    style: {
-      width: '60%',
-    },
-  },
-  style: {
-    width: '50%',
-  },
-};
-
-const formhz12 = {
-  wrapperCol: {
-    style: {
-      width: '60%',
-    },
-  },
-  style: {
-    width: '120%',
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
-
-const formhz13 = {
-  wrapperCol: {
-    style: {
-      width: '80%',
-    },
+const formItemLayout2 = {
+  style:{
+    paddingRight: 135,
+    width: '130%',
   },
-  style: {
-    width: '50%',
+  labelCol: {
+    xs: { span: 4 },
+    sm: { span: 4 },
+    xl: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 20 },
+    sm: { span: 20 },
+    xl: { span: 20 },
+  },
+};
+const formItemLayoutTextArea = {
+  style:{
+    paddingRight: 150,
+    width: '110%',
+  },
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 3 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 21 },
   },
 };
 
 class BusinessEditModal extends PureComponent {
   state = {
     width: '100%',
+    targetKeys:[],
+    selectedKeys: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -78,6 +97,19 @@ class BusinessEditModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleChange = (nextTargetKeys) => {
+    this.setState({ targetKeys: nextTargetKeys });
+  };
+
+  handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
+
+  handleClick = (e) => {
+    console.log('click ', e);
+  }
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -88,6 +120,7 @@ class BusinessEditModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, handleBusinessEditVisible, businessEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { selectedKeys } = this.state;
     const okHandle = () => handleBusinessEditVisible();
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -145,7 +178,7 @@ class BusinessEditModal extends PureComponent {
         title="编辑"
         style={{ top: 60 }}
         visible={businessEditVisible}
-        width="80%"
+        width="55%"
         maskClosable={false}
         onOk={okHandle}
         onCancel={() => handleBusinessEditVisible()}
@@ -160,126 +193,117 @@ class BusinessEditModal extends PureComponent {
       >
         <div>
           <Card>
-            <Form layout="inline">
-              <Row className={styles['row-h']}>
+            <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.number}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
-                      initialValue: `${rowInfo.no}`,
-                    })(<Input  placeholder="不重复的数字" className={styles['ant-input-lg']} />)}
+                    })(<Input placeholder="不重复的数字" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
-                <Col span={16}>
-                  <Form.Item {...formhz12} label={fieldLabels.businessName}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                    })(<Input  placeholder="商机描述" className={styles['ant-input-lg']} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['row-h']}>
-                <Col span={8}>
-                  <Form.Item {...formhz13} label={fieldLabels.customerName}>
-                    {getFieldDecorator('customerName', {
-                      rules: [{ required: false, message: '请输入客户名称' }],
-                    })(<Input  placeholder="请输入客户名称" style={{ width: 200 }} />)}
+                    })(<Input placeholder="商机描述" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formhz13} label={fieldLabels.assignor}>
-                    {getFieldDecorator('assignor', {
-                      rules: [{ required: false, message: '请输入分配人' }],
-                    })(<Input  placeholder="请输入分配人" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label={fieldLabels.customerContact}>
-                    {getFieldDecorator('customerContact', {
-                      rules: [{ required: false, message: '请输入客户联系人' }],
-                    })(<Input  placeholder="请输入客户联系人" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['row-h']}>
-                <Col span={8}>
-                  <Form.Item label={fieldLabels.customerSource}>
-                    {getFieldDecorator('customerSource', {
-                      rules: [{ required: true, message: '请选择商机来源' }],
-                    })(
-                      <Select  placeholder="请选择商机来源" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">客户介绍</Option>
-                        <Option value="2">老客户</Option>
-                        <Option value="3">代理商</Option>
-                        <Option value="4">合作伙伴</Option>
-                        <Option value="5">公开招聘</Option>
-                        <Option value="6">互联网</Option>
-                        <Option value="7">自主开发</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label={fieldLabels.businessState}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.businessState}>
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
                     })(
-                      <Select  placeholder="请选择商机状态" style={{ width: 200 }}>
-                        <Option value="0">请选择</Option>
-                        <Option value="1">初期沟通</Option>
-                        <Option value="2">立项评估</Option>
-                        <Option value="3">需求分析</Option>
-                        <Option value="4">方案制定</Option>
-                        <Option value="5">招投标/竞争</Option>
-                        <Option value="6">商务谈判</Option>
-                        <Option value="7">合同签约</Option>
+                      <Select placeholder="请选择商机状态" style={{ width: 150 }}>
+                        <Option value="1">提交审核</Option>
+                        <Option value="2">跟进中</Option>
+                        <Option value="3">成功</Option>
+                        <Option value="4">失败</Option>
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
+                    {getFieldDecorator('customerName', {
+                      rules: [{ required: false, message: '请输入客户名称' }],
+                    })(<Input placeholder="请输入客户名称" style={{ width: 150 }} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
+                    {getFieldDecorator('mobilePhone', {
+                      rules: [{ required: false, message: '请输入联系电话' }],
+                    })(<Input placeholder="请输入联系电话" style={{ width: 150 }} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.platform}>
+                    {getFieldDecorator('platform', {
+                      rules: [{ required: false, message: '请选择商机平台' }],
+                    })(
+                      <Select placeholder="请选择商机平台" style={{ width: 150 }}>
+                        <Option value="0">AA平台</Option>
+                        <Option value="1">BB平台</Option>
+                        <Option value="2">CCAA平台</Option>
+                        <Option value="3">DD平台</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.submissionPerson}>
+                    {getFieldDecorator('submissionPerson', {
+                    })(
+                      <Input placeholder="商机提供人" style={{ width: 150 }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={8}>
+                  <Form.Item>
+                    {getFieldDecorator('personal', {
+                    })(
+                      <div>
+                        <Transfer
+                          dataSource={mockData}
+                          titles={['备选人员', '已选人员']}
+                          targetKeys={this.state.targetKeys}
+                          selectedKeys={selectedKeys}
+                          onChange={this.handleChange}
+                          onSelectChange={this.handleSelectChange}
+                          render={item => item.title}
+                        />
+                      </div>
 
-              <Row className={styles['row-h']}>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item label={fieldLabels.customerDemand}>
+                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.customerDemand}>
                     {getFieldDecorator('customerDemand', {
                       rules: [{ required: true, message: '请输入客户需求' }],
-                    })(<TextArea  placeholder="请输入客户需求" style={{ width: 1000 }} />)}
+                    })(
+                      <TextArea placeholder="请输入客户需求" />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
-                <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.expectDealDate}>
-                    {getFieldDecorator('expectDealDate', {
-                      rules: [{ required: false, message: '请输入预计成交日期' }],
-                    })(<Input  placeholder="请输入预计成交日期" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formhz13} label={fieldLabels.offer}>
-                    {getFieldDecorator('offer', {
-                      rules: [{ required: false, message: '请输入报价' }],
-                    })(<Input  placeholder="请输入报价" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.expectTransactionPrice}>
-                    {getFieldDecorator('expectTransactionPrice', {
-                      rules: [{ required: false, message: '请输入预计成交价' }],
-                    })(<Input  placeholder="请输入预计成交价" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item label={fieldLabels.remarks}>
+                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(<TextArea  placeholder="请输入备注" style={{ width: 1000 }} />)}
+                    })(
+                      <TextArea placeholder="请输入备注" />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>

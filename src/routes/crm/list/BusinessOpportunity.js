@@ -19,6 +19,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import BusinessAddModal from '../add/BusinessAddModal.js';
+import BusinessFollowUp from '../add/BusinessFollowUp';
 import BusinessEditModal from '../edit/BusinessEditModal.js';
 import BusinessOppView from '../select/BusinessOppView.js';
 
@@ -39,6 +40,7 @@ export default class BusinessOpportunity extends PureComponent {
     businessOppVisible: false,
     businessViewVisible: false,
     businessEditVisible: false,
+    followUpVisible: false,
     selectedRows: [],
     formValues: {},
     rowInfo:{},
@@ -178,6 +180,13 @@ export default class BusinessOpportunity extends PureComponent {
       businessOppVisible: !!flag,
     });
   };
+
+  handleFollowUpVisible = flag => {
+    this.setState({
+      followUpVisible: !!flag,
+    });
+  };
+
   handleBusinessViewVisible = flag => {
     this.setState({
       businessViewVisible: !!flag,
@@ -296,7 +305,7 @@ export default class BusinessOpportunity extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, businessOppVisible, businessViewVisible, businessEditVisible, rowInfo } = this.state;
+    const { selectedRows, businessOppVisible, businessViewVisible, businessEditVisible, followUpVisible, rowInfo } = this.state;
 
     const columns = [
       {
@@ -313,18 +322,13 @@ export default class BusinessOpportunity extends PureComponent {
       },
 
       {
-        title: '联系人',
-        dataIndex: 'contacts',
+        title: '联系电话',
+        dataIndex: 'mobilePhone',
       },
 
       {
-        title: '分配人',
+        title: '执行人',
         dataIndex: 'assignor',
-      },
-
-      {
-        title: '商机来源',
-        dataIndex: 'businessSource',
       },
       {
         title: '客户需求',
@@ -336,9 +340,10 @@ export default class BusinessOpportunity extends PureComponent {
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >商机分配</a>
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
+            <a onClick={() =>this.handleFollowUpVisible(true)}>跟进</a>
+            <Divider type="vertical" />
           </Fragment>
         ),
       },
@@ -353,6 +358,10 @@ export default class BusinessOpportunity extends PureComponent {
 
     const businessAddMethods = {
       handleBusinessOppVisible: this.handleBusinessOppVisible,
+    };
+
+    const followUpMethods = {
+      handleFollowUpVisible: this.handleFollowUpVisible,
     };
 
     const businessViewMethods = {
@@ -398,6 +407,7 @@ export default class BusinessOpportunity extends PureComponent {
           </div>
         </Card>
         <BusinessAddModal {...businessAddMethods} businessOppVisible={businessOppVisible} />
+        <BusinessFollowUp {...followUpMethods} followUpVisible={followUpVisible} />
         <BusinessOppView {...businessViewMethods} businessViewVisible={businessViewVisible} rowInfo={rowInfo} />
         <BusinessEditModal {...businessEditMethods} businessEditVisible={businessEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>

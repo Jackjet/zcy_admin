@@ -291,8 +291,9 @@ class ContactsAddModal extends PureComponent {
                   <Form.Item {...statuscol} label={fieldLabels.status}>
                     {getFieldDecorator('status', {
                       rules: [{ required: false, message: '状态' }],
+                      initialValue:'启用',
                     })(
-                      <Select defaultValue="启用" placeholder="请选择状态" disable style={{ width: 200 }}>
+                      <Select placeholder="请选择状态" disable style={{ width: 200 }}>
                         <Option value="启用">
                           启用
                         </Option>

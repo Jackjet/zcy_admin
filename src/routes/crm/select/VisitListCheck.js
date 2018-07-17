@@ -16,7 +16,7 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+
 import styles from './VisitListcheck.less';
 import VisitListAddModal from '../add/VisitListAddModal';
 
@@ -27,32 +27,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="拜访新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="60%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <VisitListAddModal />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,

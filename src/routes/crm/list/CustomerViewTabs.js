@@ -19,9 +19,9 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import StandardTable from 'components/StandardTable';
-import VisitListCheck from '../../crm/select/VisitListCheck.js';
+import VisitListViewModal from '../select/VisitListViewModal.js';
 import Salesman from '../../crm/select/Salesman.js';
-import ProjectViewInfo from '../../project/select/ProjectInfo';
+import ProjectInfo from '../../project/select/ProjectInfo';
 import ContractViewInfo from '../../project/select/ContractInfo';
 
 import styles from './style.less';
@@ -55,6 +55,11 @@ const fieldLabels = {
   address: '详细地址',
   remark: '备注',
   status: '状态',
+  companyName:'单位名称',
+  companyAddress:'单位地址',
+  taxNumber:'税号',
+  openAccountBank:'开户银行',
+  bankAccount:'银行账户',
 };
 const optionshz = [
   {
@@ -179,6 +184,7 @@ class CustomerViewTabs extends PureComponent {
     width: '100%',
     projectViewVisible: false,
     contractViewVisible: false,
+    visitViewVisible: false,
     rowInfoCurrent: {},
     selectedRows: [],
   };
@@ -232,6 +238,11 @@ class CustomerViewTabs extends PureComponent {
       contractViewVisible: !!flag,
     });
   };
+  handleVisitViewVisible = flag => {
+    this.setState({
+      visitViewVisible: !!flag,
+    });
+  };
 
   showProjectViewMessage =(flag, record)=> {
     this.setState({
@@ -242,6 +253,12 @@ class CustomerViewTabs extends PureComponent {
   showContractViewMessage =(flag, record)=> {
     this.setState({
       contractViewVisible: !!flag,
+      rowInfoCurrent: record,
+    });
+  };
+  showVisitViewMessage =(flag, record)=> {
+    this.setState({
+      visitViewVisible: !!flag,
       rowInfoCurrent: record,
     });
   };
@@ -259,7 +276,7 @@ class CustomerViewTabs extends PureComponent {
     const { TabPane } = Tabs;
     const { form, dispatch, submitting, tabsViewVisible, handleTabsViewVisible, rowInfo, rule: { data }, loading } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows, projectViewVisible, rowInfoCurrent, contractViewVisible } = this.state;
+    const { selectedRows, projectViewVisible, rowInfoCurrent, contractViewVisible, visitViewVisible } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -317,31 +334,31 @@ class CustomerViewTabs extends PureComponent {
     const columnsContacts = [
       {
         title: '编码',
-        dataIndex: 'dictID',
-      },
-      {
-        title: '名称',
         dataIndex: 'code',
       },
       {
+        title: '名称',
+        dataIndex: 'name',
+      },
+      {
         title: '手机号',
-        dataIndex: 'dictTypeName',
+        dataIndex: 'mobilePhone',
       },
       {
         title: '办公电话',
-        dataIndex: 'remarks',
+        dataIndex: 'companyPhone',
       },
       {
         title: '地址',
-        dataIndex: 'remarks',
+        dataIndex: 'address',
       },
       {
         title: '联系人性质',
-        dataIndex: 'remarks',
+        dataIndex: 'contractNature',
       },
       {
         title: '状态',
-        dataIndex: 'remarks',
+        dataIndex: 'status',
       },
     ];
     const columnsProject = [
@@ -356,7 +373,7 @@ class CustomerViewTabs extends PureComponent {
       },
       {
         title: '项目名称',
-        dataIndex: 'name',
+        dataIndex: 'projectName',
         render:(text, record) => (
           <a className={styles.a} onDoubleClick={() => this.showProjectViewMessage(true, record)}>
             {text}
@@ -403,11 +420,11 @@ class CustomerViewTabs extends PureComponent {
       },
       {
         title: '客户名称',
-        dataIndex: 'cusname',
+        dataIndex: 'cusName',
       },
       {
         title: '客户联系人',
-        dataIndex: 'cuslinkmen',
+        dataIndex: 'cusLinkmen',
       },
       {
         title: '执行时间',
@@ -466,12 +483,43 @@ class CustomerViewTabs extends PureComponent {
         dataIndex: 'totalAmount',
       },
     ];
+    const columnsVisit = [
+      {
+        title: '拜访对象',
+        dataIndex: 'visitObject',
+        render:(text,record)=>(
+          <a onClick={()=>this.showVisitViewMessage(true,record)} >{text}</a>
+        ),
+      },
+      {
+        title: '关联商机',
+        dataIndex: 'associatedBusiness',
+      },
+      {
+        title: '拜访方式',
+        dataIndex: 'visitMode',
+      },
+      {
+        title: '拜访日期',
+        dataIndex: 'visitData',
+      },
+      {
+        title: '交流内容',
+        dataIndex: 'communicationContent',
+      },
+      {
+        title: '参与人员',
+        dataIndex: 'participants',
+      }];
 
     const projectViewMethods = {
       handleProjectViewVisible: this.handleProjectViewVisible,
     };
     const contractViewMethods = {
       handleContractViewVisible: this.handleContractViewVisible,
+    };
+    const visitViewMethods = {
+      handleVisitViewVisible: this.handleVisitViewVisible,
     };
     return (
       <Modal
@@ -493,7 +541,7 @@ class CustomerViewTabs extends PureComponent {
             }
             key="1"
           >
-            <Collapse defaultActiveKey={['1','2']}>
+            <Collapse defaultActiveKey={['1','2','3']}>
               <Panel header="客户基本信息" key="1">
                 <div>
                   <Card>
@@ -687,7 +735,48 @@ class CustomerViewTabs extends PureComponent {
                   </Card>
                 </div>
               </Panel>
-              <Panel header="客户联系人" key="2">
+              <Panel header="开票信息" key="2">
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
+                      {getFieldDecorator('companyName', {
+                        rules: [{ required: true, message: '请输入单位名称' }],
+                      })(<Input disabled placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
+                      {getFieldDecorator('companyAddress', {
+                        rules: [{ required: true, message: '请输入单位地址' }],
+                      })(<Input disabled placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
+                      {getFieldDecorator('taxNumber', {
+                        rules: [{ required: true, message: '请输入税号' }],
+                      })(<Input disabled placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
+                      {getFieldDecorator('openAccountBank', {
+                        rules: [{ required: true, message: '请输入开户银行' }],
+                      })(<Input disabled placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
+                      {getFieldDecorator('bankAccount', {
+                        rules: [{ required: true, message: '请输入银行账户' }],
+                      })(<Input disabled placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Panel>
+              <Panel header="客户联系人" key="3">
                 <div>
                   <Card bordered={false}>
                     <div className={styles.tableList}>
@@ -735,7 +824,7 @@ class CustomerViewTabs extends PureComponent {
                     onChange={this.handleStandardTableChange}
                   />
                 </div>
-                <ProjectViewInfo {...projectViewMethods} projectViewVisible={projectViewVisible} rowInfoCurrent={rowInfoCurrent} />
+                <ProjectInfo {...projectViewMethods} projectViewVisible={projectViewVisible} rowInfoCurrent={rowInfoCurrent} />
               </Card>
             </div>
           </TabPane>
@@ -771,7 +860,23 @@ class CustomerViewTabs extends PureComponent {
             }
             key="5"
           >
-            <VisitListCheck />
+            <div>
+              <Card bordered={false}>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListOperator}>
+                    <StandardTable
+                      selectedRows={selectedRows}
+                      loading={loading}
+                      data={data}
+                      columns={columnsVisit}
+                      onSelectRow={this.handleSelectRows}
+                      onChange={this.handleStandardTableChange}
+                    />
+                  </div>
+                </div>
+              </Card>
+              <VisitListViewModal {...visitViewMethods} visitViewVisible={visitViewVisible} rowInfo={rowInfoCurrent} />
+            </div>
           </TabPane>
         </Tabs>
       </Modal>

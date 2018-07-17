@@ -14,6 +14,7 @@ import {
   DatePicker,
   Collapse,
   Button,
+  Popover,
 } from 'antd';
 import { connect } from 'dva';
 import StandardTable from 'components/StandardTable';
@@ -23,18 +24,21 @@ import styles from './style.less';
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
 const { Option } = Select;
-const formhz11 = {
-  wrapperCol: {
-    style: {
-      width: '50%',
-    },
+
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-  style: {
-    width: '80%',
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
 
 const fieldLabels = {
+  applicationNumber:'申请单号',
   clientName: '委托方名称',
   projectUnitName: '项目单位名称',
   businessType: '业务类型',
@@ -207,7 +211,7 @@ class InvoiceTabs extends PureComponent {
       },
       {
         title: '已开票金额（元）',
-        dataIndex: 'invoiceMondyAlready',
+        dataIndex: 'invoiceMoneyAlready',
       },
       {
         title: '备注',
@@ -236,294 +240,299 @@ class InvoiceTabs extends PureComponent {
             key="1"
           >
             <div>
-              <Card>
+              <Form layout="horizontal">
                 <Divider orientation="left">项目承接与分配阶段</Divider>
-                <Form layout="inline">
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.clientName}>
-                        {getFieldDecorator('clientName', {
-                          rules: [{ required: true, message: '请委托方名称' }],
-                        })(
-                          <Select placeholder="请委托方名称" style={{ width: 200 }}>
-                            <Option value="0">杭州客户</Option>
-                            <Option value="g">新昌客户</Option>
-                            <Option value="y">诸暨客户</Option>
-                            <Option value="q">河南客户</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.projectUnitName}>
-                        {getFieldDecorator('projectUnitName', {
-                          rules: [{ required: false, message: '请选择项目单位名称' }],
-                        })(
-                          <Select placeholder="请选择项目单位名称" style={{ width: 200 }}>
-                            <Option value="0">杭州客户</Option>
-                            <Option value="g">新昌客户</Option>
-                            <Option value="y">诸暨客户</Option>
-                            <Option value="q">河南客户</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.businessType}>
-                        {getFieldDecorator('businessType', {
-                          rules: [{ required: false, message: '请选择业务类型' }],
-                        })(
-                          <Select placeholder="请选择业务类型" style={{ width: 200 }}>
-                            <Option value="0">杭州客户</Option>
-                            <Option value="g">新昌客户</Option>
-                            <Option value="y">诸暨客户</Option>
-                            <Option value="q">河南客户</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.specificBusinessType}>
-                        {getFieldDecorator('specificBusinessType', {
-                          rules: [{ required: false, message: '请选择具体业务类型' }],
-                        })(
-                          <Select placeholder="请选择具体业务类型" style={{ width: 200 }}>
-                            <Option value="0">杭州客户</Option>
-                            <Option value="g">新昌客户</Option>
-                            <Option value="y">诸暨客户</Option>
-                            <Option value="q">河南客户</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={8}>
-                      <Form.Item {...formhz11} label={fieldLabels.standardCharge}>
-                        {getFieldDecorator('standardCharge', {
-                          rules: [{ required: false, message: '请输入标准收费' }],
-                        })(<Input placeholder="请输入标准收费" className={styles['ant-input-lg']} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                      <Form.Item {...formhz11} label={fieldLabels.realCharge}>
-                        {getFieldDecorator('realCharge', {
-                          rules: [{ required: false, message: '请输入实际收费' }],
-                        })(<Input placeholder="请输入实际收费" className={styles['ant-input-lg']} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                      <Form.Item {...formhz11} label={fieldLabels.discountRate}>
-                        {getFieldDecorator('discountRate', {
-                          rules: [{ required: false, message: '请输入折扣率' }],
-                        })(<Input placeholder="请输入折扣率" className={styles['ant-input-lg']} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.entrustType}>
-                        {getFieldDecorator('entrustType', {
-                          rules: [{ required: false, message: '请选择委托类型' }],
-                        })(
-                          <Select placeholder="请选择委托类型" style={{ width: 200 }}>
-                            <Option value="0">首年</Option>
-                            <Option value="g">第二年</Option>
-                            <Option value="y">第三年</Option>
-                            <Option value="q">三年以上</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={6}>
-                      <Form.Item {...formhz11} label={fieldLabels.acceptancePerson}>
-                        {getFieldDecorator('acceptancePerson', {
-                          rules: [{ required: false, message: '请输入承接人' }],
-                        })(<Input placeholder="请输入承接人" />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item {...formhz11} label={fieldLabels.acceptanceDate}>
-                        {getFieldDecorator('acceptanceDate', {
-                          rules: [{ required: false, message: '请选择承接日期' }],
-                        })(<DatePicker placeholder="请选择承接日期" />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item {...formhz11} label={fieldLabels.acceptanceDepartment}>
-                        {getFieldDecorator('acceptanceDepartment', {
-                          rules: [{ required: false, message: '请输入承接部门' }],
-                        })(<Input placeholder="请输入承接部门" />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item {...formhz11} label={fieldLabels.businessSource}>
-                        {getFieldDecorator('businessSource', {
-                          rules: [{ required: false, message: '请输入业务来源' }],
-                        })(<Input placeholder="请输入业务来源" />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.planedProjectImplementationDate}>
-                        {getFieldDecorator('planedProjectImplementationDate', {
-                          rules: [{ required: false, message: '请选择计划项目实施时间' }],
-                        })(<DatePicker placeholder="请选择计划项目实施时间" />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.planedIssueReportingDate}>
-                        {getFieldDecorator('planedIssueReportingDate', {
-                          rules: [{ required: false, message: '请选择计划出具报告时间' }],
-                        })(<DatePicker placeholder="请选择计划出具报告时间" />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.competentPartnerApproval}>
-                        {getFieldDecorator('competentPartnerApproval', {
-                          rules: [{ required: false, message: '请输入主管合伙人审批' }],
-                        })(<Input placeholder="请输入主管合伙人审批" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.ImplementSignature}>
-                        {getFieldDecorator('ImplementSignature', {
-                          rules: [{ required: false, message: '请输入项目实施部门负责人签名' }],
-                        })(<Input placeholder="请输入项目实施部门负责人签名" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.pursuitSignature}>
-                        {getFieldDecorator('pursuitSignature', {
-                          rules: [{ required: false, message: '请输入落实项目负责人签名' }],
-                        })(<Input placeholder="请输入落实项目负责人签名" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.projectMembers}>
-                        {getFieldDecorator('projectMembers', {
-                          rules: [{ required: false, message: '请输入计划项目组成员' }],
-                        })(<Input placeholder="请输入计划项目组成员" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionSignature}>
-                        {getFieldDecorator('technicalSupervisionSignature', {
-                          rules: [{ required: false, message: '请输入负责项目技术督导人签名' }],
-                        })(<Input placeholder="请输入负责项目技术督导人签名" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Divider orientation="left">项目实施阶段</Divider>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.projectPersonChange}>
-                        {getFieldDecorator('projectPersonChange', {
-                          rules: [{ required: false, message: '请输入项目组人员调整' }],
-                        })(<Input placeholder="请输入项目组人员调整" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.planedDateChange}>
-                        {getFieldDecorator('planedDateChange', {
-                          rules: [{ required: false, message: '请输入计划时间调整' }],
-                        })(<Input placeholder="请输入计划时间调整" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.planChangeReason}>
-                        {getFieldDecorator('planChangeReason', {
-                          rules: [{ required: false, message: '请输入计划调整理由' }],
-                        })(<Input placeholder="请输入计划调整理由" className={styles['ant-input-lg']} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionOpinion}>
-                        {getFieldDecorator('technicalSupervisionOpinion', {
-                          rules: [{ required: false, message: '请输入项目实施部门负责人意见' }],
-                        })(<Input placeholder="请输入项目实施部门负责人意见" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.technicalSupervisionOpinion}>
-                        {getFieldDecorator('technicalSupervisionOpinion', {
-                          rules: [{ required: false, message: '请输入负责项目技术督导人意见' }],
-                        })(<Input placeholder="请输入负责项目技术督导人意见" />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Divider orientation="left">项目完成阶段</Divider>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.projectResponsiblePerson}>
-                        {getFieldDecorator('projectResponsiblePerson', {
-                          rules: [{ required: false, message: '请输入项目负责人' }],
-                        })(<Input placeholder="请输入项目负责人" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.actualSubmissionDate}>
-                        {getFieldDecorator('actualSubmissionDate', {
-                          rules: [{ required: false, message: '请选择实际提交报告日期' }],
-                        })(<DatePicker placeholder="请选择实际提交报告日期" />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.comprehensiveUnitSignature}>
-                        {getFieldDecorator('comprehensiveUnitSignature', {
-                          rules: [{ required: false, message: '请选择综合部签收人' }],
-                        })(<Input placeholder="请选择综合部签收人" style={{ width: 200 }} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.signDate}>
-                        {getFieldDecorator('signDate', {
-                          rules: [{ required: false, message: '请选择签收日期' }],
-                        })(<DatePicker placeholder="请选择签收日期" />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['row-h']}>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.auditOpinion}>
-                        {getFieldDecorator('auditOpinion', {
-                          rules: [{ required: false, message: '请输入审计意见' }],
-                        })(<Input placeholder="请输入审计意见" className={styles['ant-input-lg']} />)}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...formhz11} label={fieldLabels.CPA_Signature}>
-                        {getFieldDecorator('CPA_Signature', {
-                          rules: [{ required: false, message: '请输入签字注册会计师' }],
-                        })(
-                          <Input placeholder="请输入签字注册会计师" className={styles['ant-input-lg']} />
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.applicationNumber}>
+                      {getFieldDecorator('applicationNumber', {
+                        rules: [{ required: true, message: '请委托方名称' }],
+                      })(
+                        <Input placeholder="申请单号" style={{ width: 150 }} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.clientName}>
+                      {getFieldDecorator('clientName', {
+                        rules: [{ required: true, message: '请委托方名称' }],
+                      })(
+                        <Select placeholder="请委托方名称" style={{ width: 150 }}>
+                          <Option value="0">杭州客户</Option>
+                          <Option value="g">新昌客户</Option>
+                          <Option value="y">诸暨客户</Option>
+                          <Option value="q">河南客户</Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.projectUnitName}>
+                      {getFieldDecorator('projectUnitName', {
+                        rules: [{ required: false, message: '请选择项目单位名称' }],
+                      })(
+                        <Select placeholder="请选择项目单位名称" style={{ width: 150 }}>
+                          <Option value="0">杭州客户</Option>
+                          <Option value="g">新昌客户</Option>
+                          <Option value="y">诸暨客户</Option>
+                          <Option value="q">河南客户</Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.businessSource}>
+                      {getFieldDecorator('businessSource', {
+                        rules: [{ required: false, message: '请输入业务来源' }],
+                      })(<Input placeholder="请输入业务来源" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.businessType}>
+                      {getFieldDecorator('businessType', {
+                        rules: [{ required: false, message: '请选择业务类型' }],
+                      })(
+                        <Select placeholder="请选择业务类型" style={{ width: 150 }}>
+                          <Option value="0">杭州客户</Option>
+                          <Option value="g">新昌客户</Option>
+                          <Option value="y">诸暨客户</Option>
+                          <Option value="q">河南客户</Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.specificBusinessType}>
+                      {getFieldDecorator('specificBusinessType', {
+                        rules: [{ required: false, message: '请选择具体业务类型' }],
+                      })(
+                        <Select placeholder="请选择具体业务类型" style={{ width: 150 }}>
+                          <Option value="0">杭州客户</Option>
+                          <Option value="g">新昌客户</Option>
+                          <Option value="y">诸暨客户</Option>
+                          <Option value="q">河南客户</Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.entrustType}>
+                      {getFieldDecorator('entrustType', {
+                        rules: [{ required: false, message: '请选择委托类型' }],
+                      })(
+                        <Select placeholder="请选择委托类型" style={{ width: 150 }}>
+                          <Option value="0">首年</Option>
+                          <Option value="g">第二年</Option>
+                          <Option value="y">第三年</Option>
+                          <Option value="q">三年以上</Option>
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.standardCharge}>
+                      {getFieldDecorator('standardCharge', {
+                        rules: [{ required: false, message: '请输入标准收费' }],
+                      })(<Input placeholder="请输入标准收费" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.realCharge}>
+                      {getFieldDecorator('realCharge', {
+                        rules: [{ required: false, message: '请输入实际收费' }],
+                      })(<Input placeholder="请输入实际收费" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.discountRate}>
+                      {getFieldDecorator('discountRate', {
+                        rules: [{ required: false, message: '请输入折扣率' }],
+                      })(<Input placeholder="请输入折扣率" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.acceptancePerson}>
+                      {getFieldDecorator('acceptancePerson', {
+                        rules: [{ required: false, message: '请输入承接人' }],
+                      })(<Input placeholder="请输入承接人" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.acceptanceDate}>
+                      {getFieldDecorator('acceptanceDate', {
+                        rules: [{ required: false, message: '请选择承接日期' }],
+                      })(<DatePicker placeholder="请选择承接日期" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.acceptanceDepartment}>
+                      {getFieldDecorator('acceptanceDepartment', {
+                        rules: [{ required: false, message: '请输入承接部门' }],
+                      })(<Input placeholder="请输入承接部门" style={{ width: 150 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.planedProjectImplementationDate}>
+                      {getFieldDecorator('planedProjectImplementationDate', {
+                        rules: [{ required: false, message: '请选择计划项目实施时间' }],
+                      })(<DatePicker placeholder="请选择计划项目实施时间" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.planedIssueReportingDate}>
+                      {getFieldDecorator('planedIssueReportingDate', {
+                        rules: [{ required: false, message: '请选择计划出具报告时间' }],
+                      })(<DatePicker placeholder="请选择计划出具报告时间" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.competentPartnerApproval}>
+                      {getFieldDecorator('competentPartnerApproval', {
+                        rules: [{ required: false, message: '请输入主管合伙人审批' }],
+                      })(<Input placeholder="请输入主管合伙人审批" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.ImplementSignature}>
+                      {getFieldDecorator('ImplementSignature', {
+                        rules: [{ required: false, message: '请输入项目实施部门负责人签名' }],
+                      })(<Input placeholder="请输入项目实施部门负责人签名" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.pursuitSignature}>
+                      {getFieldDecorator('pursuitSignature', {
+                        rules: [{ required: false, message: '请输入落实项目负责人签名' }],
+                      })(<Input placeholder="请输入落实项目负责人签名" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.projectMembers}>
+                      {getFieldDecorator('projectMembers', {
+                        rules: [{ required: false, message: '请输入计划项目组成员' }],
+                      })(<Input placeholder="请输入计划项目组成员" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.technicalSupervisionSignature}>
+                      {getFieldDecorator('technicalSupervisionSignature', {
+                        rules: [{ required: false, message: '请输入负责项目技术督导人签名' }],
+                      })(<Input placeholder="请输入负责项目技术督导人签名" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+
+                <Divider orientation="left">项目实施阶段</Divider>
+                <Row className={styles['row-h']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.projectPersonChange}>
+                      {getFieldDecorator('projectPersonChange', {
+                        rules: [{ required: false, message: '请输入项目组人员调整' }],
+                      })(<Input placeholder="请输入项目组人员调整" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.planedDateChange}>
+                      {getFieldDecorator('planedDateChange', {
+                        rules: [{ required: false, message: '请输入计划时间调整' }],
+                      })(<Input placeholder="请输入计划时间调整" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.planChangeReason}>
+                      {getFieldDecorator('planChangeReason', {
+                        rules: [{ required: false, message: '请输入计划调整理由' }],
+                      })(<Input placeholder="请输入计划调整理由" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.ImplementOpinion}>
+                      {getFieldDecorator('ImplementOpinion', {
+                        rules: [{ required: false, message: '请输入项目实施部门负责人意见' }],
+                      })(<Input placeholder="请输入项目实施部门负责人意见" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['row-h']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.technicalSupervisionOpinion}>
+                      {getFieldDecorator('technicalSupervisionOpinion', {
+                        rules: [{ required: false, message: '请输入负责项目技术督导人意见' }],
+                      })(<Input placeholder="请输入负责项目技术督导人意见" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Divider orientation="left">项目完成阶段</Divider>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.projectResponsiblePerson}>
+                      {getFieldDecorator('projectResponsiblePerson', {
+                        rules: [{ required: false, message: '请输入项目负责人' }],
+                      })(<Input placeholder="请输入项目负责人" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.actualSubmissionDate}>
+                      {getFieldDecorator('actualSubmissionDate', {
+                        rules: [{ required: false, message: '请选择实际提交报告日期' }],
+                      })(<DatePicker placeholder="请选择实际提交报告日期" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.comprehensiveUnitSignature}>
+                      {getFieldDecorator('comprehensiveUnitSignature', {
+                        rules: [{ required: false, message: '请选择综合部签收人' }],
+                      })(<Input placeholder="请选择综合部签收人" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.signDate}>
+                      {getFieldDecorator('signDate', {
+                        rules: [{ required: false, message: '请选择签收日期' }],
+                      })(<DatePicker placeholder="请选择签收日期" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.auditOpinion}>
+                      {getFieldDecorator('auditOpinion', {
+                        rules: [{ required: false, message: '请输入审计意见' }],
+                      })(<Input placeholder="请输入审计意见" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.CPA_Signature}>
+                      {getFieldDecorator('CPA_Signature', {
+                        rules: [{ required: false, message: '请输入签字注册会计师' }],
+                      })(
+                        <Input placeholder="请输入签字注册会计师" style={{ width: 200 }} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
             </div>
           </TabPane>
           <TabPane
@@ -535,17 +544,17 @@ class InvoiceTabs extends PureComponent {
             key="2"
           >
             <div>
-              <Collapse bordered={false} defaultActiveKey={['1','2']}>
-                <Panel header="开票信息" key="1" showArrow={false}>
+              <Collapse defaultActiveKey={['1','2']}>
+                <Panel header="开票信息" key="1">
                   <Card>
-                    <Form layout="inline">
+                    <Form layout="horizontal">
                       <Row className={styles['fn-mb-15']}>
-                        <Col span={12}>
-                          <Form.Item {...formhz11} label={fieldLabels.invoiceName}>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.invoiceName}>
                             {getFieldDecorator('invoiceName', {
                               rules: [{ required: false, message: '请选择开票名称' }],
                             })(
-                              <Select placeholder="请选择开票名称" style={{ width: 200 }}>
+                              <Select placeholder="请选择开票名称" style={{ width: 150 }}>
                                 <Option value="杭州客户">杭州客户</Option>
                                 <Option value="新昌客户">新昌客户</Option>
                                 <Option value="诸暨客户">诸暨客户</Option>
@@ -554,51 +563,21 @@ class InvoiceTabs extends PureComponent {
                             )}
                           </Form.Item>
                         </Col>
-                        <Col span={12}>
-                          <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.invoiceMoney}>
                             {getFieldDecorator('invoiceMoney', {
                               rules: [{ required: false, message: '请输入开票金额' }],
                             })(
-                              <Input placeholder="请输入开票金额" style={{ width: 200 }} />
+                              <Input placeholder="请输入开票金额" style={{ width: 150 }} />
                             )}
                           </Form.Item>
                         </Col>
-                      </Row>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={12}>
-                          <Form.Item {...formhz11} label={fieldLabels.invoiceCompany}>
-                            {getFieldDecorator('invoiceCompany', {
-                              rules: [{ required: false, message: '请选择开票公司' }],
-                            })(
-                              <Select placeholder="请选择开票公司" style={{ width: 200 }}>
-                                <Option value="杭州客户">杭州客户</Option>
-                                <Option value="新昌客户">新昌客户</Option>
-                                <Option value="诸暨客户">诸暨客户</Option>
-                                <Option value="河南客户">河南客户</Option>
-                              </Select>
-                            )}
-                          </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                          <Form.Item {...formhz11} label={fieldLabels.specificBusinessType}>
-                            {getFieldDecorator('specificBusinessType', {
-                              rules: [{ required: false, message: '请选择开票类型' }],
-                            })(
-                              <Select placeholder="请选择开票类型" style={{ width: 200 }}>
-                                <Option value="服务业发展">服务业发展</Option>
-                                <Option value="增值税发票">增值税发票</Option>
-                              </Select>
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className={styles['row-h']}>
-                        <Col>
-                          <Form.Item {...formhz11} label={fieldLabels.invoicePersonnel}>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.invoicePersonnel}>
                             {getFieldDecorator('invoicePersonnel', {
                               rules: [{ required: false, message: '请选择开票人员' }],
                             })(
-                              <Select placeholder="请选择开票人员" style={{ width: 200 }}>
+                              <Select placeholder="请选择开票人员" style={{ width: 150 }}>
                                 <Option value="人员A">人员A</Option>
                                 <Option value="人员B">人员B</Option>
                               </Select>
@@ -606,13 +585,39 @@ class InvoiceTabs extends PureComponent {
                           </Form.Item>
                         </Col>
                       </Row>
-                      <Row>
-                        <Col>
-                          <Form.Item {...formhz11} label={fieldLabels.taxNumber}>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.invoiceCompany}>
+                            {getFieldDecorator('invoiceCompany', {
+                              rules: [{ required: false, message: '请选择开票公司' }],
+                            })(
+                              <Select placeholder="请选择开票公司" style={{ width: 150 }}>
+                                <Option value="杭州客户">杭州客户</Option>
+                                <Option value="新昌客户">新昌客户</Option>
+                                <Option value="诸暨客户">诸暨客户</Option>
+                                <Option value="河南客户">河南客户</Option>
+                              </Select>
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.specificBusinessType}>
+                            {getFieldDecorator('specificBusinessType', {
+                              rules: [{ required: false, message: '请选择开票类型' }],
+                            })(
+                              <Select placeholder="请选择开票类型" style={{ width: 150 }}>
+                                <Option value="服务业发展">服务业发展</Option>
+                                <Option value="增值税发票">增值税发票</Option>
+                              </Select>
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                             {getFieldDecorator('taxNumber', {
                               rules: [{ required: true, message: '请输入税号' }],
                             })(
-                              <Input placeholder="请输入税号" className={styles['ant-input-lg']} />
+                              <Input placeholder="请输入税号" style={{ width: 150 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -620,7 +625,7 @@ class InvoiceTabs extends PureComponent {
                     </Form>
                   </Card>
                 </Panel>
-                <Panel header="合同列表" key="2" showArrow={false}>
+                <Panel header="合同列表" key="2">
                   <div className={styles.tableList}>
                     <StandardTable
                       selectedRows={selectedRows}

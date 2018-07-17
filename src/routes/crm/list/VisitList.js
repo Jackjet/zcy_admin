@@ -42,6 +42,7 @@ export default class VisitList  extends PureComponent {
     visitAddVisible: false,
     visitViewVisible: false,
     visitEditVisible: false,
+    followUpVisible: false,
     rowInfo:{},
     selectedRows: [],
     formValues: {},
@@ -255,7 +256,7 @@ export default class VisitList  extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, rowInfo } = this.state;
+    const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, followUpVisible , rowInfo } = this.state;
     const columns = [
       {
         title: '拜访对象',

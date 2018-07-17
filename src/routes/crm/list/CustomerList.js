@@ -330,25 +330,33 @@ export default class CustomerList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('no',{
+
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="拼音码">
-              {getFieldDecorator('pinyin')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('pinyin',{
+
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
 
           <Col md={8} sm={24}>
             <FormItem label="电话号码">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('phone',{
+
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer')(
+              {getFieldDecorator('customer',{
+
+              })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                 </Select>
@@ -357,7 +365,9 @@ export default class CustomerList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="行业">
-              {getFieldDecorator('status')(
+              {getFieldDecorator('status',{
+
+              })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                   <Option value="z">制造业</Option>
@@ -375,7 +385,9 @@ export default class CustomerList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('address',{
+
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -418,14 +430,18 @@ export default class CustomerList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode')(
+              {getFieldDecorator('customerCode',{
+
+              })(
                 <Input placeholder="请输入客户编码和名称" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="key">
-              {getFieldDecorator('key')(
+              {getFieldDecorator('key',{
+
+              })(
                 <Input placeholder="请输入key" />
               )}
             </FormItem>

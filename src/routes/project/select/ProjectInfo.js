@@ -1,69 +1,22 @@
 import React, { PureComponent } from 'react';
 import {
   Card,
-  Button,
   Form,
   Icon,
   Col,
   Row,
   DatePicker,
-  // TimePicker,
   Input,
-  InputNumber,
   Select,
   Popover,
-  Cascader,
   Checkbox,
   Modal,
 } from 'antd';
 import { connect } from 'dva';
-// import FooterToolbar from 'components/FooterToolbar';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-// import TableForm from './TableForm';
 import styles from './style.less';
 
 const { Option } = Select;
-const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const optionshz = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
-
-function onChange(value) {
-  console.log(value);
-}
-
 const fieldLabels = {
   number: '项目编码',
   type: '项目类别',
@@ -283,7 +236,7 @@ class ProjectCheck extends PureComponent {
     return (
 
       <Modal
-        title="商机基本信息新增"
+        title="项目基本信息"
         style={{ top: 20 }}
         visible={projectViewVisible}
         width="90%"

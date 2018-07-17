@@ -6,7 +6,7 @@ import styles from './style.less';
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
-  visitors: '拜访对象',
+  businessName: '商机名称',
   visitType: '拜访方式',
   connectBusiness: '关联商机',
   visitDate: '拜访日期',
@@ -27,7 +27,7 @@ const formItemLayout = {
   },
 };
 
-class VisitListAddModal extends PureComponent {
+class BusinessFollowUp extends PureComponent {
   state = {
     width: '90%',
     mockData: [],
@@ -74,7 +74,7 @@ class VisitListAddModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, visitAddVisible, handleVisitAddVisible } = this.props;
+    const { form, dispatch, submitting, followUpVisible, handleFollowUpVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -85,7 +85,7 @@ class VisitListAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功bbb');
-          handleVisitAddVisible(false);
+          handleFollowUpVisible(false);
         }
       });
     };
@@ -130,36 +130,26 @@ class VisitListAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="拜访新增"
+        title="跟进"
         style={{ top: 150 }}
         // 对话框是否可见
-        visible={visitAddVisible}
+        visible={followUpVisible}
         width="60%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleVisitAddVisible()}
+        onCancel={() => handleFollowUpVisible()}
       >
         <div>
           <Card>
             <Form layout="horizontal">
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
-                    {getFieldDecorator('visitors', {
-                      rules: [{ required: false, message: '请选择拜访对象' }],
+                  <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
+                    {getFieldDecorator('businessName', {
+                      rules: [{ required: false, message: '商机名称' }],
                     })(
-                      <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">客户介绍</Option>
-                        <Option value="2">老客户</Option>
-                        <Option value="3">代理商</Option>
-                        <Option value="4">合作伙伴</Option>
-                        <Option value="5">公开招聘</Option>
-                        <Option value="6">互联网</Option>
-                        <Option value="7">自主开发</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
+                      <Input placeholder="请选择拜访对象" style={{ width: 200 }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -185,21 +175,6 @@ class VisitListAddModal extends PureComponent {
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
                     })(<DatePicker placeholder="请选择拜访日期" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.connectBusiness}>
-                    {getFieldDecorator('connectBusiness', {
-                      rules: [{ required: false, message: '请选择关联商机' }],
-                    })(
-                      <Select placeholder="请选择关联商机" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">现场拜访</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
-                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -258,4 +233,4 @@ class VisitListAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(VisitListAddModal));
+}))(Form.create()(BusinessFollowUp));

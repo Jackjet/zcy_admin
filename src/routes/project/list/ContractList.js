@@ -236,10 +236,8 @@ export default class Contract extends PureComponent {
           }
         >
           <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">咨询报告</Menu.Item>
+          <Menu.Item key="2">可研报告</Menu.Item>
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
-          <Menu.Item key="4">打包项目</Menu.Item>
-          <Menu.Item key="5">2010年免审批工程造价、招投标项目</Menu.Item>
         </SubMenuTree>
       </Menu>
     );
@@ -381,49 +379,59 @@ export default class Contract extends PureComponent {
       {
         title: '合同编码',
         dataIndex: 'contractCode',
+        width: 100,
+        align: 'center',
       },
       {
         title: '合同标题',
         dataIndex: 'contractName',
+        width: 100,
+        align: 'center',
       },
       {
         title: '对方企业',
         dataIndex: 'partnerEnterprise',
+        align: 'center',
       },
       {
         title: '负责人',
         dataIndex: 'linkman',
+        align: 'center',
       },
       {
         title: '业务类别',
         dataIndex: 'businessType',
+        align: 'center',
       },
       {
         title: '签订时间',
         dataIndex: 'signTime',
+        align: 'center',
         sorter: true,
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '开始时间',
         dataIndex: 'startTime',
-        sorter: true,
+        align: 'center',
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '结束时间',
         dataIndex: 'endTime',
-        sorter: true,
+        align: 'center',
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
 
       {
         title: '总金额',
         dataIndex: 'totalAmount',
+        align: 'center',
       },
 
       {
         title: '操作',
+        align: 'center',
         render: (text,record) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
@@ -431,7 +439,6 @@ export default class Contract extends PureComponent {
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
             <a onClick={this.handleDeleteClick} >删除</a>
-            <Divider type="vertical" />
           </Fragment>
         ),
       },

@@ -87,17 +87,38 @@ const menuData = [
     path: 'fi',
     children: [
       {
-        name: '发票管理',
+        name: '应收款管理',
         path: 'fiInvoice',
         children: [
           {
             key: 'invoiceManage',
-            name: '开票管理',
+            name: '开票申请',
+            path: 'invoiceApply',
+          },
+          {
+            key: 'invoiceManage',
+            name: '发票管理',
             path: 'invoiceManage',
           },
           {
             key: 'receivablesMessage',
-            name: '收款信息',
+            name: '收款管理',
+            path: 'receivablesMessage',
+          },
+        ],
+      },
+      {
+        name: '应付款管理',
+        path: 'fiInvoiceMange',
+        children: [
+          {
+            key: 'invoiceManage',
+            name: '发票管理',
+            path: 'invoiceManage',
+          },
+          {
+            key: 'receivablesMessage',
+            name: '付款管理',
             path: 'receivablesMessage',
           },
         ],
@@ -187,14 +208,14 @@ const menuData = [
     path: 'dangan',
     children: [
       {
-        key: 'danganjyue',
-        name: '档案借阅管理',
-        path: 'dajym',
-      },
-      {
         key: 'danganyij',
         name: '档案入库',
         path: 'dazyj',
+      },
+      {
+        key: 'danganjyue',
+        name: '档案借阅',
+        path: 'dajym',
       },
       {
         key: 'guihuandj',

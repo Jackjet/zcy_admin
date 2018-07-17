@@ -121,13 +121,17 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
       name: '业务流转',
     },
-    '/fi/fiInvoice/invoiceManage': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/InvoiceApplyList')),
-      name: '开票管理',
-    },
     '/fi/fiInvoice/receivablesMessage': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/DetailedInfo')),
+      name: '收款管理',
+    },
+    '/fi/fiInvoice/invoiceApply': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/InvoiceApplyList')),
+      name: '开票申请',
+    },
+    '/fi/fiInvoice/invoiceManage': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/ReceivablesInfoList')),
-      name: '收款信息',
+      name: '发票管理',
     },
     '/fi/commission/commissionQuery': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/CommissionQuery')),
@@ -249,7 +253,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
     '/test': {
-      component: dynamicWrapper(app, [], () => import('../routes/Test/SelectDemo')),
+      component: dynamicWrapper(app, [], () => import('../routes/Test/CssJsTest')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

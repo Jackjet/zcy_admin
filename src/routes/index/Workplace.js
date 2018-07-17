@@ -196,7 +196,7 @@ export default class Workplace extends PureComponent {
                 <TabPane
                   tab={
                     <span>
-                      <Icon type="notification" />新闻通知
+                      <Icon type="notification" />新闻公告
                     </span>
                   }
                   key="1"
@@ -205,12 +205,12 @@ export default class Workplace extends PureComponent {
                     <div className={styles.activitiesList}>{this.renderActivities()}</div>
                   </List>
                 </TabPane>
-                <TabPane tab="公告通知" key="2">
+                <TabPane tab="代办消息" key="2">
                   <List loading={activitiesLoading} size="large">
                     <div className={styles.activitiesList}>{this.renderActivities()}</div>
                   </List>
                 </TabPane>
-                <TabPane tab="待办消息" key="3">
+                <TabPane tab="预警消息" key="3">
                   <List loading={activitiesLoading} size="large">
                     <div className={styles.activitiesList}>{this.renderActivities()}</div>
                   </List>
