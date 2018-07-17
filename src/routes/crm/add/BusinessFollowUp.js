@@ -7,9 +7,9 @@ const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
   businessName: '商机名称',
-  visitType: '拜访方式',
+  visitType: '跟进方式',
   connectBusiness: '关联商机',
-  visitDate: '拜访日期',
+  visitDate: '跟进日期',
   communication: '交流内容',
   participants: '参与人员',
   remarks: '备注',
@@ -22,10 +22,24 @@ const formItemLayout = {
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 12 },
-    md: { span: 10 },
+    sm: { span: 16 },
   },
 };
+
+const formItemLayoutTextArea = {
+  style:{
+    width: '200%',
+  },
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+
 
 class BusinessFollowUp extends PureComponent {
   state = {
@@ -48,8 +62,6 @@ class BusinessFollowUp extends PureComponent {
       const data = {
         key: i.toString(),
         title: `content${i + 1}`,
-        description: `description of content${i + 1}`,
-        chosen: Math.random() * 2 > 1,
       };
       if (data.chosen) {
         targetKeys.push(data.key);
@@ -131,7 +143,7 @@ class BusinessFollowUp extends PureComponent {
     return (
       <Modal
         title="跟进"
-        style={{ top: 150 }}
+        style={{ top: 20 }}
         // 对话框是否可见
         visible={followUpVisible}
         width="60%"
@@ -143,8 +155,8 @@ class BusinessFollowUp extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Row>
-                <Col lg={24} md={24} sm={24}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: false, message: '商机名称' }],
@@ -153,9 +165,7 @@ class BusinessFollowUp extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitType}>
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '请选择拜访方式' }],
@@ -169,27 +179,27 @@ class BusinessFollowUp extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(<DatePicker placeholder="请选择拜访日期" />)}
+                    })(<DatePicker placeholder="请选择拜访日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.communication}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12} pull={4}>
+                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.communication}>
                     {getFieldDecorator('communication')(
-                      <TextArea placeholder="请输入交流内容" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea placeholder="请输入交流内容" />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.participants}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12} push={8}>
+                  <Form.Item label={fieldLabels.participants}>
                     {getFieldDecorator('participants')(
                       <Transfer
                         // 数据源，其中的数据将会被渲染到左边一栏中，targetKeys 中指定的除外。
@@ -212,11 +222,11 @@ class BusinessFollowUp extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12} pull={4}>
+                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(
-                      <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea placeholder="请输入备注" />
                     )}
                   </Form.Item>
                 </Col>

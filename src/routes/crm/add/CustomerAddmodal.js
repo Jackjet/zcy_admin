@@ -226,7 +226,7 @@ class CustomerAddmodal extends PureComponent {
         title="客户基本信息新增"
         style={{ top: 20 }}
         visible={customerAddVisible}
-        width="70%"
+        width="80%"
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
@@ -249,7 +249,7 @@ class CustomerAddmodal extends PureComponent {
                       {getFieldDecorator('customerName', {
                         rules: [{ required: true, message: '请输入客户名称' }],
                       })(
-                        <Input placeholder="请输入客户名称" style={{ width: 600 }} />
+                        <Input placeholder="请输入客户名称" style={{ width: 520 }} />
                       )}
                     </Form.Item>
                   </Col>
@@ -329,7 +329,7 @@ class CustomerAddmodal extends PureComponent {
                           options={optionshz}
                           onChange={onChange}
                           placeholder="请选择所在区域"
-                          style={{ width: 603 }}
+                          style={{ width: 520 }}
                         />
                       )}
                     </Form.Item>
@@ -352,7 +352,7 @@ class CustomerAddmodal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.address}>
                       {getFieldDecorator('address', {
                         rules: [{ required: false, message: '请输入详细地址' }],
-                      })(<Input placeholder="请输入详细地址" style={{ width: 603 }} />)}
+                      })(<Input placeholder="请输入详细地址" style={{ width: 520 }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -362,7 +362,7 @@ class CustomerAddmodal extends PureComponent {
                       {getFieldDecorator('company', {
                         rules: [{ required: false, message: '请输出所属公司' }],
                       })(
-                        <Input disabled placeholder="请输出所属公司" style={{ width: 603 }} />
+                        <Input disabled placeholder="请输出所属公司" style={{ width: 520 }} />
                       )}
                     </Form.Item>
                   </Col>

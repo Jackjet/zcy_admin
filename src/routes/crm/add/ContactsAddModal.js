@@ -12,8 +12,12 @@ import {
   Checkbox,
   Modal,
   message,
+  Button,
+  Table,
+  Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
+import EditableCell from '../EditableTable/EditableCell';
 import styles from './style.less';
 
 
@@ -82,6 +86,21 @@ const formItemLayout = {
 class ContactsAddModal extends PureComponent {
   state = {
     width: '100%',
+    dataSource: [
+      {
+        key: '0',
+        name: '汪工',
+        phone: '123456',
+        remarks: 'aaa',
+      },
+      {
+        key: '1',
+        name: '申工',
+        phone: '456789',
+        remarks: 'bbb',
+      },
+    ],
+    count: 2,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -89,6 +108,34 @@ class ContactsAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.setState({ dataSource });
+      }
+    };
+  };
+  onDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  };
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
+    const newData = {
+      key: count,
+      name: `小杨 ${count}`,
+      phone: 18,
+      remarks: `London, Park Lane no. ${count}`,
+    };
+    this.setState({
+      dataSource: [...dataSource, newData],
+      count: count + 1,
+    });
+  };
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -151,12 +198,59 @@ class ContactsAddModal extends PureComponent {
         </span>
       );
     };
+    const { dataSource } = this.state;
+    const columns = [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
+        ),
+      },
+      {
+        title: '联系人类型',
+        dataIndex: 'type',
+        render: (text, record) => (
+          <div>
+            <Select style={{ width: 130 }}>
+              <Option value="0">主联系人</Option>
+              <Option value="1">法人</Option>
+            </Select>
+          </div>
+        ),
+      },
+      {
+        title: '联系电话',
+        dataIndex: 'mobilePhone',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
+        ),
+      },
+      {
+        title: '办公电话',
+        dataIndex: 'officePhone',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
+        ),
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return this.state.dataSource.length > 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+              <a href=" ">Delete</a>
+            </Popconfirm>
+          ) : null;
+        },
+      },
+    ];
     return (
       <Modal
         title="联系人基本信息设置"
         style={{ top: 20 }}
         visible={contactsVisible}
-        width="45%"
+        width="80%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleContactsVisible()}
@@ -261,6 +355,15 @@ class ContactsAddModal extends PureComponent {
                 </Col>
               </Row>
             </Form>*/}
+            <div>
+              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                新增联系人
+              </Button>
+              <Table
+                dataSource={dataSource}
+                columns={columns}
+              />
+            </div>
           </Card>
         </div>
       </Modal>

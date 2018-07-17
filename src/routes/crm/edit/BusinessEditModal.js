@@ -16,10 +16,12 @@ import {
   Modal,
   Transfer,
   Menu,
+  Tree,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const { TreeNode }= Tree;
 const { SubMenu, MenuItemGroup } = Menu;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -43,6 +45,7 @@ const fieldLabels = {
   platform:'商机平台',
   submissionPerson:'商机提供人',
   executor:'执行人',
+  assignor:'分配人',
 };
 const formItemLayout = {
   labelCol: {
@@ -54,22 +57,8 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-const formItemLayout2 = {
-  style:{
-    paddingRight: 135,
-    width: '130%',
-  },
-  labelCol: {
-    xs: { span: 4 },
-    sm: { span: 4 },
-    xl: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 20 },
-    sm: { span: 20 },
-    xl: { span: 20 },
-  },
-};
+
+
 const formItemLayoutTextArea = {
   style:{
     paddingRight: 150,
@@ -106,10 +95,6 @@ class BusinessEditModal extends PureComponent {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
 
-  handleClick = (e) => {
-    console.log('click ', e);
-  }
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -117,6 +102,8 @@ class BusinessEditModal extends PureComponent {
       this.setState({ width });
     }
   };
+
+
   render() {
     const { form, dispatch, submitting, handleBusinessEditVisible, businessEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
@@ -175,21 +162,14 @@ class BusinessEditModal extends PureComponent {
     };
     return (
       <Modal
-        title="编辑"
+        title="商机分配"
         style={{ top: 60 }}
         visible={businessEditVisible}
         width="55%"
         maskClosable={false}
         onOk={okHandle}
         onCancel={() => handleBusinessEditVisible()}
-        footer={
-          (null,
-            (
-              <Button onClick={okHandle} type="primary">
-                知道了
-              </Button>
-            ))
-        }
+        okText='分配'
       >
         <div>
           <Card>
@@ -199,14 +179,16 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
-                    })(<Input placeholder="不重复的数字" style={{ width: 150 }} />)}
+                      initialValue:`${rowInfo.businessCode}`,
+                    })(<Input disabled placeholder="不重复的数字" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                    })(<Input placeholder="商机描述" style={{ width: 150 }} />)}
+                      initialValue:`${rowInfo.businessName}`,
+                    })(<Input disabled placeholder="商机描述" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -214,7 +196,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
                     })(
-                      <Select placeholder="请选择商机状态" style={{ width: 150 }}>
+                      <Select disabled placeholder="请选择商机状态" style={{ width: 150 }}>
                         <Option value="1">提交审核</Option>
                         <Option value="2">跟进中</Option>
                         <Option value="3">成功</Option>
@@ -229,14 +211,16 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
                     {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
-                    })(<Input placeholder="请输入客户名称" style={{ width: 150 }} />)}
+                      initialValue:`${rowInfo.customerForBusinessName}`,
+                    })(<Input disabled placeholder="请输入客户名称" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入联系电话' }],
-                    })(<Input placeholder="请输入联系电话" style={{ width: 150 }} />)}
+                      initialValue:`${rowInfo.mobilePhone}`,
+                    })(<Input disabled placeholder="请输入联系电话" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -244,11 +228,11 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('platform', {
                       rules: [{ required: false, message: '请选择商机平台' }],
                     })(
-                      <Select placeholder="请选择商机平台" style={{ width: 150 }}>
-                        <Option value="0">AA平台</Option>
-                        <Option value="1">BB平台</Option>
-                        <Option value="2">CCAA平台</Option>
-                        <Option value="3">DD平台</Option>
+                      <Select disabled placeholder="请选择商机平台" style={{ width: 150 }}>
+                        <Option value="0">杭州工程平台</Option>
+                        <Option value="1">义务工程平台</Option>
+                        <Option value="2">杭州审计平台</Option>
+                        <Option value="3">义务审计平台</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -265,14 +249,44 @@ class BusinessEditModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={8}>
-                  <Form.Item>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
+                    {getFieldDecorator('assignor', {
+                    })(
+                      <div className={styles.divBorder}>
+                        <Tree>
+                          <TreeNode title="杭州至诚" key="0-0">
+                            <TreeNode title="管理层1" key="0-0-0" >
+                              <TreeNode title="员工1" key="0-0-0-0"  />
+                              <TreeNode title="员工2" key="0-0-0-1" />
+                            </TreeNode>
+                            <TreeNode title="管理层2" key="0-0-1">
+                              <TreeNode title="小卒1" key="0-0-1-0" />
+                              <TreeNode title="小卒2" key="0-0-1-1" />
+                            </TreeNode>
+                          </TreeNode>
+                          <TreeNode title="义务至诚" key="0-1">
+                            <TreeNode title="董事会" key="0-1-0" >
+                              <TreeNode title="主管1" key="0-1-0-0"  />
+                              <TreeNode title="主管2" key="0-1-0-1" />
+                            </TreeNode>
+                            <TreeNode title="财务部" key="0-1-1">
+                              <TreeNode title="会计1" key="0-1-1-0" />
+                            </TreeNode>
+                          </TreeNode>
+                        </Tree>
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={15} offset={1}>
+                  <Form.Item >
                     {getFieldDecorator('personal', {
                     })(
                       <div>
                         <Transfer
                           dataSource={mockData}
-                          titles={['备选人员', '已选人员']}
+                          titles={['可选人员', '已选人员']}
                           targetKeys={this.state.targetKeys}
                           selectedKeys={selectedKeys}
                           onChange={this.handleChange}
@@ -281,17 +295,6 @@ class BusinessEditModal extends PureComponent {
                         />
                       </div>
 
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.customerDemand}>
-                    {getFieldDecorator('customerDemand', {
-                      rules: [{ required: true, message: '请输入客户需求' }],
-                    })(
-                      <TextArea placeholder="请输入客户需求" />
                     )}
                   </Form.Item>
                 </Col>

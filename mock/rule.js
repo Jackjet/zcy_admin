@@ -38,6 +38,10 @@ for (let i = 0; i < 46; i += 1) {
 
     invoiceNumber:`发票号码${i}`,
 
+    businessCode:`商机编号${i}`,
+    businessName:`商机名称${i}`,
+    customerForBusinessName:`客户名称${i}`,
+
   });
 }
 

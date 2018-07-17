@@ -310,7 +310,7 @@ export default class BusinessOpportunity extends PureComponent {
     const columns = [
       {
         title: '编号',
-        dataIndex: 'no',
+        dataIndex: 'businessCode',
       },
       {
         title: '商机名称',
@@ -318,7 +318,7 @@ export default class BusinessOpportunity extends PureComponent {
       },
       {
         title: '客户名称',
-        dataIndex: 'customerName',
+        dataIndex: 'customerForBusinessName',
       },
 
       {
@@ -377,32 +377,29 @@ export default class BusinessOpportunity extends PureComponent {
         <Card bordered={false}>
           <div>
             <div className={styles.tableList}>
-              <div className={styles.leftBlock}>{this.treeMenu()}</div>
-              <div className={styles.rightBlock}>
-                <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-                <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
-                    新建
-                  </Button>
-                  {selectedRows.length > 0 && (
-                    <span>
-                      <Dropdown overlay={menu}>
-                        <Button>
-                          批量操作 <Icon type="down" />
-                        </Button>
-                      </Dropdown>
-                    </span>
-                  )}
-                </div>
-                <StandardTable
-                  selectedRows={selectedRows}
-                  loading={loading}
-                  data={data}
-                  columns={columns}
-                  onSelectRow={this.handleSelectRows}
-                  onChange={this.handleStandardTableChange}
-                />
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+              <div className={styles.tableListOperator}>
+                <Button icon="plus" type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
+                  新建
+                </Button>
+                {selectedRows.length > 0 && (
+                  <span>
+                    <Dropdown overlay={menu}>
+                      <Button>
+                        批量操作 <Icon type="down" />
+                      </Button>
+                    </Dropdown>
+                  </span>
+                )}
               </div>
+              <StandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
             </div>
           </div>
         </Card>

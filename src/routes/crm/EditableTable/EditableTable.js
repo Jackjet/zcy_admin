@@ -79,7 +79,6 @@ class EditableTable extends PureComponent {
           return this.state.dataSource.length > 1 ? (
             <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
               <a href=" ">Delete</a>
-              <a>编辑</a>
             </Popconfirm>
           ) : null;
         },
