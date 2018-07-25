@@ -20,6 +20,8 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
 import ProjectAddModal from '../add/ProjectAddModal.js';
+import ProjectApplyAddModal from '../add/ProjectApplyAddModal.js';
+import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectCheckTabs.js';
 import ProjectEditModal from '../edit/ProjectEditModal.js';
 
@@ -42,10 +44,14 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 export default class projectList extends PureComponent {
   state = {
     projectVisible: false,
+    projectApplyAddVisible: false,
+    projectChildrenAddVisible: false,
     projectEditVisible: false,
     projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
+    choiceTypeKey: 0,
+    choiceTypeValue:'',
     rowInfo:{},
     formValues: {},
     openKeys: ['sub1'],
@@ -172,8 +178,28 @@ export default class projectList extends PureComponent {
   };
 
   handleProjectVisible = flag => {
+    if(this.state.choiceTypeKey === 0){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请选择工程类别');
+      return false;
+    }
     this.setState({
       projectVisible: !!flag,
+    });
+  };
+  handleProjectApplyAddVisible = flag => {
+    this.setState({
+      projectApplyAddVisible: !!flag,
+    });
+  };
+
+  handleProjectChildrenAddVisible = flag => {
+    this.setState({
+      projectChildrenAddVisible: !!flag,
     });
   };
 
@@ -205,14 +231,22 @@ export default class projectList extends PureComponent {
 
   rootSubmenuKeys = ['sub1'];
 
+  handleGetMenuValue = (MenuValue) => {
+    this.setState({
+      choiceTypeKey: MenuValue.key,
+      choiceTypeValue: MenuValue.item.props.children,
+    });
+  };
+
   treemenu() {
     const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
         openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
+        onOpenChange={this.handleGetOptionValue}
         style={{ width: 140 }}
+        onClick={this.handleGetMenuValue}
       >
         <SubMenu
           key="sub1"
@@ -222,7 +256,7 @@ export default class projectList extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
+          <Menu.Item key="1">工程造价业务项目</Menu.Item>
           <Menu.Item key="2">可研报告</Menu.Item>
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
         </SubMenu>
@@ -393,7 +427,16 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, projectVisible, projectTabsVisible, rowInfo, projectEditVisible } = this.state;
+    const {
+      selectedRows,
+      projectVisible,
+      projectApplyAddVisible,
+      projectTabsVisible,
+      rowInfo,
+      projectEditVisible,
+      projectChildrenAddVisible,
+      choiceTypeValue,
+    } = this.state;
 
     const columns = [
       {
@@ -478,6 +521,14 @@ export default class projectList extends PureComponent {
       handleProjectVisible: this.handleProjectVisible,
     };
 
+    const projectApplyAddMethods = {
+      handleProjectApplyAddVisible: this.handleProjectApplyAddVisible,
+    };
+    const projectChildrenAddMethods = {
+      handleProjectChildrenAddVisible: this.handleProjectChildrenAddVisible,
+    };
+
+
     const projectTabsMethods = {
       handleProjectTabsVisible: this.handleProjectTabsVisible,
     };
@@ -496,6 +547,16 @@ export default class projectList extends PureComponent {
                 <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
                   新建
                 </Button>
+                <Button type="primary" onClick={() => this.handleProjectApplyAddVisible(true)}>
+                  项目流程
+                </Button>
+                {selectedRows.length > 0 && (
+                  <span>
+                    <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
+                      新增子项目
+                    </Button>
+                  </span>
+                )}
               </div>
               <StandardTable
                 selectedRows={selectedRows}
@@ -508,9 +569,11 @@ export default class projectList extends PureComponent {
             </div>
           </div>
         </Card>
-        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} />
+        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} />
+        <ProjectChildrenAddModal {...projectChildrenAddMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...projectTabsMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal {...projectEditMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
+        <ProjectApplyAddModal {...projectApplyAddMethods} projectApplyAddVisible={projectApplyAddVisible} />
       </PageHeaderLayout>
     );
   }

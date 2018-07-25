@@ -224,11 +224,12 @@ class InvoiceTabs extends PureComponent {
         style={{ top: 150 }}
         // 对话框是否可见
         visible={invoiceTabsVisible}
-        width="60%"
+        width="75%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleInvoiceTabsVisible()}
+        okText="提交"
       >
         <Tabs defaultActiveKey="1" >
           <TabPane
@@ -542,6 +543,7 @@ class InvoiceTabs extends PureComponent {
               </span>
             }
             key="2"
+            disabled
           >
             <div>
               <Collapse defaultActiveKey={['1','2']}>

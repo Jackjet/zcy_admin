@@ -14,123 +14,57 @@ import {
   Modal,
   Button,
   Divider,
+  Upload,
+  Tree,
+  Transfer,
+  Popover,
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
 import StandardTable from 'components/StandardTable';
 import ProcedureList from './ProcedureProject.js';
-import ProjectMemberList from './ProjectMemberList.js';
 import ReportAddModal from '../add/ReportAddModal';
 import ReportEditModal from '../edit/ReportEditModal';
 import ReportViewModal from '../select/ReportViewModal';
 
 import styles from '../list/Style.less';
 
-
+const mockData = [];
+for (let i = 0; i < 10; i++) {
+  mockData.push({
+    key: i.toString(),
+    title: `人员${i + 1}`,
+  });
+};
+const { TreeNode } = Tree;
+const fileList = [
+  {
+    uid: -1,
+    name: 'xxx.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: -2,
+    name: 'yyy.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+];
+const props2 = {
+  action: '//jsonplaceholder.typicode.com/posts/',
+  listType: 'picture',
+  defaultFileList: [...fileList],
+  className: styles['upload-list-inline'],
+};
 const { Option } = Select;
 const { TextArea } = Input;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const cnumcol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-const yearscol = {
-  style: {
-    paddingLeft: 36,
-  },
-};
-const customercol = {
-  style: {
-    paddingLeft: 36,
-  },
-};
-const feecol = {
-  style: {
-    paddingLeft: 13,
-  },
-};
-const addresscol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-const enddatecol = {
-  style: {
-    paddingLeft: 23,
-  },
-};
-const startdatecol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-const remarkcol = {
-  wrapperCol: {
-    style: {
-      width: '91.66666667%',
-    },
-  },
-  style: {
-    width: '98.66666667%',
-    paddingLeft: 24,
-  },
-};
-const demandcol = {
-  wrapperCol: {
-    style: {
-      width: '69%',
-    },
-  },
-  style: {
-    width: '90%',
-    paddingLeft: 20,
-  },
-};
-const jfwcol = {
-  wrapperCol: {
-    style: {
-      width: '78%',
-    },
-  },
-  style: {
-    width: '91%',
-    paddingLeft: 12,
-  },
-};
-const companycol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-const statuscol = {
-  style: {
-    paddingLeft: 35,
-  },
-};
-const formhz12 = {
-  wrapperCol: {
-    style: {
-      width: '92%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
-  },
-};
-const formhz11 = {
-  wrapperCol: {
-    style: {
-      width: '90.2%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
-  },
-};
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -141,6 +75,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+const CheckBoxOption = ['底稿','报告','工程','项目','合同'];
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -154,6 +89,10 @@ class ProjectCheckTabs extends PureComponent {
     reportEditVisible: false,
     reportViewVisible: false,
     rowInfoCurrent: {},
+    checkBoxOptionData: [],
+    choiceOption:[],
+    targetKeys:[],
+    selectedKeys: [],
     selectedRows:{},
   };
   componentDidMount() {
@@ -162,6 +101,14 @@ class ProjectCheckTabs extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleChange = (nextTargetKeys) => {
+    this.setState({ targetKeys: nextTargetKeys });
+  };
+
+  handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
 
   handleReportAddVisible = flag => {
     this.setState({
@@ -195,6 +142,21 @@ class ProjectCheckTabs extends PureComponent {
           selectedRows: [],
         });
       },
+    });
+  };
+
+  handleCheckBoxChange = () => {
+    this.setState({
+      checkBoxOptionData: CheckBoxOption.map((data) => {
+        const value = `${data}`;
+        return <Col span={6}><Checkbox value="value">value</Checkbox></Col>;
+      }),
+    });
+  };
+
+  handleGetOptionValue=(value)=>{
+    this.setState({
+      choiceOption:`${value}`,
     });
   };
 
@@ -316,7 +278,16 @@ class ProjectCheckTabs extends PureComponent {
         </span>
       );
     };
-    const { selectedRows, reportAddVisible ,reportEditVisible, reportViewVisible, rowInfoCurrent } = this.state;
+    const {
+      selectedRows,
+      reportAddVisible,
+      reportEditVisible,
+      reportViewVisible,
+      rowInfoCurrent,
+      selectedKeys,
+      checkBoxOptionData,
+      choiceOption,
+    } = this.state;
     const fieldLabels = {
       number: '项目编码',
       type: '项目类别',
@@ -339,6 +310,7 @@ class ProjectCheckTabs extends PureComponent {
       status: '状态',
       jfw: '交付物',
       demand: '客户需求',
+      attachment: '附件',
     };
     const columnsProject = [
       {
@@ -492,7 +464,6 @@ class ProjectCheckTabs extends PureComponent {
         ),
       },
     ];
-
     const reportAddMethods = {
       handleReportAddVisible: this.handleReportAddVisible,
     };
@@ -508,7 +479,7 @@ class ProjectCheckTabs extends PureComponent {
         title="项目基本信息查看"
         style={{ top: 20 }}
         visible={projectTabsVisible}
-        width="90%"
+        width="75%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleProjectTabsVisible()}
@@ -524,20 +495,22 @@ class ProjectCheckTabs extends PureComponent {
           >
             <div>
               <Card>
-                <Form layout="inline">
+                <Form layout="horizontal">
                   <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.name}>
+                    <Col span={23} pull={5}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.name}>
                         {getFieldDecorator('name', {
                           rules: [{ required: true, message: '请输入项目名称' }],
                           initialValue:`${rowInfo.name}`,
-                        })(<Input disabled placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
+                        })(
+                          <Input disabled placeholder="请输入项目名称" className={styles['ant-input-lg']} />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
-                  <Row className={styles['row-h']}>
+                  <Row className={styles['fn-mb-15']}>
                     <Col span={8}>
-                      <Form.Item label={fieldLabels.type}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.type}>
                         {getFieldDecorator('type', {
                           rules: [{ required: true, message: '请选择项目类别' }],
                         })(
@@ -551,7 +524,7 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...yearscol} label={fieldLabels.years}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.years}>
                         {getFieldDecorator('years', {
                           rules: [{ required: true, message: '请选择年度' }],
                         })(
@@ -569,7 +542,7 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...statuscol} label={fieldLabels.status}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.status}>
                         {getFieldDecorator('status', {
                           rules: [{ required: true, message: '请选择项目状态' }],
                         })(
@@ -581,16 +554,16 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                   </Row>
-                  <Row className={styles['row-h']}>
+                  <Row className={styles['fn-mb-15']}>
                     <Col span={8}>
-                      <Form.Item {...cnumcol} label={fieldLabels.number}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.number}>
                         {getFieldDecorator('number', {
                           rules: [{ required: false, message: '请输入项目编码' }],
                         })(<Input disabled placeholder="请输入项目编码" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...customercol} label={fieldLabels.customer}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.customer}>
                         {getFieldDecorator('customer', {
                           rules: [{ required: true, message: '请选择客户' }],
                         })(
@@ -608,7 +581,7 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item label={fieldLabels.cuslink}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
                         {getFieldDecorator('cuslink', {
                           rules: [{ required: true, message: '请选择客户联系人' }],
                         })(
@@ -626,10 +599,9 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                   </Row>
-
-                  <Row className={styles['row-h']}>
+                  <Row className={styles['fn-mb-15']}>
                     <Col span={8}>
-                      <Form.Item label={fieldLabels.fzcompany}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.fzcompany}>
                         {getFieldDecorator('fzcompany', {
                           rules: [{ required: true, message: '负责公司' }],
                         })(
@@ -647,7 +619,7 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item label={fieldLabels.fzperson}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
                         {getFieldDecorator('fzperson', {
                           rules: [{ required: true, message: '项目负责人' }],
                         })(
@@ -665,24 +637,23 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...feecol} label={fieldLabels.fee}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.fee}>
                         {getFieldDecorator('fee', {
                           rules: [{ required: true, message: '请输入项目费用' }],
                         })(<Input disabled placeholder="请输入项目费用" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
-
-                  <Row className={styles['row-h']}>
+                  <Row className={styles['fn-mb-15']}>
                     <Col span={8}>
-                      <Form.Item {...startdatecol} label={fieldLabels.startdate}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.startdate}>
                         {getFieldDecorator('startdate')(
                           <DatePicker disabled style={{ width: 200 }} placeholder="请输入开始日期" />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...enddatecol} label={fieldLabels.enddate}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.enddate}>
                         {getFieldDecorator('enddate')(
                           <DatePicker disabled style={{ width: 200 }} placeholder="请输入结束日期" />
                         )}
@@ -690,10 +661,9 @@ class ProjectCheckTabs extends PureComponent {
                     </Col>
                     <Col span={8} />
                   </Row>
-
                   <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...formhz11} label={fieldLabels.biztype}>
+                    <Col span={23} pull={5}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.biztype}>
                         {getFieldDecorator('biztype')(
                           <Checkbox.Group disabled style={{ width: '100%' }}>
                             <Row>
@@ -728,32 +698,20 @@ class ProjectCheckTabs extends PureComponent {
                     </Col>
                   </Row>
                   <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...formhz12} label={fieldLabels.content}>
-                        {getFieldDecorator('content')(<TextArea disabled placeholder="请输入项目内容" rows={4} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row className={styles['row-h']}>
-                    <Col span={12}>
-                      <Form.Item {...jfwcol} label={fieldLabels.jfw}>
-                        {getFieldDecorator('jfw')(
-                          <TextArea disabled placeholder="请输入项目结束时的交付物" rows={4} />
+                    <Col span={23} pull={5}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                        {getFieldDecorator('attachment ', {
+                          initialValue: '1',
+                        })(
+                          <Upload {...props2}>
+                            <Button type="primary">
+                              <Icon type="upload" /> 上传附件
+                            </Button>
+                            <span>
+                              *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                            </span>
+                          </Upload>
                         )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item {...demandcol} label={fieldLabels.demand}>
-                        {getFieldDecorator('demand')(<TextArea disabled placeholder="请输入客户需求" rows={4} />)}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row className={styles['fn-mb-15']}>
-                    <Col>
-                      <Form.Item {...remarkcol} label={fieldLabels.remark}>
-                        {getFieldDecorator('remark')(<TextArea  placeholder="请输入备注信息" rows={4} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -779,7 +737,223 @@ class ProjectCheckTabs extends PureComponent {
             }
             key="3"
           >
-            <ProjectMemberList />
+            <div>
+              <Card>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={5} offset={6}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
+                      {getFieldDecorator('assignor', {
+
+                      })(
+                        <div className={styles.divBorder}>
+                          <Tree>
+                            <TreeNode title="杭州至诚" key="0-0">
+                              <TreeNode title="管理层1" key="0-0-0" >
+                                <TreeNode title="员工1" key="0-0-0-0"  />
+                                <TreeNode title="员工2" key="0-0-0-1" />
+                              </TreeNode>
+                              <TreeNode title="管理层2" key="0-0-1">
+                                <TreeNode title="小卒1" key="0-0-1-0" />
+                                <TreeNode title="小卒2" key="0-0-1-1" />
+                              </TreeNode>
+                            </TreeNode>
+                            <TreeNode title="义务至诚" key="0-1">
+                              <TreeNode title="董事会" key="0-1-0" >
+                                <TreeNode title="主管1" key="0-1-0-0"  />
+                                <TreeNode title="主管2" key="0-1-0-1" />
+                              </TreeNode>
+                              <TreeNode title="财务部" key="0-1-1">
+                                <TreeNode title="会计1" key="0-1-1-0" />
+                              </TreeNode>
+                            </TreeNode>
+                          </Tree>
+                        </div>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={13} >
+                    <Form.Item >
+                      {getFieldDecorator('personal', {
+                      })(
+                        <div>
+                          <Transfer
+                            dataSource={mockData}
+                            titles={['可选人员', '已选人员']}
+                            targetKeys={this.state.targetKeys}
+                            listStyle={{
+                              width: 200,
+                              height: 200,
+                            }}
+                            selectedKeys={selectedKeys}
+                            onChange={this.handleChange}
+                            onSelectChange={this.handleSelectChange}
+                            render={item => item.title}
+                          />
+                        </div>
+
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </div>
+          </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <Icon type="exception" />资料清单
+              </span>
+            }
+            key="8"
+          >
+            <div>
+              <Card>
+                <Form layout="horizontal">
+                  {/*<Row className={styles['fn-mb-15']}>
+                    <Col span={24} pull={4}>
+                      <Form.Item {...formItemLayout} label="请选择上传附件类型">
+                        {getFieldDecorator('checkBoxOption ', {
+                        })(
+                          <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="请选择上传附件类型"
+                            onMouseEnter={this.handleCheckBoxChange}
+                            onChange={this.handleGetOptionValue}
+                          >
+                            {checkBoxOptionData}
+                          </Select>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>*/}
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={24}>
+                      <Checkbox.Group
+                        style={{ width: '100%' }} >
+                        <Row>
+                          <Col span={6}><Checkbox value="A">A</Checkbox></Col>
+                          <Col span={6}><Checkbox value="B">B</Checkbox></Col>
+                          <Col span={6}><Checkbox value="C">C</Checkbox></Col>
+                          <Col span={6}><Checkbox value="D">D</Checkbox></Col>
+                          <Col span={6}><Checkbox value="E">E</Checkbox></Col>
+                        </Row>
+                      </Checkbox.Group>
+                    </Col>
+                  </Row>
+                  { ( `${choiceOption.indexOf("资料")}` > `-1` ) && (
+                    <span>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                            {getFieldDecorator('attachment ', {
+                              initialValue: '1',
+                            })(
+                              <Upload {...props2}>
+                                <Button type="primary">
+                                  <Icon type="upload" /> 上传资料附件
+                                </Button>
+                                <span>
+                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                </span>
+                              </Upload>
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </span>
+                  )}
+                  { ( `${choiceOption.indexOf("底稿")}` > `-1` ) && (
+                    <span>
+                       <Row className={styles['fn-mb-15']}>
+                    <Col span={24} pull={4}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                        {getFieldDecorator('attachment ', {
+                          initialValue: '1',
+                        })(
+                          <Upload {...props2}>
+                            <Button type="primary">
+                              <Icon type="upload" /> 上传底稿附件
+                            </Button>
+                            <span>
+                              *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                            </span>
+                          </Upload>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                    </span>
+                  )}
+                  { ( `${choiceOption.indexOf("报告")}` > `-1` ) && (
+                    <span>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                            {getFieldDecorator('report', {
+                              initialValue: '1',
+                            })(
+                              <Upload {...props2}>
+                                <Button type="primary">
+                                  <Icon type="upload" /> 上传报告附件
+                                </Button>
+                                <span>
+                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                </span>
+                              </Upload>
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </span>
+                  )}
+                  { ( `${choiceOption.indexOf("工程")}` > `-1` ) && (
+                    <span>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                            {getFieldDecorator('project', {
+                              initialValue: '1',
+                            })(
+                              <Upload {...props2}>
+                                <Button type="primary">
+                                  <Icon type="upload" /> 上传工程附件
+                                </Button>
+                                <span>
+                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                </span>
+                              </Upload>
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </span>
+                  )}
+                  { ( `${choiceOption.indexOf("合同")}` > `-1` ) && (
+                    <span>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                            {getFieldDecorator('contract ', {
+                              initialValue: '1',
+                            })(
+                              <Upload {...props2}>
+                                <Button type="primary">
+                                  <Icon type="upload" /> 上传合同附件
+                                </Button>
+                                <span>
+                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                </span>
+                              </Upload>
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </span>
+                  )}
+                </Form>
+              </Card>
+            </div>
           </TabPane>
           <TabPane
             tab={
@@ -813,19 +987,19 @@ class ProjectCheckTabs extends PureComponent {
             key="5"
           >
             <div>
-              <Card bordered={false}>
-                <div className={styles.tableList}>
-                  <StandardTable
-                    selectedRows={selectedRows}
-                    loading={loading}
-                    data={data}
-                    columns={columnsWorkDiary}
-                    onSelectRow={this.handleSelectRows}
-                    onChange={this.handleStandardTableChange}
-                  />
-                </div>
-              </Card>
-            </div>
+            <Card bordered={false}>
+              <div className={styles.tableList}>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columnsPlan}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
+              </div>
+            </Card>
+          </div>
           </TabPane>
           <TabPane
             tab={
@@ -842,7 +1016,7 @@ class ProjectCheckTabs extends PureComponent {
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}
-                    columns={columnsPlan}
+                    columns={columnsWorkDiary}
                     onSelectRow={this.handleSelectRows}
                     onChange={this.handleStandardTableChange}
                   />
@@ -881,6 +1055,53 @@ class ProjectCheckTabs extends PureComponent {
               <ReportViewModal {...reportViewMethods} reportViewVisible={reportViewVisible} rowInfoCurrent={rowInfoCurrent} />
             </div>
           </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <Icon type="exception" />项目交流
+              </span>
+            }
+            key="9"
+          >
+            <div>
+              <Card>
+                <Form layout="horizontal">
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={24} pull={4}>
+                      <Form.Item {...formItemLayout} label="交流内容">
+                        {getFieldDecorator('communicationContent ', {
+                        })(
+                          <TextArea placeholder="交流内容" style={{ width: 200 }} />
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={24} pull={4}>
+                      <Form.Item {...formItemLayout} label="交流时间">
+                        {getFieldDecorator('communicationTime ', {
+                          initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}`,
+                        })(
+                          <Input placeholder="交流时间" style={{ width: 200 }} />
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={24} pull={4}>
+                      <Form.Item {...formItemLayout} label="@人员">
+                        {getFieldDecorator('personnel', {
+                        })(
+                          <Input placeholder="@人员" style={{ width: 200 }} />
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card>
+            </div>
+          </TabPane>
+
         </Tabs>
       </Modal>
     );

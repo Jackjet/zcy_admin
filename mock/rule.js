@@ -19,7 +19,7 @@ for (let i = 0; i < 46; i += 1) {
     name: '这个字段是名字',
     no: `AAA ${i}`,
 
-    contractCode: '这个字段是合同编码',
+    contractCode: `这个字段是合同编码${i}`,
     callNo: Math.floor(Math.random() * 1000),
 
     updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
@@ -41,6 +41,8 @@ for (let i = 0; i < 46; i += 1) {
     businessCode:`商机编号${i}`,
     businessName:`商机名称${i}`,
     customerForBusinessName:`客户名称${i}`,
+
+    projectCode:`项目编号${i}`,
 
   });
 }

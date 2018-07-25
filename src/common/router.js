@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
+import ProjectsRepository from "../routes/KnowledgeBase/ProjectsRepository";
 
 let routerDataCache;
 
@@ -81,9 +82,11 @@ export const getRouterData = app => {
     '/crm/customer': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerList')),
     },
+    '/crm/customerApply': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerApplyList')),
+    },
     '/crm/business': {
-      component: dynamicWrapper(app, ['list'], () =>
-        import('../routes/crm/list/BusinessOpportunity')
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/BusinessOpportunity')
       ),
     },
     '/crm/visit': {
@@ -140,6 +143,10 @@ export const getRouterData = app => {
     '/fi/commission/commissionSetting': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/CommissionSetting')),
       name: '提成比例设置',
+    },
+    '/zhiku/zskgl': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/ProjectsRepository')),
+      name: '项目知识库管理',
     },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),

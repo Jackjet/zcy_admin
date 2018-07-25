@@ -151,7 +151,7 @@ export default class AddNotice extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayoutwidth} label="公告附件">
               {getFieldDecorator('Attachment ', {
-                initialValue: '2',
+                initialValue: '1',
               })(
                 <Upload {...props2}>
                   <Button type="primary">

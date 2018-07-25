@@ -1,8 +1,45 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, DatePicker, Input, Select, Checkbox, Modal, message } from 'antd';
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  DatePicker,
+  Input,
+  Select,
+  Checkbox,
+  Modal,
+  message,
+  Icon,
+  Upload,
+  Button,
+  Popover,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const fileList = [
+  {
+    uid: -1,
+    name: 'xxx.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: -2,
+    name: 'yyy.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+];
+const props2 = {
+  action: '//jsonplaceholder.typicode.com/posts/',
+  listType: 'picture',
+  defaultFileList: [...fileList],
+  className: styles['upload-list-inline'],
+};
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -12,7 +49,7 @@ const fieldLabels = {
   contractType: '合同类别',
   years: '年度',
   projectName: '项目名称',
-  projectStatus: '项目状态',
+  contractStatus: '合同性质',
   contractTitle: '合同标题',
   dfCompany: '对方公司',
   authorizedAgent: '客户授权代理人',
@@ -26,53 +63,18 @@ const fieldLabels = {
   contractSubject: '合同标的',
   startDate: '开始日期',
   endDate: '结束日期',
-  totalAmount: '总金额',
+  totalAmount: '合同金额',
   fzperson: '项目负责人',
   remark: '备注',
 };
-const remarkcol = {
-  wrapperCol: {
-    style: {
-      width: '91.66666667%',
-    },
-  },
-  style: {
-    width: '98.66666667%',
-  },
-};
-const formhz13 = {
+const formItemLayout = {
   labelCol: {
-    style: {
-      marginBottom: 17,
-    },
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
   wrapperCol: {
-    style: {
-      width: '92%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
-  },
-};
-const formhz12 = {
-  wrapperCol: {
-    style: {
-      width: '92%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
-  },
-};
-const formhz11 = {
-  wrapperCol: {
-    style: {
-      width: '60%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
 
@@ -173,31 +175,31 @@ class ContractAddModal extends PureComponent {
       <Modal
         title="合同基本信息新增"
         visible={contractVisible}
-        width="90%"
+        width="75%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleContractVisible()}
       >
         <div>
           <Card>
-            <Form layout="inline">
-              <Row className={styles['row-h']}>
+            <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.contractCode}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
                     })(
-                      <Input placeholder="请输入合同编码" />
+                      <Input placeholder="自动生成" />
                     )}
                   </Form.Item>
                 </Col>
 
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.contractType}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.contractType}>
                     {getFieldDecorator('contractType', {
                       rules: [{ required: true, message: '请选择合同类别' }],
                     })(
-                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleChoiceContractType} placeholder="请选择合同类别" style={{ width: 200 }}>
+                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleChoiceContractType} placeholder="请选择合同类别" >
                         {contractOptionData}
                       </Select>
                     )}
@@ -205,11 +207,11 @@ class ContractAddModal extends PureComponent {
                 </Col>
 
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.years}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请选择年度' }],
                     })(
-                      <Select placeholder="请选择年度" style={{ width: 200 }}>
+                      <Select placeholder="请选择年度" >
                         <Option value="xiao">请选择</Option>
                         <Option value="z">2018</Option>
                         <Option value="f">2019</Option>
@@ -224,13 +226,23 @@ class ContractAddModal extends PureComponent {
                 </Col>
               </Row>
 
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.projectName}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: true, message: '请输入合同标题' }],
+                    })(
+                      <Input placeholder="请输入合同标题" />
+                    )}
+                  </Form.Item>
+                </Col>
+
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
                     {getFieldDecorator('projectName', {
                       rules: [{ required: true, message: '请输入项目名称' }],
                     })(
-                      <Select placeholder="请输入项目名称" style={{ width: 200 }}>
+                      <Select placeholder="请输入项目名称" >
                         <Option value="c">项目A</Option>
                         <Option value="h">项目B</Option>
                       </Select>
@@ -238,37 +250,29 @@ class ContractAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
 
-                <Col span={8} offset={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.projectStatus}>
-                    {getFieldDecorator('projectStatus', {
-                      rules: [{ required: true, message: '请选择项目状态' }],
+                <Col span={8} >
+                  <Form.Item {...formItemLayout} label={fieldLabels.contractStatus}>
+                    {getFieldDecorator('contractStatus', {
+                      rules: [{ required: true, message: '请选择合同性质' }],
                     })(
-                      <Select placeholder="请选择项目状态" style={{ width: 200 }}>
-                        <Option value="c">审批中</Option>
-                        <Option value="h">已审批</Option>
+                      <Select placeholder="请选择合同性质" >
+                        <Option value="c">工程</Option>
+                        <Option value="h">建设</Option>
+                        <Option value="h">其它</Option>
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
 
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz12} label={fieldLabels.contractTitle}>
-                    {getFieldDecorator('contractTitle', {
-                      rules: [{ required: true, message: '请输入合同标题' }],
-                    })(<Input placeholder="请输入合同标题" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
 
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.dfCompany}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.dfCompany}>
                     {getFieldDecorator('dfCompany', {
                       rules: [{ required: false, message: '对方公司' }],
                     })(
-                      <Select placeholder="对方公司" style={{ width: 200 }}>
+                      <Select placeholder="对方公司" >
                         <Option value="xiao">请选择</Option>
                         <Option value="z">公司A</Option>
                         <Option value="f">公司B</Option>
@@ -282,11 +286,11 @@ class ContractAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formhz11} label={fieldLabels.authorizedAgent}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.authorizedAgent}>
                     {getFieldDecorator('authorizedAgent', {
                       rules: [{ required: false, message: '客户授权代理人' }],
                     })(
-                      <Select placeholder="请选择客户授权代理人" style={{ width: 200 }}>
+                      <Select placeholder="请选择客户授权代理人" >
                         <Option value="xiao">请选择</Option>
                         <Option value="z">公司A</Option>
                         <Option value="f">公司B</Option>
@@ -301,8 +305,8 @@ class ContractAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formhz13} label={fieldLabels.businessType}>
+                <Col span={23} pull={5}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.businessType}>
                     {getFieldDecorator('businessType')(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
@@ -346,40 +350,20 @@ class ContractAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formhz12} label={fieldLabels.contractSubject}>
-                    {getFieldDecorator('contractSubject')(<Input placeholder="请输入合同标的" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles['row-h']}>
-                <Col md={16} sm={24}>
-                  <Form.Item label="项目日期">
-                    {getFieldDecorator('date', {
-                      rules: [{ required: false, message: '请选择日期' }],
-                    })(
-                      <RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['row-h']}>
-                <Col span={12}>
-                  <Form.Item label={fieldLabels.totalAmount}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.totalAmount}>
                     {getFieldDecorator('totalAmount', {
                       rules: [{ required: true, message: '请输入总金额' }],
-                    })(<Input placeholder="请输入合同标题" style={{ width: 200 }} />)}
+                    })(<Input placeholder="请输入合同标题" />)}
                   </Form.Item>
                 </Col>
 
-                <Col span={12}>
-                  <Form.Item label={fieldLabels.fzperson}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
                     {getFieldDecorator('fzperson', {
                       rules: [{ required: true, message: '请选择负责人' }],
                     })(
-                      <Select placeholder="请选择负责人" style={{ width: 200 }}>
+                      <Select placeholder="请选择负责人" >
                         <Option value="c">公司员工1</Option>
                         <Option value="h">公司员工2</Option>
                       </Select>
@@ -389,9 +373,28 @@ class ContractAddModal extends PureComponent {
               </Row>
 
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...remarkcol} label={fieldLabels.remark}>
-                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} />)}
+                <Col span={23} offset={2}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                    {getFieldDecorator('attachment ', {
+                      initialValue: '1',
+                    })(
+                      <Upload {...props2}>
+                        <Button type="primary">
+                          <Icon type="upload" /> 上传附件
+                        </Button>
+                        <span>
+                          *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                        </span>
+                      </Upload>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row className={styles['fn-mb-15']}>
+                <Col span={23} pull={5}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.remark}>
+                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
               </Row>

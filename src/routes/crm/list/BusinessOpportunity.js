@@ -22,6 +22,8 @@ import BusinessAddModal from '../add/BusinessAddModal.js';
 import BusinessFollowUp from '../add/BusinessFollowUp';
 import BusinessEditModal from '../edit/BusinessEditModal.js';
 import BusinessOppView from '../select/BusinessOppView.js';
+import BusinessStateModal from '../add/BusinessStateModal';
+import ProjectAddModal from '../../project/add/ProjectAddModal';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -41,6 +43,8 @@ export default class BusinessOpportunity extends PureComponent {
     businessViewVisible: false,
     businessEditVisible: false,
     followUpVisible: false,
+    businessStateVisible: false,
+    projectVisible: false,
     selectedRows: [],
     formValues: {},
     rowInfo:{},
@@ -193,6 +197,18 @@ export default class BusinessOpportunity extends PureComponent {
     });
   };
 
+  handleBusinessStateVisible = flag => {
+    this.setState({
+      businessStateVisible: !!flag,
+    });
+  };
+
+  handleProjectVisible = flag => {
+    this.setState({
+      projectVisible: !!flag,
+    });
+  };
+
   handleBusinessEditVisible = flag => {
     this.setState({
       businessEditVisible: !!flag,
@@ -305,12 +321,25 @@ export default class BusinessOpportunity extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, businessOppVisible, businessViewVisible, businessEditVisible, followUpVisible, rowInfo } = this.state;
+    const {
+      selectedRows,
+      businessOppVisible,
+      businessViewVisible,
+      businessEditVisible,
+      followUpVisible,
+      rowInfo ,
+      businessStateVisible,
+      projectVisible,
+    } = this.state;
 
     const columns = [
       {
         title: '编号',
         dataIndex: 'businessCode',
+      },
+      {
+        title: '项目编号',
+        dataIndex: 'projectCode',
       },
       {
         title: '商机名称',
@@ -329,6 +358,10 @@ export default class BusinessOpportunity extends PureComponent {
       {
         title: '执行人',
         dataIndex: 'assignor',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
       },
       {
         title: '客户需求',
@@ -372,6 +405,13 @@ export default class BusinessOpportunity extends PureComponent {
       handleBusinessEditVisible: this.handleBusinessEditVisible,
     };
 
+    const businessStateMethods = {
+      handleBusinessStateVisible: this.handleBusinessStateVisible,
+    };
+    const projectAddMethods = {
+      handleProjectVisible: this.handleProjectVisible,
+    };
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -381,6 +421,12 @@ export default class BusinessOpportunity extends PureComponent {
               <div className={styles.tableListOperator}>
                 <Button icon="plus" type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
                   新建
+                </Button>
+                <Button type="primary" onClick={() => this.handleProjectVisible(true)}>
+                  新建项目
+                </Button>
+                <Button type="primary" onClick={() => this.handleBusinessStateVisible(true)}>
+                  状态标示
                 </Button>
                 {selectedRows.length > 0 && (
                   <span>
@@ -407,6 +453,8 @@ export default class BusinessOpportunity extends PureComponent {
         <BusinessFollowUp {...followUpMethods} followUpVisible={followUpVisible} />
         <BusinessOppView {...businessViewMethods} businessViewVisible={businessViewVisible} rowInfo={rowInfo} />
         <BusinessEditModal {...businessEditMethods} businessEditVisible={businessEditVisible} rowInfo={rowInfo} />
+        <BusinessStateModal {...businessStateMethods} businessStateVisible={businessStateVisible} />
+        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} />
       </PageHeaderLayout>
     );
   }

@@ -31,53 +31,36 @@ const fieldLabels = {
   cuslink: '备注',
   customer: '附件',
 };
-const data = [
+const fileList = [
   {
-    key: '1',
-    fileName: '员工购买笔记本管理之地.doc',
-    fileType: 'doc',
-    version: '1',
-    editPerson: '小杨',
+    uid: -1,
+    name: 'xxx.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: -2,
+    name: 'yyy.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
 ];
-
-const columns = [
-  {
-    title: '文档名称',
-    dataIndex: 'fileName',
-    key: 'age',
-    render: text => <a href=" ">{text}</a>,
+const props2 = {
+  action: '//jsonplaceholder.typicode.com/posts/',
+  listType: 'picture',
+  defaultFileList: [...fileList],
+  className: styles['upload-list-inline'],
+};
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
-  {
-    title: '文档类型',
-    dataIndex: 'fileType',
-    key: 'address',
-  },
-  {
-    title: '版本号',
-    dataIndex: 'version',
-    key: 'address',
-  },
-  {
-    title: '修改时间',
-    dataIndex: 'editDate',
-    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-  },
-  {
-    title: '修改人',
-    dataIndex: 'editPerson',
-    key: 'address',
-  },
-];
-
-const formhz11 = {
   wrapperCol: {
-    style: {
-      width: '90.2%',
-    },
-  },
-  style: {
-    width: '96.66666667%',
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
 
@@ -174,29 +157,29 @@ class ReportViewModal extends PureComponent {
       <Modal
         title="报告基本信息查看"
         visible={reportViewVisible}
-        width="90%"
+        width="75%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleReportViewVisible()}
       >
         <div>
           <Card>
-            <Form layout="inline">
+            <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.number}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入报告编号' }],
-                      initialValue: `${rowInfoCurrent.no}`,
-                    })(<Input placeholder="请输入报告编号" className={styles['ant-input-lg']} />)}
+                      initialValue:`${rowInfoCurrent.no}`,
+                    })(<Input disabled placeholder="请输入报告编号" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.type}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.type}>
                     {getFieldDecorator('type', {
                       rules: [{ required: true, message: '请选择业务类别' }],
                     })(
-                      <Select placeholder="请选择业务类别" style={{ width: 200 }}>
+                      <Select disabled placeholder="请选择业务类别" style={{ width: 200 }}>
                         <Option value="0">请选择</Option>
                         <Option value="g">A</Option>
                         <Option value="y">B</Option>
@@ -206,22 +189,24 @@ class ReportViewModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.years}>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请输入名称' }],
-                    })(<Input placeholder="请输入名称" style={{ width: 200 }} />)}
+                      initialValue:`${rowInfoCurrent.name}`,
+                    })(<Input disabled placeholder="请输入名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.name}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择报告性质' }],
+                      initialValue:`${rowInfoCurrent.linkman}`,
                     })(
-                      <Select placeholder="请选择客户" style={{ width: 200 }}>
+                      <Select disabled placeholder="请选择客户" style={{ width: 200 }}>
                         <Option value="xiao">请选择</Option>
                         <Option value="z">A</Option>
                         <Option value="f">B</Option>
@@ -231,40 +216,37 @@ class ReportViewModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item {...formhz11} label={fieldLabels.dateRange}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.dateRange}>
                     {getFieldDecorator('dateRange', {
                       rules: [{ required: false, message: '请输入出具时间' }],
-                    })(<DatePicker style={{ width: 200 }} placeholder="请输入出具时间" />)}
+                    })(<DatePicker disabled style={{ width: 200 }} placeholder="请输入出具时间" />)}
                   </Form.Item>
                 </Col>
               </Row>
-
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.cuslink}>
-                    {getFieldDecorator('cuslink')(<TextArea placeholder="请输入备注信息" rows={4} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11} label={fieldLabels.customer}>
-                    {getFieldDecorator('customer')(
-                      <Upload {...FiledInfo}>
-                        <Button type="primary">上传附件</Button>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24} offset={4} >
+                  <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                    {getFieldDecorator('attachment ', {
+                      initialValue: '1',
+                    })(
+                      <Upload disabled {...props2}>
+                        <Button type="primary">
+                          <Icon type="upload" /> 上传附件
+                        </Button>
                         <span>
-                        只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif格式的文件，最多上传5个附件
+                          *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
                         </span>
                       </Upload>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
-                <Col>
-                  <Form.Item {...formhz11}>
-                    {getFieldDecorator('customer')(<Table columns={columns} dataSource={data} />)}
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24} pull={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
+                    {getFieldDecorator('cuslink')(
+                      <TextArea disabled placeholder="请输入备注信息" style={{ width: '160%' }} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>

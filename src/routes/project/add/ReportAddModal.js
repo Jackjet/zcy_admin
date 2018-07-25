@@ -31,44 +31,28 @@ const fieldLabels = {
   cuslink: '备注',
   customer: '附件',
 };
-const data = [
+const fileList = [
   {
-    key: '1',
-    fileName: '员工购买笔记本管理之地.doc',
-    fileType: 'doc',
-    version: '1',
-    editPerson: '小杨',
+    uid: -1,
+    name: 'xxx.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: -2,
+    name: 'yyy.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
 ];
-
-const columns = [
-  {
-    title: '文档名称',
-    dataIndex: 'fileName',
-    key: 'age',
-    render: text => <a href=" ">{text}</a>,
-  },
-  {
-    title: '文档类型',
-    dataIndex: 'fileType',
-    key: 'address',
-  },
-  {
-    title: '版本号',
-    dataIndex: 'version',
-    key: 'address',
-  },
-  {
-    title: '修改时间',
-    dataIndex: 'editDate',
-    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-  },
-  {
-    title: '修改人',
-    dataIndex: 'editPerson',
-    key: 'address',
-  },
-];
+const props2 = {
+  action: '//jsonplaceholder.typicode.com/posts/',
+  listType: 'picture',
+  defaultFileList: [...fileList],
+  className: styles['upload-list-inline'],
+};
 
 const formItemLayout = {
   labelCol: {
@@ -174,7 +158,7 @@ class ReportAddModal extends PureComponent {
       <Modal
         title="报告基本信息新增"
         visible={reportAddVisible}
-        width="55%"
+        width="75%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleReportAddVisible()}
@@ -237,23 +221,18 @@ class ReportAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
-                    {getFieldDecorator('cuslink')(<TextArea placeholder="请输入备注信息" rows={4} style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.customer}>
-                    {getFieldDecorator('customer')(
-                      <Upload {...FiledInfo}>
-                        <Button type="primary">上传附件</Button>
+                <Col span={24} offset={4} >
+                  <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                    {getFieldDecorator('attachment ', {
+                      initialValue: '1',
+                    })(
+                      <Upload {...props2}>
+                        <Button type="primary">
+                          <Icon type="upload" /> 上传附件
+                        </Button>
                         <span>
-                        只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif格式的文件，最多上传5个附件
+                          *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
                         </span>
                       </Upload>
                     )}
@@ -261,10 +240,10 @@ class ReportAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('customer')(
-                      <Table columns={columns} dataSource={data}  />
+                <Col span={24} pull={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
+                    {getFieldDecorator('cuslink')(
+                      <TextArea placeholder="请输入备注信息" style={{ width: '160%' }} />
                     )}
                   </Form.Item>
                 </Col>

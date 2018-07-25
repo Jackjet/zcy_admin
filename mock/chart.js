@@ -28,6 +28,20 @@ for (let i = 0; i < 12; i += 1) {
     y: Math.floor(Math.random() * 1000) + 200,
   });
 }
+const departmentData = [];
+for (let i = 0; i < 12; i += 1) {
+  departmentData.push({
+    x: `审计${i}部`,
+    y: Math.floor(Math.random() * 1000) + 600,
+  });
+}
+const contractData = [];
+for (let i = 0; i < 12; i += 1) {
+  contractData.push({
+    x: `审计${i}部`,
+    y: Math.floor(Math.random() * 10000) + 9000,
+  });
+}
 const searchData = [];
 for (let i = 0; i < 50; i += 1) {
   searchData.push({
@@ -183,6 +197,8 @@ export const getFakeChartData = {
   visitData,
   visitData2,
   salesData,
+  departmentData,
+  contractData,
   searchData,
   offlineData,
   offlineChartData,

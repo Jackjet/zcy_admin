@@ -13,6 +13,11 @@ const menuData = [
     path: 'crm',
     children: [
       {
+        key: 'customerApply',
+        name: '客户申请单',
+        path: 'customerApply',
+      },
+      {
         key: 'customerList',
         name: '客户信息管理',
         path: 'customer',
