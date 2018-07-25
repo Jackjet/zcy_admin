@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import DataSet from '@antv/data-set';
-import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar } from 'antd';
+import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge} from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, View, Guide, Shape } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -137,14 +137,26 @@ export default class Workplace extends PureComponent {
           <p>56</p>
         </div>
         <div className={styles.statItem}>
-          <p>部门内排名</p>
+          <p>进行中</p>
           <p>
-            8<span> / 24</span>
+            50
           </p>
         </div>
         <div className={styles.statItem}>
-          <p>报告访问</p>
-          <p>2,223</p>
+          <p>已完成</p>
+          <p>
+            6
+          </p>
+        </div>
+        <div className={styles.statItem}>
+          <p>合同金额</p>
+          <p>
+            2,000,000
+          </p>
+        </div>
+        <div className={styles.statItem}>
+          <p>应收款金额</p>
+          <p>2,223,000</p>
         </div>
       </div>
     );
@@ -182,47 +194,63 @@ export default class Workplace extends PureComponent {
           <div style={{fontSize: 20, margin:"center", paddingBottom: 15}}>
             待处理事物
           </div>
-          <Row  className={styles["row-h"]}>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row" >
+          <Row gutter={48} className={styles["row-h"]}>
+            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:20, paddingRight:20}} className="ant-col-3 gutter-row" >
+
+              <Badge count={0}>
               <div className={styles["gutter-box1"]}>
                 <h3 >项目审批</h3>
+                <br/>
                 <p>
                   0个待审批的项目
                 </p>
               </div>
+              </Badge>
 
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:20, paddingRight:20}} className="ant-col-3 gutter-row">
+              <Badge count={3}>
               <div className={styles["gutter-box2"]} >
                 <h3 >合同审批</h3>
+                <br/>
                 <p>
                   3个待审批的合同
                 </p>
               </div>
+              </Badge>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+              <Badge count={1}>
               <div className={styles["gutter-box3"]} >
                 <h3 >费用审批</h3>
+                <br/>
                 <p>
                   1个待审批的费用
                 </p>
               </div>
+              </Badge>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+              <Badge count={10}>
               <div className={styles["gutter-box4"]} >
                 <h3>请假审批</h3>
+                <br/>
                 <p>
-                  0个待审批的请假
+                  10个待审批的请假
                 </p>
               </div>
+              </Badge>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+              <Badge count={6}>
               <div className={styles["gutter-box5"]} >
                 <h3>报销审批</h3>
+                <br/>
                 <p>
-                  0个待审批的报销
+                  6个待审批的报销
                 </p>
               </div>
+              </Badge>
             </Col>
 
           </Row>
@@ -237,6 +265,7 @@ export default class Workplace extends PureComponent {
               <a className={styles["gutter-box1"]} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
+                <p/>
                 <a>客户信息管理</a>
               </a>
             </Col>
