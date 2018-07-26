@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Table, Button, Popconfirm } from 'antd';
-import EditableCell from './EditableCell';
+import EditableCell from './index';
 
 class EditableTable extends PureComponent {
   constructor(props) {

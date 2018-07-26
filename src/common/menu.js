@@ -152,6 +152,23 @@ const menuData = [
     ],
   },
   {
+    name: '费用报销',
+    icon: 'user',
+    path: 'ExpenseReimbursement',
+    children: [
+      {
+        key: 'ExpenseApply',
+        name: '费用申请单',
+        path: 'ExpenseApply',
+      },
+      {
+        key: 'ReimbursementList',
+        name: '费用报销单',
+        path: 'ReimbursementList',
+      },
+    ],
+  },
+  {
     name: '人事管理',
     icon: 'user',
     path: 'HR',

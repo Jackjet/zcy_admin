@@ -1,15 +1,5 @@
 @import '../../../../node_modules/antd/lib/style/themes/default.less';
 
-
-.tableList {
-  .tableListOperator {
-    margin-bottom: 16px;
-    button {
-      margin-right: 8px;
-    }
-  }
-}
-
 .card {
   margin-bottom: 24px;
 }
@@ -138,9 +128,6 @@
   text-align: center;
   margin-top: 60px;
 }
-.ant-card-bordered {
-  border: 0 solid #e8e8e8;
-}
 
 :global {
   .ant-modal-footer {
@@ -149,12 +136,13 @@
     text-align: center;
     border-radius: 0 0 4px 4px;
   }
-}
-
-.divBorder {
-  width: 200px;
-  height: 200px;
-  border:1px solid #a3a3a3;
-  position:relative;
-  overflow-y:auto;
+  .ant-card-bordered {
+    border: 0 solid #e8e8e8;
+  }
+  .ant-modal-body {
+    padding: 0;
+     font-size: 12px;
+     line-height: 1.5;
+     word-wrap: break-word;
+  }
 }

@@ -148,6 +148,30 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/ProjectsRepository')),
       name: '项目知识库管理',
     },
+    '/ExpenseReimbursement/ExpenseApply': {
+    component: dynamicWrapper(app, [], () => import('../routes/ExpenseReimbursement/list/ExpenseApplyList')),
+      name: '费用申请单',
+    },
+    '/ExpenseReimbursement/ReimbursementList': {
+      component: dynamicWrapper(app, [], () => import('../routes/ExpenseReimbursement/list/ReimbursementList')),
+      name: '费用报销单',
+    },
+    '/dangan/dazyj': {
+      component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/ArchivesWarehousing')),
+      name: '档案入库',
+    },
+    '/dangan/dajym': {
+      component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/BorrowingManage')),
+      name: '档案借阅',
+      },
+    '/dangan/ghdj': {
+      component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/RevertManage')),
+      name: '归还登记',
+    },
+    '/dangan/danbqkuj': {
+      component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/ArchivesTabsBase')),
+      name: '档案标签库架',
+    },
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
