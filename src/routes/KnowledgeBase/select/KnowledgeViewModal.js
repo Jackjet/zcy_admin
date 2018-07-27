@@ -1,8 +1,25 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover } from 'antd';
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+  Transfer,
+  Modal,
+  Icon,
+  message,
+  Popover,
+  Button,
+  Divider,
+  Tabs,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const {TabPane} = Tabs;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -141,113 +158,59 @@ class KnowledgeViewModal extends PureComponent {
         onCancel={() => handleKnowledgeViewVisible()}
       >
         <div>
-          <Card>
-            <Form layout="horizontal">
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
-                    {getFieldDecorator('visitors', {
-                      rules: [{ required: false, message: '请选择拜访对象' }],
-                    })(
-                      <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">客户介绍</Option>
-                        <Option value="2">老客户</Option>
-                        <Option value="3">代理商</Option>
-                        <Option value="4">合作伙伴</Option>
-                        <Option value="5">公开招聘</Option>
-                        <Option value="6">互联网</Option>
-                        <Option value="7">自主开发</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.visitType}>
-                    {getFieldDecorator('visitType', {
-                      rules: [{ required: false, message: '请选择拜访方式' }],
-                    })(
-                      <Select placeholder="请选择拜访方式" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">现场拜访</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
-                    {getFieldDecorator('visitDate', {
-                      rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(<DatePicker placeholder="请选择拜访日期" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.connectBusiness}>
-                    {getFieldDecorator('connectBusiness', {
-                      rules: [{ required: false, message: '请选择关联商机' }],
-                    })(
-                      <Select placeholder="请选择关联商机" style={{ width: 200 }}>
-                        <Option value="0">电话来访</Option>
-                        <Option value="1">现场拜访</Option>
-                        <Option value="8">其他</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.communication}>
-                    {getFieldDecorator('communication')(
-                      <TextArea placeholder="请输入交流内容" style={{ minHeight: 32 }} rows={4} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.participants}>
-                    {getFieldDecorator('participants')(
-                      <Transfer
-                        // 数据源，其中的数据将会被渲染到左边一栏中，targetKeys 中指定的除外。
-                        dataSource={this.state.mockData}
-                        // 接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false。
-                        filterOption={this.filterOption}
-                        listStyle={{
-                          width: 150,
-                          height: 150,
-                        }}
-                        // 显示在右侧框数据的key集合
-                        targetKeys={this.state.targetKeys}
-                        // 选项在两栏之间转移时的回调函数
-                        onChange={this.handleChange}
-                        // 每行数据渲染函数，该函数的入参为 dataSource 中的项，返回值为 ReactElement。
-                        // 或者返回一个普通对象，其中 label 字段为 ReactElement，value 字段为 title
-                        render={item => item.title}
-                      />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
-                    {getFieldDecorator('remarks')(
-                      <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Card>
+          <Form layout="horizontal">
+            <Row>
+              <Col xl={16} lg={24} md={24} sm={24} xs={24}>
+                <Form.Item {...formItemLayout} >
+                  {getFieldDecorator('visitors', {
+                  })(
+                    <div>
+                      <Card>
+                        <div style={{fontSize: 30}}>XXX项目案例</div>
+                        <Card>
+                          <Input placeholder="文档标题" />
+                        </Card>
+                        <Card>
+                          <Row gutter={12}>
+                            <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+                              <Button type="ghost">顶(8)</Button>
+                            </Col>
+                            <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+                              <Button type="ghost">点赞(16)</Button>
+                            </Col>
+                          </Row>
+                        </Card>
+                        <Card>
+                          <Row>
+                            <Col >
+                              <Tabs defaultActiveKey="1">
+                                <TabPane tab="文档介绍" key="1">Content of Tab Pane 1</TabPane>
+                                <TabPane tab="文档评论" key="2">Content of Tab Pane 2</TabPane>
+                              </Tabs>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Card>
+                    </div>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+                <Form.Item {...formItemLayout} >
+                  {getFieldDecorator('visitors', {
+                  })(
+                    <div>
+                      <Card>
+                        <Button type="ghost">下载文档</Button>
+                        <Divider />
+                        <Button type="dashed">收藏文档</Button>
+                      </Card>
+                    </div>
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
         </div>
       </Modal>
 
