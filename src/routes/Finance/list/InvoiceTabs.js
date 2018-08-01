@@ -210,7 +210,7 @@ class InvoiceTabs extends PureComponent {
         dataIndex: 'contractMoney',
       },
       {
-        title: '已开票金额（元）',
+        title: '申请开票金额（元）',
         dataIndex: 'invoiceMoneyAlready',
       },
       {
@@ -543,7 +543,7 @@ class InvoiceTabs extends PureComponent {
               </span>
             }
             key="2"
-            disabled
+
           >
             <div>
               <Collapse defaultActiveKey={['1','2']}>

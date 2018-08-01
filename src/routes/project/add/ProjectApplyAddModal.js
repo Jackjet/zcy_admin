@@ -397,7 +397,7 @@ class ProjectApplyAddModal extends PureComponent {
                 <Step status="finish" title="项目信息" />
                 <Step status="finish" title="人员分配" />
                 <Step status="process" title="资料上传" icon={<Icon type="loading" />} />
-                <Step status="wait" title="生成合同" />
+                <Step status="wait" title="项目过程" />
                 <Step status="wait" title="报告审核" />
                 <Step status="wait" title="生成报告号" />
                 <Step status="wait" title="报告文印/盖章" />
@@ -723,7 +723,7 @@ class ProjectApplyAddModal extends PureComponent {
                   </Col>
                 </Row>
               </Panel>
-              <Panel header="生成合同" key="4">
+              <Panel header="项目过程" key="4">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={12}>
                     <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>

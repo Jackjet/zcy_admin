@@ -19,11 +19,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-@connect(({ loading }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
-}))
-@Form.create()
-export default class AddSchedule extends PureComponent {
+ class AddSchedule extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -36,7 +32,7 @@ export default class AddSchedule extends PureComponent {
     });
   };
   render() {
-    const { submitting } = this.props;
+    const { submitting ,TwoschduleAddVisible,handleAddTwoScheduleVisible} = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
 
     const formItemLayout = {
@@ -59,59 +55,63 @@ export default class AddSchedule extends PureComponent {
     };
 
     return (
-      <div>
-        <Card bordered={false}>
-          <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label="公告标题">
-              {getFieldDecorator('title', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入标题',
-                  },
-                ],
-              })(<Input placeholder="请输入公告标题" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="所属栏目">
-              {getFieldDecorator('date', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择起止日期',
-                  },
-                ],
-              })(<RangePicker style={{ width: '100%' }} placeholder={['开始日期', '结束日期']} />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="目标描述">
-              {getFieldDecorator('goal', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入目标描述',
-                  },
-                ],
-              })(
-                <TextArea
-                  style={{ minHeight: 32 }}
-                  placeholder="请输入你的阶段性工作目标"
-                  rows={4}
-                />
-              )}
-            </FormItem>
-            <FormItem {...formItemLayout} label="衡量标准">
-              {getFieldDecorator('standard', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入衡量标准',
-                  },
-                ],
-              })(<TextArea style={{ minHeight: 32 }} placeholder="请输入衡量标准" rows={4} />)}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
+      <Modal visible={TwoschduleAddVisible}
+             onCancel={handleAddTwoScheduleVisible(false)}
+             onOk={handleAddTwoScheduleVisible(false)}
+             title="新增双周计划" >
+        <div>
+          <Card bordered={false}>
+            <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+              <FormItem {...formItemLayout} label="公告标题">
+                {getFieldDecorator('title', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入标题',
+                    },
+                  ],
+                })(<Input placeholder="请输入公告标题" />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="所属栏目">
+                {getFieldDecorator('date', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择起止日期',
+                    },
+                  ],
+                })(<RangePicker style={{ width: '100%' }} placeholder={['开始日期', '结束日期']} />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="目标描述">
+                {getFieldDecorator('goal', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入目标描述',
+                    },
+                  ],
+                })(
+                  <TextArea
+                    style={{ minHeight: 32 }}
+                    placeholder="请输入你的阶段性工作目标"
+                    rows={4}
+                  />
+                )}
+              </FormItem>
+              <FormItem {...formItemLayout} label="衡量标准">
+                {getFieldDecorator('standard', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入衡量标准',
+                    },
+                  ],
+                })(<TextArea style={{ minHeight: 32 }} placeholder="请输入衡量标准" rows={4} />)}
+              </FormItem>
+              <FormItem
+                {...formItemLayout}
+                label={
+                  <span>
                   客户
                   <em className={styles.optional}>
                     （选填）
@@ -120,67 +120,72 @@ export default class AddSchedule extends PureComponent {
                     </Tooltip>
                   </em>
                 </span>
-              }
-            >
-              {getFieldDecorator('client')(
-                <Input placeholder="请描述你服务的客户，内部客户直接 @姓名／工号" />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
+                }
+              >
+                {getFieldDecorator('client')(
+                  <Input placeholder="请描述你服务的客户，内部客户直接 @姓名／工号" />
+                )}
+              </FormItem>
+              <FormItem
+                {...formItemLayout}
+                label={
+                  <span>
                   邀评人<em className={styles.optional}>（选填）</em>
                 </span>
-              }
-            >
-              {getFieldDecorator('invites')(
-                <Input placeholder="请直接 @姓名／工号，最多可邀请 5 人" />
-              )}
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={
-                <span>
+                }
+              >
+                {getFieldDecorator('invites')(
+                  <Input placeholder="请直接 @姓名／工号，最多可邀请 5 人" />
+                )}
+              </FormItem>
+              <FormItem
+                {...formItemLayout}
+                label={
+                  <span>
                   权重<em className={styles.optional}>（选填）</em>
                 </span>
-              }
-            >
-              {getFieldDecorator('weight')(<InputNumber placeholder="请输入" min={0} max={100} />)}
-              <span>%</span>
-            </FormItem>
-            <FormItem {...formItemLayout} label="目标公开" help="客户、邀评人默认被分享">
-              <div>
-                {getFieldDecorator('public', {
-                  initialValue: '1',
-                })(
-                  <Radio.Group>
-                    <Radio value="1">公开</Radio>
-                    <Radio value="2">部分公开</Radio>
-                    <Radio value="3">不公开</Radio>
-                  </Radio.Group>
-                )}
-                <FormItem style={{ marginBottom: 0 }}>
-                  {getFieldDecorator('publicUsers')(
-                    <Select
-                      mode="multiple"
-                      placeholder="公开给"
-                      style={{
-                        margin: '8px 0',
-                        display: getFieldValue('public') === '2' ? 'block' : 'none',
-                      }}
-                    >
-                      <Option value="1">同事甲</Option>
-                      <Option value="2">同事乙</Option>
-                      <Option value="3">同事丙</Option>
-                    </Select>
+                }
+              >
+                {getFieldDecorator('weight')(<InputNumber placeholder="请输入" min={0} max={100} />)}
+                <span>%</span>
+              </FormItem>
+              <FormItem {...formItemLayout} label="目标公开" help="客户、邀评人默认被分享">
+                <div>
+                  {getFieldDecorator('public', {
+                    initialValue: '1',
+                  })(
+                    <Radio.Group>
+                      <Radio value="1">公开</Radio>
+                      <Radio value="2">部分公开</Radio>
+                      <Radio value="3">不公开</Radio>
+                    </Radio.Group>
                   )}
-                </FormItem>
-              </div>
-            </FormItem>
-          </Form>
-        </Card>
-      </div>
-    );
+                  <FormItem style={{ marginBottom: 0 }}>
+                    {getFieldDecorator('publicUsers')(
+                      <Select
+                        mode="multiple"
+                        placeholder="公开给"
+                        style={{
+                          margin: '8px 0',
+                          display: getFieldValue('public') === '2' ? 'block' : 'none',
+                        }}
+                      >
+                        <Option value="1">同事甲</Option>
+                        <Option value="2">同事乙</Option>
+                        <Option value="3">同事丙</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                </div>
+              </FormItem>
+            </Form>
+          </Card>
+        </div>
+      </Modal>
+    )
   }
 }
+
+export default connect(({ loading }) => ({
+  submitting: loading.effects['form/submitRegularForm'],
+}))(Form.create()(AddSchedule));

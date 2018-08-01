@@ -197,7 +197,7 @@ class Invoicing extends PureComponent {
         dataIndex: 'contractMoney',
       },
       {
-        title: '已开票金额（元）',
+        title: '申请开票金额（元）',
         dataIndex: 'invoiceMondyAlready',
       },
       {

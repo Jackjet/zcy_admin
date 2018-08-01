@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 const { Html } = Guide;
 const dataPie = [
   { item: '杭州', count: 40 },
-  { item: '义务', count: 21 },
+  { item: '义乌', count: 21 },
   { item: '浦江', count: 17 },
   { item: '金华', count: 13 },
   { item: '东阳', count: 9 },
