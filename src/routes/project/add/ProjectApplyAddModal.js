@@ -723,6 +723,34 @@ class ProjectApplyAddModal extends PureComponent {
                   </Col>
                 </Row>
               </Panel>
+              <Panel header="项目进度" key="11">
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={12}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.ReportName}>
+                      {getFieldDecorator('ReportName', {
+                      })(<Input disabled placeholder="报告名称" style={{ width: 200 }} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={24} pull={4}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                      {getFieldDecorator('attachment ', {
+                        initialValue: '1',
+                      })(
+                        <Upload {...props2}>
+                          <Button type="primary">
+                            <Icon type="upload" /> 上传附件
+                          </Button>
+                          <span>
+                            *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                          </span>
+                        </Upload>
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Panel>
               <Panel header="生成合同" key="4">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={12}>
