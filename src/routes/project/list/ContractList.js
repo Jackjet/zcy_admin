@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 
 import {
+  Layout,
   Row,
   Col,
   Card,
@@ -27,6 +28,9 @@ import ContractEditModal from '../edit/ContractEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
+
+const { Content,  Sider } = Layout;
+const { SubMenu } = Menu;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
@@ -246,18 +250,18 @@ export default class Contract extends PureComponent {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
-            <FormItem label="合同编码">
+        <Row gutter={24}>
+          <Col span={6}>
+            <FormItem label="编码">
               {getFieldDecorator('contractCode')(<Input placeholder="请输入合同编码" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="合同名称">
+          <Col span={6} >
+            <FormItem label="名称">
               {getFieldDecorator('contractName')(<Input placeholder="合同名称" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col span={6}>
             <FormItem label="项目">
               {getFieldDecorator('project', {
                 rules: [{ required: true, message: '请输入项目' }],
@@ -272,7 +276,7 @@ export default class Contract extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col span={6} >
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 搜索
@@ -465,7 +469,40 @@ export default class Contract extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treemenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+              <div className={styles.tableListForm}>{this.renderForm()}</div>
+              <div className={styles.tableListOperator}>
+                <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
+                  新建
+                </Button>
+                {selectedRows.length > 0 && (
+                  <span>
+                    <Dropdown overlay={menu}>
+                      <Button>
+                        批量操作 <Icon type="down" />
+                      </Button>
+                    </Dropdown>
+                  </span>
+                )}
+              </div>
+              <StandardTable scroll={{ x: 1500}}
+                             selectedRows={selectedRows}
+                             loading={loading}
+                             data={data}
+                             columns={columns}
+                             onSelectRow={this.handleSelectRows}
+                             onChange={this.handleStandardTableChange}
+              />
+              </div>
+            </Content>
+          </Layout>
+
+        {/*  <div className={styles.leftBlock}>{this.treemenu()}</div>
           <div className={styles.rightBlock}>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
@@ -483,7 +520,7 @@ export default class Contract extends PureComponent {
                   </span>
                 )}
               </div>
-              <StandardTable
+              <StandardTable scroll={{ x: 1500}}
                 selectedRows={selectedRows}
                 loading={loading}
                 data={data}
@@ -492,7 +529,7 @@ export default class Contract extends PureComponent {
                 onChange={this.handleStandardTableChange}
               />
             </div>
-          </div>
+          </div>*/}
         </Card>
         <ContractAddModal {...contractAddMethods} contractVisible={contractVisible} />
         <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />

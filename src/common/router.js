@@ -104,9 +104,13 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
       name: '项目信息管理',
     },
-    '/project/contract': {
+    '/contractManager/Contractinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
-      name: '协议（合同）管理',
+      name: '合同管理',
+    },
+    '/contractManager/xieyiInfo': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
+      name: '协议管理',
     },
     '/project/workPlanManage/workPlan': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),

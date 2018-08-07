@@ -194,110 +194,122 @@ export default class Workplace extends PureComponent {
           <div style={{fontSize: 20, margin:"center", paddingBottom: 15}}>
             待处理事物
           </div>
-          <Row gutter={48} className={styles["row-h"]}>
-            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:20, paddingRight:20}} className="ant-col-3 gutter-row" >
 
+          <Row gutter={32}>
+            <Col span={6}>
               <Badge count={0}>
-              <div className={styles["gutter-box1"]}>
-                <h3 >项目审批</h3>
-                <br/>
-                <p>
-                  0个待审批的项目
-                </p>
-              </div>
+                <div className={styles["gutter-box1"]}>
+                  <h3 >项目审批</h3>
+                  <br/>
+                  <p>
+                    0个待审批的项目
+                  </p>
+                </div>
               </Badge>
-
             </Col>
-            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:20, paddingRight:20}} className="ant-col-3 gutter-row">
+            <Col span={6}>
               <Badge count={3}>
-              <div className={styles["gutter-box2"]} >
-                <h3 >合同审批</h3>
-                <br/>
-                <p>
-                  3个待审批的合同
-                </p>
-              </div>
+                <div className={styles["gutter-box2"]} >
+                  <h3 >合同审批</h3>
+                  <br/>
+                  <p>
+                    3个待审批的合同
+                  </p>
+                </div>
               </Badge>
             </Col>
-            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col span={6}>
               <Badge count={1}>
-              <div className={styles["gutter-box3"]} >
-                <h3 >费用审批</h3>
-                <br/>
-                <p>
-                  1个待审批的费用
-                </p>
-              </div>
+                <div className={styles["gutter-box3"]} >
+                  <h3 >费用审批</h3>
+                  <br/>
+                  <p>
+                    1个待审批的费用
+                  </p>
+                </div>
               </Badge>
             </Col>
-            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+            <Col span={6}>
               <Badge count={10}>
-              <div className={styles["gutter-box4"]} >
-                <h3>请假审批</h3>
-                <br/>
-                <p>
-                  10个待审批的请假
-                </p>
-              </div>
+                <div className={styles["gutter-box4"]} >
+                  <h3>请假审批</h3>
+                  <br/>
+                  <p>
+                    10个待审批的请假
+                  </p>
+                </div>
               </Badge>
             </Col>
-            <Col xl={6} lg={12} md={24} sm={24} xs={24}  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
+          </Row>
+          <Row gutter={32}>
+            <Col span={6}>
               <Badge count={6}>
-              <div className={styles["gutter-box5"]} >
-                <h3>报销审批</h3>
-                <br/>
-                <p>
-                  6个待审批的报销
-                </p>
-              </div>
+                <div className={styles["gutter-box5"]} >
+                  <h3>报销审批</h3>
+                  <br/>
+                  <p>
+                    6个待审批的报销
+                  </p>
+                </div>
               </Badge>
             </Col>
+            <Col span={6}>
 
+            </Col>
+            <Col span={6}>
+
+
+            </Col>
+            <Col span={6}>
+
+
+            </Col>
           </Row>
         </Card>
         <div style={{fontSize: 20, marginBottom: 20, color: "black" }}>
           快捷常用工具
         </div>
         <Card style={{marginBottom: 20}}>
-          <Row  className={styles["row-h"]}>
 
-            <Col  style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row" >
-              <a className={styles["gutter-box1"]} >
+
+          <Row gutter={32}>
+            <Col span={4}>
+              <a className={styles["shortcut-box1"]} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
                 <p/>
                 <a>客户信息管理</a>
               </a>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
-              <a className={styles["gutter-box2"]} >
+            <Col span={4}>
+              <a className={styles["shortcut-box2"]} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
-                <h5 >客户信息管理</h5>
+                <h5 >项目信息管理</h5>
               </a>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
-              <a className={styles["gutter-box3"]} >
-                <div ><Icon className={styles.iconhz}  type="star" />
-                </div>
-                <h5 >新增日报</h5>
-              </a>
-            </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
-              <a className={styles["gutter-box4"]} >
+            <Col span={4}>
+              <a className={styles["shortcut-box3"]} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
                 <h5 >新增日报</h5>
               </a>
             </Col>
-            <Col style={{paddingLeft:10, paddingRight:10}} className="ant-col-3 gutter-row">
-              <a className={styles["gutter-box5"]} >
+            <Col span={4}>
+              <a className={styles["shortcut-box4"]} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
                 <h5 >新增日报</h5>
               </a>
             </Col>
-
+            <Col span={4}>
+              <a className={styles["shortcut-box5"]} >
+                <div ><Icon className={styles.iconhz}  type="star" />
+                </div>
+                <h5 >新增日报</h5>
+              </a>
+            </Col>
+            <Col span={4} />
           </Row>
         </Card>
         <Row gutter={24} className={styles["row-h"]}>

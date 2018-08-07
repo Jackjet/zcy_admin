@@ -37,6 +37,25 @@ const menuData = [
     ],
   },
   {
+    name: '合同(协议)管理',
+    icon: 'folder',
+    path: 'contractManager',
+    children: [
+      {
+        key: 'contractinfoList',
+        name: '合同管理',
+        path: 'Contractinfo',
+      },
+      {
+        key: 'xieyiList',
+        name: '协议管理',
+        path: 'xieyiInfo',
+      },
+     ],
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+   },
+  {
     name: '项目管理',
     icon: 'folder',
     path: 'project',
@@ -45,11 +64,6 @@ const menuData = [
         key: 'projectinfoList',
         name: '项目信息管理',
         path: 'projectinfo',
-      },
-      {
-        key: 'contractList',
-        name: '协议（合同）管理',
-        path: 'contract',
       },
       {
         key: 'workplanList',
@@ -133,11 +147,6 @@ const menuData = [
         path: 'commission',
         children: [
           {
-            key: 'tijfa',
-            name: '提成计发',
-            path: 'tichengjf01',
-          },
-          {
             key: 'commissionQuery',
             name: '提成查询',
             path: 'commissionQuery',
@@ -153,7 +162,7 @@ const menuData = [
   },
   {
     name: '费用报销',
-    icon: 'user',
+    icon: 'pay-circle-o',
     path: 'ExpenseReimbursement',
     children: [
       {
@@ -192,7 +201,7 @@ const menuData = [
   },
   {
     name: '日常管理',
-    icon: 'user',
+    icon: 'calendar',
     path: 'schedule',
     children: [
       {
@@ -209,7 +218,7 @@ const menuData = [
   },
   {
     name: '知识库管理',
-    icon: 'setting',
+    icon: 'zhihu',
     path: 'zhiku',
     children: [
       {
@@ -226,7 +235,7 @@ const menuData = [
   },
   {
     name: '档案管理',
-    icon: 'setting',
+    icon: 'book',
     path: 'dangan',
     children: [
       {
@@ -254,7 +263,7 @@ const menuData = [
 
   {
     name: '合伙人管理',
-    icon: 'setting',
+    icon: 'usergroup-add',
     path: 'hehuorenmanager',
     children: [
       {

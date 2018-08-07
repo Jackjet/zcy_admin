@@ -76,7 +76,7 @@ export default class LoginPage extends Component {
           </Tab>*/}
           <div>
             <Checkbox checked={this.state.autoLogin} onChange={this.changeAutoLogin}>
-              记住密码
+              记住用户
             </Checkbox>
             <a style={{ float: 'right' }} href="">
               忘记密码
