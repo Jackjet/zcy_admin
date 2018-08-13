@@ -74,6 +74,13 @@ export async function fakeRegister(params) {
   });
 }
 
+export async function fakeReset(params) {
+  return request('/api/reset', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function queryNotices() {
   return request('/api/notices');
 }

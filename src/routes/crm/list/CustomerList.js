@@ -617,9 +617,6 @@ export default class CustomerList extends PureComponent {
                       >
                         客户分配
                       </Button>
-                      <Button type="primary" onClick={() => this.handleSalesVisible(true)}>
-                        设置业务员
-                      </Button>
                       <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
                         设置联系人
                       </Button>

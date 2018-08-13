@@ -723,6 +723,47 @@ class ProjectApplyAddModal extends PureComponent {
                   </Col>
                 </Row>
               </Panel>
+              <Panel header="过程管理" key="3">
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
+                      {getFieldDecorator('companyName', {
+                        rules: [{ required: true, message: '请输入单位名称' }],
+                      })(<Input placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
+                      {getFieldDecorator('companyAddress', {
+                        rules: [{ required: true, message: '请输入单位地址' }],
+                      })(<Input placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
+                      {getFieldDecorator('taxNumber', {
+                        rules: [{ required: true, message: '请输入税号' }],
+                      })(<Input placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
+                      {getFieldDecorator('openAccountBank', {
+                        rules: [{ required: true, message: '请输入开户银行' }],
+                      })(<Input placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
+                      {getFieldDecorator('bankAccount', {
+                        rules: [{ required: true, message: '请输入银行账户' }],
+                      })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Panel>
               <Panel header="生成合同" key="4">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={12}>

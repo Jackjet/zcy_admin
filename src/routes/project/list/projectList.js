@@ -442,6 +442,11 @@ export default class projectList extends PureComponent {
       {
         title: '项目编号',
         dataIndex: 'no',
+        render: (text, record, index) => (
+          <Fragment>
+            <a onClick={() =>this.showViewMessage(true, text, record, index)} >{text}</a>
+          </Fragment>
+        ),
       },
       {
         title: '项目名称',
@@ -504,7 +509,7 @@ export default class projectList extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+            <a onClick={() =>this.handleProjectApplyAddVisible(true)} >项目过程</a>
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
@@ -546,9 +551,6 @@ export default class projectList extends PureComponent {
               <div className={styles.tableListOperator}>
                 <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
                   新建
-                </Button>
-                <Button type="primary" onClick={() => this.handleProjectApplyAddVisible(true)}>
-                  项目流程
                 </Button>
                 {selectedRows.length > 0 && (
                   <span>

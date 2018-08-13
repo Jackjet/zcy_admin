@@ -281,8 +281,14 @@ export const getRouterData = app => {
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
+    '/user/reset': {
+      component: dynamicWrapper(app, ['login'], () => import('../routes/User/ResetPassword')),
+    },
     '/user/register': {
       component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
+    },
+    '/user/modify': {
+      component: dynamicWrapper(app, [], () => import('../routes/User/ModifyPassword')),
     },
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
