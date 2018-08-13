@@ -5,11 +5,20 @@
   flex-direction: column;
   min-height: 100%;
   background: #f0f2f5;*/
-  height: 100%;
-  background: /*url(./login-bg.png)*/ #f5f5f5 no-repeat;
+  //height: 100%;
+  //background: /*url(./login-bg.png)*/ #f5f5f5 no-repeat;
+ // background-size: 100% 100%;
+  border-radius: 15px;
+  background-clip: padding-box;
+  margin: 80px auto;
+  width: 600px;
+  padding: 35px 35px 15px 35px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 0 25px #cac6c6;
   background-size: 100% 100%;
-}
 
+}
 .content {
   padding: 32px 0;
   flex: 1;
@@ -30,7 +39,7 @@
   @media (min-width: 768px) {
     .content,
     .login-footer {
-      padding: 70px 8px;
+      padding: 0px 8px;
     }
   }
   @media (min-width: 1024px) {
@@ -38,7 +47,7 @@
     .login-footer {
       //padding: 125px 8px;
       margin: 0px auto;
-      width: 854px;
+     // width: 854px;
     }
   }
 
@@ -52,8 +61,8 @@
 }
 
 .header {
-  height: 44px;
-  line-height: 44px;
+  height: 33px;
+  line-height: 33px;
   a {
     text-decoration: none;
   }
@@ -66,12 +75,12 @@
     font-size: 28px;
     color: #424242;
     font-weight: normal;
-    padding-top: 18px;
+    padding-top: 10px;
   }
 }
 
 .logo {
-  height: 44px;
+  height: 20px;
   vertical-align: top;
   margin-right: 16px;
 }

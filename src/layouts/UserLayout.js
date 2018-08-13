@@ -4,7 +4,6 @@ import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
-import logo from '../assets/logo.svg';
 import logo1 from '../assets/zclogo.png';
 import { getRoutes } from '../utils/utils';
 
@@ -41,8 +40,7 @@ class UserLayout extends React.PureComponent {
             <div className={styles.top}>
               <div className={styles.head}>
                 <Link to="/">
-                  <img alt="logo" className={styles.title} src={logo1} />
-                  {/*<span className={styles.title}>浙江至诚会计师事务所</span>*/}
+                  {/*<img alt="logo" className={styles.title} src={logo1} />*/}
                   <h3>项目管理平台</h3>
                 </Link>
               </div>
