@@ -3,7 +3,7 @@ import { isUrl } from '../utils/utils';
 const menuData = [
   {
     name: '工作台',
-    icon: 'dashboard',
+    icon: 'desktop',
     path: 'workplace',
     children: [],
   },
@@ -56,8 +56,20 @@ const menuData = [
         // hideInMenu: true,
    },
   {
+    name: '项目指派',
+    icon: 'folder-open',
+    path: 'projectallow',
+    children: [
+      {
+        key: 'projectinfoallow',
+        name: '项目指派',
+        path: 'projectallcation',
+      },
+    ],
+  },
+  {
     name: '项目管理',
-    icon: 'folder',
+    icon: 'folder-add',
     path: 'project',
     children: [
       {
@@ -231,6 +243,12 @@ const menuData = [
         name: '知识库积分管理',
         path: 'zskjfma',
       },
+      {
+        key: 'cljgku',
+        name: '价格格库',
+        path: 'priceissue',
+      },
+
     ],
   },
   {
@@ -275,6 +293,19 @@ const menuData = [
         key: 'fenxipingtai',
         name: '分析平台',
         path: 'fxpt',
+      },
+    ],
+  },
+
+  {
+    name: '分析平台',
+    icon: 'dashboard',
+    path: 'report',
+    children: [
+      {
+        key: 'reportlist',
+        name: '报表分析',
+        path: 'reportInfo',
       },
     ],
   },
