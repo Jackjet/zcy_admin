@@ -1,4 +1,4 @@
-import { fakeRegister } from '../services/api';
+import { fakeRegister, fakeReset } from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 
@@ -12,6 +12,13 @@ export default {
   effects: {
     *submit(_, { call, put }) {
       const response = yield call(fakeRegister);
+      yield put({
+        type: 'registerHandle',
+        payload: response,
+      });
+    },
+    *submitReset(_, { call, put }) {
+      const response = yield call(fakeReset);
       yield put({
         type: 'registerHandle',
         payload: response,

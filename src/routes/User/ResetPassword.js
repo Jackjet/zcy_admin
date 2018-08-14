@@ -14,7 +14,7 @@ const passwordProgressMap = {
 
 @connect(({ register, loading }) => ({
   register,
-  submitting: loading.effects['register/submit'],
+  submitting: loading.effects['register/submitReset'],
 }))
 @Form.create()
 export default class ResetPassword extends Component {
@@ -27,8 +27,8 @@ export default class ResetPassword extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const account = this.props.form.getFieldValue('mail');
-    if (nextProps.register.status === 'ok') {
+    const account = this.props.form.getFieldValue('mobile');
+    if (nextProps.register.status === 'resetTest') {
       this.props.dispatch(
         routerRedux.push ({
           pathname: '/user/modify',
@@ -73,7 +73,7 @@ export default class ResetPassword extends Component {
     this.props.form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         this.props.dispatch({
-          type: 'register/submit',
+          type: 'register/submitReset',
           payload: {
             ...values,
             prefix: this.state.prefix,

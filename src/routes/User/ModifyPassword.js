@@ -46,11 +46,11 @@ export default class ModifyPassword extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const account = this.props.form.getFieldValue('mail');
+    const account = this.props.form.getFieldValue('mobile');
     if (nextProps.register.status === 'ok') {
       this.props.dispatch(
         routerRedux.push({
-          pathname: '/user/register-result',
+          pathname: '/user/reset-result',
           state: {
             account,
           },
@@ -177,31 +177,48 @@ export default class ModifyPassword extends Component {
         <Form layout="horizontal" onSubmit={this.handleSubmit}>
           <Row gutter={24}>
             <Col>
-              <FormItem label="新密码">
-                {getFieldDecorator('lock', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入密码！ ',
-                    },
-                  ],
-                })(
-                  <Input size="large" placeholder="请输入密码" />
-                )}
+              <FormItem label="新密码" help={this.state.help}>
+                <Popover
+                  content={
+                    <div style={{ padding: '4px 0' }}>
+                      {passwordStatusMap[this.getPasswordStatus()]}
+                      {this.renderPasswordProgress()}
+                      <div style={{ marginTop: 10 }}>
+                        请至少输入 6 个字符。请不要使用容易被猜到的密码。
+                      </div>
+                    </div>
+                  }
+                  overlayStyle={{ width: 240 }}
+                  placement="right"
+                  visible={this.state.visible}
+                >
+                  {getFieldDecorator('password', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入密码！',
+                      },
+                      {
+                        validator: this.checkPassword,
+                      },
+                    ],
+                  })(<Input size="large" type="password" placeholder="至少6位密码，区分大小写" />)}
+                </Popover>
               </FormItem>
             </Col>
             <Col>
               <FormItem label="确认密码">
-                {getFieldDecorator('lock', {
+                {getFieldDecorator('confirm', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入密码！ ',
+                      message: '请确认密码！',
+                    },
+                    {
+                      validator: this.checkConfirm,
                     },
                   ],
-                })(
-                  <Input size="large" placeholder="请输入密码" />
-                )}
+                })(<Input size="large" type="password" placeholder="确认密码" />)}
               </FormItem>
             </Col>
             <Col>
