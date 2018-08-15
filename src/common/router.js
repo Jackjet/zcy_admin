@@ -302,6 +302,16 @@ export const getRouterData = app => {
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
+
+    '/promission/obj': {
+      component: dynamicWrapper(app, [], () => import('../routes/promission/promissionList')),
+      name:"权限对象",
+    },
+    '/promission/role': {
+      component: dynamicWrapper(app, [], () => import('../routes/promission/role/roleList')),
+      name:"角色管理",
+    },
+
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
