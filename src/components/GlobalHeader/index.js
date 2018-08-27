@@ -5,6 +5,8 @@ import groupBy from 'lodash/groupBy';
 import Debounce from 'lodash-decorators/debounce';
 import { Link } from 'dva/router';
 import styles from './index.less';
+import scroxt from 'scroxt';
+
 
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
@@ -53,7 +55,16 @@ export default class GlobalHeader extends PureComponent {
     event.initEvent('resize', true, false);
     window.dispatchEvent(event);
   }
+
+
+
   render() {
+  /*  const scroxthz = new scroxt.Horizontal({
+      target: ".right",
+      data: ['第一条','第2条','第3条'],
+      speed: -5
+    });*/
+
     const {
       currentUser,
       collapsed,
@@ -66,14 +77,14 @@ export default class GlobalHeader extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item>
+        <Menu.Item key="user">
           <Icon type="user" />个人中心
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item key="setting">
           <Icon type="setting" />设置
         </Menu.Item>
-        <Menu.Item>
-          <Icon type="setting" />切换组织
+        <Menu.Item key="switchOrg">
+          <Icon type="switcher" />切换组织
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
@@ -95,7 +106,10 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
+        <span className={`${styles.action} ${styles.search}`} > 杭州至诚云 {moment().format('llll')} </span>
         <div className={styles.right}>
+
+
           {/* <HeaderSearch
             className={`${styles.action} ${styles.search}`}
             placeholder="站内搜索"
@@ -106,7 +120,7 @@ export default class GlobalHeader extends PureComponent {
             onPressEnter={value => {
               console.log('enter', value); // eslint-disable-line
             }}
-          />*/}
+          /> */}
           {/*    <Tooltip title="使用文档">
             <a
               target="_blank"
@@ -152,7 +166,9 @@ export default class GlobalHeader extends PureComponent {
               <span className={`${styles.action} ${styles.account}`}>
                 <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
                 <span className={styles.name}>{currentUser.name}</span>
+
               </span>
+
             </Dropdown>
           ) : (
             <Spin size="small" style={{ marginLeft: 8 }} />

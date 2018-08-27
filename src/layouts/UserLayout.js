@@ -17,7 +17,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 杭州至诚云软件技术有限公司版权所有
+    Copyright <Icon type="copyright" /> 2017-2018 杭州至诚云软件技术有限公司版权所有
   </Fragment>
 );
 

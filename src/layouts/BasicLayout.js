@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Icon, message } from 'antd';
+import { Layout, Icon, message,Modal, Button } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
@@ -15,10 +15,13 @@ import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.png';
+import Moment from 'moment';
+
+
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
-
+const confirm = Modal.confirm;
 /**
  * 根据菜单取得重定向地址.
  */
@@ -90,7 +93,63 @@ class BasicLayout extends React.PureComponent {
   };
   state = {
     isMobile,
+    loading: false,
+    switchOrgvisible: false,
+    userInfovisible:false,
   };
+
+
+// 切换组织确定
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, switchOrgvisible: false });
+      this.props.dispatch(routerRedux.push('/'));
+    }, 2000);
+  };
+
+
+// 切换组织 和 个人信息 取消
+  handleCancel = () => {
+    this.setState({ switchOrgvisible: false,userInfovisible:false });
+  };
+
+  // 显示是否要切换组织提示
+  showSwitchOrgConfirm (){
+    let _this = this;
+    const ref  = confirm({
+      title: '切换组织将首先关闭当前的所有操作。您是否确定执行此操作?',
+      //content: '您是否确定执行此操作?',
+      okText: '确认',
+      cancelText: '取消',
+      onOk(){
+        _this.handleSwitchOrgShowModal(true);
+        console.log('ok');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+
+  }
+
+//  切换组织
+  handleSwitchOrgShowModal = () => {
+    this.setState({
+      switchOrgvisible: true,
+    });
+
+  };
+
+
+// 个人信息
+  handleuserInfoShowModal = () => {
+    this.setState({
+      userInfovisible: true,
+    });
+  };
+
+
   getChildContext() {
     const { location, routerData } = this.props;
     return {
@@ -153,16 +212,47 @@ class BasicLayout extends React.PureComponent {
       payload: type,
     });
   };
+
   handleMenuClick = ({ key }) => {
     if (key === 'triggerError') {
       this.props.dispatch(routerRedux.push('/exception/trigger'));
       return;
     }
     if (key === 'logout') {
+      let _this = this;
+      confirm({
+        title: '您确定要退出当前系统吗?',
+        //content: '您是否确定执行此操作?',
+        okText: '确认',
+        cancelText: '取消',
+        onOk() {
+          _this.props.dispatch({
+            type: 'login/logout',
+          });
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+
+
+    }
+    // 切换组织
+    if (key === 'switchOrg') {
+      this.showSwitchOrgConfirm();
+    }
+    // 个人设置
+    if (key === 'setting') {
       this.props.dispatch({
         type: 'login/logout',
       });
     }
+
+    // 个人中心
+    if (key === 'user') {
+      this.handleuserInfoShowModal(true);
+    }
+
   };
   handleNoticeVisibleChange = visible => {
     if (visible) {
@@ -171,7 +261,15 @@ class BasicLayout extends React.PureComponent {
       });
     }
   };
+
+
+
+
+
+
   render() {
+    const { switchOrgvisible,userInfovisible, loading } = this.state;
+
     const {
       currentUser,
       collapsed,
@@ -182,6 +280,9 @@ class BasicLayout extends React.PureComponent {
       location,
     } = this.props;
     const bashRedirect = this.getBashRedirect();
+
+
+
     const layout = (
       <Layout>
         <SiderMenu
@@ -242,20 +343,68 @@ class BasicLayout extends React.PureComponent {
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 杭州至诚云软件技术有限公司版权所有
+                  Copyright <Icon type="copyright" /> 2017-2018 杭州至诚云软件技术有限公司版权所有
+
                 </Fragment>
               }
             />
           </Footer>
+          <Footer style={{padding: 0 }}>
+              杭州至诚云     { Moment().format('llll')}
+          </Footer>
         </Layout>
+
+        <Modal
+          visible={switchOrgvisible}
+          title="组织公司切换"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          maskClosable={false}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>取消</Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+              确定
+            </Button>,
+          ]}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
+
+
+        <Modal
+          visible={userInfovisible}
+          title="个人信息"
+          onCancel={this.handleCancel}
+          maskClosable={false}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>取消</Button>,
+            null,
+          ]}
+        >
+          <p>账号：</p>
+          <p>当前日期：</p>
+          <p>组织：</p>
+          <p>职位：</p>
+        </Modal>
+
+
+
       </Layout>
+
+
     );
 
     return (
+
       <DocumentTitle title={this.getPageTitle()}>
         <ContainerQuery query={query}>
           {params => <div className={classNames(params)}>{layout}</div>}
         </ContainerQuery>
+
       </DocumentTitle>
     );
   }
