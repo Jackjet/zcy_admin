@@ -58,12 +58,12 @@ const menuData = [
   {
     name: '项目指派',
     icon: 'folder-open',
-    path: 'projectallow',
+    path: 'projectAllow',
     children: [
       {
-        key: 'projectinfoallow',
+        key: 'projectInfoAllow',
         name: '项目指派',
-        path: 'projectallcation',
+        path: 'projectAllocation',
       },
     ],
   },

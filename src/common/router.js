@@ -100,6 +100,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
       name: '数据字典管理',
     },
+    '/projectAllow/projectAllocation': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/projectAllow/list/AllocationList')),
+      name: '项目指派',
+    },
     '/project/projectinfo': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
       name: '项目信息管理',
