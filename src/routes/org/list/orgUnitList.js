@@ -350,7 +350,7 @@ export default class orgUnitList extends PureComponent {
     };
 
     return (
-      <PageHeaderLayout>
+      <div>
         <Card bordered={false}>
           <div className={styles.leftBlock}>{this.treemenu()}</div>
           <div className={styles.rightBlock}>
@@ -379,7 +379,7 @@ export default class orgUnitList extends PureComponent {
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
-      </PageHeaderLayout>
+      </div>
     );
   }
 }

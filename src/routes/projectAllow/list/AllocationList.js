@@ -372,7 +372,7 @@ export default class AllocationList extends PureComponent {
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleAllocationAddVisible(true)}>
                     新建
                   </Button>
                   {selectedRows.length > 0 && (

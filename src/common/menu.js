@@ -193,9 +193,9 @@ const menuData = [
     path: 'HR',
     children: [
       {
-        key: 'orgunitList',
+        key: 'organizeList',
         name: '组织机构',
-        path: 'orgunit',
+        path: 'organize',
       },
       {
         key: 'departmentList',

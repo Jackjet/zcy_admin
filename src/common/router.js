@@ -186,7 +186,7 @@ export const getRouterData = app => {
     '/schedule/notice': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/notice/NoticeList')),
     },
-    '/HR/orgunit': {
+    '/HR/organize': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/org/list/orgUnitList')),
     },
     '/HR/department': {
