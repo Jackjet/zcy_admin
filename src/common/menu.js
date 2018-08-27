@@ -52,8 +52,6 @@ const menuData = [
         path: 'xieyiInfo',
       },
      ],
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
    },
   {
     name: '项目指派',
