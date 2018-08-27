@@ -43,6 +43,7 @@ for (let i = 0; i < 46; i += 1) {
     customerForBusinessName:`客户名称${i}`,
 
     projectCode:`项目编号${i}`,
+    organizeCode:`${i}`,
 
   });
 }
@@ -115,12 +116,12 @@ export function postRule(req, res, u, b) {
   }
 
   const body = (b && b.body) || req.body;
-  const { method, no, description, customerCode } = body;
+  const { method, no, description, organizeCode } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':
-      tableListDataSource = tableListDataSource.filter(item => no.indexOf(item.no) === -1);
+      tableListDataSource = tableListDataSource.filter(item => organizeCode.indexOf(item.organizeCode) === -1);
       break;
     case 'post':
       const i = Math.ceil(Math.random() * 10000);
@@ -146,6 +147,7 @@ export function postRule(req, res, u, b) {
         progress: Math.ceil(Math.random() * 100),
         customerCode: ` 客户编码${i} `,
         contractTitle:`这个字段是合同标题 ${i}`,
+        organizeCode:`${i}`,
       });
       break;
     default:

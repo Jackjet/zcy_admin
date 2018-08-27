@@ -1,8 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
-import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -14,18 +11,18 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
   Modal,
   message,
-  Badge,
   Divider,
+  Popconfirm,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from '../list/orgUnitList.less';
-import OrgUnitAdd from '../add/OrgUnitAdd2';
-import BasicForm from '../../Forms/BasicForm';
+import styles from './OrgUnitList.less';
+import OrgUnitAddModal from '../add/OrgUnitAddModal';
+import OrgUnitViewModal from '../select/OrgUnitViewModal';
+import OrgUnitEditModal from '../edit/OrgUnitEditModal';
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -33,33 +30,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      title="新增组织信息"
-      style={{ top: 20 }}
-      visible={modalVisible}
-      mask={'true'}
-      width={'60%'}
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <BasicForm />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -68,7 +38,10 @@ const CreateForm = Form.create()(props => {
 @Form.create()
 export default class orgUnitList extends PureComponent {
   state = {
-    modalVisible: false,
+    OrgUnitAddVisible: false,
+    OrgUnitViewVisible: false,
+    OrgUnitEditVisible: false,
+    rowInfo:``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -194,30 +167,65 @@ export default class orgUnitList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleOrgUnitAddVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      OrgUnitAddVisible: !!flag,
     });
   };
 
-  handleAdd = fields => {
+  handleOrgUnitViewVisible = flag => {
+    this.setState({
+      OrgUnitViewVisible: !!flag,
+    });
+  };
+
+  handleOrgUnitEditVisible = flag => {
+    this.setState({
+      OrgUnitEditVisible: !!flag,
+    });
+  };
+
+  showViewMessage =(flag, text, record)=> {
+    this.setState({
+      OrgUnitViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      OrgUnitEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showDeleteMessage =(flag, record)=> {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'rule/remove',
       payload: {
-        description: fields.desc,
+        organizeCode: record.organizeCode,
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+        message.success('删除成功!');
       },
     });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
   };
+
+   confirm = () => {
+    message.success('Click on Yes');
+  }
+
+   cancel = () => {
+    message.error('Click on No');
+  }
 
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
-    const SubMenu = Menu.SubMenu;
+  treeMenu() {
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -248,7 +256,9 @@ export default class orgUnitList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
+              {getFieldDecorator('no')(
+                <Input placeholder="请输入编码名称" />
+              )}
             </FormItem>
           </Col>
 
@@ -261,14 +271,6 @@ export default class orgUnitList extends PureComponent {
                 重置
               </Button>
             </span>
-            <Button
-              className={styles.buttonadd}
-              icon="plus"
-              type="primary"
-              onClick={() => this.handleModalVisible(true)}
-            >
-              新建
-            </Button>
           </Col>
         </Row>
       </Form>
@@ -280,25 +282,28 @@ export default class orgUnitList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
 
     const columns = [
       {
         title: '组织编号',
-        dataIndex: 'no',
+        dataIndex: 'organizeCode',
       },
       {
         title: '组织名称',
-        dataIndex: 'name',
+        dataIndex: 'organizeName',
       },
       {
         title: '电话',
         dataIndex: 'phone',
       },
-
       {
         title: '负责人',
         dataIndex: 'fzperson',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
       },
       {
         title: '分公司',
@@ -311,14 +316,17 @@ export default class orgUnitList extends PureComponent {
 
       {
         title: '操作',
-        render: () => (
+        render: (text, record, index) => (
           <Fragment>
-            <a href="">编辑</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
             <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <Divider type="vertical" />
+            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+              <a>删除</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Dropdown overlay={downMenu}>
               <a>
                 更多 <Icon type="down" />
               </a>
@@ -328,38 +336,52 @@ export default class orgUnitList extends PureComponent {
       },
     ];
 
-    const downhz = (
+    const downMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
+        <Menu.Item key="turnOn">停用</Menu.Item>
+        <Menu.Item key="turnOff">启用</Menu.Item>
       </Menu>
     );
 
-    const menu = (
+    const batchMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    const OrgUnitAddMethods = {
+      handleOrgUnitAddVisible: this.handleOrgUnitAddVisible,
     };
+
+    const OrgUnitViewMethods = {
+      handleOrgUnitViewVisible: this.handleOrgUnitViewVisible,
+    };
+
+    const OrgUnitEditMethods = {
+      handleOrgUnitEditVisible: this.handleOrgUnitEditVisible,
+    };
+
+
 
     return (
       <div>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
+          <div className={styles.leftBlock}>{this.treeMenu()}</div>
           <div className={styles.rightBlock}>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
+                <Button
+                  icon="plus"
+                  type="primary"
+                  onClick={() => this.handleOrgUnitAddVisible(true)}
+                >
+                  新建
+                </Button>
                 {selectedRows.length > 0 && (
                   <span>
-                    <Dropdown overlay={menu}>
+                    <Dropdown overlay={batchMenu}>
                       <Button>
                         批量操作 <Icon type="down" />
                       </Button>
@@ -376,9 +398,11 @@ export default class orgUnitList extends PureComponent {
                 onChange={this.handleStandardTableChange}
               />
             </div>
+            <OrgUnitAddModal {...OrgUnitAddMethods} OrgUnitAddVisible={OrgUnitAddVisible} />
+            <OrgUnitViewModal {...OrgUnitViewMethods} OrgUnitViewVisible={OrgUnitViewVisible} rowInfo={rowInfo} />
+            <OrgUnitEditModal {...OrgUnitEditMethods} OrgUnitEditVisible={OrgUnitEditVisible} rowInfo={rowInfo} />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
       </div>
     );
   }
