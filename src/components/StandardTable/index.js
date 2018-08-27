@@ -103,7 +103,7 @@ class StandardTable extends PureComponent {
             showIcon
           />
         </div>
-        <Table scroll={scroll}
+        <Table bordered={true} scroll={scroll}
           loading={loading}
           rowKey={rowKey || 'key'}
           rowSelection={rowSelection}

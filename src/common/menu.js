@@ -289,11 +289,7 @@ const menuData = [
         name: '合伙人设置',
         path: 'hehuorsetting',
       },
-      {
-        key: 'fenxipingtai',
-        name: '分析平台',
-        path: 'fxpt',
-      },
+
     ],
   },
 
@@ -326,9 +322,22 @@ const menuData = [
         path: 'dictType',
       },
       {
-        key: 'promissionList',
+        key: 'promission',
         name: '权限管理',
         path: 'promission',
+        children: [
+          {
+            key: 'Obj',
+            name: '权限对象',
+            path: 'obj',
+          },
+          {
+            key: 'role',
+            name: '角色管理',
+            path: 'role',
+          },
+
+        ],
       },
     ],
   },
