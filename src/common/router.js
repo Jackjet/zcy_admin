@@ -190,7 +190,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/org/list/OrgUnitList')),
     },
     '/HR/department': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/depList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/department/list/DepartmentList')),
     },
     '/HR/staff': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/staff/list/userList')),

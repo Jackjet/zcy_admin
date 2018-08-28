@@ -29,7 +29,7 @@ const formItemLayout = {
   },
 };
 
-class OrgUnitAddModal extends PureComponent {
+class DepartmentViewModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -47,7 +47,7 @@ class OrgUnitAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, OrgUnitAddVisible, handleOrgUnitAddVisible } = this.props;
+    const { form, dispatch, submitting, DepartmentViewVisible, handleDepartmentViewVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -58,13 +58,13 @@ class OrgUnitAddModal extends PureComponent {
             payload: values,
           });
           form.resetFields();
-          handleOrgUnitAddVisible(false);
+          handleDepartmentViewVisible(false);
         }
       });
     };
     const cancelDate = () => {
       form.resetFields();
-      handleOrgUnitAddVisible(false);
+      handleDepartmentViewVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -107,9 +107,9 @@ class OrgUnitAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="组织机构基本信息新增"
+        title="组织机构基本信息查看"
         style={{ top: 20 }}
-        visible={OrgUnitAddVisible}
+        visible={DepartmentViewVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
@@ -148,14 +148,15 @@ class OrgUnitAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="组织编码">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '请输入组织编码' }],
+                    initialValue:`${rowInfo.organizeCode}`,
                   })(
-                    <Input placeholder="请输入组织编码" />
+                    <Input disabled placeholder="请输入组织编码" />
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
-                    {getFieldDecorator('isCompany', {
+                  {getFieldDecorator('isCompany', {
                     rules: [{ required: true, message: '是否分公司' }],
                     initialValue:`否`,
                   })(
@@ -190,8 +191,9 @@ class OrgUnitAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="负责人">
                   {getFieldDecorator('principal', {
                     rules: [{ required: false, message: '请选择负责人' }],
+                    initialValue:`请选择`,
                   })(
-                    <Select placeholder="请选择负责人" >
+                    <Select>
                       <Option value="0">请选择</Option>
                       <Option value="1">员工A</Option>
                       <Option value="2">员工B</Option>
@@ -328,4 +330,4 @@ class OrgUnitAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(OrgUnitAddModal));
+}))(Form.create()(DepartmentViewModal));
