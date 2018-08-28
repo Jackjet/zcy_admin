@@ -36,7 +36,7 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class orgUnitList extends PureComponent {
+export default class OrgUnitList extends PureComponent {
   state = {
     OrgUnitAddVisible: false,
     OrgUnitViewVisible: false,
