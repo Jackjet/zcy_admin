@@ -1,8 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { connect } from 'dva';
-import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -14,18 +11,16 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
   Modal,
   message,
-  Badge,
   Divider,
+  Popconfirm,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable/index';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './userList.less';
-import UserListAdd from '../../staff/add/UserListAdd';
+import StandardTable from '../../../components/StandardTable';
+import styles from './UserList.less';
 
+const { Search } = Input;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -33,42 +28,18 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['离职', '在职', '已上线', '异常'];
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-
-  return (
-    <Modal
-      title="新增员工信息"
-      style={{ top: 20 }}
-      visible={modalVisible}
-      width="55%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <UserListAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class userList extends PureComponent {
+export default class UserList extends PureComponent {
   state = {
-    modalVisible: false,
+    OrgUnitAddVisible: false,
+    OrgUnitViewVisible: false,
+    OrgUnitEditVisible: false,
+    rowInfo:``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -194,30 +165,65 @@ export default class userList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleOrgUnitAddVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      OrgUnitAddVisible: !!flag,
     });
   };
 
-  handleAdd = fields => {
+  handleOrgUnitViewVisible = flag => {
+    this.setState({
+      OrgUnitViewVisible: !!flag,
+    });
+  };
+
+  handleOrgUnitEditVisible = flag => {
+    this.setState({
+      OrgUnitEditVisible: !!flag,
+    });
+  };
+
+  showViewMessage =(flag, text, record)=> {
+    this.setState({
+      OrgUnitViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      OrgUnitEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showDeleteMessage =(flag, record)=> {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'rule/remove',
       payload: {
-        description: fields.desc,
+        organizeCode: record.organizeCode,
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+        message.success('删除成功!');
       },
     });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
   };
+
+  confirm = () => {
+    message.success('Click on Yes');
+  }
+
+  cancel = () => {
+    message.error('Click on No');
+  }
 
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
-    const SubMenu = Menu.SubMenu;
+  treeMenu() {
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -246,13 +252,43 @@ export default class userList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="关键字">
-              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
+          <Col md={12} sm={24}>
+            <FormItem label="用户">
+              {getFieldDecorator('no')(
+                <Input placeholder="默认当前用户" />
+              )}
             </FormItem>
           </Col>
 
-          <Col md={8} sm={24}>
+          <Col md={12} sm={24}>
+            <FormItem label="组织">
+              {getFieldDecorator('subordinateUnit', {
+                rules: [{ required: false, message: '请输入所属单位' }],
+              })(
+                <Search
+                  placeholder="请输入所属单位"
+                  onSearch=""
+                />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+
+          <Col md={12} sm={24}>
+            <FormItem label="指定用户的主角色">
+              {getFieldDecorator('subordinateUnit', {
+                rules: [{ required: false, message: '请输入所属单位' }],
+              })(
+                <Select placeholder="请输入所属单位" >
+                  <Option value="1" >aaa</Option>
+                  <Option value="2" >bbb</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+
+          {/*<Col md={12} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -261,15 +297,7 @@ export default class userList extends PureComponent {
                 重置
               </Button>
             </span>
-            <Button
-              className={styles.buttonadd}
-              icon="plus"
-              type="primary"
-              onClick={() => this.handleModalVisible(true)}
-            >
-              新建
-            </Button>
-          </Col>
+          </Col>*/}
         </Row>
       </Form>
     );
@@ -280,70 +308,51 @@ export default class userList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
 
     const columns = [
       {
-        title: '工号',
-        dataIndex: 'no',
+        title: '组织编号',
+        dataIndex: 'organizeCode',
       },
       {
-        title: '姓名',
-        dataIndex: 'name',
+        title: '组织名称',
+        dataIndex: 'organizeName',
       },
       {
-        title: '性别',
+        title: '电话',
         dataIndex: 'phone',
       },
-
       {
-        title: '岗位',
+        title: '负责人',
         dataIndex: 'fzperson',
-      },
-      {
-        title: '移动电话',
-        dataIndex: 'company',
-      },
-      {
-        title: '办公电话',
-        dataIndex: 'address',
       },
       {
         title: '状态',
         dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
       },
       {
+        title: '分公司',
+        dataIndex: 'company',
+      },
+      {
+        title: '地址',
+        dataIndex: 'address',
+      },
+
+      {
         title: '操作',
-        render: () => (
+        render: (text, record, index) => (
           <Fragment>
-            <a href="">编辑</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
             <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              {/* <Button className={styles.antbtngroup}>
-                更多 <Icon type="down" />
-              </Button>*/}
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <Divider type="vertical" />
+            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+              <a>删除</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Dropdown overlay={downMenu}>
               <a>
                 更多 <Icon type="down" />
               </a>
@@ -353,38 +362,51 @@ export default class userList extends PureComponent {
       },
     ];
 
-    const downhz = (
+    const downMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="edit">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
+        <Menu.Item key="turnOn">停用</Menu.Item>
+        <Menu.Item key="turnOff">启用</Menu.Item>
       </Menu>
     );
 
-    const menu = (
+    const batchMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    const OrgUnitAddMethods = {
+      handleOrgUnitAddVisible: this.handleOrgUnitAddVisible,
     };
 
+    const OrgUnitViewMethods = {
+      handleOrgUnitViewVisible: this.handleOrgUnitViewVisible,
+    };
+
+    const OrgUnitEditMethods = {
+      handleOrgUnitEditVisible: this.handleOrgUnitEditVisible,
+    };
+
+
+
     return (
-      <PageHeaderLayout>
+      <div>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
-          <div className={styles.rightBlock}>
+          <div>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
               <div className={styles.tableListOperator}>
+                <Button
+                  icon="plus"
+                  type="primary"
+                  onClick={() => this.handleOrgUnitAddVisible(true)}
+                >
+                  新建
+                </Button>
                 {selectedRows.length > 0 && (
                   <span>
-                    <Dropdown overlay={menu}>
+                    <Dropdown overlay={batchMenu}>
                       <Button>
                         批量操作 <Icon type="down" />
                       </Button>
@@ -403,8 +425,7 @@ export default class userList extends PureComponent {
             </div>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-      </PageHeaderLayout>
+      </div>
     );
   }
 }

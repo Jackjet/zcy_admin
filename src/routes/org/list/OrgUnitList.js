@@ -216,11 +216,11 @@ export default class OrgUnitList extends PureComponent {
 
    confirm = () => {
     message.success('Click on Yes');
-  }
+  };
 
    cancel = () => {
     message.error('Click on No');
-  }
+  };
 
   rootSubmenuKeys = ['sub1'];
 

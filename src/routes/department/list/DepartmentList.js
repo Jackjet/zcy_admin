@@ -211,11 +211,11 @@ export default class DepartmentList extends PureComponent {
 
   confirm = () => {
     message.success('Click on Yes');
-  }
+  };
 
   cancel = () => {
     message.error('Click on No');
-  }
+  };
 
   rootSubmenuKeys = ['sub1'];
 
