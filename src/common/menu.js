@@ -244,7 +244,7 @@ const menuData = [
       {
         key: 'cljgku',
         name: '价格格库',
-        path: 'priceissue',
+        path: 'priceIssue',
       },
 
     ],
@@ -320,19 +320,19 @@ const menuData = [
         path: 'dictType',
       },
       {
-        key: 'promission',
+        key: 'authorization',
         name: '权限管理',
-        path: 'promission',
+        path: 'authorization',
         children: [
           {
             key: 'Obj',
             name: '权限对象',
-            path: 'obj',
+            path: 'Obj',
           },
           {
-            key: 'role',
+            key: 'Role',
             name: '角色管理',
-            path: 'role',
+            path: 'Role',
           },
 
         ],

@@ -156,6 +156,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/ProjectsRepository')),
       name: '项目知识库管理',
     },
+    '/zhiku/priceIssue': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/list/PriceIssueList')),
+      name: '项目知识库管理',
+    },
     '/ExpenseReimbursement/ExpenseApply': {
     component: dynamicWrapper(app, [], () => import('../routes/ExpenseReimbursement/list/ExpenseApplyList')),
       name: '费用申请单',
@@ -307,12 +311,12 @@ export const getRouterData = app => {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
 
-    '/promission/obj': {
-      component: dynamicWrapper(app, [], () => import('../routes/promission/promissionList')),
+    '/system/authorization/Obj': {
+      component: dynamicWrapper(app, [], () => import('../routes/Authorization/Obj/ObjManageList')),
       name:"权限对象",
     },
-    '/promission/role': {
-      component: dynamicWrapper(app, [], () => import('../routes/promission/role/roleList')),
+    '/system/authorization/Role': {
+      component: dynamicWrapper(app, [], () => import('../routes/Authorization/Role/RoleManageList')),
       name:"角色管理",
     },
 
