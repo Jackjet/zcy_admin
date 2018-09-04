@@ -723,7 +723,7 @@ class ProjectApplyAddModal extends PureComponent {
                   </Col>
                 </Row>
               </Panel>
-              <Panel header="过程管理" key="3">
+              <Panel header="过程管理" key="11">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.companyName}>

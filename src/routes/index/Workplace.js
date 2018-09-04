@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import DataSet from '@antv/data-set';
 import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge} from 'antd';
-import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, View, Guide, Shape } from 'bizcharts';
+import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Workplace.less';
@@ -70,7 +71,11 @@ export default class Workplace extends PureComponent {
 
   handleClick = () =>{
     alert(11111111111111);
-  }
+  };
+
+  handleArea = () =>{
+    window.scrollTo(0,0)
+  };
 
   renderActivities() {
     const { activities: { list } } = this.props;
@@ -106,8 +111,6 @@ export default class Workplace extends PureComponent {
       );
     });
   }
-
-
 
   render() {
     const {
@@ -200,7 +203,7 @@ export default class Workplace extends PureComponent {
               <Badge count={0}>
                 <div className={styles["gutter-box1"]}>
                   <h3 >项目审批</h3>
-                  <br/>
+                  <br />
                   <p>
                     0个待审批的项目
                   </p>
@@ -211,7 +214,7 @@ export default class Workplace extends PureComponent {
               <Badge count={3}>
                 <div className={styles["gutter-box2"]} >
                   <h3 >合同审批</h3>
-                  <br/>
+                  <br />
                   <p>
                     3个待审批的合同
                   </p>
@@ -222,7 +225,7 @@ export default class Workplace extends PureComponent {
               <Badge count={1}>
                 <div className={styles["gutter-box3"]} >
                   <h3 >费用审批</h3>
-                  <br/>
+                  <br />
                   <p>
                     1个待审批的费用
                   </p>
@@ -233,7 +236,7 @@ export default class Workplace extends PureComponent {
               <Badge count={10}>
                 <div className={styles["gutter-box4"]} >
                   <h3>请假审批</h3>
-                  <br/>
+                  <br />
                   <p>
                     10个待审批的请假
                   </p>
@@ -246,23 +249,12 @@ export default class Workplace extends PureComponent {
               <Badge count={6}>
                 <div className={styles["gutter-box5"]} >
                   <h3>报销审批</h3>
-                  <br/>
+                  <br />
                   <p>
                     6个待审批的报销
                   </p>
                 </div>
               </Badge>
-            </Col>
-            <Col span={6}>
-
-            </Col>
-            <Col span={6}>
-
-
-            </Col>
-            <Col span={6}>
-
-
             </Col>
           </Row>
         </Card>
@@ -270,44 +262,61 @@ export default class Workplace extends PureComponent {
           快捷常用工具
         </div>
         <Card style={{marginBottom: 20}}>
-
-
           <Row gutter={32}>
             <Col span={4}>
-              <a className={styles["shortcut-box1"]} >
+              <Link
+                className={styles["shortcut-box1"]}
+                to="/crm/customer"
+                onClick={this.handleArea}
+              >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
-                <p/>
-                <a>客户信息管理</a>
-              </a>
+                <h5 >客户信息管理</h5>
+              </Link>
             </Col>
             <Col span={4}>
-              <a className={styles["shortcut-box2"]} >
+              <Link
+                className={styles["shortcut-box2"]}
+                to='/project/projectinfo'
+                onClick={this.handleArea}
+              >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
                 <h5 >项目信息管理</h5>
-              </a>
+              </Link>
             </Col>
             <Col span={4}>
-              <a className={styles["shortcut-box3"]} >
+              <Link
+                className={styles["shortcut-box3"]}
+                to='/schedule/schedulelist'
+                onClick={this.handleArea}
+              >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
-                <h5 >新增日报</h5>
-              </a>
+                <h5 >日常管理</h5>
+              </Link>
             </Col>
             <Col span={4}>
-              <a className={styles["shortcut-box4"]} >
+              <Link
+                className={styles["shortcut-box4"]}
+                to="/HR/organize"
+                onClick={this.handleArea}
+              >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
-                <h5 >新增日报</h5>
-              </a>
+                <h5 >组织结构</h5>
+              </Link>
             </Col>
             <Col span={4}>
-              <a className={styles["shortcut-box5"]} >
+              <Link
+                className={styles["shortcut-box5"]}
+                to="/ExpenseReimbursement/ExpenseApply"
+                onClick={this.handleArea}
+              >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
-                <h5 >新增日报</h5>
-              </a>
+                <h5 >费用申请单</h5>
+              </Link>
             </Col>
             <Col span={4} />
           </Row>
