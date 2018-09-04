@@ -15,7 +15,7 @@ import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.png';
-import Moment from 'moment';
+
 
 
 
@@ -349,9 +349,7 @@ class BasicLayout extends React.PureComponent {
               }
             />
           </Footer>
-          <Footer style={{padding: 0 }}>
-              杭州至诚云     { Moment().format('llll')}
-          </Footer>
+
         </Layout>
 
         <Modal

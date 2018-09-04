@@ -371,7 +371,6 @@ export default class Workplace extends PureComponent {
                   <List
                     loading={activitiesLoading}
                     size="large"
-                    pagination={paginationProps}
                   >
                     <div className={styles.activitiesList}>{this.renderActivities()}</div>
                   </List>
@@ -387,7 +386,7 @@ export default class Workplace extends PureComponent {
                   <List
                     loading={activitiesLoading}
                     size="large"
-                    pagination={paginationProps}
+                    /*pagination={paginationProps}*/
                   >
                     <div className={styles.activitiesList}>{this.renderActivities()}</div>
                   </List>

@@ -106,10 +106,10 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
-        <span className={`${styles.action} ${styles.search}`} > 杭州至诚云 {moment().format('llll')} </span>
+
         <div className={styles.right}>
 
-
+          <span className={`${styles.action} ${styles.search}`} > {moment().format('llll')} </span>
           {/* <HeaderSearch
             className={`${styles.action} ${styles.search}`}
             placeholder="站内搜索"
