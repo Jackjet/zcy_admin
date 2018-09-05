@@ -124,6 +124,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/project/list/WorkDiary')),
       name: '工作日记',
     },
+    '/schedule/workStatement': {
+      component: dynamicWrapper(app, [], () => import('../routes/schedule/WorkStatement')),
+      name: '工作报告',
+    },
     '/project/workRecord': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/WorkRecord')),
       name: '项目工作记录',

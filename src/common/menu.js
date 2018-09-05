@@ -224,6 +224,11 @@ const menuData = [
         name: '公告管理',
         path: 'notice',
       },
+      {
+        key: 'workStatement',
+        name: '工作报告',
+        path: 'workStatement',
+      },
     ],
   },
   {
