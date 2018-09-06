@@ -1,7 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import { List, Button, Tabs, Icon, Calendar, Badge, Card, Form, Row, Col, Input, DatePicker, Divider } from 'antd';
 import { connect } from 'dva';
-import styles from './calendarAll.less';
+import StatementAddModal from './add/StatementAddModal2'
+import styles from './Style.less';
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
@@ -12,10 +13,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-function callback(key) {
-  console.log(key);
-}
 
 function getListData(value) {
   let listData;
@@ -86,6 +83,7 @@ function monthCellRender(value) {
 export default class WorkStatement extends PureComponent {
 
   state = {
+    StatementAddVisible:false,
     selectedRows: [],
   };
 
@@ -129,6 +127,12 @@ export default class WorkStatement extends PureComponent {
     });
   };
 
+  handleStatementAddVisible = flag => {
+    this.setState({
+      StatementAddVisible:!!flag,
+    });
+  };
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -163,7 +167,10 @@ export default class WorkStatement extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, StatementAddVisible } = this.state;
+    const StatementAddMethods = {
+      handleStatementAddVisible : this.handleStatementAddVisible,
+    }
     const columns = [
       {
         title: '类型',
@@ -198,10 +205,10 @@ export default class WorkStatement extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card>
-          <Tabs defaultActiveKey="1" onChange={callback}>
+          <Tabs defaultActiveKey="1">
             <TabPane tab="我的报告" key="1">
               <div className={styles['ant-fullcalendar-header-buttonhz']}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" onClick={() => this.handleStatementAddVisible(true)}>
                   新增报告
                 </Button>
               </div>
@@ -221,6 +228,7 @@ export default class WorkStatement extends PureComponent {
               </div>
             </TabPane>
           </Tabs>
+          <StatementAddModal {...StatementAddMethods} StatementAddVisible={StatementAddVisible}  />
         </Card>
       </PageHeaderLayout>
     );

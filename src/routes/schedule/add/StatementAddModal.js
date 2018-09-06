@@ -16,8 +16,8 @@ import {
   Button,
 } from 'antd';
 import { connect } from 'dva';
-
 import styles from './Style.less';
+import moment from "moment/moment";
 
 
 const props = {
@@ -37,9 +37,7 @@ const props = {
     }
   },
 };
-const { RadioGroup } = Radio;
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+const { RadioGroup } = Radio.Group;
 const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
@@ -70,7 +68,7 @@ class StatementAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, OrgUnitAddVisible, handleOrgUnitAddVisible } = this.props;
+    const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -81,13 +79,13 @@ class StatementAddModal extends PureComponent {
             payload: values,
           });
           form.resetFields();
-          handleOrgUnitAddVisible(false);
+          handleStatementAddVisible(false);
         }
       });
     };
     const cancelDate = () => {
       form.resetFields();
-      handleOrgUnitAddVisible(false);
+      handleStatementAddVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -132,7 +130,7 @@ class StatementAddModal extends PureComponent {
       <Modal
         title="日报新增"
         style={{ top: 20 }}
-        visible={OrgUnitAddVisible}
+        visible={StatementAddVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
@@ -161,7 +159,7 @@ class StatementAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="报告日期">
                   {getFieldDecorator('parentOrg', {
                     rules: [{ required: true, message: '报告日期' }],
-                    initialValue:`至诚`,
+                    initialValue:`{moment(val).format('YYYY-MM-DD HH:mm:ss')}`,
                   })(
                     <DatePicker />
                   )}
