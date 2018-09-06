@@ -14,6 +14,7 @@ import {
   Button,
   Modal,
   message,
+  Popconfirm,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -38,6 +39,7 @@ const props = {
     }
   },
 };
+const { RangePicker } = DatePicker;
 const { Group } = Radio;
 const { TextArea } = Input;
 const formItemLayout = {
@@ -55,6 +57,7 @@ class StatementAddModal2 extends PureComponent {
   state = {
     width: '100%',
     radioValue: 1,
+    popconfirmVisible:false,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -69,6 +72,12 @@ class StatementAddModal2 extends PureComponent {
     });
   };
 
+  handlePopconfirmVisible = (flag) => {
+    this.setState({
+      popconfirmVisible:!!flag,
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -79,7 +88,7 @@ class StatementAddModal2 extends PureComponent {
   render() {
     const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { radioValue } = this.state;
+    const { radioValue, popconfirmVisible } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -93,9 +102,16 @@ class StatementAddModal2 extends PureComponent {
         }
       });
     };
-    const cancelDate = () => {
+    const confirm = () => {
+      message.success('暂存成功');
+      handleStatementAddVisible(false);
+      this.handlePopconfirmVisible(false);
+    };
+    const cancel = () => {
+      message.error('未暂存');
       form.resetFields();
       handleStatementAddVisible(false);
+      this.handlePopconfirmVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -144,104 +160,138 @@ class StatementAddModal2 extends PureComponent {
         width="55%"
         maskClosable={false}
         onOk={validate}
-        onCancel={cancelDate}
+        onCancel={() =>this.handlePopconfirmVisible(true)}
         okText='提交'
       >
         <Card>
-          <Form layout="horizontal">
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="报告类型">
-                  {getFieldDecorator('name', {
-                    rules: [{ required: true, message: '请输入组织名称' }],
-                  })(
-                    <Group onChange={this.handleRadioGroup} value={1}>
-                      <Radio value={1}>日报</Radio>
-                      <Radio value={2}>周报</Radio>
-                      <Radio value={3}>月报</Radio>
-                    </Group>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="报告日期">
-                  {getFieldDecorator('reportData', {
-                    rules: [{ required: true, message: '报告日期' }],
-                  })(
-                    <DatePicker />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="已完结工作">
-                  {getFieldDecorator('number', {
-                    rules: [{ required: true, message: '已完结工作' }],
-                  })(
-                    <TextArea placeholder="已完结工作" />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="未完成工作">
-                  {getFieldDecorator('isCompany', {
-                    rules: [{ required: true, message: '未完成工作' }],
-                  })(
-                    <TextArea placeholder="未完成工作" />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="协助工作">
-                  {getFieldDecorator('simpleName', {
-                    rules: [{ required: false, message: '协助工作' }],
-                  })(
-                    <TextArea placeholder="协助工作" />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="附件">
-                  {getFieldDecorator('englishName', {
-                    rules: [{ required: false, message: '请输入英文名称' }],
-                  })(
-                    <Upload {...props}>
-                      <Button type="primary">
-                        <Icon type="upload" /> 上传附件
-                      </Button>
-                      <span>
+          <div>
+            <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="报告类型">
+                    {getFieldDecorator('name', {
+                      rules: [{ required: true, message: '请输入组织名称' }],
+                      initialValue:radioValue,
+                    })(
+                      <Group onChange={this.handleRadioGroup}>
+                        <Radio value={1}>日报</Radio>
+                        <Radio value={2}>周报</Radio>
+                        <Radio value={3}>月报</Radio>
+                      </Group>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="报告日期">
+                    {getFieldDecorator('reportData', {
+                      rules: [{ required: true, message: '报告日期' }],
+                    })(
+                      <div>
+                        {(radioValue === 1) && (
+                          <span>
+                            <DatePicker />
+                          </span>)
+                        }
+
+                        {(radioValue === 2) && (
+                          <span>
+                            <RangePicker
+                              showTime
+                              format="YYYY-MM-DD"
+                              placeholder={['Start Time', 'End Time']}
+                            />
+                          </span>)
+                        }
+
+                        {(radioValue === 3) && (
+                          <span>
+                            <DatePicker />
+                          </span>)
+                        }
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="已完结工作">
+                    {getFieldDecorator('number', {
+                      rules: [{ required: true, message: '已完结工作' }],
+                    })(
+                      <TextArea placeholder="已完结工作" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="未完成工作">
+                    {getFieldDecorator('isCompany', {
+                      rules: [{ required: true, message: '未完成工作' }],
+                    })(
+                      <TextArea placeholder="未完成工作" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="协助工作">
+                    {getFieldDecorator('simpleName', {
+                      rules: [{ required: false, message: '协助工作' }],
+                    })(
+                      <TextArea placeholder="协助工作" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="附件">
+                    {getFieldDecorator('englishName', {
+                      rules: [{ required: false, message: '请输入英文名称' }],
+                    })(
+                      <Upload {...props}>
+                        <Button type="primary">
+                          <Icon type="upload" /> 上传附件
+                        </Button>
+                        <span>
                           *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                      </span>
-                    </Upload>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
-                <Form.Item {...formItemLayout} label="审阅人">
-                  {getFieldDecorator('principal', {
-                    rules: [{ required: false, message: '请选择负责人' }],
-                  })(
-                    <Group>
-                      <Radio.Button value="1">汪工</Radio.Button>
-                      <Radio.Button value="2">申工</Radio.Button>
-                      <Radio.Button value="3">盛工</Radio.Button>
-                    </Group>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+                        </span>
+                      </Upload>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="审阅人">
+                    {getFieldDecorator('principal', {
+                      rules: [{ required: false, message: '请选择负责人' }],
+                    })(
+                      <Group>
+                        <Radio.Button value="1">汪工</Radio.Button>
+                        <Radio.Button value="2">申工</Radio.Button>
+                        <Radio.Button value="3">盛工</Radio.Button>
+                      </Group>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Popconfirm
+                arrowPointAtCenter={true}
+                visible={popconfirmVisible}
+                title="是否要暂存当前记录?"
+                onConfirm={confirm}
+                onCancel={cancel}
+                okText="暂存"
+                cancelText="取消"
+              />
+            </Form>
+          </div>
         </Card>
       </Modal>
     );
