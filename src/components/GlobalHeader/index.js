@@ -109,7 +109,7 @@ export default class GlobalHeader extends PureComponent {
 
         <div className={styles.right}>
 
-          <span className={`${styles.action} ${styles.search}`} > {moment().format('llll')} </span>
+          <span className={`${styles.action} ${styles.search}`} > 今天是{moment().format('llll')} </span>
           {/* <HeaderSearch
             className={`${styles.action} ${styles.search}`}
             placeholder="站内搜索"
