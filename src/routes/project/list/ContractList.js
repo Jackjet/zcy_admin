@@ -385,11 +385,12 @@ export default class Contract extends PureComponent {
         dataIndex: 'contractCode',
         width: 100,
         align: 'center',
+        fixed: 'left'
       },
       {
         title: '合同标题',
         dataIndex: 'contractName',
-        width: 100,
+        width: 130,
         align: 'center',
       },
       {
@@ -436,6 +437,8 @@ export default class Contract extends PureComponent {
       {
         title: '操作',
         align: 'center',
+        fixed: 'right',
+        width: 150,
         render: (text,record) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, record)} >查看</a>

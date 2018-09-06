@@ -1,17 +1,22 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
+import { Link,routerRedux } from 'dva/router';
 import DataSet from '@antv/data-set';
-import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge} from 'antd';
+import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button} from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Workplace.less';
 
 
+
 const { TabPane } = Tabs;
 const { Html } = Guide;
+
+
+
+
 const dataPie = [
   { item: '杭州', count: 40 },
   { item: '义乌', count: 21 },
@@ -36,9 +41,18 @@ const colsPie = {
   },
 };
 
-function callback(key) {
+
+let tolink = 'schedule/notice';
+
+
+function callback(key){
   console.log(key);
+  if(key == "notice"){
+    tolink = 'schedule/notice';
+  }
+
 }
+
 
 @connect(({ project, activities, chart, loading }) => ({
   project,
@@ -68,6 +82,14 @@ export default class Workplace extends PureComponent {
       type: 'chart/clear',
     });
   }
+
+
+
+
+
+  handlelink = () =>{
+    this.props.dispatch(routerRedux.push(tolink));
+  };
 
   handleClick = () =>{
     alert(11111111111111);
@@ -113,6 +135,13 @@ export default class Workplace extends PureComponent {
   }
 
   render() {
+
+
+
+    const morecharts =<a onClick={() =>this.handlelink()}><span style={{paddingRight:15}}>更多图表</span></a>;
+
+    const moremessage =<a onClick={() =>this.handlelink()}><span style={{paddingRight:15}}>更多</span> </a>;
+
     const {
       activitiesLoading,
       chart,
@@ -329,14 +358,14 @@ export default class Workplace extends PureComponent {
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
-              <Tabs defaultActiveKey="1" onChange={callback}>
+              <Tabs defaultActiveKey="notice" onChange={this.callback}  tabBarExtraContent={moremessage}>
                 <TabPane
                   tab={
                     <span>
                       <Icon type="notification" />公告通知
                     </span>
                   }
-                  key="1"
+                  key="notice"
                 >
                   <List
                     loading={activitiesLoading}
@@ -351,7 +380,7 @@ export default class Workplace extends PureComponent {
                       <Icon type="bell" />待办消息
                     </span>
                   }
-                  key="2"
+                  key="bellMes"
                 >
                   <List
                     loading={activitiesLoading}
@@ -366,7 +395,7 @@ export default class Workplace extends PureComponent {
                       <Icon type="bell" />预警消息
                     </span>
                   }
-                  key="3"
+                  key="Earlywarning"
                 >
                   <List
                     loading={activitiesLoading}
@@ -381,7 +410,7 @@ export default class Workplace extends PureComponent {
                       <Icon type="bell" />项目消息
                     </span>
                   }
-                  key="4"
+                  key="projctMes"
                 >
                   <List
                     loading={activitiesLoading}
@@ -415,7 +444,7 @@ export default class Workplace extends PureComponent {
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
-              <Tabs defaultActiveKey="1" onChange={callback}>
+              <Tabs defaultActiveKey="1" onChange={callback} tabBarExtraContent={morecharts}>
                 <TabPane
                   tab={
                     <span>

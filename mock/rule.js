@@ -19,14 +19,15 @@ for (let i = 0; i < 46; i += 1) {
     name: '这个字段是名字',
     no: `AAA ${i}`,
 
-    contractCode: `这个字段是合同编码${i}`,
+    contractCode: `合同编码${i}`,
     callNo: Math.floor(Math.random() * 1000),
 
     updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
 
-    contractTitle:`这个字段是合同标题 ${i}`,
+    contractName:`合同标题 ${i}`,
+    totalAmount:100,
     customerCode:`CMD ${i}`,
     customerName:`杭州至诚 ${i}`,
     linkman: `汪工${i}`,
