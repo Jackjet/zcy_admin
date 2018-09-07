@@ -2,12 +2,14 @@ import React, { PureComponent, Fragment } from 'react';
 import { List, Button, Tabs, Icon, Calendar, Badge, Card, Form, Row, Col, Input, DatePicker, Divider } from 'antd';
 import { connect } from 'dva';
 import StatementAddModal from './add/StatementAddModal2'
+import StatementViewModal from './view/StatementViewModal'
+import StatementReviewModal from './Review/StatementReviewModal'
 import styles from './Style.less';
 import StandardTable from '../../components/StandardTable';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 
-
+const statusMap = ['success', 'error'];
+const status = ['已阅', '未阅'];
 const { TabPane } = Tabs;
 const getValue = obj =>
   Object.keys(obj)
@@ -84,6 +86,8 @@ export default class WorkStatement extends PureComponent {
 
   state = {
     StatementAddVisible:false,
+    StatementViewVisible:false,
+    StatementReviewVisible:false,
     selectedRows: [],
   };
 
@@ -133,13 +137,25 @@ export default class WorkStatement extends PureComponent {
     });
   };
 
+  handleStatementViewVisible = flag => {
+    this.setState({
+      StatementViewVisible:!!flag,
+    });
+  };
+
+  handleStatementReviewVisible = flag => {
+    this.setState({
+      StatementReviewVisible:!!flag,
+    });
+  };
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <Form.Item label="关键字">
+            <Form.Item label="报告日期">
               {getFieldDecorator('no')(
                 <DatePicker />
               )}
@@ -167,10 +183,16 @@ export default class WorkStatement extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, StatementAddVisible } = this.state;
+    const { selectedRows, StatementAddVisible, StatementViewVisible, StatementReviewVisible } = this.state;
     const StatementAddMethods = {
       handleStatementAddVisible : this.handleStatementAddVisible,
-    }
+    };
+    const StatementViewMethods = {
+      handleStatementViewVisible : this.handleStatementViewVisible,
+    };
+    const StatementReviewMethods = {
+      handleStatementReviewVisible : this.handleStatementReviewVisible,
+    };
     const columns = [
       {
         title: '类型',
@@ -191,19 +213,31 @@ export default class WorkStatement extends PureComponent {
       {
         title: '状态',
         dataIndex: 'status',
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
+        },
       },
       {
         title: '操作',
         render: (text, record, index) => (
           <Fragment>
-            <a>查看</a>
-            <Divider type="vertical" />
+            {
+              (`${record.status}` === `0`)&&(
+                <a onClick={()=>this.handleStatementViewVisible(true,record)}>查看</a>
+              )
+            }
+
+            {
+              (`${record.status}` === `1`)&&(
+                <a onClick={()=>this.handleStatementReviewVisible(true,record)}>审阅</a>
+              )
+            }
           </Fragment>
         ),
       },
     ];
     return (
-      <PageHeaderLayout>
+      <div>
         <Card>
           <Tabs defaultActiveKey="1">
             <TabPane tab="我的报告" key="1">
@@ -229,8 +263,10 @@ export default class WorkStatement extends PureComponent {
             </TabPane>
           </Tabs>
           <StatementAddModal {...StatementAddMethods} StatementAddVisible={StatementAddVisible}  />
+          <StatementViewModal {...StatementViewMethods} StatementViewVisible={StatementViewVisible} />
+          <StatementReviewModal {...StatementReviewMethods} StatementReviewVisible={StatementReviewVisible} />
         </Card>
-      </PageHeaderLayout>
+      </div>
     );
   }
 }

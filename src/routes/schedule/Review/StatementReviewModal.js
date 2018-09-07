@@ -15,6 +15,7 @@ import {
   Modal,
   message,
   Popconfirm,
+  Table,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -53,7 +54,7 @@ const formItemLayout = {
   },
 };
 
-class StatementAddModal2 extends PureComponent {
+class StatementReviewModal extends PureComponent {
   state = {
     width: '100%',
     radioValue: 1,
@@ -86,9 +87,9 @@ class StatementAddModal2 extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
+    const { form, dispatch, submitting, StatementReviewVisible, handleStatementReviewVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { radioValue, popconfirmVisible } = this.state;
+    const { radioValue } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -98,20 +99,13 @@ class StatementAddModal2 extends PureComponent {
             payload: values,
           });
           form.resetFields();
-          handleStatementAddVisible(false);
+          handleStatementReviewVisible(false);
         }
       });
     };
-    const confirm = () => {
-      message.success('暂存成功');
-      handleStatementAddVisible(false);
-      this.handlePopconfirmVisible(false);
-    };
     const cancel = () => {
-      message.error('未暂存');
       form.resetFields();
-      handleStatementAddVisible(false);
-      this.handlePopconfirmVisible(false);
+      handleStatementReviewVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -152,71 +146,73 @@ class StatementAddModal2 extends PureComponent {
         </span>
       );
     };
+    const columns = [{
+      title: '审评人',
+      dataIndex: 'name',
+      key: 'name',
+    }, {
+      title: '审评日期',
+      dataIndex: 'age',
+      key: 'age',
+    }, {
+      title: '点评内容',
+      dataIndex: 'address',
+      key: 'address',
+    }];
+
+    const data = [{
+      key: '1',
+      name: '汪工',
+      age: '2018/9/7',
+      address: 'good',
+    }, {
+      key: '2',
+      name: '申工',
+      age: '2018/9/8',
+      address: 'very good',
+    }, {
+      key: '3',
+      name: '盛工',
+      age: '2018/9/9',
+      address: 'very very good',
+    }];
     return (
       <Modal
-        title="组织机构基本信息新增"
+        title="日报查看"
         style={{ top: 20 }}
-        visible={StatementAddVisible}
+        visible={StatementReviewVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() =>this.handlePopconfirmVisible(true)}
-        okText='提交'
+        onCancel={cancel}
+        okText='确定'
       >
         <Card>
           <div>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告类型">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入组织名称' }],
-                      initialValue:radioValue,
+                      initialValue:`日报`,
                     })(
-                      <Group onChange={this.handleRadioGroup}>
-                        <Radio value={1}>日报</Radio>
-                        <Radio value={2}>周报</Radio>
-                        <Radio value={3}>月报</Radio>
-                      </Group>
+                      <Input />
                     )}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告日期">
                     {getFieldDecorator('reportData', {
                       rules: [{ required: true, message: '报告日期' }],
                     })(
-                      <div>
-                        {(radioValue === 1) && (
-                          <span>
-                            <DatePicker />
-                          </span>)
-                        }
-
-                        {(radioValue === 2) && (
-                          <span>
-                            <RangePicker
-                              showTime
-                              format="YYYY-MM-DD"
-                              placeholder={['Start Time', 'End Time']}
-                            />
-                          </span>)
-                        }
-
-                        {(radioValue === 3) && (
-                          <span>
-                            <DatePicker />
-                          </span>)
-                        }
-                      </div>
+                      <DatePicker />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="已完结工作">
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '已完结工作' }],
@@ -227,7 +223,7 @@ class StatementAddModal2 extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={23} pull={1}>
                   <Form.Item {...formItemLayout} label="未完成工作">
                     {getFieldDecorator('isCompany', {
                       rules: [{ required: true, message: '未完成工作' }],
@@ -238,7 +234,7 @@ class StatementAddModal2 extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={23} pull={1}>
                   <Form.Item {...formItemLayout} label="协助工作">
                     {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '协助工作' }],
@@ -249,7 +245,7 @@ class StatementAddModal2 extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={23} pull={1}>
                   <Form.Item {...formItemLayout} label="附件">
                     {getFieldDecorator('englishName', {
                       rules: [{ required: false, message: '请输入英文名称' }],
@@ -267,7 +263,7 @@ class StatementAddModal2 extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={23} pull={1}>
                   <Form.Item {...formItemLayout} label="审阅人">
                     {getFieldDecorator('principal', {
                       rules: [{ required: false, message: '请选择负责人' }],
@@ -281,14 +277,17 @@ class StatementAddModal2 extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Popconfirm
-                visible={popconfirmVisible}
-                title="是否要暂存当前记录?"
-                onConfirm={confirm}
-                onCancel={cancel}
-                okText="暂存"
-                cancelText="取消"
-              />
+              <Row className={styles['fn-mb-15']}>
+                <Col span={24}>
+                  <Form.Item {...formItemLayout} label="审阅点评">
+                    {getFieldDecorator('principal', {
+                      rules: [{ required: false, message: '审阅点评' }],
+                    })(
+                      <Table columns={columns} dataSource={data} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
             </Form>
           </div>
         </Card>
@@ -300,4 +299,4 @@ class StatementAddModal2 extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(StatementAddModal2));
+}))(Form.create()(StatementReviewModal));

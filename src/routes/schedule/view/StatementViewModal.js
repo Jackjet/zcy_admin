@@ -53,7 +53,7 @@ const formItemLayout = {
   },
 };
 
-class StatementAddModal2 extends PureComponent {
+class StatementViewModal extends PureComponent {
   state = {
     width: '100%',
     radioValue: 1,
@@ -86,7 +86,7 @@ class StatementAddModal2 extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
+    const { form, dispatch, submitting, StatementViewVisible, handleStatementViewVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { radioValue, popconfirmVisible } = this.state;
     const validate = () => {
@@ -98,20 +98,13 @@ class StatementAddModal2 extends PureComponent {
             payload: values,
           });
           form.resetFields();
-          handleStatementAddVisible(false);
+          handleStatementViewVisible(false);
         }
       });
     };
-    const confirm = () => {
-      message.success('暂存成功');
-      handleStatementAddVisible(false);
-      this.handlePopconfirmVisible(false);
-    };
     const cancel = () => {
-      message.error('未暂存');
       form.resetFields();
-      handleStatementAddVisible(false);
-      this.handlePopconfirmVisible(false);
+      handleStatementViewVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -156,11 +149,11 @@ class StatementAddModal2 extends PureComponent {
       <Modal
         title="组织机构基本信息新增"
         style={{ top: 20 }}
-        visible={StatementAddVisible}
+        visible={StatementViewVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() =>this.handlePopconfirmVisible(true)}
+        onCancel={cancel}
         okText='提交'
       >
         <Card>
@@ -281,14 +274,6 @@ class StatementAddModal2 extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Popconfirm
-                visible={popconfirmVisible}
-                title="是否要暂存当前记录?"
-                onConfirm={confirm}
-                onCancel={cancel}
-                okText="暂存"
-                cancelText="取消"
-              />
             </Form>
           </div>
         </Card>
@@ -300,4 +285,4 @@ class StatementAddModal2 extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(StatementAddModal2));
+}))(Form.create()(StatementViewModal));
