@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
-import Login from 'components/Login';
+import Login from '../../components/Login';
 
 const {  Mobile, Captcha } = Login;
 
@@ -13,10 +13,9 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 
-@connect(({ login,register, loading }) => ({
+@connect(({ login, loading }) => ({
   login,
-  register,
-  submitting: loading.effects['register/submitReset'],
+  submitting: loading.effects['login/submitReset'],
 }))
 @Form.create()
 export default class ResetPassword extends Component {
@@ -30,7 +29,7 @@ export default class ResetPassword extends Component {
 
   componentWillReceiveProps(nextProps) {
     const account = this.props.form.getFieldValue('mobile');
-    if (nextProps.register.status === 'resetTest') {
+    if (nextProps.login.status === 'resetTest') {
       this.props.dispatch(
         routerRedux.push ({
           pathname: '/user/modify',
@@ -70,12 +69,11 @@ export default class ResetPassword extends Component {
     return 'poor';
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
+  handleSubmit = () => {
     this.props.form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         this.props.dispatch({
-          type: 'register/submitReset',
+          type: 'login/submitReset',
           payload: {
             ...values,
             prefix: this.state.prefix,
@@ -157,13 +155,13 @@ export default class ResetPassword extends Component {
       <div className={styles.main}>
         <h3>重置密码</h3>
         <Login  onSubmit={this.handleSubmit}>
-        <div>
-          {login.status === 'error' &&
-          !login.submitting &&
-          this.renderMessage('验证码错误')}
-          <Mobile name="mobile" />
-          <Captcha name="captcha" />
-        </div>
+          <div>
+            {login.status === 'error' &&
+            !login.submitting &&
+            this.renderMessage('验证码错误')}
+            <Mobile name="mobile" />
+            <Captcha name="captcha" />
+          </div>
           <div>
             <Button
               size="large"
@@ -178,7 +176,6 @@ export default class ResetPassword extends Component {
               返回登录
             </Link>
           </div>
-
         </Login>
       </div>
     );
