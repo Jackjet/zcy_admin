@@ -84,11 +84,11 @@ export default class LoginPage extends Component {
         <div className={styles["ercode-open"]} id="qrcodeModal">
           <a href="javascript:;" onClick={()=>{this.showHideQRModal(0)}}  className={styles['code_close']}><span className={styles['close-btn']}></span></a>
           <div  className={styles["head"]}>
-            <h3>扫码二维码登录至诚云APP</h3>
-            <p>请打开至诚云APP应用，‘扫一扫’登录</p>
+            <h3>扫码二维码登录至诚云</h3>
+            <p>请打开至诚云APP，‘扫一扫’登录</p>
           </div>
-          <div >
-            <img src />
+          <div className={styles['ercode-con']}>
+            <img src={'../../src/assets/1536566323.png'} />
           </div>
         </div>
 

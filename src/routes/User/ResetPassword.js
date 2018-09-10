@@ -69,18 +69,33 @@ export default class ResetPassword extends Component {
     return 'poor';
   };
 
-  handleSubmit = () => {
-    this.props.form.validateFields({ force: true }, (err, values) => {
-      if (!err) {
-        this.props.dispatch({
-          type: 'login/submitReset',
-          payload: {
-            ...values,
-            prefix: this.state.prefix,
-          },
-        });
-      }
-    });
+  // handleSubmit = () => {
+  //   this.props.form.validateFields({ force: true }, (err, values) => {
+  //     if (!err) {
+  //       this.props.dispatch({
+  //         type: 'login/submitReset',
+  //         payload: {
+  //           ...values,
+  //           prefix: this.state.prefix,
+  //         },
+  //       });
+  //     }else{
+  //
+  //     }
+  //   });
+  // };
+
+  handleSubmit = (err, values) => {
+    const { prefix } = this.state;
+    if (!err) {
+      this.props.dispatch({
+        type: 'login/submitReset',
+        payload: {
+          ...values,
+          prefix,
+        },
+      });
+    }
   };
 
   handleConfirmBlur = e => {

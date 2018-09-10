@@ -173,7 +173,7 @@ export default class ModifyPassword extends Component {
     const { count, prefix } = this.state;
     return (
       <div className={styles.main}>
-        <h3>重置密码</h3>
+        <h3>重置密码---至诚会计事务所项目管理系统</h3>
         <Form layout="horizontal" onSubmit={this.handleSubmit}>
           <Row gutter={24}>
             <Col>

@@ -37,16 +37,16 @@ const map = {
     props: {
       size: 'large',
       prefix: <Icon type="mobile" className={styles.prefixIcon} />,
-      placeholder: 'mobile number',
+      placeholder: '手机号码',
     },
     rules: [
       {
         required: true,
-        message: 'Please enter mobile number!',
+        message: '请输入手机号码!',
       },
       {
         pattern: /^1\d{10}$/,
-        message: 'Wrong mobile number format!',
+        message: '手机号码格式不对!',
       },
     ],
   },
@@ -55,12 +55,12 @@ const map = {
     props: {
       size: 'large',
       prefix: <Icon type="mail" className={styles.prefixIcon} />,
-      placeholder: 'captcha',
+      placeholder: '验证码',
     },
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入验证码!',
       },
     ],
   },
