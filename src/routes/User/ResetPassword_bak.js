@@ -3,9 +3,8 @@ import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
-import Login from 'components/Login';
 
-const {  Mobile, Captcha } = Login;
+const FormItem = Form.Item;
 
 const passwordProgressMap = {
   ok: 'success',
@@ -13,8 +12,7 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 
-@connect(({ login,register, loading }) => ({
-  login,
+@connect(({ register, loading }) => ({
   register,
   submitting: loading.effects['register/submitReset'],
 }))
@@ -151,35 +149,74 @@ export default class ResetPassword extends Component {
   };
 
   render() {
-    const { login, submitting } = this.props;
+    const { form, submitting } = this.props;
+    const { getFieldDecorator } = form;
     const { count, prefix } = this.state;
     return (
       <div className={styles.main}>
-        <h3>重置密码</h3>
-        <Login  onSubmit={this.handleSubmit}>
-        <div>
-          {login.status === 'error' &&
-          !login.submitting &&
-          this.renderMessage('验证码错误')}
-          <Mobile name="mobile" />
-          <Captcha name="captcha" />
-        </div>
-          <div>
-            <Button
-              size="large"
-              loading={submitting}
-              className={styles.submit}
-              type="primary"
-              htmlType="submit"
-            >
-              下一步
-            </Button>
-            <Link className={styles.login} to="/user/login">
-              返回登录
-            </Link>
-          </div>
-
-        </Login>
+        <h3>重置密码---至诚会计事务所项目管理系统</h3>
+        <Form layout="horizontal" onSubmit={this.handleSubmit}>
+          <Row gutter={24}>
+            <Col>
+              <FormItem label="手机号">
+                {getFieldDecorator('mobile', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入手机号！ ',
+                    },
+                  ],
+                })(
+                  <Input size="large" placeholder="11位手机号" />
+                )}
+              </FormItem>
+            </Col>
+            <Col>
+              <FormItem label="验证码">
+                <Row gutter={8}>
+                  <Col span={16}>
+                    {getFieldDecorator('captcha', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入验证码！',
+                        },
+                      ],
+                    })(
+                      <Input size="large" placeholder="验证码" />
+                    )}
+                  </Col>
+                  <Col span={8}>
+                    <Button
+                      size="large"
+                      disabled={count}
+                      className={styles.getCaptcha}
+                      onClick={this.onGetCaptcha}
+                    >
+                      {count ? `${count} s` : '获取验证码'}
+                    </Button>
+                  </Col>
+                </Row>
+              </FormItem>
+            </Col>
+            <Col>
+              <FormItem >
+                <Button
+                  size="large"
+                  loading={submitting}
+                  className={styles.submit}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  下一步
+                </Button>
+                <Link className={styles.login} to="/user/login">
+                  返回登录
+                </Link>
+              </FormItem>
+            </Col>
+          </Row>
+        </Form>
       </div>
     );
   }
