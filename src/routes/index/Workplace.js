@@ -89,6 +89,7 @@ export default class Workplace extends PureComponent {
 
   handlelink = () =>{
     this.props.dispatch(routerRedux.push(tolink));
+    window.scrollTo(0,0)
   };
 
   handleClick = () =>{
