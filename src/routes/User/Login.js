@@ -4,6 +4,7 @@ import { Link } from 'dva/router';
 import { Checkbox, Alert, Icon } from 'antd';
 import Login from 'components/Login';
 import styles from './Login.less';
+import $ from  'jquery';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
@@ -40,6 +41,16 @@ export default class LoginPage extends Component {
     });
   };
 
+  showHideQRModal(state){
+    var obj = $("#qrcodeModal");
+    if(state===1){
+      obj.show();
+    }else{
+      obj.hide();
+    }
+  }
+
+
   renderMessage = content => {
     return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
   };
@@ -49,7 +60,7 @@ export default class LoginPage extends Component {
     const { type } = this.state;
     return (
       <div className={styles.main}>
-        <a href="javascript:;" className={styles.ercode} ></a>
+        <a href="javascript:;" className={styles.ercode} onClick={()=>{this.showHideQRModal(1)}} ></a>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
          <div>
             {login.status === 'error' &&
@@ -70,6 +81,17 @@ export default class LoginPage extends Component {
           </div>
           <Submit loading={submitting}>登录</Submit>
         </Login>
+
+        <div className={styles["ercode-open"]} id="qrcodeModal">
+          <a href="javascript:;" onClick={()=>{this.showHideQRModal(0)}}  className={styles['code_close']}><span className={styles['close-btn']}></span></a>
+          <div  className={styles["head"]}>
+            <h3>扫码二维码登录至诚云APP</h3>
+            <p>请打开至诚云APP应用，‘扫一扫’登录</p>
+          </div>
+          <div >
+            <img src />
+          </div>
+        </div>
 
       </div>
     );
