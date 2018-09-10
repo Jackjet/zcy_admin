@@ -51,11 +51,11 @@ export default class LoginPage extends Component {
       <div className={styles.main}>
         <a href="javascript:;" className={styles.ercode} ></a>
         <Login defaultActiveKey={type} onTabChange={this.onTabChange} onSubmit={this.handleSubmit}>
-         <div>
+          <div>
             {login.status === 'error' &&
-              login.type === 'account' &&
-              !login.submitting &&
-              this.renderMessage('账户或密码错误（admin/888888）')}
+            login.type === 'account' &&
+            !login.submitting &&
+            this.renderMessage('账户或密码错误（admin/888888）')}
             <UserName name="userName" placeholder="请输入手机号" />
             <Password name="password" placeholder="请输入密码" />
           </div>
@@ -64,8 +64,7 @@ export default class LoginPage extends Component {
               记住用户
             </Checkbox>
             <Link className={styles.register} to="/user/reset">
-              忘记密码
-            </Link>
+              忘记密码</Link>
 
           </div>
           <Submit loading={submitting}>登录</Submit>

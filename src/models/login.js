@@ -1,7 +1,8 @@
 import { routerRedux } from 'dva/router';
-import { fakeAccountLogin } from '../services/api';
+import {fakeAccountLogin, fakeReset, fakeRegister} from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
+
 
 export default {
   namespace: 'login',
@@ -43,6 +44,13 @@ export default {
         yield put(routerRedux.push('/user/login'));
       }
     },
+    *submitReset(_, { call, put }) {
+      const response = yield call(fakeReset);
+      yield put({
+        type: 'registerHandle',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -52,6 +60,14 @@ export default {
         ...state,
         status: payload.status,
         type: payload.type,
+      };
+    },
+    registerHandle(state, { payload }) {
+      setAuthority('user');
+      reloadAuthorized();
+      return {
+        ...state,
+        status: payload.status,
       };
     },
   },
