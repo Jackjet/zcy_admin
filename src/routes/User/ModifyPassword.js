@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
+import { Form, Input, Icon,Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
 
 const FormItem = Form.Item;
@@ -30,6 +30,11 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+
+
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
 
 @connect(({ register, loading }) => ({
   register,
@@ -87,9 +92,14 @@ export default class ModifyPassword extends Component {
     return 'poor';
   };
 
+  componentDidMount() {
+    // To disabled submit button at the beginning.
+    this.props.form.validateFields();
+  }
+
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields({ force: true }, (err, values) => {
+    this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.dispatch({
           type: 'register/submit',
@@ -109,7 +119,7 @@ export default class ModifyPassword extends Component {
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
+    if (value && value !== form.getFieldValue('newpassword1')) {
       callback('两次输入的密码不匹配!');
     } else {
       callback();
@@ -119,7 +129,7 @@ export default class ModifyPassword extends Component {
   checkPassword = (rule, value, callback) => {
     if (!value) {
       this.setState({
-        help: '请输入密码！',
+        help: '请输入新密码！',
         visible: !!value,
       });
       callback('error');
@@ -137,7 +147,7 @@ export default class ModifyPassword extends Component {
       } else {
         const { form } = this.props;
         if (value && this.state.confirmDirty) {
-          form.validateFields(['confirm'], { force: true });
+          form.validateFields(['newpassword2'], { force: true });
         }
         callback();
       }
@@ -152,7 +162,7 @@ export default class ModifyPassword extends Component {
 
   renderPasswordProgress = () => {
     const { form } = this.props;
-    const value = form.getFieldValue('password');
+    const value = form.getFieldValue('newpassword1');
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
@@ -168,23 +178,25 @@ export default class ModifyPassword extends Component {
   };
 
   render() {
+    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
     const { form, submitting } = this.props;
-    const { getFieldDecorator } = form;
     const { count, prefix } = this.state;
+    const password1Error = isFieldTouched('newpassword1') && getFieldError('newpassword1');
+    const password2Error = isFieldTouched('newpassword2') && getFieldError('newpassword2');
     return (
       <div className={styles.main}>
         <h3>重置密码</h3>
         <Form layout="horizontal" onSubmit={this.handleSubmit}>
           <Row gutter={24}>
             <Col>
-              <FormItem label="新密码" help={this.state.help}>
+              <FormItem  validateStatus={password1Error ? 'error' : ''} help={this.state.help}>
                 <Popover
                   content={
                     <div style={{ padding: '4px 0' }}>
                       {passwordStatusMap[this.getPasswordStatus()]}
                       {this.renderPasswordProgress()}
                       <div style={{ marginTop: 10 }}>
-                        请至少输入 6 个字符。请不要使用容易被猜到的密码。
+                        请至少输入 6 位字符。包含字母、数字、下划线。
                       </div>
                     </div>
                   }
@@ -192,23 +204,23 @@ export default class ModifyPassword extends Component {
                   placement="right"
                   visible={this.state.visible}
                 >
-                  {getFieldDecorator('password', {
+                  {getFieldDecorator('newpassword1', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入密码！',
+                        message: '请输入新密码！',
                       },
                       {
                         validator: this.checkPassword,
                       },
                     ],
-                  })(<Input size="large" type="password" placeholder="至少6位密码，区分大小写" />)}
+                  })(<Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} size="large" type="password" placeholder="至少6位密码，区分大小写" />)}
                 </Popover>
               </FormItem>
             </Col>
             <Col>
-              <FormItem label="确认密码">
-                {getFieldDecorator('confirm', {
+              <FormItem validateStatus={password2Error ? 'error' : ''} >
+                {getFieldDecorator('newpassword2', {
                   rules: [
                     {
                       required: true,
@@ -218,7 +230,7 @@ export default class ModifyPassword extends Component {
                       validator: this.checkConfirm,
                     },
                   ],
-                })(<Input size="large" type="password" placeholder="确认密码" />)}
+                })(<Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} size="large" type="password" placeholder="确认密码" />)}
               </FormItem>
             </Col>
             <Col>
@@ -229,6 +241,7 @@ export default class ModifyPassword extends Component {
                   className={styles.submit}
                   type="primary"
                   htmlType="submit"
+                  disabled={hasErrors(getFieldsError())}
                 >
                   确定
                 </Button>
