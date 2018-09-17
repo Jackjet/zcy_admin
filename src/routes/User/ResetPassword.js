@@ -100,6 +100,7 @@ export default class ResetPassword extends Component {
 
   render() {
     const { login, submitting } = this.props;
+
     const { count, prefix } = this.state;
     return (
       <div className={styles.main}>
