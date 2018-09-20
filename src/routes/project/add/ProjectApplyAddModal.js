@@ -20,6 +20,9 @@ import {
   Tree,
   Transfer,
   Steps,
+  Divider,
+  Table,
+  message,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import { connect } from 'dva';
@@ -52,7 +55,7 @@ const fileList = [
 ];
 const props2 = {
   action: '//jsonplaceholder.typicode.com/posts/',
-  listType: 'picture',
+  listType: 'text',
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
@@ -60,73 +63,6 @@ const { TextArea } = Input;
 const { Panel } = Collapse;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const optionshz = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
-const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
-const IndustryOption = ['制造业','服务业','房地产建筑','三农业务','政府购买','商业','金融','非营利组织','其他'];
-const IncomeTaxOption = ['查账征收','核定征收'];
-const statusOption = ['保存','启用','禁用'];
-
-
-/*const fieldLabels = {
-  customerCode: '客户编码',
-  customerLevel: '客户等级',
-  industry: '所属行业',
-  customerName: '客户名称',
-  dateRange: '生效日期',
-  simpleName: '简称',
-  pinyin: ' 拼 音 码 ',
-  url: '网站主页',
-  taxCode: '税务登记号',
-  mobilePhone: '移动电话',
-  email: '电子邮箱',
-  companyPhone: '办公电话',
-  postalCode: '邮政编码',
-  region: '所在区域',
-  incomeTax: '所得税征收方式',
-  company: '所属公司',
-  address: '详细地址',
-  remark: '备注',
-  status: '状态',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
-};*/
-
 const fieldLabels = {
   ProjectCode:'项目编码',
   ReportName: '报告名称',
@@ -185,9 +121,6 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-function onChange(value) {
-  console.log(value);
-}
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -197,10 +130,6 @@ function onChange(value) {
 class ProjectApplyAddModal extends PureComponent {
   state = {
     width: '100%',
-    levelOptionData: [],
-    industryOptionData:[],
-    incomeTaxOptionData:[],
-    statusOptionData:[],
     selectedRows:[],
     targetKeys:[],
     selectedKeys: [],
@@ -212,6 +141,24 @@ class ProjectApplyAddModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
+  handleUploadFile = (info)=>{
+    console.log(`${info.file.name}+1111`)
+  };
+
+  handleOnChange = (info)=>{
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      console.log(`${info.file.name}`)
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+      this.handleUploadFile(info);
+      console.log(`${info.file.name}`)
+    }
+  };
+
   handleChange = (nextTargetKeys) => {
     this.setState({ targetKeys: nextTargetKeys });
   };
@@ -220,41 +167,6 @@ class ProjectApplyAddModal extends PureComponent {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
 
-  handleLevelChange = () => {
-    this.setState({
-      levelOptionData: CustomerOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-  handleIndustryChange = () => {
-    this.setState({
-      industryOptionData: IndustryOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-  handleIncomeTaxChange = () => {
-    this.setState({
-      incomeTaxOptionData: IncomeTaxOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-  handleStatusChange = () => {
-    this.setState({
-      statusOptionData: statusOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
 
   // 选中的行
   handleSelectRows = rows => {
@@ -361,6 +273,47 @@ class ProjectApplyAddModal extends PureComponent {
         </span>
       );
     };
+    const uploadProps = {
+      name: 'file',
+      action: '//jsonplaceholder.typicode.com/posts/',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      showUploadList:false,
+      onChange:this.handleOnChange,
+    };
+    const uploadColumns = [{
+      title: '文件名称',
+      dataIndex: 'name',
+      key: 'name',
+      render: text => <a>{text}</a>,
+    }, {
+      title: '操作',
+      dataIndex: 'age',
+      key: 'age',
+      render: text => <a>{text}</a>,
+    }, {
+      title: '版本',
+      dataIndex: 'address',
+      key: 'address',
+      render: text => <a>{text}</a>,
+    }];
+    const uploadData = [{
+      key: '1',
+      name: '文件1',
+      age: '在线编辑',
+      address: '3.0',
+    }, {
+      key: '2',
+      name: '文件2',
+      age: '在线编辑',
+      address: '2.0',
+    }, {
+      key: '3',
+      name: '文件3',
+      age: '在线编辑',
+      address: '1.0',
+    }];
     const columns = [
       {
         title: '清单编号',
@@ -685,40 +638,62 @@ class ProjectApplyAddModal extends PureComponent {
               <Panel header="资料上传" key="3">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
+                    <Form.Item {...formItemLayout} label='底稿'>
                       {getFieldDecorator('companyName', {
-                        rules: [{ required: true, message: '请输入单位名称' }],
-                      })(<Input placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                        rules: [{ required: false, message: '请输入单位名称' }],
+                      })(
+                        <div>
+                          <Upload {...uploadProps}>
+                            <Button>
+                              <Icon type="upload" /> 底稿
+                            </Button>
+                          </Upload>
+                          <br />
+                        </div>
+                      )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
-                      {getFieldDecorator('companyAddress', {
-                        rules: [{ required: true, message: '请输入单位地址' }],
-                      })(<Input placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                    <Form.Item {...formItemLayout} label='文档'>
+                      {getFieldDecorator('companyName', {
+                        rules: [{ required: false, message: '请输入单位名称' }],
+                      })(
+                        <div>
+                          <Upload {...props2}>
+                            <Button>
+                              <Icon type="upload" /> 文档
+                            </Button>
+                          </Upload>
+                        </div>
+                      )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
-                      {getFieldDecorator('taxNumber', {
-                        rules: [{ required: true, message: '请输入税号' }],
-                      })(<Input placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                    <Form.Item {...formItemLayout} label='图片'>
+                      {getFieldDecorator('companyName', {
+                        rules: [{ required: false, message: '请输入单位名称' }],
+                      })(
+                        <div>
+                          <Upload {...props2}>
+                            <Button>
+                              <Icon type="upload" /> 图片
+                            </Button>
+                          </Upload>
+                        </div>
+                      )}
                     </Form.Item>
                   </Col>
                 </Row>
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
-                      {getFieldDecorator('openAccountBank', {
-                        rules: [{ required: true, message: '请输入开户银行' }],
-                      })(<Input placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
-                      {getFieldDecorator('bankAccount', {
-                        rules: [{ required: true, message: '请输入银行账户' }],
-                      })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                    <Form.Item {...formItemLayout} label='底稿'>
+                      {getFieldDecorator('companyName', {
+                        rules: [{ required: false, message: '请输入单位名称' }],
+                      })(
+                        <div>
+                          <Table columns={uploadColumns} dataSource={uploadData} />
+                        </div>
+                      )}
                     </Form.Item>
                   </Col>
                 </Row>

@@ -58,7 +58,6 @@ class StatementReviewModal extends PureComponent {
   state = {
     width: '100%',
     radioValue: 1,
-    popconfirmVisible:false,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -72,13 +71,6 @@ class StatementReviewModal extends PureComponent {
       radioValue: e.target.value,
     });
   };
-
-  handlePopconfirmVisible = (flag) => {
-    this.setState({
-      popconfirmVisible:!!flag,
-    });
-  };
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;

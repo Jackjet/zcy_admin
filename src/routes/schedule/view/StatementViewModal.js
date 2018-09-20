@@ -15,30 +15,23 @@ import {
   Modal,
   message,
   Popconfirm,
+  Tag,
+  Table,
+  Divider,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './Style.less';
 
-
-
-const props = {
-  name: 'file',
-  action: '//jsonplaceholder.typicode.com/posts/',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+const dataTest = [];
+for (let i = 0; i < 46; i+=1) {
+  dataTest.push({
+    key: i,
+    name: `Edward King ${i}`,
+    age: 32,
+    address: `London, Park Lane no. ${i}`,
+  });
+}
 const { RangePicker } = DatePicker;
 const { Group } = Radio;
 const { TextArea } = Input;
@@ -56,8 +49,7 @@ const formItemLayout = {
 class StatementViewModal extends PureComponent {
   state = {
     width: '100%',
-    radioValue: 1,
-    popconfirmVisible:false,
+    dataDemo: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -65,19 +57,25 @@ class StatementViewModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-
-  handleRadioGroup = (e)=>{
-    this.setState({
-      radioValue: e.target.value,
-    });
+  handleUploadFile = (info)=>{
+    console.log(`${info.file.name}+1111`)
   };
-
-  handlePopconfirmVisible = (flag) => {
-    this.setState({
-      popconfirmVisible:!!flag,
-    });
+  handleChange = (info)=>{
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      console.log(`${info.file.name}`);
+      this.setState({
+        dataDemo:dataTest,
+      });
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+      this.handleUploadFile(info);
+      console.log(`${info.file.name}`)
+    }
   };
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -88,7 +86,7 @@ class StatementViewModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, StatementViewVisible, handleStatementViewVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { radioValue, popconfirmVisible } = this.state;
+    const { dataDemo } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -145,12 +143,45 @@ class StatementViewModal extends PureComponent {
         </span>
       );
     };
+    const uploadProps = {
+      name: 'file',
+      action: '//jsonplaceholder.typicode.com/posts/',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      showUploadList:false,
+      onChange:this.handleChange,
+    };
+    const columns = [{
+      title: '文件名称',
+      dataIndex: 'fileName',
+      key: 'name',
+      render: text => <a href="">{text}</a>,
+    }, {
+      title: '文档类型',
+      dataIndex: 'fileType',
+      key: 'type',
+    }, {
+      title: '上传(更新)时间',
+      dataIndex: 'uploadTime',
+      key: 'address',
+    }, {
+      title: '操作',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <a href="">下载</a>
+          <Divider type="vertical" />
+          <a href="">删除</a>
+        </span>
+      ),
+    }];
     return (
       <Modal
-        title="组织机构基本信息新增"
+        title="查看"
         style={{ top: 20 }}
         visible={StatementViewVisible}
-        width="55%"
+        width="65%"
         maskClosable={false}
         onOk={validate}
         onCancel={cancel}
@@ -160,56 +191,28 @@ class StatementViewModal extends PureComponent {
           <div>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={12} >
                   <Form.Item {...formItemLayout} label="报告类型">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入组织名称' }],
-                      initialValue:radioValue,
+                      initialValue:`日报`,
                     })(
-                      <Group onChange={this.handleRadioGroup}>
-                        <Radio value={1}>日报</Radio>
-                        <Radio value={2}>周报</Radio>
-                        <Radio value={3}>月报</Radio>
-                      </Group>
+                      <Input style={{width:'80%'}} />
                     )}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告日期">
                     {getFieldDecorator('reportData', {
                       rules: [{ required: true, message: '报告日期' }],
                     })(
-                      <div>
-                        {(radioValue === 1) && (
-                          <span>
-                            <DatePicker />
-                          </span>)
-                        }
-
-                        {(radioValue === 2) && (
-                          <span>
-                            <RangePicker
-                              showTime
-                              format="YYYY-MM-DD"
-                              placeholder={['Start Time', 'End Time']}
-                            />
-                          </span>)
-                        }
-
-                        {(radioValue === 3) && (
-                          <span>
-                            <DatePicker />
-                          </span>)
-                        }
-                      </div>
+                      <DatePicker />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label="已完结工作">
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '已完结工作' }],
@@ -220,7 +223,7 @@ class StatementViewModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label="未完成工作">
                     {getFieldDecorator('isCompany', {
                       rules: [{ required: true, message: '未完成工作' }],
@@ -231,7 +234,7 @@ class StatementViewModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label="协助工作">
                     {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '协助工作' }],
@@ -242,25 +245,42 @@ class StatementViewModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label="附件">
                     {getFieldDecorator('englishName', {
                       rules: [{ required: false, message: '请输入英文名称' }],
                     })(
-                      <Upload {...props}>
-                        <Button type="primary">
-                          <Icon type="upload" /> 上传附件
-                        </Button>
-                        <span>
-                          *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                        </span>
-                      </Upload>
+                      <div>
+                        <Upload
+                          {...uploadProps}
+                        >
+                          <Button type="primary">
+                            <Icon type="upload" /> 上传附件
+                          </Button>
+                          <span>
+                            *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                          </span>
+                        </Upload>
+                      </div>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24}>
+                <Col span={21} pull={3}>
+                  <Form.Item {...formItemLayout} label="附件列表">
+                    {getFieldDecorator('englishName', {
+                      rules: [{ required: false, message: '附件列表' }],
+                    })(
+                      <div>
+                        <Table columns={columns} dataSource={dataDemo} />
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label="审阅人">
                     {getFieldDecorator('principal', {
                       rules: [{ required: false, message: '请选择负责人' }],
@@ -270,6 +290,17 @@ class StatementViewModal extends PureComponent {
                         <Radio.Button value="2">申工</Radio.Button>
                         <Radio.Button value="3">盛工</Radio.Button>
                       </Group>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={21} pull={3}>
+                  <Form.Item {...formItemLayout} label="审阅点评">
+                    {getFieldDecorator('principal', {
+                      rules: [{ required: false, message: '审阅点评' }],
+                    })(
+                      <TextArea placeholder="审阅点评" />
                     )}
                   </Form.Item>
                 </Col>
