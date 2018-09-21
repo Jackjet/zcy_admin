@@ -3,7 +3,7 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Link,routerRedux } from 'dva/router';
 import DataSet from '@antv/data-set';
-import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button} from 'antd';
+import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button, Divider} from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -13,10 +13,6 @@ import styles from './Workplace.less';
 
 const { TabPane } = Tabs;
 const { Html } = Guide;
-
-
-
-
 const dataPie = [
   { item: '杭州', count: 40 },
   { item: '义乌', count: 21 },
@@ -42,13 +38,12 @@ const colsPie = {
 };
 
 
-let tolink = 'schedule/notice';
-
+let toLink = 'schedule/notice';
 
 function callback(key){
   console.log(key);
-  if(key == "notice"){
-    tolink = 'schedule/notice';
+  if(key === "notice"){
+    toLink = 'schedule/notice';
   }
 
 }
@@ -84,16 +79,13 @@ export default class Workplace extends PureComponent {
   }
 
 
-
-
-
-  handlelink = () =>{
-    this.props.dispatch(routerRedux.push(tolink));
+  handleLink = () =>{
+    this.props.dispatch(routerRedux.push(toLink));
     window.scrollTo(0,0)
   };
 
   handleClick = () =>{
-    alert(11111111111111);
+    console.log(11111111111111);
   };
 
   handleArea = () =>{
@@ -136,12 +128,9 @@ export default class Workplace extends PureComponent {
   }
 
   render() {
+    const moreCharts =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多图表</span></a>;
 
-
-
-    const morecharts =<a onClick={() =>this.handlelink()}><span style={{paddingRight:15}}>更多图表</span></a>;
-
-    const moremessage =<a onClick={() =>this.handlelink()}><span style={{paddingRight:15}}>更多</span> </a>;
+    const moreMessage =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多</span> </a>;
 
     const {
       activitiesLoading,
@@ -359,7 +348,7 @@ export default class Workplace extends PureComponent {
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
-              <Tabs defaultActiveKey="notice" onChange={this.callback}  tabBarExtraContent={moremessage}>
+              <Tabs defaultActiveKey="notice" onChange={this.callback}  tabBarExtraContent={moreMessage}>
                 <TabPane
                   tab={
                     <span>
@@ -432,6 +421,15 @@ export default class Workplace extends PureComponent {
               loading={activitiesLoading}
             >
               <div className="calendar-all" id="homeCalendarCon">
+                <div className={styles['ant-fullcalendar-header-buttonhz']}>
+                  <a type="primary" >新增日程</a>
+                  <Divider type="vertical" />
+                  <Link
+                    to='/schedule/schedulelist'
+                    onClick={this.handleArea}
+                  >日常管理
+                  </Link>
+                </div>
                 <Calendar fullscreen={false} />
               </div>
             </Card>
@@ -445,7 +443,7 @@ export default class Workplace extends PureComponent {
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
-              <Tabs defaultActiveKey="1" onChange={callback} tabBarExtraContent={morecharts}>
+              <Tabs defaultActiveKey="1" onChange={callback} tabBarExtraContent={moreCharts}>
                 <TabPane
                   tab={
                     <span>
@@ -455,10 +453,10 @@ export default class Workplace extends PureComponent {
                   key="1"
                 >
                   <Row>
-                    <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+                    <Col xl={12} lg={24} md={24} sm={24} xs={24}>
                       <Chart
-                        width={500}
-                        height={500}
+                        width={400}
+                        height={400}
                         data={dv}
                         scale={colsPie}
                         padding={[ 80, 100, 80, 80 ]}
@@ -467,13 +465,13 @@ export default class Workplace extends PureComponent {
                       >
                         <Coord type='theta' radius={0.75} innerRadius={0.6} />
                         <Axis name="percent" />
-                        <Legend position='bottom' />
+                        <Legend position='right' offsetY={-window.innerHeight / 2 + 240} offsetX={-100} />
                         <Tooltip
                           showTitle={false}
                           itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
                         />
                         <Guide >
-                          <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
+                          <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:0.84em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
                         </Guide>
                         <Geom
                           type="intervalStack"
@@ -490,13 +488,64 @@ export default class Workplace extends PureComponent {
                         >
                           <Label
                             content='percent'
-                            formatter={(val, item) => {
-                            return item.point.item + ': ' + val;}}
+                            offset={-20}
+                            textStyle={{
+                            rotate: 0,
+                            textAlign: 'center',
+                            shadowBlur: 2,
+                            shadowColor: 'rgba(0, 0, 0, .45)',
+                          }}
                           />
                         </Geom>
                       </Chart>
                     </Col>
-                    <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+                    <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                      <Chart
+                        width={400}
+                        height={400}
+                        data={dv}
+                        scale={colsPie}
+                        padding={[ 80, 100, 80, 80 ]}
+                        onPlotClick={()=>this.handleClick()}
+                        forceFit
+                      >
+                        <Coord type='theta' radius={0.75} innerRadius={0.6} />
+                        <Axis name="percent" />
+                        <Legend position='right' offsetY={-window.innerHeight / 2 + 240} offsetX={-100} />
+                        <Tooltip
+                          showTitle={false}
+                          itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+                        />
+                        <Guide >
+                          <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:0.84em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
+                        </Guide>
+                        <Geom
+                          type="intervalStack"
+                          position="percent"
+                          color='item'
+                          tooltip={['item*percent',(item, percent) => {
+                            percent = percent * 100 + '%';
+                            return {
+                              name: item,
+                              value: percent,
+                            };
+                          }]}
+                          style={{lineWidth: 1,stroke: '#fff'}}
+                        >
+                          <Label
+                            content='percent'
+                            offset={-20}
+                            textStyle={{
+                              rotate: 0,
+                              textAlign: 'center',
+                              shadowBlur: 2,
+                              shadowColor: 'rgba(0, 0, 0, .45)',
+                            }}
+                          />
+                        </Geom>
+                      </Chart>
+                    </Col>
+                    {/*    <Col xl={12} lg={12} md={12} sm={24} xs={24}>
                       <Chart
                         width={500}
                         height={500}
@@ -535,7 +584,7 @@ export default class Workplace extends PureComponent {
                           />
                         </Geom>
                       </Chart>
-                    </Col>
+                    </Col>*/}
                   </Row>
                 </TabPane>
                 <TabPane

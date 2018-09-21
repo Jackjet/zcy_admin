@@ -11,6 +11,7 @@ import {
   Radio,
   Icon,
   Tooltip,
+  Modal,
 } from 'antd';
 import styles from './AddSchedule.less';
 
@@ -55,10 +56,12 @@ const { TextArea } = Input;
     };
 
     return (
-      <Modal visible={TwoschduleAddVisible}
-             onCancel={handleAddTwoScheduleVisible(false)}
-             onOk={handleAddTwoScheduleVisible(false)}
-             title="新增双周计划" >
+      <Modal
+        visible={TwoschduleAddVisible}
+        onCancel={handleAddTwoScheduleVisible(false)}
+        onOk={handleAddTwoScheduleVisible(false)}
+        title="新增双周计划"
+      >
         <div>
           <Card bordered={false}>
             <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>

@@ -92,7 +92,6 @@ export default class CalendarAll extends PureComponent {
             </TabPane>
           </Tabs>
         </Card>
-        r
       </PageHeaderLayout>
     );
   }
