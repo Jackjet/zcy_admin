@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import { List, Button, Tabs, Icon, Calendar, Badge, Card } from 'antd';
+import { List, Button, Tabs, Icon, Calendar, Badge, Card, Form } from 'antd';
+import { connect } from 'dva';
+import ScheduleAddModal from './ScheduleAddModal';
 import styles from './calendarAll.less';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import AddSchedule from './AddSchedule';
-const TabPane = Tabs.TabPane;
 
+
+const { TabPane } = Tabs;
 function callback(key) {
   console.log(key);
 }
@@ -70,8 +72,26 @@ function monthCellRender(value) {
   ) : null;
 }
 
+@connect(({ rule, loading }) => ({
+  rule,
+  loading: loading.models.rule,
+}))
+@Form.create()
 export default class CalendarAll extends PureComponent {
+  state = {
+    ScheduleAddVisible:false,
+  };
+  handleScheduleAddVisible = (flag)=>{
+    this.setState({
+      ScheduleAddVisible:!!flag,
+    });
+  };
   render() {
+    const { form, rule: { data }, loading } = this.props;
+    const { ScheduleAddVisible } = this.state;
+    const ScheduleAddMethods = {
+      handleScheduleAddVisible: this.handleScheduleAddVisible,
+    };
     return (
       <PageHeaderLayout>
         <Card>
@@ -81,7 +101,7 @@ export default class CalendarAll extends PureComponent {
                 <Button type="primary" htmlType="submit">
                   新增双周日程
                 </Button>
-                <Button type="primary" style={{ marginLeft: 8 }}>
+                <Button type="primary" style={{ marginLeft: 8 }} onClick={()=>this.handleScheduleAddVisible(true)}>
                   新增日常
                 </Button>
               </div>
@@ -91,6 +111,7 @@ export default class CalendarAll extends PureComponent {
               <h1>Hello World!</h1>
             </TabPane>
           </Tabs>
+          <ScheduleAddModal {...ScheduleAddMethods} ScheduleAddVisible={ScheduleAddVisible} />
         </Card>
       </PageHeaderLayout>
     );

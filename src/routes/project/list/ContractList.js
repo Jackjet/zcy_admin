@@ -385,7 +385,7 @@ export default class Contract extends PureComponent {
         dataIndex: 'contractCode',
         width: 100,
         align: 'center',
-        fixed: 'left'
+        fixed: 'left',
       },
       {
         title: '合同标题',
@@ -432,6 +432,9 @@ export default class Contract extends PureComponent {
         title: '总金额',
         dataIndex: 'totalAmount',
         align: 'center',
+        render: val => `${val} 万`,
+        // mark to display a total number
+        needTotal: true,
       },
 
       {
@@ -478,29 +481,30 @@ export default class Contract extends PureComponent {
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
-              </div>
-              <StandardTable scroll={{ x: 1500}}
-                             selectedRows={selectedRows}
-                             loading={loading}
-                             data={data}
-                             columns={columns}
-                             onSelectRow={this.handleSelectRows}
-                             onChange={this.handleStandardTableChange}
-              />
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
+                    新建
+                  </Button>
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Dropdown overlay={menu}>
+                        <Button>
+                          批量操作 <Icon type="down" />
+                        </Button>
+                      </Dropdown>
+                    </span>
+                  )}
+                </div>
+                <StandardTable
+                  scroll={{ x: 1500}}
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
             </Content>
           </Layout>

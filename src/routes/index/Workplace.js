@@ -6,6 +6,7 @@ import DataSet from '@antv/data-set';
 import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button, Divider} from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
+import ScheduleAddModal from '../schedule/ScheduleAddModal';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Workplace.less';
 
@@ -57,6 +58,9 @@ function callback(key){
   activitiesLoading: loading.effects['activities/fetchList'],
 }))
 export default class Workplace extends PureComponent {
+  state = {
+    ScheduleAddVisible: false,
+  };
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -90,6 +94,12 @@ export default class Workplace extends PureComponent {
 
   handleArea = () =>{
     window.scrollTo(0,0)
+  };
+
+  handleScheduleAddVisible = (flag)=>{
+    this.setState({
+      ScheduleAddVisible:!!flag,
+    });
   };
 
   renderActivities() {
@@ -128,10 +138,9 @@ export default class Workplace extends PureComponent {
   }
 
   render() {
+    const { ScheduleAddVisible } = this.state;
     const moreCharts =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多图表</span></a>;
-
     const moreMessage =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多</span> </a>;
-
     const {
       activitiesLoading,
       chart,
@@ -205,6 +214,10 @@ export default class Workplace extends PureComponent {
       showQuickJumper: true,
       pageSizeOptions: ['5','10','15','20'],
       total: 50,
+    };
+
+    const ScheduleAddMethods = {
+      handleScheduleAddVisible: this.handleScheduleAddVisible,
     };
 
     return (
@@ -422,7 +435,7 @@ export default class Workplace extends PureComponent {
             >
               <div className="calendar-all" id="homeCalendarCon">
                 <div className={styles['ant-fullcalendar-header-buttonhz']}>
-                  <a type="primary" >新增日程</a>
+                  <a type="primary" onClick={()=>this.handleScheduleAddVisible(true)} >新增日程</a>
                   <Divider type="vertical" />
                   <Link
                     to='/schedule/schedulelist'
@@ -639,6 +652,7 @@ export default class Workplace extends PureComponent {
             </Card>
           </Col>
         </Row>
+        <ScheduleAddModal {...ScheduleAddMethods} ScheduleAddVisible={ScheduleAddVisible} />
       </PageHeaderLayout>
     );
   }

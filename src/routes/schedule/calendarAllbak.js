@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { List, Button, Tabs, Icon, Calendar, Badge, Card } from 'antd';
+import { List, Button, Tabs, Icon, Calendar, Badge, Card, message } from 'antd';
 import styles from './calendarAll.less';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import AddSchedule from './AddSchedule';
-import {message} from "antd/lib/index";
+import AddSchedule from './ScheduleAddModal';
+
 
 
 
