@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Icon, message,Modal, Button } from 'antd';
+import { Layout, Icon, message,Modal, Button,Radio } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
@@ -17,11 +17,12 @@ import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.png';
 
 
-
-
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
 const confirm = Modal.confirm;
+
+const RadioGroup = Radio.Group;
+
 /**
  * 根据菜单取得重定向地址.
  */
@@ -96,6 +97,10 @@ class BasicLayout extends React.PureComponent {
     loading: false,
     switchOrgvisible: false,
     userInfovisible:false,
+    value:'',
+    companyId:'',
+    companyName:'',
+    menuData:'',
   };
 
 
@@ -104,7 +109,10 @@ class BasicLayout extends React.PureComponent {
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, switchOrgvisible: false });
-      this.props.dispatch(routerRedux.push('/'));
+      this.props.dispatch(routerRedux.push({
+        pathname: '/',
+        query: {companyId: this.state.companyId,companyName:this.state.companyName}
+      }));
     }, 2000);
   };
 
@@ -131,7 +139,24 @@ class BasicLayout extends React.PureComponent {
       },
     });
 
-  }
+  };
+
+  //公司列表 单选框 变化事件
+  onChange = (e) => {
+    let checkvalue = e.target.value;
+    let nameid = '';
+    if(checkvalue){
+      nameid =  checkvalue.split('<@>');
+    }
+    console.log('radio checked', nameid[0]);
+    console.log('radio checked', nameid[1]);
+    console.log('radio checked', e.target.value);
+    this.setState({
+      value: e.target.value,
+      companyId:nameid[0],
+      companyName:nameid[1],
+    });
+  };
 
 //  切换组织
   handleSwitchOrgShowModal = () => {
@@ -277,10 +302,15 @@ class BasicLayout extends React.PureComponent {
       notices,
       routerData,
       match,
-      location,
+      location
     } = this.props;
     const bashRedirect = this.getBashRedirect();
 
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    };
 
 
     const layout = (
@@ -354,7 +384,7 @@ class BasicLayout extends React.PureComponent {
 
         <Modal
           visible={switchOrgvisible}
-          title="组织公司切换"
+          title={<h5 ><i className="anticon anticon-bars" ></i><span>切换组织公司</span></h5>}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           maskClosable={false}
@@ -365,11 +395,14 @@ class BasicLayout extends React.PureComponent {
             </Button>,
           ]}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <div style={{paddingLeft:16}}>
+            <RadioGroup onChange={this.onChange} value={this.state.value}>
+              <Radio style={radioStyle} value={'1<@>义乌至诚会计师事务所'}>义乌至诚会计师事务所</Radio>
+              <Radio style={radioStyle} value={'2<@>杭州至诚云软件技术有限公司'}>杭州至诚云软件技术有限公司</Radio>
+              <Radio style={radioStyle} value={'3<@>杭州至诚会计师事务所'}>杭州至诚会计师事务所</Radio>
+              <Radio style={radioStyle} value={'4<@>---'}>...</Radio>
+            </RadioGroup>
+          </div>
         </Modal>
 
 
