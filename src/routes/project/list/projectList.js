@@ -15,6 +15,7 @@ import {
   message,
   Badge,
   Divider,
+  Layout,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -25,6 +26,7 @@ import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectCheckTabs.js';
 import ProjectEditModal from '../edit/ProjectEditModal.js';
 
+const {Content, Sider} = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -442,6 +444,8 @@ export default class projectList extends PureComponent {
       {
         title: '项目编号',
         dataIndex: 'no',
+        width: 150,
+        fixed: 'left',
         render: (text, record, index) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, text, record, index)} >{text}</a>
@@ -507,6 +511,8 @@ export default class projectList extends PureComponent {
 
       {
         title: '操作',
+        width: 200,
+        fixed: 'right',
         render: (text, record) => (
           <Fragment>
             <a onClick={() =>this.handleProjectApplyAddVisible(true)} >项目过程</a>
@@ -544,32 +550,37 @@ export default class projectList extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
-          <div className={styles.rightBlock}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
-                      新增子项目
-                    </Button>
-                  </span>
-                )}
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treemenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
+                    新建
+                  </Button>
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
+                        新增子项目
+                      </Button>
+                    </span>
+                  )}
+                </div>
+                <StandardTable
+                  scroll={{ x: 1500}}
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-          </div>
+            </Content>
+          </Layout>
         </Card>
         <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} />
         <ProjectChildrenAddModal {...projectChildrenAddMethods} projectChildrenAddVisible={projectChildrenAddVisible} />

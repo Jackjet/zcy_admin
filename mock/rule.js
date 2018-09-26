@@ -28,14 +28,15 @@ for (let i = 0; i < 46; i += 1) {
 
     contractName:`合同标题 ${i}`,
     totalAmount:100,
-    customerCode:`CMD ${i}`,
+    customerCode:[`贵宾${i}`,`一般${i}`,`重要${i}`,`潜在${i}`, `施工单位${i}`, `无${i}`][i % 6],
     customerName:`杭州至诚 ${i}`,
     linkman: `汪工${i}`,
     address:`清泰街${i}`,
     company: `至诚云${i}`,
     mobilePhone: `手机号码${i}`,
     industry: Math.floor(Math.random() * 10) % 8,
-    status: Math.floor(Math.random() * 10) % 2,
+    customerStatus: Math.floor(Math.random() * 10) % 2,
+    businessStatus: Math.floor(Math.random() * 10) % 3,
 
     invoiceNumber:`发票号码${i}`,
 
@@ -122,7 +123,7 @@ export function postRule(req, res, u, b) {
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':
-      tableListDataSource = tableListDataSource.filter(item => organizeCode.indexOf(item.organizeCode) === -1);
+      tableListDataSource = tableListDataSource.filter(item => no.indexOf(item.no) === -1);
       break;
     case 'post':
       const i = Math.ceil(Math.random() * 10000);

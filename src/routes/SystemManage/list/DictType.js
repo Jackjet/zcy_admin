@@ -13,13 +13,15 @@ import {
   Modal,
   message,
   Divider,
+  Layout,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './DictType.less';
 import DictTypeAdd from '../add/DictTypeAdd';
 
-const confirm = Modal.confirm;
+const { Content, Sider } = Layout;
+const { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)

@@ -22,7 +22,6 @@ import VisitListAddModal from '../add/VisitListAddModal';
 import VisitListViewModal from '../select/VisitListViewModal';
 import VisitListEditModal from '../edit/VisitListEditModal';
 
-
 const { Option } = Select;
 const confirm = Modal.confirm;
 const FormItem = Form.Item;

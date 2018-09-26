@@ -15,6 +15,8 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
+const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
+const status = ['启用', '停用'];
 const { Panel} = Collapse;
 const { Option } = Select;
 const optionshz = [
@@ -75,7 +77,7 @@ const fieldLabels = {
   company: '所属公司',
   address: '详细地址',
   remark: '备注',
-  status: '状态',
+  customerStatus: '状态',
   companyName:'单位名称',
   companyAddress:'单位地址',
   taxNumber:'税号',
@@ -226,7 +228,7 @@ class CustomerApplyEditModal extends PureComponent {
     return (
       <Modal
         title="客户申请单信息编辑"
-        style={{ top: 80 }}
+        style={{ top: 20 }}
         visible={customerApplyEditVisible}
         width="90%"
         maskClosable={false}
@@ -244,31 +246,19 @@ class CustomerApplyEditModal extends PureComponent {
                         {getFieldDecorator('customerName',
                           {
                             rules: [{ required: true, message: '请输入客户名称' }],
-                            initialValue:`${rowInfo.customerName}`})(
-                              <Input  placeholder="请输入客户名称" className={styles['ant-input-lg']} />
+                            initialValue:`${rowInfo.customerName}`,
+                          })(
+                            <Input  placeholder="请输入客户名称" className={styles['ant-input-lg']} />
                         )}
                       </Form.Item>
                     </Col>
                   </Row>
                   <Row className={styles['row-h']}>
                     <Col span={8}>
-                      <Form.Item label={fieldLabels.customerLevel}>
-                        {getFieldDecorator('customerLevel', {
-                          rules: [{ required: false, message: '请选择客户等级' }],
-                        })(
-                          <Select placeholder="请选择客户等级" style={{ width: 200 }}>
-                            <Option value="0">请选择</Option>
-                            <Option value="g">贵宾</Option>
-                            <Option value="y">一般客户</Option>
-                            <Option value="q">潜在客户</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={8}>
                       <Form.Item label={fieldLabels.industry}>
                         {getFieldDecorator('industry', {
                           rules: [{ required: false, message: '请选择行业' }],
+                          initialValue:`${industry[rowInfo.industry]}`,
                         })(
                           <Select placeholder="请选择行业" style={{ width: 200 }}>
                             <Option value="xiao">请选择</Option>
@@ -303,7 +293,11 @@ class CustomerApplyEditModal extends PureComponent {
                       <Form.Item {...cnumcol} label={fieldLabels.customerCode}>
                         {getFieldDecorator('customerCode', {
                           rules: [{ required: true, message: '请输入客户编码' }],
-                          initialValue:`${rowInfo.customerCode}`})(<Input placeholder="请输入客户编码" style={{ width: 200 }} />)}
+                          initialValue:`${rowInfo.customerCode}`,
+                        })
+                        (
+                          <Input placeholder="请输入客户编码" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
@@ -326,7 +320,11 @@ class CustomerApplyEditModal extends PureComponent {
                       <Form.Item label={fieldLabels.mobilePhone}>
                         {getFieldDecorator('mobilePhone', {
                           rules: [{ required: false, message: '请输入手机号码' }],
-                        })(<Input placeholder="请输入手机号码" style={{ width: 200 }} />)}
+                          initialValue:`${rowInfo.mobilePhone}`,
+                        })
+                        (
+                          <Input placeholder="请输入手机号码" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
@@ -401,9 +399,10 @@ class CustomerApplyEditModal extends PureComponent {
                   </Row>
                   <Row className={styles['row-h']}>
                     <Col span={8}>
-                      <Form.Item {...statuscol} label={fieldLabels.status}>
-                        {getFieldDecorator('status', {
+                      <Form.Item {...statuscol} label={fieldLabels.customerStatus}>
+                        {getFieldDecorator('customerStatus', {
                           rules: [{ required: false, message: '状态' }],
+                          initialValue:`${status[rowInfo.customerStatus]}`,
                         })(
                           <Select placeholder="请选择状态" disable style={{ width: 200 }}>
                             <Option value="cancel" selected>
@@ -416,7 +415,9 @@ class CustomerApplyEditModal extends PureComponent {
                     </Col>
                     <Col span={16}>
                       <Form.Item {...companycol} label={fieldLabels.company}>
-                        {getFieldDecorator('company', {})(
+                        {getFieldDecorator('company', {
+                          initialValue:`${rowInfo.company}`,
+                        })(
                           <Input placeholder="所属公司" style={{ width: 603 }} />
                         )}
                       </Form.Item>

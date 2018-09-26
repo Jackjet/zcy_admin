@@ -14,6 +14,8 @@ import {
   message,
   Badge,
   Divider,
+  Layout,
+  Alert,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -25,18 +27,15 @@ import ContactsAddModal from '../add/ContactsAddModal';
 import CustomerApplyEditModal from '../edit/CustomerApplyEditModal';
 
 
-
+const { Content } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-
 const getValue = obj =>
   Object.keys(obj).map(key => obj[key]).join(',');
-
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
 const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
-
 
 // 设置业务员
 const SalesManage = Form.create()(props => {
@@ -57,7 +56,6 @@ const SalesManage = Form.create()(props => {
       <div className={styles.editPerson}>
         <EditableTable />
       </div>
-
     </Modal>
   );
 });
@@ -166,12 +164,27 @@ export default class CustomerApplyList extends PureComponent {
   };
 
   // 选中行删除方法
+  handleDeleteMoreClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    if (!selectedRows) return;
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-
     if (!selectedRows) return;
-
     dispatch({
       type: 'rule/remove',
       payload: {
@@ -273,8 +286,8 @@ export default class CustomerApplyList extends PureComponent {
       applyTabsViewVisible: !!flag,
       rowInfo: record,
     });
+    console.log(record);
   };
-
 
   // 高级搜索
   renderAdvancedForm() {
@@ -375,6 +388,7 @@ export default class CustomerApplyList extends PureComponent {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
+
   // 简单查询
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -386,7 +400,9 @@ export default class CustomerApplyList extends PureComponent {
               {getFieldDecorator('customerCode',{
 
               })(
-                <Input placeholder="请输入客户编码和名称" />
+                <div>
+                  <Input placeholder="请输入客户编码和名称" />
+                </div>
               )}
             </FormItem>
           </Col>
@@ -424,6 +440,8 @@ export default class CustomerApplyList extends PureComponent {
       {
         title: '编码',
         dataIndex: 'customerCode',
+        width: 150,
+        fixed:'left',
       },
       {
         title: '名称',
@@ -484,8 +502,8 @@ export default class CustomerApplyList extends PureComponent {
         dataIndex: 'mobilePhone',
       },
       {
-        title: '状态',
-        dataIndex: 'status',
+        title: '审核状态',
+        dataIndex: 'customerStatus',
         filters: [
           {
             text: status[0],
@@ -503,6 +521,8 @@ export default class CustomerApplyList extends PureComponent {
       },
       {
         title: '操作',
+        width: 200,
+        fixed:'right',
         render: (text, record, index) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
@@ -531,36 +551,41 @@ export default class CustomerApplyList extends PureComponent {
 
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
-          <div>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick={() => this.handleCustomerApplyAddVisible(true)}
-                >
-                  新建客户
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Button type="primary" onClick={() => this.handleDeleteClick(true)}>
-                      批量删除
+        <Card>
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListForm}>{this.renderForm()}</div>
+                  <div className={styles.tableListOperator}>
+                    <Button
+                      icon="plus"
+                      type="primary"
+                      onClick={() => this.handleCustomerApplyAddVisible(true)}
+                    >
+                      新建客户
                     </Button>
-                  </span>
-                )}
+                    {selectedRows.length > 0 && (
+                      <span>
+                        <Button type="primary" onClick={() => this.handleDeleteMoreClick(true)}>
+                          批量删除
+                        </Button>
+                      </span>
+                    )}
+                  </div>
+                  <StandardTable
+                    scroll={{ x: 1500}}
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
+                </div>
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-          </div>
+            </Content>
+          </Layout>
         </Card>
         <CustomerApplyAddModal {...CustomerAddMethods} customerApplyAddVisible={customerApplyAddVisible} />
         <CustomerApplyViewTabs {...parentMethods} applyTabsViewVisible={applyTabsViewVisible} rowInfo={rowInfo} />

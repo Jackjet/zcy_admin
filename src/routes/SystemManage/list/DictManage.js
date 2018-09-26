@@ -17,13 +17,15 @@ import {
   message,
   Badge,
   Divider,
+  Layout,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './DictManage.less';
 import DictTypeAdd from '../add/DictTypeAdd';
 
-const SubMenu = Menu.SubMenu;
+const { Content, Sider } = Layout;
+const { SubMenu } = Menu;
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
 const FormItem = Form.Item;
@@ -404,31 +406,35 @@ export default class TableList extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treeMenu()}</div>
-          <div className={styles.rightBlock}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量删除 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treeMenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Dropdown overlay={menu}>
+                        <Button>
+                          批量删除 <Icon type="down" />
+                        </Button>
+                      </Dropdown>
+                    </span>
+                  )}
+                </div>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-          </div>
+            </Content>
+          </Layout>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
       </PageHeaderLayout>

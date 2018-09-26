@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-
 import {
   Layout,
   Row,
@@ -28,9 +27,7 @@ import ContractEditModal from '../edit/ContractEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-
 const { Content,  Sider } = Layout;
-const { SubMenu } = Menu;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
@@ -222,8 +219,8 @@ export default class Contract extends PureComponent {
     });
   };
 
-  treemenu() {
-    const SubMenuTree = Menu.SubMenu;
+  treeMenu() {
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -231,7 +228,7 @@ export default class Contract extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
       >
-        <SubMenuTree
+        <SubMenu
           key="sub1"
           title={
             <span>
@@ -242,7 +239,7 @@ export default class Contract extends PureComponent {
           <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
           <Menu.Item key="2">可研报告</Menu.Item>
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
-        </SubMenuTree>
+        </SubMenu>
       </Menu>
     );
   }
@@ -253,12 +250,16 @@ export default class Contract extends PureComponent {
         <Row gutter={24}>
           <Col span={6}>
             <FormItem label="编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入合同编码" />)}
+              {getFieldDecorator('contractCode')(
+                <Input placeholder="请输入合同编码" />
+              )}
             </FormItem>
           </Col>
           <Col span={6} >
             <FormItem label="名称">
-              {getFieldDecorator('contractName')(<Input placeholder="合同名称" />)}
+              {getFieldDecorator('contractName')(
+                <Input placeholder="合同名称" />
+              )}
             </FormItem>
           </Col>
           <Col span={6}>
@@ -301,18 +302,24 @@ export default class Contract extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="合同编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('contractCode')(
+                <Input placeholder="请输入" />
+              )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="合同名称">
-              {getFieldDecorator('contractName')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('contractName')(
+                <Input placeholder="请输入" />
+              )}
             </FormItem>
           </Col>
 
           <Col md={8} sm={24}>
             <FormItem label="负责公司">
-              {getFieldDecorator('phone')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('phone')(
+                <Input placeholder="请输入" />
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -351,7 +358,9 @@ export default class Contract extends PureComponent {
             <FormItem label="项目日期">
               {getFieldDecorator('date', {
                 rules: [{ required: false, message: '请选择日期' }],
-              })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
+              })(
+                <RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -477,7 +486,7 @@ export default class Contract extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treemenu()}
+              {this.treeMenu()}
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
@@ -509,7 +518,7 @@ export default class Contract extends PureComponent {
             </Content>
           </Layout>
 
-        {/*  <div className={styles.leftBlock}>{this.treemenu()}</div>
+        {/*  <div className={styles.leftBlock}>{this.treeMenu()}</div>
           <div className={styles.rightBlock}>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
