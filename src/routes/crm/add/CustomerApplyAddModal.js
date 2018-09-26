@@ -1,67 +1,20 @@
 import React, { PureComponent } from 'react';
 import {
-  Card,
-  Button,
   Form,
   Icon,
   Col,
   Row,
-  DatePicker,
-  // TimePicker,
   Input,
-  InputNumber,
   Select,
   Popover,
   Modal,
-  Cascader,
-  Collapse,
+  Card,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
-const { Panel } = Collapse;
 const { Option } = Select;
-const { RangePicker } = DatePicker;
-const optionshz = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
 const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
-const IndustryOption = ['制造业','服务业','房地产建筑','三农业务','政府购买','商业','金融','非营利组织','其他'];
-const IncomeTaxOption = ['查账征收','核定征收'];
-const statusOption = ['保存','启用','禁用'];
-
-
 const fieldLabels = {
   customerCode: '客户编号',
   customerName: '客户名称',
@@ -80,10 +33,6 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-function onChange(value) {
-  console.log(value);
-}
-
 
 class CustomerApplyAddModal extends PureComponent {
   state = {
@@ -109,32 +58,6 @@ class CustomerApplyAddModal extends PureComponent {
     });
   };
 
-  handleIndustryChange = () => {
-    this.setState({
-      industryOptionData: IndustryOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-  handleIncomeTaxChange = () => {
-    this.setState({
-      incomeTaxOptionData: IncomeTaxOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-  handleStatusChange = () => {
-    this.setState({
-      statusOptionData: statusOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -208,90 +131,88 @@ class CustomerApplyAddModal extends PureComponent {
         title="客户申请单信息新增"
         style={{ top: 20 }}
         visible={customerApplyAddVisible}
-        width="55%"
+        width="35%"
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
         okText='提交'
       >
         <div>
-          <Form layout="horizontal">
-            <Collapse defaultActiveKey={['1','2']} >
-              <Panel header="客户信息" key="1">
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.customerCode}>
-                      {getFieldDecorator('customerCode', {
-                        rules: [{ required: false, message: '请输入客户编码' }],
-                      })(<Input disabled placeholder="新增自动产生" style={{ width: 200 }} />)}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
-                      {getFieldDecorator('customerName', {
-                        rules: [{ required: false, message: '请输入客户名称' }],
-                      })(
-                        <Input onMouseEnter={this.handleLevelChange} placeholder="请输入客户名称" style={{ width: 200 }} />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.contactsNature}>
-                      {getFieldDecorator('contactsNature', {
-                        rules: [{ required: false, message: '请选择联系人业务性质' }],
-                      })(
-                        <Select placeholder="请选择联系人业务性质" style={{ width: 200 }} >
-                          <Option key="1" >工程</Option>
-                          <Option key="2" >招标</Option>
-                          <Option key="3" >采购</Option>
-                        </Select>
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.status}>
-                      {getFieldDecorator('status', {
-                        rules: [{ required: false, message: '请选择状态' }],
-                      })(
-                        <Select placeholder="请选择状态" style={{ width: 200 }} >
-                          <Option key="1" >启用</Option>
-                          <Option key="2" >禁用</Option>
-                        </Select>
-                          )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.contacts}>
-                      {getFieldDecorator('contacts', {
-                        rules: [{ required: false, message: '请输入联系人' }],
-                      })(
-                        <Input placeholder="请输入联系人" style={{ width: 200 }} />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={16} offset={4}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
-                      {getFieldDecorator('mobilePhone', {
-                        rules: [{ required: false, message: '请输出联系电话' }],
-                      })(
-                        <Input placeholder="请输出联系电话" style={{ width: 200 }} />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Panel>
-            </Collapse>
-          </Form>
+          <Card>
+            <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.customerCode}>
+                    {getFieldDecorator('customerCode', {
+                      rules: [{ required: false, message: '请输入客户编码' }],
+                    })(<Input readOnly placeholder="新增自动产生" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
+                    {getFieldDecorator('customerName', {
+                      rules: [{ required: false, message: '请输入客户名称' }],
+                    })(
+                      <Input onMouseEnter={this.handleLevelChange} placeholder="请输入客户名称" style={{ width: 200 }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.contactsNature}>
+                    {getFieldDecorator('contactsNature', {
+                      rules: [{ required: false, message: '请选择联系人业务性质' }],
+                    })(
+                      <Select placeholder="请选择联系人业务性质" style={{ width: 200 }} >
+                        <Option key="1" >工程</Option>
+                        <Option key="2" >招标</Option>
+                        <Option key="3" >采购</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.status}>
+                    {getFieldDecorator('status', {
+                      rules: [{ required: false, message: '请选择状态' }],
+                    })(
+                      <Select placeholder="请选择状态" style={{ width: 200 }} >
+                        <Option key="1" >启用</Option>
+                        <Option key="2" >禁用</Option>
+                      </Select>
+                        )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.contacts}>
+                    {getFieldDecorator('contacts', {
+                      rules: [{ required: false, message: '请输入联系人' }],
+                    })(
+                      <Input placeholder="请输入联系人" style={{ width: 200 }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={16} offset={4}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
+                    {getFieldDecorator('mobilePhone', {
+                      rules: [{ required: false, message: '请输出联系电话' }],
+                    })(
+                      <Input placeholder="请输出联系电话" style={{ width: 200 }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
         </div>
       </Modal>
     );

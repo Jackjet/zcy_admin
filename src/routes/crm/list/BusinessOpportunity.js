@@ -14,6 +14,7 @@ import {
   Modal,
   message,
   Divider,
+  Badge,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -25,6 +26,8 @@ import BusinessOppView from '../select/BusinessOppView.js';
 import BusinessStateModal from '../add/BusinessStateModal';
 import ProjectAddModal from '../../project/add/ProjectAddModal';
 
+const statusMap = ['success', 'warning','default'];
+const status = ['已跟进', '未分配','已分配'];
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj =>
@@ -180,6 +183,14 @@ export default class BusinessOpportunity extends PureComponent {
   };
   // 隐藏和显示
   handleBusinessOppVisible = flag => {
+    if(this.state.selectedRows.length > 1){
+      message.warning('不支持多行选择');
+      return false;
+    }
+    if(this.state.selectedRows.length === 0){
+      message.warning('请选择商机');
+      return false;
+    }
     this.setState({
       businessOppVisible: !!flag,
     });
@@ -362,6 +373,24 @@ export default class BusinessOpportunity extends PureComponent {
       {
         title: '状态',
         dataIndex: 'status',
+        filters: [
+          {
+            text: status[0],
+            value: 0,
+          },
+          {
+            text: status[1],
+            value: 1,
+          },
+          {
+            text: status[2],
+            value: 2,
+          },
+        ],
+        onFilter: (value, record) => record.status.toString() === value,
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
+        },
       },
       {
         title: '客户需求',

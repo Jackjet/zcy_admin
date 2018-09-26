@@ -26,7 +26,6 @@ import AllocationAddModal from '../add/AllocationAddModal.js';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Content,  Sider } = Layout;
-const { SubMenu } = Menu;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
@@ -180,8 +179,8 @@ export default class AllocationList extends PureComponent {
   };
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
-    const SubMenuTree = Menu.SubMenu;
+  treeMenu() {
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -189,7 +188,7 @@ export default class AllocationList extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
       >
-        <SubMenuTree
+        <SubMenu
           key="sub1"
           title={
             <span>
@@ -200,7 +199,7 @@ export default class AllocationList extends PureComponent {
           <Menu.Item key="1">工程造价业务项目</Menu.Item>
           <Menu.Item key="2">可研报告</Menu.Item>
           <Menu.Item key="3">招标代理业务项目</Menu.Item>
-        </SubMenuTree>
+        </SubMenu>
       </Menu>
     );
   }
@@ -366,7 +365,7 @@ export default class AllocationList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treemenu()}
+              {this.treeMenu()}
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
@@ -386,7 +385,6 @@ export default class AllocationList extends PureComponent {
                   )}
                 </div>
                 <StandardTable
-                  scroll={{ x: 1500}}
                   selectedRows={selectedRows}
                   loading={loading}
                   data={data}

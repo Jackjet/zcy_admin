@@ -66,6 +66,7 @@ class StatementAddModal2 extends PureComponent {
   }
 
   handleRadioGroup = (e)=>{
+    alert(e.target.name);
     this.setState({
       radioValue: e.target.value,
     });

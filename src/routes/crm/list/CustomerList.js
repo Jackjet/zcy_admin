@@ -14,6 +14,7 @@ import {
   message,
   Badge,
   Divider,
+  Layout,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -25,8 +26,7 @@ import ContactsAddModal from '../add/ContactsAddModal';
 import CustomerDistributionModal from '../add/CustomerDistributionModal';
 import CustomerEditModal from '../edit/CustomerEditModal';
 
-
-
+const { Content,  Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -58,7 +58,6 @@ const SalesManage = Form.create()(props => {
       <div className={styles.editPerson}>
         <EditableTable />
       </div>
-
     </Modal>
   );
 });
@@ -300,7 +299,7 @@ export default class CustomerList extends PureComponent {
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
-    const SubMenuTree = Menu.SubMenu;
+    const { SubMenu }= Menu;
     return (
       <Menu
         mode="inline"
@@ -308,7 +307,7 @@ export default class CustomerList extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 130 }}
       >
-        <SubMenuTree
+        <SubMenu
           key="sub1"
           title={
             <span>
@@ -320,7 +319,9 @@ export default class CustomerList extends PureComponent {
           <Menu.Item key="2">一般客户</Menu.Item>
           <Menu.Item key="3">重要客户</Menu.Item>
           <Menu.Item key="4">潜在客户</Menu.Item>
-        </SubMenuTree>
+          <Menu.Item key="5">施工单位</Menu.Item>
+          <Menu.Item key="6">无</Menu.Item>
+        </SubMenu>
       </Menu>
     );
   }
@@ -451,7 +452,10 @@ export default class CustomerList extends PureComponent {
               {getFieldDecorator('customerCode',{
 
               })(
-                <Input placeholder="请输入客户编码和名称" />
+                <div>
+                  <Input placeholder="请输入客户编码和名称" />
+                </div>
+
               )}
             </FormItem>
           </Col>
@@ -474,6 +478,7 @@ export default class CustomerList extends PureComponent {
   }
 
   render() {
+
     const { rule: { data }, loading } = this.props;
     const {
       selectedRows,
@@ -490,10 +495,13 @@ export default class CustomerList extends PureComponent {
       {
         title: '编码',
         dataIndex: 'customerCode',
+        width: 100,
+        fixed: 'left',
       },
       {
         title: '名称',
         dataIndex: 'customerName',
+
       },
       {
         title: '联系人',
@@ -551,7 +559,7 @@ export default class CustomerList extends PureComponent {
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'customerStatus',
         filters: [
           {
             text: status[0],
@@ -569,11 +577,29 @@ export default class CustomerList extends PureComponent {
       },
       {
         title: '操作',
+        width: 200,
+        fixed: 'right',
         render: (text, record, index) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            {
+              record.status === 0 && (
+                <span>
+                  <Divider type="vertical" />
+                  <a>启用</a>
+                </span>
+              )
+            }
+            {
+              record.status === 1 && (
+                <span>
+                  <Divider type="vertical" />
+                  <a>停用</a>
+                </span>
+              )
+            }
             <Divider type="vertical" />
             <a onClick={this.handleDeleteClick} >删除</a>
           </Fragment>
@@ -598,45 +624,50 @@ export default class CustomerList extends PureComponent {
 
     const customerDistributionMethods = {
       handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,
-    }
+    };
 
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
-          <div>
-            <div className={styles.tableList}>
-              <div className={styles.leftBlock}>{this.treeMenu()}</div>
-              <div className={styles.rightBlock}>
-                <div className={styles.tableListForm}>{this.renderForm()}</div>
-                <div className={styles.tableListOperator}>
-                  {selectedRows.length > 0 && (
-                    <span>
-                      <Button
-                        type="primary"
-                        onClick={() => this.handleCustomerDistributionVisible(true)}
-                      >
-                        客户分配
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
-                        设置联系人
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleDeleteClick(true)}>
-                        批量删除
-                      </Button>
-                    </span>
-                  )}
+        <Card>
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treeMenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListForm}>{this.renderForm()}</div>
+                  <div className={styles.tableListOperator}>
+                    {selectedRows.length > 0 && (
+                      <span>
+                        <Button
+                          type="primary"
+                          onClick={() => this.handleCustomerDistributionVisible(true)}
+                        >
+                          客户分配
+                        </Button>
+                        <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
+                          设置联系人
+                        </Button>
+                        <Button type="primary" onClick={() => this.handleDeleteClick(true)}>
+                          批量删除
+                        </Button>
+                      </span>
+                    )}
+                  </div>
+                  <StandardTable
+                    scroll={{ x: 1500}}
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
                 </div>
-                <StandardTable
-                  selectedRows={selectedRows}
-                  loading={loading}
-                  data={data}
-                  columns={columns}
-                  onSelectRow={this.handleSelectRows}
-                  onChange={this.handleStandardTableChange}
-                />
               </div>
-            </div>
-          </div>
+            </Content>
+          </Layout>
         </Card>
         <CustomerAddModal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
         <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />

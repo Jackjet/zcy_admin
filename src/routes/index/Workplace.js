@@ -466,7 +466,7 @@ export default class Workplace extends PureComponent {
                   key="1"
                 >
                   <Row>
-                    <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                    <Col xl={8} lg={12} md={12} sm={12} xs={12}>
                       <Chart
                         width={400}
                         height={400}
@@ -478,7 +478,7 @@ export default class Workplace extends PureComponent {
                       >
                         <Coord type='theta' radius={0.75} innerRadius={0.6} />
                         <Axis name="percent" />
-                        <Legend position='right' offsetY={-window.innerHeight / 2 + 240} offsetX={-100} />
+                        <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-85} />
                         <Tooltip
                           showTitle={false}
                           itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
@@ -512,7 +512,7 @@ export default class Workplace extends PureComponent {
                         </Geom>
                       </Chart>
                     </Col>
-                    <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                    <Col xl={8} lg={12} md={12} sm={12} xs={12}>
                       <Chart
                         width={400}
                         height={400}
@@ -524,7 +524,7 @@ export default class Workplace extends PureComponent {
                       >
                         <Coord type='theta' radius={0.75} innerRadius={0.6} />
                         <Axis name="percent" />
-                        <Legend position='right' offsetY={-window.innerHeight / 2 + 240} offsetX={-100} />
+                        <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-85} />
                         <Tooltip
                           showTitle={false}
                           itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'

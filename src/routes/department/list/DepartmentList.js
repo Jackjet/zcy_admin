@@ -13,6 +13,7 @@ import {
   message,
   Divider,
   Popconfirm,
+  Layout,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import styles from './DepartmentList.less';
@@ -20,6 +21,7 @@ import DepartmentAddModal from '../add/DepartmentAddModal';
 import DepartmentViewModal from '../select/DepartmentViewModal';
 import DepartmentEditModal from '../edit/DepartmentEditModal';
 
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
@@ -357,41 +359,45 @@ export default class DepartmentList extends PureComponent {
     return (
       <div>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treeMenu()}</div>
-          <div className={styles.rightBlock}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick={() => this.handleDepartmentAddVisible(true)}
-                >
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={batchMenu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treeMenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() => this.handleDepartmentAddVisible(true)}
+                  >
+                    新建
+                  </Button>
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Dropdown overlay={batchMenu}>
+                        <Button>
+                          批量操作 <Icon type="down" />
+                        </Button>
+                      </Dropdown>
+                    </span>
+                  )}
+                </div>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-            <DepartmentAddModal {...DepartmentAddMethods} DepartmentAddVisible={DepartmentAddVisible} />
-            <DepartmentViewModal {...DepartmentViewMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
-            <DepartmentEditModal {...DepartmentEditMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
-          </div>
+            </Content>
+          </Layout>
+          <DepartmentAddModal {...DepartmentAddMethods} DepartmentAddVisible={DepartmentAddVisible} />
+          <DepartmentViewModal {...DepartmentViewMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
+          <DepartmentEditModal {...DepartmentEditMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
         </Card>
       </div>
     );
