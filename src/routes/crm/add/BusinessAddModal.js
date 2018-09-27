@@ -134,7 +134,7 @@ class BusinessAddModal extends PureComponent {
         title="商机基本信息新增"
         style={{ top: 20 }}
         visible={businessOppVisible}
-        width="70%"
+        width="55%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleBusinessOppVisible()}
@@ -148,14 +148,14 @@ class BusinessAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
-                    })(<Input disabled placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                    })(<Input disabled placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>

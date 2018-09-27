@@ -1,18 +1,14 @@
 import React, { PureComponent } from 'react';
 import {
   Card,
-  Button,
   Form,
   Icon,
   Col,
   Row,
-  DatePicker,
   // TimePicker,
   Input,
-  InputNumber,
   Select,
   Popover,
-  Cascader,
   Modal,
   Transfer,
   Menu,
@@ -27,7 +23,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const mockData = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 10; i+=1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
@@ -163,7 +159,7 @@ class BusinessEditModal extends PureComponent {
     return (
       <Modal
         title="商机分配"
-        style={{ top: 60 }}
+        style={{ top: 20 }}
         visible={businessEditVisible}
         width="55%"
         maskClosable={false}
@@ -180,7 +176,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                       initialValue:`${rowInfo.businessCode}`,
-                    })(<Input disabled placeholder="不重复的数字" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="不重复的数字" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -188,7 +184,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
                       initialValue:`${rowInfo.businessName}`,
-                    })(<Input disabled placeholder="商机描述" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="商机描述" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -196,7 +192,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
                     })(
-                      <Select disabled placeholder="请选择商机状态" style={{ width: 150 }}>
+                      <Select readOnly placeholder="请选择商机状态" style={{ width: 150 }}>
                         <Option value="1">提交审核</Option>
                         <Option value="2">跟进中</Option>
                         <Option value="3">成功</Option>
@@ -212,7 +208,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
                       initialValue:`${rowInfo.customerForBusinessName}`,
-                    })(<Input disabled placeholder="请输入客户名称" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="请输入客户名称" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -220,7 +216,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入联系电话' }],
                       initialValue:`${rowInfo.mobilePhone}`,
-                    })(<Input disabled placeholder="请输入联系电话" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="请输入联系电话" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -228,7 +224,7 @@ class BusinessEditModal extends PureComponent {
                     {getFieldDecorator('platform', {
                       rules: [{ required: false, message: '请选择商机平台' }],
                     })(
-                      <Select disabled placeholder="请选择商机平台" style={{ width: 150 }}>
+                      <Select readOnly placeholder="请选择商机平台" style={{ width: 150 }}>
                         <Option value="0">杭州工程平台</Option>
                         <Option value="1">义务工程平台</Option>
                         <Option value="2">杭州审计平台</Option>

@@ -18,6 +18,7 @@ import {
   Upload,
 } from 'antd';
 import { connect } from 'dva';
+import moment from "moment/moment";
 import styles from './style.less';
 
 const { Option } = Select;
@@ -162,7 +163,7 @@ class ProjectAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue  } = this.props;
+    const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { projectOptionData, choiceCheckBox } = this.state;
     const validate = () => {
@@ -225,6 +226,7 @@ class ProjectAddModal extends PureComponent {
     return (
       <Modal
         title="项目基本信息新增"
+        style={{ top: 20 }}
         visible={projectVisible}
         width='85%'
         maskClosable={false}
@@ -240,6 +242,7 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
+                      initialValue:`${rowInfo.customerName}`,
                     })(<Input placeholder="请输入项目名称" style={{width:'140%'}} />)}
                   </Form.Item>
                 </Col>
@@ -251,7 +254,7 @@ class ProjectAddModal extends PureComponent {
                       rules: [{ required: true, message: '请选择项目类别' }],
                       initialValue:`${choiceTypeValue}`,
                     })(
-                      <Select disabled onChange={this.handleGetOptionValue} onMouseEnter={this.handleProjectChange} placeholder="请选择项目类别" style={{ width: 200 }}>
+                      <Select readOnly onChange={this.handleGetOptionValue} onMouseEnter={this.handleProjectChange} placeholder="请选择项目类别" style={{ width: 200 }}>
                         {projectOptionData}
                       </Select>
                     )}
@@ -261,6 +264,7 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请选择年度' }],
+                      initialValue:`${moment().format('YYYY')}`,
                     })(
                       <Select placeholder="请选择年度" style={{ width: '100%' }}>
                         <Option value="xiao">请选择</Option>
@@ -293,24 +297,19 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: false, message: '请输入项目编码' }],
-                    })(<Input placeholder="自动带出" style={{ width: '100%' }} />)}
+                      initialValue:`${rowInfo.projectCode}` === 'undefined'?'':`${rowInfo.projectCode}`,
+                    })(
+                      <Input placeholder="自动带出" style={{ width: '100%' }} />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.customer}>
                     {getFieldDecorator('customer', {
                       rules: [{ required: true, message: '请选择客户' }],
+                      initialValue:`${rowInfo.customerName}` === 'undefined'?'':`${rowInfo.customerName}`,
                     })(
-                      <Select placeholder="请选择客户" style={{ width: '100%' }}>
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">客户A</Option>
-                        <Option value="f">客户B</Option>
-                        <Option value="fd">客户C</Option>
-                        <Option value="sn">客户D</Option>
-                        <Option value="zf">客户E</Option>
-                        <Option value="sy">客户F</Option>
-                        <Option value="jr">客户H</Option>
-                      </Select>
+                      <Input placeholder="请选择客户" style={{ width: '100%' }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -319,16 +318,7 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('cuslink', {
                       rules: [{ required: true, message: '请选择客户联系人' }],
                     })(
-                      <Select placeholder="请选择客户联系人" style={{ width: '100%' }}>
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">客户联系人A</Option>
-                        <Option value="f">客户联系人B</Option>
-                        <Option value="fd">客户联系人C</Option>
-                        <Option value="sn">客户联系人D</Option>
-                        <Option value="zf">客户联系人E</Option>
-                        <Option value="sy">客户联系人F</Option>
-                        <Option value="jr">客户联系人H</Option>
-                      </Select>
+                      <Input placeholder="请选择客户联系人" style={{ width: '100%' }} />
                     )}
                   </Form.Item>
                 </Col>

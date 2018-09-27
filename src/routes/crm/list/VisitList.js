@@ -221,7 +221,7 @@ export default class VisitList  extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="拜访对象">
-              {getFieldDecorator('no')(
+              {getFieldDecorator('visit')(
                 <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
                   <Option value="0">请选择</Option>
                   <Option value="1">初期沟通</Option>
@@ -243,9 +243,6 @@ export default class VisitList  extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitAddVisible}>
-                新建
-              </Button>
             </span>
           </Col>
         </Row>
@@ -259,19 +256,19 @@ export default class VisitList  extends PureComponent {
     const columns = [
       {
         title: '拜访对象',
-        dataIndex: 'dictID',
+        dataIndex: 'visitCus',
       },
       {
         title: '关联商机',
-        dataIndex: 'code',
+        dataIndex: 'withBusiness',
       },
       {
         title: '拜访方式',
-        dataIndex: 'dictTypeName',
+        dataIndex: 'visitMethod',
       },
       {
         title: '拜访日期',
-        dataIndex: 'remarks',
+        dataIndex: 'visitDate',
       },
       {
         title: '交流内容',
@@ -279,7 +276,7 @@ export default class VisitList  extends PureComponent {
       },
       {
         title: '参与人员',
-        dataIndex: 'remarks',
+        dataIndex: 'person',
       },
       {
         title: '操作',
@@ -313,10 +310,13 @@ export default class VisitList  extends PureComponent {
 
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
+        <Card>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitAddVisible}>
+                新建拜访
+              </Button>
               {selectedRows.length > 0 && (
                 <span>
                   <Dropdown overlay={menu}>

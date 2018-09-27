@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
+import {message} from "antd/lib/index";
 
 const { Option } = Select;
 const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
@@ -80,6 +81,7 @@ class CustomerApplyAddModal extends PureComponent {
             payload: values,
           });
           handleCustomerApplyAddVisible(false);
+          message.success('成功申请用户');
         }
       });
     };

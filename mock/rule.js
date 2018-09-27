@@ -47,6 +47,10 @@ for (let i = 0; i < 46; i += 1) {
     projectCode:`项目编号${i}`,
     organizeCode:`${i}`,
 
+    visitCus:`拜访对象${i}`,
+    visitMethod:`拜访方式${i}`,
+    withBusiness:`关联商机${i}`,
+
   });
 }
 

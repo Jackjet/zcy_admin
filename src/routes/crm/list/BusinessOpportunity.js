@@ -50,7 +50,7 @@ export default class BusinessOpportunity extends PureComponent {
     projectVisible: false,
     selectedRows: [],
     formValues: {},
-    rowInfo:{},
+    rowInfo:[],
     openKeys: ['sub1'],
   };
 
@@ -183,14 +183,6 @@ export default class BusinessOpportunity extends PureComponent {
   };
   // 隐藏和显示
   handleBusinessOppVisible = flag => {
-    if(this.state.selectedRows.length > 1){
-      message.warning('不支持多行选择');
-      return false;
-    }
-    if(this.state.selectedRows.length === 0){
-      message.warning('请选择商机');
-      return false;
-    }
     this.setState({
       businessOppVisible: !!flag,
     });
@@ -215,8 +207,18 @@ export default class BusinessOpportunity extends PureComponent {
   };
 
   handleProjectVisible = flag => {
+    const { selectedRows, rowInfo } = this.state;
+    if(this.state.selectedRows.length > 1){
+      message.warning('不支持多行选择');
+      return false;
+    }
+    if(this.state.selectedRows.length === 0){
+      message.warning('请选择商机');
+      return false;
+    }
     this.setState({
       projectVisible: !!flag,
+      rowInfo: selectedRows[0],
     });
   };
 
@@ -243,7 +245,7 @@ export default class BusinessOpportunity extends PureComponent {
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
-    const SubMenuTree = Menu.SubMenu;
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -251,7 +253,7 @@ export default class BusinessOpportunity extends PureComponent {
         onOpenChange={this.onOpenChange}
         style={{ width: 130 }}
       >
-        <SubMenuTree
+        <SubMenu
           key="sub1"
           title={
             <span>
@@ -266,7 +268,7 @@ export default class BusinessOpportunity extends PureComponent {
           <Menu.Item key="5">招投标/竞争</Menu.Item>
           <Menu.Item key="6">商务谈判</Menu.Item>
           <Menu.Item key="7">合同签约</Menu.Item>
-        </SubMenuTree>
+        </SubMenu>
       </Menu>
     );
   }
@@ -285,6 +287,13 @@ export default class BusinessOpportunity extends PureComponent {
     });
   };
 
+  showFollowUpMessage =(flag, record)=> {
+    this.setState({
+      followUpVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
   // 简单查询
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -293,12 +302,12 @@ export default class BusinessOpportunity extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={5} sm={24}>
             <FormItem label="编码">
-              {getFieldDecorator('no')(<Input placeholder="请输入编码" />)}
+              {getFieldDecorator('code')(<Input placeholder="请输入编码" />)}
             </FormItem>
           </Col>
           <Col md={5} sm={24}>
             <FormItem label="客户名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入客户名称" />)}
+              {getFieldDecorator('customerName')(<Input placeholder="请输入客户名称" />)}
             </FormItem>
           </Col>
           <Col md={5} sm={24}>
@@ -338,7 +347,7 @@ export default class BusinessOpportunity extends PureComponent {
       businessViewVisible,
       businessEditVisible,
       followUpVisible,
-      rowInfo ,
+      rowInfo,
       businessStateVisible,
       projectVisible,
     } = this.state;
@@ -372,7 +381,7 @@ export default class BusinessOpportunity extends PureComponent {
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'businessStatus',
         filters: [
           {
             text: status[0],
@@ -398,14 +407,28 @@ export default class BusinessOpportunity extends PureComponent {
       },
       {
         title: '操作',
+        width: 180,
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >商机分配</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.handleFollowUpVisible(true)}>跟进</a>
-            <Divider type="vertical" />
+            {record.businessStatus === 0 && (
+              <div>
+                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+              </div>
+            )}
+            {record.businessStatus === 1 && (
+              <div>
+                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+                <Divider type="vertical" />
+                <a onClick={() =>this.showEditMessage(true, record)} >商机分配</a>
+              </div>
+            )}
+            {record.businessStatus === 2 && (
+              <div>
+                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+                <Divider type="vertical" />
+                <a onClick={() =>this.showFollowUpMessage(true, record)}>跟进</a>
+              </div>
+            )}
           </Fragment>
         ),
       },
@@ -448,8 +471,8 @@ export default class BusinessOpportunity extends PureComponent {
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
-                  新建
+                <Button type="primary" onClick={() => this.handleBusinessOppVisible(true)}>
+                  新建商机
                 </Button>
                 <Button type="primary" onClick={() => this.handleProjectVisible(true)}>
                   新建项目
@@ -479,11 +502,11 @@ export default class BusinessOpportunity extends PureComponent {
           </div>
         </Card>
         <BusinessAddModal {...businessAddMethods} businessOppVisible={businessOppVisible} />
-        <BusinessFollowUp {...followUpMethods} followUpVisible={followUpVisible} />
+        <BusinessFollowUp {...followUpMethods} followUpVisible={followUpVisible} rowInfo={rowInfo} />
         <BusinessOppView {...businessViewMethods} businessViewVisible={businessViewVisible} rowInfo={rowInfo} />
         <BusinessEditModal {...businessEditMethods} businessEditVisible={businessEditVisible} rowInfo={rowInfo} />
         <BusinessStateModal {...businessStateMethods} businessStateVisible={businessStateVisible} />
-        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} />
+        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

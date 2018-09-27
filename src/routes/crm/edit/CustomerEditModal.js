@@ -226,7 +226,7 @@ class CustomerEditModal extends PureComponent {
     return (
       <Modal
         title="客户基本信息编辑"
-        style={{ top: 80 }}
+        style={{ top: 20 }}
         visible={customerEditVisible}
         width="90%"
         maskClosable={false}
@@ -326,6 +326,7 @@ class CustomerEditModal extends PureComponent {
                       <Form.Item label={fieldLabels.mobilePhone}>
                         {getFieldDecorator('mobilePhone', {
                           rules: [{ required: false, message: '请输入手机号码' }],
+                          initialValue:`${rowInfo.mobilePhone}`,
                         })(<Input placeholder="请输入手机号码" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
