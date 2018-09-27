@@ -12,6 +12,11 @@ function initTotalList(columns) {
   return totalList;
 }
 
+function showTotal(total){
+  return `总计 ${total} 条记录 `;
+
+}
+
 class StandardTable extends PureComponent {
   constructor(props) {
     super(props);
@@ -61,14 +66,22 @@ class StandardTable extends PureComponent {
     this.handleRowSelectChange([], []);
   };
 
+
+
+
+  showTotal1=() =>{(total, range) => `${range[0]}-${range[1]} 总计  ${total} 条 `};
+
   render() {
     const { selectedRowKeys, needTotalList } = this.state;
-    const { data: { list, pagination }, loading, columns, rowKey,scroll } = this.props;
+    const { data: { list, pagination,total }, loading, columns, rowKey,scroll } = this.props;
 
     const paginationProps = {
+      showTotal: showTotal ,
       showSizeChanger: true,
       showQuickJumper: true,
+      pageSizeOptions:['10','20','30','40','50'],
       ...pagination,
+      total: total,
     };
 
     const rowSelection = {

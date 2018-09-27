@@ -234,8 +234,7 @@ export default class Workplace extends PureComponent {
             <Col span={6}>
               <Badge count={0}>
                 <div className={styles["gutter-box1"]}>
-                  <h3 >项目审批</h3>
-                  <br />
+                  <h4 >项目审批</h4>
                   <p>
                     0个待审批的项目
                   </p>
@@ -245,8 +244,7 @@ export default class Workplace extends PureComponent {
             <Col span={6}>
               <Badge count={3}>
                 <div className={styles["gutter-box2"]} >
-                  <h3 >合同审批</h3>
-                  <br />
+                  <h4 >合同审批</h4>
                   <p>
                     3个待审批的合同
                   </p>
@@ -256,8 +254,7 @@ export default class Workplace extends PureComponent {
             <Col span={6}>
               <Badge count={1}>
                 <div className={styles["gutter-box3"]} >
-                  <h3 >费用审批</h3>
-                  <br />
+                  <h4 >费用审批</h4>
                   <p>
                     1个待审批的费用
                   </p>
@@ -267,21 +264,17 @@ export default class Workplace extends PureComponent {
             <Col span={6}>
               <Badge count={10}>
                 <div className={styles["gutter-box4"]} >
-                  <h3>请假审批</h3>
-                  <br />
+                  <h4>请假审批</h4>
                   <p>
                     10个待审批的请假
                   </p>
                 </div>
               </Badge>
             </Col>
-          </Row>
-          <Row gutter={32}>
             <Col span={6}>
               <Badge count={6}>
                 <div className={styles["gutter-box5"]} >
-                  <h3>报销审批</h3>
-                  <br />
+                  <h4>报销审批</h4>
                   <p>
                     6个待审批的报销
                   </p>

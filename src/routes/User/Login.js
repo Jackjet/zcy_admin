@@ -136,7 +136,7 @@ export default class LoginPage extends Component {
             login.type === 'account' &&
             !login.submitting &&
             this.renderMessage('账户或密码错误（18888888888/888888）')}
-            <UserName name="userName" placeholder="请输入手机号" />
+            <Mobile name="userName" placeholder="请输入手机号" />
             <Password name="password" placeholder="请输入密码" />
           </div>
           <div className={styles.other}>

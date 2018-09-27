@@ -416,10 +416,13 @@ class BasicLayout extends React.PureComponent {
             null,
           ]}
         >
-          <p>账号：</p>
-          <p>当前日期：</p>
-          <p>组织：</p>
-          <p>职位：</p>
+          <div style={{paddingLeft:16}}>
+
+            <p>账号：</p>
+            <p>当前组织：</p>
+            <p>职位：</p>
+          </div>
+
         </Modal>
 
 

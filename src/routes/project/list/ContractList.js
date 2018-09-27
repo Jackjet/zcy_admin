@@ -32,7 +32,7 @@ const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
-    .join(',');
+.join(',');
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -51,8 +51,7 @@ export default class Contract extends PureComponent {
     openKeys: ['sub1'],
   };
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
+    this.props.dispatch({
       type: 'rule/fetch',
     });
   }
