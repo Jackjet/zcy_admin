@@ -1,8 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover } from 'antd';
+import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover, Tree } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const mockData = [];
+for (let i = 0; i < 10; i+=1) {
+  mockData.push({
+    key: i.toString(),
+    title: `人员${i + 1}`,
+  });
+};
+const { TreeNode } = Tree;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -30,34 +38,16 @@ const formItemLayout = {
 class VisitListEditModal extends PureComponent {
   state = {
     width: '90%',
-    mockData: [],
+    selectedKeys: [],
     targetKeys: [],
   };
   componentDidMount() {
-    this.getMock();
     window.addEventListener('resize', this.resizeFooterToolbar);
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  getMock = () => {
-    const targetKeys = [];
-    const mockData = [];
-    for (let i = 0; i < 20; i++) {
-      const data = {
-        key: i.toString(),
-        title: `content${i + 1}`,
-        description: `description of content${i + 1}`,
-        chosen: Math.random() * 2 > 1,
-      };
-      if (data.chosen) {
-        targetKeys.push(data.key);
-      }
-      mockData.push(data);
-    }
-    this.setState({ mockData, targetKeys });
-  };
   filterOption = (inputValue, option) => {
     return option.description.indexOf(inputValue) > -1;
   };
@@ -76,6 +66,7 @@ class VisitListEditModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, visitEditVisible, handleVisitEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { selectedKeys } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -131,10 +122,10 @@ class VisitListEditModal extends PureComponent {
     return (
       <Modal
         title="拜访新增"
-        style={{ top: 150 }}
+        style={{ top: 20 }}
         // 对话框是否可见
         visible={visitEditVisible}
-        width="60%"
+        width="50%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
@@ -144,13 +135,13 @@ class VisitListEditModal extends PureComponent {
           <Card>
             <Form layout="horizontal">
               <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '请选择拜访对象' }],
-                      initialValue:`${rowInfo.dictID}`,
+                      initialValue:`${rowInfo.visitCus}`,
                     })(
-                      <Select  placeholder="请选择拜访对象" style={{ width: 200 }}>
+                      <Select placeholder="请选择拜访对象" >
                         <Option value="0">电话来访</Option>
                         <Option value="1">客户介绍</Option>
                         <Option value="2">老客户</Option>
@@ -164,14 +155,13 @@ class VisitListEditModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitType}>
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '请选择拜访方式' }],
+                      initialValue:`${rowInfo.visitMethod}`,
                     })(
-                      <Select placeholder="请选择拜访方式" style={{ width: 200 }}>
+                      <Select placeholder="请选择拜访方式" >
                         <Option value="0">电话来访</Option>
                         <Option value="1">现场拜访</Option>
                         <Option value="8">其他</Option>
@@ -181,21 +171,20 @@ class VisitListEditModal extends PureComponent {
                 </Col>
               </Row>
               <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
                     })(<DatePicker placeholder="请选择拜访日期" />)}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.connectBusiness}>
                     {getFieldDecorator('connectBusiness', {
                       rules: [{ required: false, message: '请选择关联商机' }],
+                      initialValue:`${rowInfo.withBusiness}`,
                     })(
-                      <Select placeholder="请选择关联商机" style={{ width: 200 }}>
+                      <Select placeholder="请选择关联商机">
                         <Option value="0">电话来访</Option>
                         <Option value="1">现场拜访</Option>
                         <Option value="8">其他</Option>
@@ -204,48 +193,75 @@ class VisitListEditModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col span={21} pull={3} >
                   <Form.Item {...formItemLayout} label={fieldLabels.communication}>
                     {getFieldDecorator('communication')(
-                      <TextArea placeholder="请输入交流内容" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea placeholder="请输入交流内容" style={{ minHeight: '200%' }} rows={4} />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={10} push={1}>
+                  <Form.Item {...formItemLayout} label='参与人员'>
+                    {getFieldDecorator('assignor', {
+                    })(
+                      <div className={styles.divBorder}>
+                        <Tree>
+                          <TreeNode title="杭州至诚" key="0-0">
+                            <TreeNode title="管理层1" key="0-0-0" >
+                              <TreeNode title="员工1" key="0-0-0-0"  />
+                              <TreeNode title="员工2" key="0-0-0-1" />
+                            </TreeNode>
+                            <TreeNode title="管理层2" key="0-0-1">
+                              <TreeNode title="小卒1" key="0-0-1-0" />
+                              <TreeNode title="小卒2" key="0-0-1-1" />
+                            </TreeNode>
+                          </TreeNode>
+                          <TreeNode title="义务至诚" key="0-1">
+                            <TreeNode title="董事会" key="0-1-0" >
+                              <TreeNode title="主管1" key="0-1-0-0"  />
+                              <TreeNode title="主管2" key="0-1-0-1" />
+                            </TreeNode>
+                            <TreeNode title="财务部" key="0-1-1">
+                              <TreeNode title="会计1" key="0-1-1-0" />
+                            </TreeNode>
+                          </TreeNode>
+                        </Tree>
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={11} push={1}>
+                  <Form.Item >
+                    {getFieldDecorator('personal', {
+                    })(
+                      <div>
+                        <Transfer
+                          listStyle={{
+                            width: 130,
+                            height: 150,
+                          }}
+                          dataSource={mockData}
+                          titles={['可选人员', '已选人员']}
+                          targetKeys={this.state.targetKeys}
+                          selectedKeys={selectedKeys}
+                          onChange={this.handleChange}
+                          onSelectChange={this.handleSelectChange}
+                          render={item => item.title}
+                        />
+                      </div>
 
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.participants}>
-                    {getFieldDecorator('participants')(
-                      <Transfer
-                        // 数据源，其中的数据将会被渲染到左边一栏中，targetKeys 中指定的除外。
-                        dataSource={this.state.mockData}
-                        // 接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false。
-                        filterOption={this.filterOption}
-                        listStyle={{
-                          width: 150,
-                          height: 150,
-                        }}
-                        // 显示在右侧框数据的key集合
-                        targetKeys={this.state.targetKeys}
-                        // 选项在两栏之间转移时的回调函数
-                        onChange={this.handleChange}
-                        // 每行数据渲染函数，该函数的入参为 dataSource 中的项，返回值为 ReactElement。
-                        // 或者返回一个普通对象，其中 label 字段为 ReactElement，value 字段为 title
-                        render={item => item.title}
-                      />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row>
-                <Col lg={24} md={24} sm={24}>
+                <Col span={21} pull={3} >
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(
-                      <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
+                      <TextArea placeholder="请输入备注" rows={4} />
                     )}
                   </Form.Item>
                 </Col>

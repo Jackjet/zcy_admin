@@ -26,6 +26,7 @@ import ContactsAddModal from '../add/ContactsAddModal';
 import CustomerDistributionModal from '../add/CustomerDistributionModal';
 import CustomerEditModal from '../edit/CustomerEditModal';
 
+const {confirm} = Modal;
 const { Content,  Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -168,22 +169,65 @@ export default class CustomerList extends PureComponent {
   };
 
   // 选中行删除方法
+  handleDeleteMoreClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    if (!selectedRows) return;
+    confirm({
+      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
+      keyboard:false,
+      cancelText:'取消',
+      okText:'确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: selectedRows.map(row => row.no).join(','),
+          },
+        });
+        message.success('删除成功')
+      },
+      onCancel() {
+        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      },
+    });
+    this.setState({
+      selectedRows: [],
+    });
+  };
+
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    dispatch({
-      type: 'rule/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
+    if(this.state.selectedRows.length === 0){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请勾选');
+      return false;
+    }
+    confirm({
+      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
+      keyboard:false,
+      cancelText:'取消',
+      okText:'确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: selectedRows.map(row => row.no).join(','),
+          },
         });
+        message.success('删除成功')
       },
+      onCancel() {
+        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      },
+    });
+    this.setState({
+      selectedRows: [],
     });
   };
 
@@ -585,7 +629,7 @@ export default class CustomerList extends PureComponent {
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             {
-              record.status === 0 && (
+              record.customerStatus === 1 && (
                 <span>
                   <Divider type="vertical" />
                   <a>启用</a>
@@ -593,7 +637,7 @@ export default class CustomerList extends PureComponent {
               )
             }
             {
-              record.status === 1 && (
+              record.customerStatus === 0 && (
                 <span>
                   <Divider type="vertical" />
                   <a>停用</a>
@@ -649,7 +693,11 @@ export default class CustomerList extends PureComponent {
                         <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
                           设置联系人
                         </Button>
-                        <Button type="primary" onClick={() => this.handleDeleteClick(true)}>
+                      </span>
+                    )}
+                    {selectedRows.length > 1 && (
+                      <span>
+                        <Button type="primary" onClick={() => this.handleDeleteMoreClick(true)}>
                           批量删除
                         </Button>
                       </span>

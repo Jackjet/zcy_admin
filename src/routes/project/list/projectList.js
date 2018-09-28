@@ -582,7 +582,7 @@ export default class projectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} />
+        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
         <ProjectChildrenAddModal {...projectChildrenAddMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...projectTabsMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal {...projectEditMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />

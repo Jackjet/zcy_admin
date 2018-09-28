@@ -1,8 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover } from 'antd';
+import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover, Tree } from 'antd';
+import moment from "moment/moment";
 import { connect } from 'dva';
 import styles from './style.less';
 
+const mockData = [];
+for (let i = 0; i < 10; i+=1) {
+  mockData.push({
+    key: i.toString(),
+    title: `人员${i + 1}`,
+  });
+};
+const { TreeNode }= Tree;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -44,32 +53,16 @@ const formItemLayoutTextArea = {
 class BusinessFollowUp extends PureComponent {
   state = {
     width: '90%',
-    mockData: [],
     targetKeys: [],
+    selectedKeys: [],
   };
   componentDidMount() {
-    this.getMock();
     window.addEventListener('resize', this.resizeFooterToolbar);
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  getMock = () => {
-    const targetKeys = [];
-    const mockData = [];
-    for (let i = 0; i < 20; i++) {
-      const data = {
-        key: i.toString(),
-        title: `content${i + 1}`,
-      };
-      if (data.chosen) {
-        targetKeys.push(data.key);
-      }
-      mockData.push(data);
-    }
-    this.setState({ mockData, targetKeys });
-  };
   filterOption = (inputValue, option) => {
     return option.description.indexOf(inputValue) > -1;
   };
@@ -86,8 +79,9 @@ class BusinessFollowUp extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, followUpVisible, handleFollowUpVisible } = this.props;
+    const { form, dispatch, submitting, followUpVisible, handleFollowUpVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { selectedKeys } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -142,11 +136,11 @@ class BusinessFollowUp extends PureComponent {
     };
     return (
       <Modal
-        title="跟进"
+        title="商机跟进"
         style={{ top: 20 }}
         // 对话框是否可见
         visible={followUpVisible}
-        width="60%"
+        width="50%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
@@ -160,8 +154,9 @@ class BusinessFollowUp extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: false, message: '商机名称' }],
+                      initialValue:`${rowInfo.businessName}`,
                     })(
-                      <Input placeholder="请选择拜访对象" style={{ width: 200 }} />
+                      <Input placeholder="商机名称" style={{ width: 200 }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -184,7 +179,9 @@ class BusinessFollowUp extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(<DatePicker placeholder="请选择拜访日期" style={{ width: 200 }} />)}
+                    })(
+                      <DatePicker placeholder="请选择拜访日期" style={{ width: 200 }} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -198,26 +195,52 @@ class BusinessFollowUp extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={12} push={8}>
-                  <Form.Item label={fieldLabels.participants}>
-                    {getFieldDecorator('participants')(
-                      <Transfer
-                        // 数据源，其中的数据将会被渲染到左边一栏中，targetKeys 中指定的除外。
-                        dataSource={this.state.mockData}
-                        // 接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false。
-                        filterOption={this.filterOption}
-                        listStyle={{
-                          width: 150,
-                          height: 150,
-                        }}
-                        // 显示在右侧框数据的key集合
-                        targetKeys={this.state.targetKeys}
-                        // 选项在两栏之间转移时的回调函数
-                        onChange={this.handleChange}
-                        // 每行数据渲染函数，该函数的入参为 dataSource 中的项，返回值为 ReactElement。
-                        // 或者返回一个普通对象，其中 label 字段为 ReactElement，value 字段为 title
-                        render={item => item.title}
-                      />
+                <Col span={7} push={2}>
+                  <Form.Item {...formItemLayout} label='参与人员'>
+                    {getFieldDecorator('assignor', {
+                    })(
+                      <div className={styles.divBorder}>
+                        <Tree>
+                          <TreeNode title="杭州至诚" key="0-0">
+                            <TreeNode title="管理层1" key="0-0-0" >
+                              <TreeNode title="员工1" key="0-0-0-0"  />
+                              <TreeNode title="员工2" key="0-0-0-1" />
+                            </TreeNode>
+                            <TreeNode title="管理层2" key="0-0-1">
+                              <TreeNode title="小卒1" key="0-0-1-0" />
+                              <TreeNode title="小卒2" key="0-0-1-1" />
+                            </TreeNode>
+                          </TreeNode>
+                          <TreeNode title="义务至诚" key="0-1">
+                            <TreeNode title="董事会" key="0-1-0" >
+                              <TreeNode title="主管1" key="0-1-0-0"  />
+                              <TreeNode title="主管2" key="0-1-0-1" />
+                            </TreeNode>
+                            <TreeNode title="财务部" key="0-1-1">
+                              <TreeNode title="会计1" key="0-1-1-0" />
+                            </TreeNode>
+                          </TreeNode>
+                        </Tree>
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={15} push={3}>
+                  <Form.Item >
+                    {getFieldDecorator('personal', {
+                    })(
+                      <div>
+                        <Transfer
+                          dataSource={mockData}
+                          titles={['可选人员', '已选人员']}
+                          targetKeys={this.state.targetKeys}
+                          selectedKeys={selectedKeys}
+                          onChange={this.handleChange}
+                          onSelectChange={this.handleSelectChange}
+                          render={item => item.title}
+                        />
+                      </div>
+
                     )}
                   </Form.Item>
                 </Col>

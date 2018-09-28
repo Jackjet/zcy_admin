@@ -450,7 +450,7 @@ class CustomerViewTabs extends PureComponent {
                         <Col span={8}>
                           <Form.Item label={fieldLabels.incomeTax}>
                             {getFieldDecorator('incomeTax', {
-                              rules: [{ required: true, message: '请选择所得税征收方式' }],
+                              rules: [{ required: false, message: '请选择所得税征收方式' }],
                             })(
                               <Input readOnly placeholder="请选择所得税征收方式" style={{ width: 200 }} />
                             )}
@@ -501,7 +501,7 @@ class CustomerViewTabs extends PureComponent {
                         <Col span={8}>
                           <Form.Item label={fieldLabels.email}>
                             {getFieldDecorator('email', {
-                              rules: [{ required: true, message: '请输入电子邮箱' }],
+                              rules: [{ required: false, message: '请输入电子邮箱' }],
                             })(
                               <Input readOnly placeholder="请输入电子邮箱" style={{ width: 200 }} />
                             )}
@@ -510,7 +510,7 @@ class CustomerViewTabs extends PureComponent {
                         <Col span={8}>
                           <Form.Item {...companyphonecol} label={fieldLabels.companyPhone}>
                             {getFieldDecorator('companyPhone', {
-                              rules: [{ required: true, message: '请输入公司电话' }],
+                              rules: [{ required: false, message: '请输入公司电话' }],
                             })(
                               <Input readOnly placeholder="请输入公司电话" style={{ width: 200 }} />
                             )}
@@ -522,7 +522,7 @@ class CustomerViewTabs extends PureComponent {
                         <Col span={8}>
                           <Form.Item label={fieldLabels.postalCode}>
                             {getFieldDecorator('postalCode', {
-                              rules: [{ required: true, message: '请输入邮政编码' }],
+                              rules: [{ required: false, message: '请输入邮政编码' }],
                             })(
                               <Input readOnly placeholder="请输入邮政编码" style={{ width: 200 }} />
                             )}
@@ -615,21 +615,21 @@ class CustomerViewTabs extends PureComponent {
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
                       {getFieldDecorator('companyName', {
-                        rules: [{ required: true, message: '请输入单位名称' }],
+                        rules: [{ required: false, message: '请输入单位名称' }],
                       })(<Input readOnly placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
                       {getFieldDecorator('companyAddress', {
-                        rules: [{ required: true, message: '请输入单位地址' }],
+                        rules: [{ required: false, message: '请输入单位地址' }],
                       })(<Input readOnly placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                       {getFieldDecorator('taxNumber', {
-                        rules: [{ required: true, message: '请输入税号' }],
+                        rules: [{ required: false, message: '请输入税号' }],
                       })(<Input readOnly placeholder="请输入税号" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
@@ -638,14 +638,14 @@ class CustomerViewTabs extends PureComponent {
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
                       {getFieldDecorator('openAccountBank', {
-                        rules: [{ required: true, message: '请输入开户银行' }],
+                        rules: [{ required: false, message: '请输入开户银行' }],
                       })(<Input readOnly placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
                       {getFieldDecorator('bankAccount', {
-                        rules: [{ required: true, message: '请输入银行账户' }],
+                        rules: [{ required: false, message: '请输入银行账户' }],
                       })(<Input readOnly placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>

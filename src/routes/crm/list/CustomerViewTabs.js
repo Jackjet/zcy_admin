@@ -26,9 +26,9 @@ import ContractViewInfo from '../../project/select/ContractInfo';
 
 import styles from './style.less';
 
-
+const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
 const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+const customerStatus = ['启用', '禁用'];
 const { Panel } = Collapse;
 const { Option } = Select;
 const getValue = obj =>
@@ -54,7 +54,7 @@ const fieldLabels = {
   company: '所属公司',
   address: '详细地址',
   remark: '备注',
-  status: '状态',
+  customerStatus: '状态',
   companyName:'单位名称',
   companyAddress:'单位地址',
   taxNumber:'税号',
@@ -524,7 +524,7 @@ class CustomerViewTabs extends PureComponent {
     return (
       <Modal
         title="查看"
-        style={{ top: 60 }}
+        style={{ top: 20 }}
         visible={tabsViewVisible}
         width="80%"
         maskClosable={false}
@@ -552,7 +552,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('customerName', {
                               rules: [{ required: true, message: '请输入客户名称' }],
                               initialValue :`${rowInfo.customerName}`,
-                            })(<Input disabled placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
+                            })(<Input readOnly placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
                           </Form.Item>
                         </Col>
                       </Row>
@@ -562,7 +562,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('customerLevel', {
                               rules: [{ required: true, message: '请选择客户等级' }],
                             })(
-                              <Input disabled placeholder="请选择客户等级" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择客户等级" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -570,8 +570,9 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item label={fieldLabels.industry}>
                             {getFieldDecorator('industry', {
                               rules: [{ required: true, message: '请选择行业' }],
+                              initialValue:`${industry[rowInfo.industry]}`,
                             })(
-                              <Input disabled placeholder="请选择行业" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择行业" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -580,7 +581,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('incomeTax', {
                               rules: [{ required: true, message: '请选择所得税征收方式' }],
                             })(
-                              <Input disabled placeholder="请选择所得税征收方式" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择所得税征收方式" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -592,7 +593,7 @@ class CustomerViewTabs extends PureComponent {
                               rules: [{ required: false, message: '请输入客户编码' }],
                               initialValue:`${rowInfo.customerCode}`,
                             })(
-                              <Input disabled placeholder="请输入客户编码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入客户编码" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -601,7 +602,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('pinyin', {
                               rules: [{ required: false, message: '请输入拼音码' }],
                             })(
-                              <Input disabled placeholder="请输入拼音码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入拼音码" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -609,7 +610,7 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item {...simplenamecol} label={fieldLabels.simpleName}>
                             {getFieldDecorator('simpleName', {
                               rules: [{ required: false, message: '请输入简称' }],
-                            })(<Input disabled placeholder="请输入简称" style={{ width: 200 }} />
+                            })(<Input readOnly placeholder="请输入简称" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -618,10 +619,11 @@ class CustomerViewTabs extends PureComponent {
                       <Row className={styles['row-h']}>
                         <Col span={8}>
                           <Form.Item label={fieldLabels.mobilePhone}>
-                            {getFieldDecorator('mobilepPhone', {
+                            {getFieldDecorator('mobilePhone', {
                               rules: [{ required: true, message: '请输入手机号码' }],
+                              initialValue:`${rowInfo.mobilePhone}`,
                             })(
-                              <Input disabled placeholder="请输入手机号码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入手机号码" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -630,7 +632,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('email', {
                               rules: [{ required: true, message: '请输入电子邮箱' }],
                             })(
-                              <Input disabled placeholder="请输入电子邮箱" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入电子邮箱" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -639,7 +641,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('companyPhone', {
                               rules: [{ required: true, message: '请输入公司电话' }],
                             })(
-                              <Input disabled placeholder="请输入公司电话" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入公司电话" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -651,7 +653,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('postalCode', {
                               rules: [{ required: true, message: '请输入邮政编码' }],
                             })(
-                              <Input disabled placeholder="请输入邮政编码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入邮政编码" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -660,10 +662,8 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('region', {
                               rules: [{ required: true, message: '请选择所在区域' }],
                             })(
-                              <Cascader
-                                disabled
-                                options={optionshz}
-                                onChange={onChange}
+                              <Input
+                                readOnly
                                 placeholder="请选择所在区域"
                                 style={{ width: 603 }}
                               />
@@ -677,7 +677,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('url', {
                               rules: [{ required: false, message: '请输入网站主页' }],
                             })(
-                              <Input disabled placeholder="请输入网站主页" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入网站主页" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -686,7 +686,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('address', {
                               rules: [{ required: false, message: '请输入详细地址' }],
                             })(
-                              <Input disabled placeholder="请输入详细地址" style={{ width: 603 }} />
+                              <Input readOnly placeholder="请输入详细地址" style={{ width: 603 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -697,7 +697,7 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('taxCode', {
                               rules: [{ required: false, message: '请输入税务登记号' }],
                             })(
-                              <Input disabled placeholder="请输入税务登记号" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入税务登记号" style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -706,27 +706,28 @@ class CustomerViewTabs extends PureComponent {
                             {getFieldDecorator('remark', {
                               rules: [{ required: false, message: '请输入备注' }],
                             })(
-                              <Input disabled placeholder="请输入备注" style={{ width: 603 }} />
+                              <Input readOnly placeholder="请输入备注" style={{ width: 603 }} />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
                       <Row className={styles['row-h']}>
                         <Col span={8}>
-                          <Form.Item {...statuscol} label={fieldLabels.status}>
-                            {getFieldDecorator('status', {
+                          <Form.Item {...statuscol} label={fieldLabels.customerStatus}>
+                            {getFieldDecorator('customerStatus', {
                               rules: [{ required: true, message: '状态' }],
+                              initialValue:`${customerStatus[rowInfo.customerStatus]}`,
                             })(
-                              <Input disabled placeholder="请选择状态" disable style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择状态" disable style={{ width: 200 }} />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
                           <Form.Item {...companycol} label={fieldLabels.company}>
                             {getFieldDecorator('company', {
-                              rules: [{ required: true, message: '状态' }],
+                              rules: [{ required: true, message: '公司' }],
                             })(
-                              <Input disabled placeholder="所属公司" style={{ width: 603 }} />
+                              <Input readOnly placeholder="所属公司" style={{ width: 603 }} />
                             )}
                           </Form.Item>
                         </Col>
@@ -741,21 +742,21 @@ class CustomerViewTabs extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
                       {getFieldDecorator('companyName', {
                         rules: [{ required: true, message: '请输入单位名称' }],
-                      })(<Input disabled placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                      })(<Input readOnly placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
                       {getFieldDecorator('companyAddress', {
                         rules: [{ required: true, message: '请输入单位地址' }],
-                      })(<Input disabled placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                      })(<Input readOnly placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                       {getFieldDecorator('taxNumber', {
                         rules: [{ required: true, message: '请输入税号' }],
-                      })(<Input disabled placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                      })(<Input readOnly placeholder="请输入税号" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -764,14 +765,14 @@ class CustomerViewTabs extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
                       {getFieldDecorator('openAccountBank', {
                         rules: [{ required: true, message: '请输入开户银行' }],
-                      })(<Input disabled placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                      })(<Input readOnly placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
                       {getFieldDecorator('bankAccount', {
                         rules: [{ required: true, message: '请输入银行账户' }],
-                      })(<Input disabled placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                      })(<Input readOnly placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
                     </Form.Item>
                   </Col>
                 </Row>

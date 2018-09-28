@@ -134,10 +134,10 @@ class BusinessOppView extends PureComponent {
     };
     return (
       <Modal
-        title="查看"
-        style={{ top: 60 }}
+        title="商机信息查看"
+        style={{ top: 20 }}
         visible={businessViewVisible}
-        width="70%"
+        width="55%"
         maskClosable={false}
         onOk={okHandle}
         onCancel={() => handleBusinessViewVisible()}
@@ -159,7 +159,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('businessCode', {
                       rules: [{ required: true, message: '请输入编码' }],
                       initialValue:`${rowInfo.businessCode}`,
-                    })(<Input disabled placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -167,7 +167,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
                       initialValue:`${rowInfo.businessName}`,
-                    })(<Input disabled placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -192,7 +192,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('customerForBusinessNameName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
                       initialValue:`${rowInfo.customerForBusinessName}`,
-                    })(<Input disabled placeholder="请输入客户名称" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="请输入客户名称" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -200,7 +200,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入联系电话' }],
                       initialValue:`${rowInfo.mobilePhone}`,
-                    })(<Input disabled placeholder="请输入联系电话" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="请输入联系电话" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -208,7 +208,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('platform', {
                       rules: [{ required: false, message: '请选择商机平台' }],
                     })(
-                      <Select disabled placeholder="请选择商机平台" style={{ width: 150 }}>
+                      <Select readOnly placeholder="请选择商机平台" style={{ width: 150 }}>
                         <Option value="0">杭州工程平台</Option>
                         <Option value="1">义务工程平台</Option>
                         <Option value="2">杭州审计平台</Option>
@@ -223,7 +223,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.executor}>
                     {getFieldDecorator('executor', {
                     })(
-                      <Input disabled placeholder="执行人" style={{ width: 150 }} />
+                      <Input readOnly placeholder="执行人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -231,7 +231,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.submissionPerson}>
                     {getFieldDecorator('submissionPerson', {
                     })(
-                      <Input disabled placeholder="商机提供人" style={{ width: 150 }} />
+                      <Input readOnly placeholder="商机提供人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -242,7 +242,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('customerDemand', {
                       rules: [{ required: true, message: '请输入客户需求' }],
                     })(
-                      <TextArea disabled placeholder="请输入客户需求" />
+                      <TextArea readOnly placeholder="请输入客户需求" />
                     )}
                   </Form.Item>
                 </Col>
@@ -253,7 +253,7 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
                     })(
-                      <TextArea disabled placeholder="请输入备注" />
+                      <TextArea readOnly placeholder="请输入备注" />
                     )}
                   </Form.Item>
                 </Col>

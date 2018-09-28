@@ -26,7 +26,7 @@ import EditableTable from '../EditableTable/EditableTable';
 import ContactsAddModal from '../add/ContactsAddModal';
 import CustomerApplyEditModal from '../edit/CustomerApplyEditModal';
 
-
+const { confirm } = Modal;
 const { Content } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -168,33 +168,61 @@ export default class CustomerApplyList extends PureComponent {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
     if (!selectedRows) return;
-    dispatch({
-      type: 'rule/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
+    confirm({
+      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
+      keyboard:false,
+      cancelText:'取消',
+      okText:'确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: selectedRows.map(row => row.no).join(','),
+          },
         });
+        message.success('删除成功')
       },
+      onCancel() {
+        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      },
+    });
+    this.setState({
+      selectedRows: [],
     });
   };
 
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-    if (!selectedRows) return;
-    dispatch({
-      type: 'rule/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
+    if(this.state.selectedRows.length === 0){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请勾选');
+      return false;
+    }
+    confirm({
+      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
+      keyboard:false,
+      cancelText:'取消',
+      okText:'确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: selectedRows.map(row => row.no).join(','),
+          },
         });
+        message.success('删除成功')
       },
+      onCancel() {
+        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      },
+    });
+    this.setState({
+      selectedRows: [],
     });
   };
 
@@ -565,7 +593,7 @@ export default class CustomerApplyList extends PureComponent {
                     >
                       新建客户
                     </Button>
-                    {selectedRows.length > 0 && (
+                    {selectedRows.length > 1 && (
                       <span>
                         <Button type="primary" onClick={() => this.handleDeleteMoreClick(true)}>
                           批量删除
