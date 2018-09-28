@@ -36,6 +36,7 @@ export default class SiderMenu extends PureComponent {
     this.state = {
       openKeys: this.getDefaultCollapsedSubMenus(props),
     };
+
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname !== this.props.location.pathname) {
@@ -189,8 +190,8 @@ export default class SiderMenu extends PureComponent {
     });
   };
   render() {
-    const { logo, collapsed, onCollapse } = this.props;
-    const { openKeys } = this.state;
+    const { logo, collapsed, onCollapse,location  } = this.props;
+    const { openKeys  } = this.state;
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed
       ? {}
@@ -202,6 +203,7 @@ export default class SiderMenu extends PureComponent {
     if (!selectedKeys.length) {
       selectedKeys = [openKeys[openKeys.length - 1]];
     }
+    //const namehz = location.pathname === "/" ? location.query.companyName : '企业管理平台';
     return (
       <Sider
         trigger={null}
@@ -224,6 +226,7 @@ export default class SiderMenu extends PureComponent {
           {...menuProps}
           onOpenChange={this.handleOpenChange}
           selectedKeys={selectedKeys}
+          className={styles.menuSubmenu}
           style={{ padding: '16px 0', width: '100%' }}
         >
           {this.getNavMenuItems(this.menus)}

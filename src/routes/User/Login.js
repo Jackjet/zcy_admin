@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
-import { Checkbox, Alert, Icon } from 'antd';
+import {Link, routerRedux} from 'dva/router';
+import { Checkbox, Alert, Icon,message,Modal ,Button,Radio } from 'antd';
 import Login from 'components/Login';
 import styles from './Login.less';
 import $ from  'jquery';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+
+const RadioGroup = Radio.Group;
 
 @connect(({ login, loading }) => ({
   login,
@@ -14,8 +16,14 @@ const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 }))
 export default class LoginPage extends Component {
   state = {
+    loading: false,
     type: 'account',
     autoLogin: false,
+    switchOrgvisible: false,
+    value:'',
+    companyId:'',
+    companyName:'',
+
   };
 
   onTabChange = type => {
@@ -31,16 +39,54 @@ export default class LoginPage extends Component {
           ...values,
           type,
         },
+        callback: (res) => {
+
+         /* {res.status === 'ok'  &&  this.renderMessage("222222")}*/
+          if(res.status === 'ok' ) {
+              this.handleSwitchOrgShowModal();
+          }
+            // routerRedux.push()
+
+        }
       });
     }
   };
 
+
+  // 登录公司 取消
+  handleCancel = () => {
+    this.setState({ switchOrgvisible: false });
+  };
+
+
+// 登录公司选择确定
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, switchOrgvisible: false });
+      this.props.dispatch(routerRedux.push({
+        pathname: '/',
+        query: {companyId: this.state.companyId,companyName:this.state.companyName}
+      }));
+    }, 1000);
+  };
+
+  //  显示登录 公司
+  handleSwitchOrgShowModal = () => {
+    this.setState({
+      switchOrgvisible: true,
+    });
+
+  };
+
+  // 检查 是否 记住用户
   changeAutoLogin = e => {
     this.setState({
       autoLogin: e.target.checked,
     });
   };
 
+  // 显示  隐藏  二维码 登录
   showHideQRModal(state){
     var obj = $("#qrcodeModal");
     if(state===1){
@@ -51,13 +97,36 @@ export default class LoginPage extends Component {
   }
 
 
+  //公司列表 单选框 变化事件
+  onChange = (e) => {
+    let checkvalue = e.target.value;
+    let nameid = '';
+    if(checkvalue){
+      nameid =  checkvalue.split('<@>');
+    }
+    console.log('radio checked', nameid[0]);
+    console.log('radio checked', nameid[1]);
+    console.log('radio checked', e.target.value);
+    this.setState({
+      value: e.target.value,
+      companyId:nameid[0],
+      companyName:nameid[1],
+    });
+  };
+
+// 提示信息
   renderMessage = content => {
     return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
   };
 
   render() {
     const { login, submitting } = this.props;
-    const { type } = this.state;
+    const { switchOrgvisible,type,loading } = this.state;
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    };
     return (
       <div className={styles.main}>
         <a href="javascript:;" className={styles.ercode} onClick={()=>{this.showHideQRModal(1)}} ></a>
@@ -66,7 +135,7 @@ export default class LoginPage extends Component {
             {login.status === 'error' &&
             login.type === 'account' &&
             !login.submitting &&
-            this.renderMessage('账户或密码错误（admin/888888）')}
+            this.renderMessage('账户或密码错误（18888888888/888888）')}
             <UserName name="userName" placeholder="请输入手机号" />
             <Password name="password" placeholder="请输入密码" />
           </div>
@@ -91,6 +160,32 @@ export default class LoginPage extends Component {
             <img src={'../../src/assets/1536566323.png'} />
           </div>
         </div>
+
+
+        <Modal
+          visible={switchOrgvisible}
+          title={<h5 ><i className="anticon anticon-bars" ></i><span> 请选择登录公司</span></h5>}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          maskClosable={false}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>取消</Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+              确定
+            </Button>,
+          ]}
+        >
+          <div style={{paddingLeft:16}}>
+            <RadioGroup onChange={this.onChange} value={this.state.value}>
+              <Radio style={radioStyle} value={'1<@>义乌至诚会计师事务所'}>义乌至诚会计师事务所</Radio>
+              <Radio style={radioStyle} value={'2<@>杭州至诚云软件技术有限公司'}>杭州至诚云软件技术有限公司</Radio>
+              <Radio style={radioStyle} value={'3<@>杭州至诚会计师事务所'}>杭州至诚会计师事务所</Radio>
+              <Radio style={radioStyle} value={'4<@>---'}>...</Radio>
+            </RadioGroup>
+          </div>
+        </Modal>
+
+
 
       </div>
     );
