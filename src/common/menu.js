@@ -42,9 +42,9 @@ const menuData = [
     path: 'contractManager',
     children: [
       {
-        key: 'contractinfoList',
+        key: 'contractInfoList',
         name: '合同管理',
-        path: 'Contractinfo',
+        path: 'ContractInfo',
       },
       {
         key: 'xieyiList',

@@ -133,7 +133,7 @@ class CustomerApplyAddModal extends PureComponent {
         title="客户申请单信息新增"
         style={{ top: 20 }}
         visible={customerApplyAddVisible}
-        width="35%"
+        width="40%"
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}

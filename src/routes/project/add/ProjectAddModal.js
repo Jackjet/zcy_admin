@@ -9,12 +9,11 @@ import {
   DatePicker,
   // TimePicker,
   Input,
-  InputNumber,
   Select,
   Popover,
-  Cascader,
   Checkbox,
   Modal,
+  Divider,
   Upload,
 } from 'antd';
 import { connect } from 'dva';
@@ -22,43 +21,6 @@ import moment from "moment/moment";
 import styles from './style.less';
 
 const { Option } = Select;
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-const optionshz = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
-
 
 const ProjectTypeOption = ['工程造价业务项目', '可研报告', '招标代理业务项目'];
 
@@ -76,8 +38,8 @@ const fieldLabels = {
   fzcompany: '负责公司',
   fzperson: '项目负责人',
   fee: '项目费用',
-  startdate: '开始日期',
-  enddate: '结束日期',
+  startDate: '开始日期',
+  endDate: '结束日期',
   biztype: '业务类别',
   content: '项目内容',
   address: '详细地址',
@@ -131,7 +93,6 @@ class ProjectAddModal extends PureComponent {
   state = {
     width: '100%',
     projectOptionData:[],
-    choiceCheckBox:``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -139,19 +100,26 @@ class ProjectAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-  handleProjectChange = () => {
-    const optionData = ProjectTypeOption.map((data, index) => {
-        const val = `${data}`;
-        return <Option key={val}>{val}</Option>;
+
+
+  onOpenChange = openKeys => {
+    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      this.setState({ openKeys });
+    } else {
+      this.setState({
+        openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
-    this.setState({
-      projectOptionData: optionData,
-    });
+    }
   };
 
-  handleGetOptionValue=(value)=>{
+  handleProjectChange = () => {
+    const optionData = ProjectTypeOption.map((data, index) => {
+      const val = `${data}`;
+      return <Option key={val}>{val}</Option>;
+    });
     this.setState({
-      choiceCheckBox:`${value}`,
+      projectOptionData: optionData,
     });
   };
 
@@ -165,7 +133,7 @@ class ProjectAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { projectOptionData, choiceCheckBox } = this.state;
+    const { projectOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -242,7 +210,7 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
-                      initialValue:`${rowInfo.customerName}`,
+                      initialValue:`${rowInfo.customerName}` === 'undefined'?'':`${rowInfo.customerName}`,
                     })(<Input placeholder="请输入项目名称" style={{width:'140%'}} />)}
                   </Form.Item>
                 </Col>
@@ -283,11 +251,9 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.status}>
                     {getFieldDecorator('status', {
                       rules: [{ required: true, message: '请选择项目状态' }],
+                      initialValue:`新建`,
                     })(
-                      <Select placeholder="请选择项目状态" style={{ width: '100%' }}>
-                        <Option value="c">启用</Option>
-                        <Option value="h">禁用</Option>
-                      </Select>
+                      <Input placeholder="请选择项目状态" style={{ width: '100%' }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -318,7 +284,11 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('cuslink', {
                       rules: [{ required: true, message: '请选择客户联系人' }],
                     })(
-                      <Input placeholder="请选择客户联系人" style={{ width: '100%' }} />
+                      <div>
+                        <Input placeholder="请选择客户联系人" style={{ width: '70%' }} />
+                        <Divider type="vertical" />
+                        <a>新增联系人</a>
+                      </div>
                     )}
                   </Form.Item>
                 </Col>
@@ -370,15 +340,38 @@ class ProjectAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.startdate}>
-                    {getFieldDecorator('startdate')(
-                      <DatePicker style={{ width: '100%' }} placeholder="请输入开始日期" />
+                  <Form.Item {...formItemLayout} label='施工单位'>
+                    {getFieldDecorator('shigongdanwei')(
+                      <Input style={{ width: '100%' }} placeholder="施工单位" />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.enddate}>
-                    {getFieldDecorator('enddate')(
+                  <Form.Item {...formItemLayout} label='合同编号'>
+                    {getFieldDecorator('contractCode')(
+                      <Input style={{ width: '100%' }} placeholder="合同编号" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label='合伙人'>
+                    {getFieldDecorator('partner')(
+                      <Input style={{ width: '100%' }} placeholder="合伙人" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label='开始时间'>
+                    {getFieldDecorator('startDate')(
+                      <DatePicker style={{ width: '100%' }} placeholder="请输入开始时间" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.endDate}>
+                    {getFieldDecorator('endDate')(
                       <DatePicker style={{ width: '100%' }} placeholder="请输入结束日期" />
                     )}
                   </Form.Item>
@@ -396,22 +389,22 @@ class ProjectAddModal extends PureComponent {
                           { ( `${choiceTypeValue}` === `工程造价业务项目`|| `${choiceTypeValue}` ===`可研报告` ) && (
                             <span>
                               <Col span={8}>
-                                <Checkbox key="A">预算编制</Checkbox>
+                                <Checkbox value="A">预算编制</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="B">结算编制</Checkbox>
+                                <Checkbox value="B">结算编制</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="D">咨询审核</Checkbox>
+                                <Checkbox value="D">咨询审核</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="E">预算审核</Checkbox>
+                                <Checkbox value="E">预算审核</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="F">结算审核</Checkbox>
+                                <Checkbox value="F">结算审核</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="H">咨询报告</Checkbox>
+                                <Checkbox value="H">咨询报告</Checkbox>
                               </Col>
                             </span>
                           )}
@@ -419,10 +412,10 @@ class ProjectAddModal extends PureComponent {
                           { ( `${choiceTypeValue}` === `招标代理业务项目`|| `${choiceTypeValue}`===`可研报告` ) && (
                             <span>
                               <Col span={8}>
-                                <Checkbox key="G">政府采购招标代理</Checkbox>
+                                <Checkbox value="G">政府采购招标代理</Checkbox>
                               </Col>
                               <Col span={8}>
-                                <Checkbox key="C">建设工程招标代理</Checkbox>
+                                <Checkbox value="C">建设工程招标代理</Checkbox>
                               </Col>
                             </span>
                           )}

@@ -45,6 +45,7 @@ for (let i = 0; i < 46; i += 1) {
     customerForBusinessName:`客户名称${i}`,
 
     projectCode:`项目编号${i}`,
+    projectStatus: Math.floor(Math.random() * 10) % 7,
     organizeCode:`${i}`,
 
     visitCus:`拜访对象${i}`,

@@ -30,7 +30,7 @@ import styles from './style.less';
 
 const { Step } = Steps;
 const mockData = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 10; i+=1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
@@ -365,7 +365,7 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.name}>
                       {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入项目名称' }],
-                      })(<Input disabled placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
+                      })(<Input readOnly placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -375,7 +375,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('type', {
                         rules: [{ required: true, message: '请选择项目类别' }],
                       })(
-                        <Select disabled placeholder="请选择项目类别" style={{ width: 200 }}>
+                        <Select readOnly placeholder="请选择项目类别" style={{ width: 200 }}>
                           <Option value="0">请选择</Option>
                           <Option value="g">工程造价业务项目</Option>
                           <Option value="y">咨询报告</Option>
@@ -389,7 +389,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('years', {
                         rules: [{ required: true, message: '请选择年度' }],
                       })(
-                        <Select disabled placeholder="请选择年度" style={{ width: 200 }}>
+                        <Select readOnly placeholder="请选择年度" style={{ width: 200 }}>
                           <Option value="xiao">请选择</Option>
                           <Option value="z">2018</Option>
                           <Option value="f">2019</Option>
@@ -407,7 +407,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('status', {
                         rules: [{ required: true, message: '请选择项目状态' }],
                       })(
-                        <Select disabled placeholder="请选择项目状态" style={{ width: 200 }}>
+                        <Select readOnly placeholder="请选择项目状态" style={{ width: 200 }}>
                           <Option value="c">启用</Option>
                           <Option value="h">禁用</Option>
                         </Select>
@@ -420,7 +420,7 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.ProjectCode}>
                       {getFieldDecorator('ProjectCode', {
                         rules: [{ required: false, message: '请输入项目编码' }],
-                      })(<Input disabled placeholder="请输入项目编码" style={{ width: 200 }} />)}
+                      })(<Input readOnly placeholder="请输入项目编码" style={{ width: 200 }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -428,7 +428,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('customer', {
                         rules: [{ required: true, message: '请选择客户' }],
                       })(
-                        <Select disabled placeholder="请选择客户" style={{ width: 200 }}>
+                        <Select readOnly placeholder="请选择客户" style={{ width: 200 }}>
                           <Option value="xiao">请选择</Option>
                           <Option value="z">客户A</Option>
                           <Option value="f">客户B</Option>
@@ -446,7 +446,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('cuslink', {
                         rules: [{ required: true, message: '请选择客户联系人' }],
                       })(
-                        <Select disabled placeholder="请选择客户联系人" style={{ width: 200 }}>
+                        <Select readOnly placeholder="请选择客户联系人" style={{ width: 200 }}>
                           <Option value="xiao">请选择</Option>
                           <Option value="z">客户联系人A</Option>
                           <Option value="f">客户联系人B</Option>
@@ -466,7 +466,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('fzcompany', {
                         rules: [{ required: true, message: '负责公司' }],
                       })(
-                        <Select disabled placeholder="负责公司" style={{ width: 200 }}>
+                        <Select readOnly placeholder="负责公司" style={{ width: 200 }}>
                           <Option value="xiao">请选择</Option>
                           <Option value="z">公司A</Option>
                           <Option value="f">公司B</Option>
@@ -484,7 +484,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('fzperson', {
                         rules: [{ required: true, message: '项目负责人' }],
                       })(
-                        <Select disabled placeholder="负责公司" style={{ width: 200 }}>
+                        <Select readOnly placeholder="负责公司" style={{ width: 200 }}>
                           <Option value="xiao">请选择</Option>
                           <Option value="z">公司A</Option>
                           <Option value="f">公司B</Option>
@@ -501,7 +501,7 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.fee}>
                       {getFieldDecorator('fee', {
                         rules: [{ required: true, message: '请输入项目费用' }],
-                      })(<Input disabled placeholder="请输入项目费用" style={{ width: 200 }} />)}
+                      })(<Input readOnly placeholder="请输入项目费用" style={{ width: 200 }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -509,14 +509,14 @@ class ProjectApplyAddModal extends PureComponent {
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.startdate}>
                       {getFieldDecorator('startdate')(
-                        <DatePicker disabled style={{ width: 200 }} placeholder="请输入开始日期" />
+                        <DatePicker readOnly style={{ width: 200 }} placeholder="请输入开始日期" />
                       )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.enddate}>
                       {getFieldDecorator('enddate')(
-                        <DatePicker disabled style={{ width: 200 }} placeholder="请输入结束日期" />
+                        <DatePicker readOnly style={{ width: 200 }} placeholder="请输入结束日期" />
                       )}
                     </Form.Item>
                   </Col>
@@ -526,7 +526,7 @@ class ProjectApplyAddModal extends PureComponent {
                   <Col span={23} pull={5}>
                     <Form.Item {...formItemLayout} label={fieldLabels.biztype}>
                       {getFieldDecorator('biztype')(
-                        <Checkbox.Group disabled style={{ width: '100%' }}>
+                        <Checkbox.Group readOnly style={{ width: '100%' }}>
                           <Row>
                             <Col span={8}>
                               <Checkbox value="A">预算编制</Checkbox>
@@ -659,7 +659,7 @@ class ProjectApplyAddModal extends PureComponent {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
                         <div>
-                          <Upload {...props2}>
+                          <Upload {...uploadProps}>
                             <Button>
                               <Icon type="upload" /> 文档
                             </Button>
@@ -674,7 +674,7 @@ class ProjectApplyAddModal extends PureComponent {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
                         <div>
-                          <Upload {...props2}>
+                          <Upload {...uploadProps}>
                             <Button>
                               <Icon type="upload" /> 图片
                             </Button>
@@ -684,14 +684,19 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                 </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label='底稿'>
+                <Row>
+                  <Col span={6} push={2}>
+                    <Form.Item {...formItemLayout} lable="文档列表">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
-                        <div>
-                          <Table columns={uploadColumns} dataSource={uploadData} />
+                        <div style={{marginTop: -25}}>
+                          <Table
+                            showHeader={false}
+                            pagination={false}
+                            columns={uploadColumns}
+                            dataSource={uploadData}
+                          />
                         </div>
                       )}
                     </Form.Item>
@@ -853,7 +858,7 @@ class ProjectApplyAddModal extends PureComponent {
                   <Col span={12}>
                     <Form.Item {...formItemLayout} label={fieldLabels.ReportName}>
                       {getFieldDecorator('ReportName', {
-                      })(<Input disabled placeholder="报告名称" style={{ width: 200 }} />)}
+                      })(<Input readOnly placeholder="报告名称" style={{ width: 200 }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -884,7 +889,7 @@ class ProjectApplyAddModal extends PureComponent {
                         rules: [{ required: true, message: '报告号' }],
                       })(
                         <div>
-                          <Input disabled placeholder="报告号" className={styles['fn-mb-15']} />
+                          <Input readOnly placeholder="报告号" className={styles['fn-mb-15']} />
                         </div>
                       )}
                     </Form.Item>
@@ -937,8 +942,9 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="文印份数">
                       {getFieldDecorator('PrintingCopies', {
                         rules: [{ required: true, message: '文印份数' }],
+                        initialValue:`1`,
                       })(
-                        <InputNumber placeholder="文印份数" min={1} max={99} defaultValue={1} />,
+                        <InputNumber placeholder="文印份数" min={1} max={99} />,
                       )}
                     </Form.Item>
                   </Col>

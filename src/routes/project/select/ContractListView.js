@@ -21,7 +21,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ContractListView.less';
-import ContractAddModal from '../add/ContractAddModal.js';
+import ContractAddModal from '../../Contract/ContractAddModal.js';
 import ProjectCheckTabs from '../projectTabsInfo/ProjectCheckTabs.js';
 
 const FormItem = Form.Item;

@@ -44,6 +44,8 @@ export default class AllocationList extends PureComponent {
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
+    choiceTypeKey: 0,
+    choiceTypeValue:'',
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -95,6 +97,12 @@ export default class AllocationList extends PureComponent {
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
+    });
+  };
+  handleGetMenuValue = (MenuValue) => {
+    this.setState({
+      choiceTypeKey: MenuValue.key,
+      choiceTypeValue: MenuValue.item.props.children,
     });
   };
   handleMenuClick = e => {
@@ -159,6 +167,15 @@ export default class AllocationList extends PureComponent {
     });
   };
   handleAllocationAddVisible = flag => {
+    if(this.state.choiceTypeKey === 0) {
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请选择项目类别');
+      return false;
+    }
     this.setState({
       AllocationAddVisible: !!flag,
     });
@@ -187,6 +204,7 @@ export default class AllocationList extends PureComponent {
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
+        onClick={this.handleGetMenuValue}
       >
         <SubMenu
           key="sub1"
@@ -315,7 +333,7 @@ export default class AllocationList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, AllocationAddVisible } = this.state;
+    const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
 
     const columns = [
       {
@@ -396,7 +414,7 @@ export default class AllocationList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <AllocationAddModal {...AllocationAddMethods} AllocationAddVisible={AllocationAddVisible} />
+        <AllocationAddModal {...AllocationAddMethods} AllocationAddVisible={AllocationAddVisible} choiceTypeValue={choiceTypeValue} />
       </PageHeaderLayout>
     );
   }

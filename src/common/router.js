@@ -108,16 +108,16 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
       name: '项目信息管理',
     },
-    '/contractManager/Contractinfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
+    '/contractManager/ContractInfo': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
       name: '合同管理',
     },
     '/contractManager/xieyiInfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
       name: '协议管理',
     },
     '/project/workPlanManage/workPlan': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/ContractList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
       name: '项目计划',
     },
     '/project/workPlanManage/workDiary': {
@@ -263,9 +263,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
     },
     '/profile/advanced': {
-      component: dynamicWrapper(app, ['profile'], () =>
-        import('../routes/Profile/AdvancedProfile')
-      ),
+      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
     },
     '/result/success': {
       component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
@@ -283,9 +281,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
     },
     '/exception/trigger': {
-      component: dynamicWrapper(app, ['error'], () =>
-        import('../routes/Exception/triggerException')
-      ),
+      component: dynamicWrapper(app, ['error'], () => import('../routes/Exception/triggerException')),
     },
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import moment from "moment/moment";
 import {
   Card,
   Form,
@@ -11,13 +12,14 @@ import {
   Modal,
   message,
   Icon,
-  Popover,
   Upload,
   Button,
+  Popover,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './style.less';
+import styles from '../project/add/style.less';
 
+const { Search }= Input;
 const fileList = [
   {
     uid: -1,
@@ -76,12 +78,10 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-const ContractTypeOption = ["工程造价业务项目","咨询报告","招标"];
 
-class ContractEditModal extends PureComponent {
+class ContractAddModal extends PureComponent {
   state = {
     width: '100%',
-    choiceCheckBox:``,
     contractOptionData:[],
   };
   componentDidMount() {
@@ -91,22 +91,6 @@ class ContractEditModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleChoiceContractType = () =>{
-    const optionData = ContractTypeOption.map((data, index) => {
-      const value = `${data}`;
-      return <Option value={value}>{value}</Option>;
-    });
-    this.setState({
-      contractOptionData: optionData,
-    });
-  };
-
-  handleGetOptionValue=(value)=>{
-    this.setState({
-      choiceCheckBox:`${value}`,
-    });
-  };
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -115,9 +99,9 @@ class ContractEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, contractEditVisible, handleContractEditVisible, rowInfo } = this.props;
+    const { form, dispatch, submitting, contractVisible, handleContractVisible, choiceTypeValue } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { choiceCheckBox, contractOptionData } = this.state;
+    const {contractOptionData} = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -127,7 +111,7 @@ class ContractEditModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleContractEditVisible(false);
+          handleContractVisible(false);
         }
       });
     };
@@ -173,11 +157,12 @@ class ContractEditModal extends PureComponent {
     return (
       <Modal
         title="合同基本信息新增"
-        visible={contractEditVisible}
+        style={{ top: 20 }}
+        visible={contractVisible}
         width="75%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleContractEditVisible()}
+        onCancel={() => handleContractVisible()}
       >
         <div>
           <Card>
@@ -187,7 +172,6 @@ class ContractEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
-                      initialValue:`${rowInfo.contractCode}`,
                     })(
                       <Input placeholder="自动生成" />
                     )}
@@ -198,10 +182,9 @@ class ContractEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.contractType}>
                     {getFieldDecorator('contractType', {
                       rules: [{ required: true, message: '请选择合同类别' }],
+                      initialValue:`${choiceTypeValue}`,
                     })(
-                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleChoiceContractType} placeholder="请选择合同类别" >
-                        {contractOptionData}
-                      </Select>
+                      <Input readOnly placeholder="请选择合同类别" />
                     )}
                   </Form.Item>
                 </Col>
@@ -210,22 +193,22 @@ class ContractEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请选择年度' }],
+                      initialValue:`${moment().format('YYYY')}`,
                     })(
                       <Select placeholder="请选择年度" >
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">2018</Option>
-                        <Option value="f">2019</Option>
-                        <Option value="fd">2020</Option>
-                        <Option value="sn">2021</Option>
-                        <Option value="zf">2022</Option>
-                        <Option value="sy">2023</Option>
-                        <Option value="jr">2024</Option>
+                        <Option key={1}>请选择</Option>
+                        <Option key={2}>2018</Option>
+                        <Option key={3}>2019</Option>
+                        <Option key={4}>2020</Option>
+                        <Option key={5}>2021</Option>
+                        <Option key={6}>2022</Option>
+                        <Option key={7}>2023</Option>
+                        <Option key={8}>2024</Option>
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
@@ -243,8 +226,8 @@ class ContractEditModal extends PureComponent {
                       rules: [{ required: true, message: '请输入项目名称' }],
                     })(
                       <Select placeholder="请输入项目名称" >
-                        <Option value="c">项目A</Option>
-                        <Option value="h">项目B</Option>
+                        <Option key={1}>项目A</Option>
+                        <Option key={2}>项目B</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -256,16 +239,14 @@ class ContractEditModal extends PureComponent {
                       rules: [{ required: true, message: '请选择合同性质' }],
                     })(
                       <Select placeholder="请选择合同性质" >
-                        <Option value="c">工程</Option>
-                        <Option value="h">建设</Option>
-                        <Option value="h">其它</Option>
+                        <Option key={1}>工程</Option>
+                        <Option key={2}>建设</Option>
+                        <Option key={3}>其它</Option>
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-
-
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.dfCompany}>
@@ -273,14 +254,14 @@ class ContractEditModal extends PureComponent {
                       rules: [{ required: false, message: '对方公司' }],
                     })(
                       <Select placeholder="对方公司" >
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">公司A</Option>
-                        <Option value="f">公司B</Option>
-                        <Option value="fd">公司C</Option>
-                        <Option value="sn">公司D</Option>
-                        <Option value="zf">公司E</Option>
-                        <Option value="sy">公司F</Option>
-                        <Option value="jr">公司H</Option>
+                        <Option key="xiao">请选择</Option>
+                        <Option key="z">公司A</Option>
+                        <Option key="f">公司B</Option>
+                        <Option key="fd">公司C</Option>
+                        <Option key="sn">公司D</Option>
+                        <Option key="zf">公司E</Option>
+                        <Option key="sy">公司F</Option>
+                        <Option key="jr">公司H</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -291,14 +272,14 @@ class ContractEditModal extends PureComponent {
                       rules: [{ required: false, message: '客户授权代理人' }],
                     })(
                       <Select placeholder="请选择客户授权代理人" >
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">公司A</Option>
-                        <Option value="f">公司B</Option>
-                        <Option value="fd">公司C</Option>
-                        <Option value="sn">公司D</Option>
-                        <Option value="zf">公司E</Option>
-                        <Option value="sy">公司F</Option>
-                        <Option value="jr">公司H</Option>
+                        <Option key="xiao">请选择</Option>
+                        <Option key="z">公司A</Option>
+                        <Option key="f">公司B</Option>
+                        <Option key="fd">公司C</Option>
+                        <Option key="sn">公司D</Option>
+                        <Option key="zf">公司E</Option>
+                        <Option key="sy">公司F</Option>
+                        <Option key="jr">公司H</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -310,36 +291,36 @@ class ContractEditModal extends PureComponent {
                     {getFieldDecorator('businessType')(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
-                          { ( choiceCheckBox === `工程造价业务项目`|| choiceCheckBox===`咨询报告` ) && (
+                          { ( choiceTypeValue === `工程造价业务`|| choiceTypeValue ===`咨询报告` ) && (
                             <span>
-                              <Col span={6}>
-                                <Checkbox value="A">预算编制</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={1} value={1}>预算编制</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="B">结算编制</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={2} value={2}>结算编制</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="D">咨询审核</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={3} value={3}>咨询审核</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="E">预算审核</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={4} value={4}>预算审核</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="F">结算审核</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={5} value={5}>结算审核</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="H">咨询报告</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={6} value={6}>咨询报告</Checkbox>
                               </Col>
                             </span>
                           )}
 
-                          { ( choiceCheckBox === `招标`|| choiceCheckBox===`咨询报告` ) && (
+                          { ( choiceTypeValue === `工程造价业务`|| choiceTypeValue ===`招标` ) && (
                             <span>
-                              <Col span={6}>
-                                <Checkbox value="G">政府采购招标代理</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={7} value={7}>政府采购招标代理</Checkbox>
                               </Col>
-                              <Col span={6}>
-                                <Checkbox value="C">建设工程招标代理</Checkbox>
+                              <Col span={8}>
+                                <Checkbox key={8} value={8}>建设工程招标代理</Checkbox>
                               </Col>
                             </span>
                           )}
@@ -364,18 +345,17 @@ class ContractEditModal extends PureComponent {
                       rules: [{ required: true, message: '请选择负责人' }],
                     })(
                       <Select placeholder="请选择负责人" >
-                        <Option value="c">公司员工1</Option>
-                        <Option value="h">公司员工2</Option>
+                        <Option key={1}>公司员工1</Option>
+                        <Option key={2}>公司员工2</Option>
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} offset={2}>
                   <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                    {getFieldDecorator('  attachment ', {
+                    {getFieldDecorator('attachment ', {
                       initialValue: '1',
                     })(
                       <Upload {...props2}>
@@ -390,11 +370,10 @@ class ContractEditModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={5}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remark}>
-                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4}  style={{width:'170%'}} />)}
+                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -410,4 +389,4 @@ class ContractEditModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ContractEditModal));
+}))(Form.create()(ContractAddModal));

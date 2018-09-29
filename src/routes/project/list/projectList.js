@@ -34,8 +34,8 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'default', 'processing', 'warning'];
+const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核'];
 
 
 @connect(({ rule, loading }) => ({
@@ -52,7 +52,7 @@ export default class projectList extends PureComponent {
     projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
-    choiceTypeKey: 0,
+    choiceTypeKey: '0',
     choiceTypeValue:'',
     rowInfo:{},
     formValues: {},
@@ -180,7 +180,7 @@ export default class projectList extends PureComponent {
   };
 
   handleProjectVisible = flag => {
-    if(this.state.choiceTypeKey === 0){
+    if(this.state.choiceTypeKey === "0" ){
       message.config({
         top: 100,
         duration: 2,
@@ -188,10 +188,11 @@ export default class projectList extends PureComponent {
       });
       message.warning('请选择工程类别');
       return false;
+    } else {
+      this.setState({
+        projectVisible: !!flag,
+      });
     }
-    this.setState({
-      projectVisible: !!flag,
-    });
   };
   handleProjectApplyAddVisible = flag => {
     this.setState({
@@ -240,13 +241,13 @@ export default class projectList extends PureComponent {
     });
   };
 
-  treemenu() {
+  treeMenu() {
     const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
         openKeys={this.state.openKeys}
-        onOpenChange={this.handleGetOptionValue}
+        onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
         onClick={this.handleGetMenuValue}
       >
@@ -258,9 +259,10 @@ export default class projectList extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key="1">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">可研报告</Menu.Item>
-          <Menu.Item key="3">招标代理业务项目</Menu.Item>
+          <Menu.Item key='0'>全部</Menu.Item>
+          <Menu.Item key='1'>工程造价业务项目</Menu.Item>
+          <Menu.Item key='2'>可研报告</Menu.Item>
+          <Menu.Item key='3'>招标代理业务项目</Menu.Item>
         </SubMenu>
       </Menu>
     );
@@ -462,7 +464,7 @@ export default class projectList extends PureComponent {
       },
       {
         title: '项目状态',
-        dataIndex: 'status',
+        dataIndex: 'projectStatus',
         filters: [
           {
             text: status[0],
@@ -479,6 +481,22 @@ export default class projectList extends PureComponent {
           {
             text: status[3],
             value: 3,
+          },
+          {
+            text: status[4],
+            value: 4,
+          },
+          {
+            text: status[5],
+            value: 5,
+          },
+          {
+            text: status[6],
+            value: 6,
+          },
+          {
+            text: status[7],
+            value: 7,
           },
         ],
         onFilter: (value, record) => record.status.toString() === value,
@@ -552,7 +570,7 @@ export default class projectList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treemenu()}
+              {this.treeMenu()}
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>

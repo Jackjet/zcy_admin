@@ -11,12 +11,12 @@ import {
   Modal,
   message,
   Icon,
+  Popover,
   Upload,
   Button,
-  Popover,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './style.less';
+import styles from '../project/edit/style.less';
 
 const fileList = [
   {
@@ -43,7 +43,6 @@ const props2 = {
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { TextArea } = Input;
-const ContractTypeOption = ["工程造价业务项目","咨询报告","招标"];
 const fieldLabels = {
   contractCode: '合同编码',
   contractType: '合同类别',
@@ -77,13 +76,13 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+const ContractTypeOption = ["工程造价业务项目","咨询报告","招标"];
 
-class ContractAddModal extends PureComponent {
+class ContractEditModal extends PureComponent {
   state = {
     width: '100%',
+    choiceCheckBox:``,
     contractOptionData:[],
-    choiceCheckBox:"",
-
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -116,9 +115,9 @@ class ContractAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, contractVisible, handleContractVisible } = this.props;
+    const { form, dispatch, submitting, contractEditVisible, handleContractEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const {contractOptionData, choiceCheckBox} = this.state;
+    const { choiceCheckBox, contractOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -128,7 +127,7 @@ class ContractAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleContractVisible(false);
+          handleContractEditVisible(false);
         }
       });
     };
@@ -174,11 +173,11 @@ class ContractAddModal extends PureComponent {
     return (
       <Modal
         title="合同基本信息新增"
-        visible={contractVisible}
+        visible={contractEditVisible}
         width="75%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleContractVisible()}
+        onCancel={() => handleContractEditVisible()}
       >
         <div>
           <Card>
@@ -188,6 +187,7 @@ class ContractAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
+                      initialValue:`${rowInfo.contractCode}`,
                     })(
                       <Input placeholder="自动生成" />
                     )}
@@ -375,7 +375,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} offset={2}>
                   <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                    {getFieldDecorator('attachment ', {
+                    {getFieldDecorator('  attachment ', {
                       initialValue: '1',
                     })(
                       <Upload {...props2}>
@@ -394,7 +394,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={5}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remark}>
-                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />)}
+                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4}  style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -410,4 +410,4 @@ class ContractAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ContractAddModal));
+}))(Form.create()(ContractEditModal));

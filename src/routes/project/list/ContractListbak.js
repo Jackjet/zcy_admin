@@ -21,9 +21,9 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
-import ContractAddModal from '../add/ContractAddModal.js';
-import ContractViewTabs from '../contractTabsInfo/ContractViewTabs.js';
-import ContractEditModal from '../edit/ContractEditModal.js';
+import ContractAddModal from '../../Contract/ContractAddModal.js';
+import ContractViewTabs from '../../Contract/ContractViewTabs.js';
+import ContractEditModal from '../../Contract/ContractEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

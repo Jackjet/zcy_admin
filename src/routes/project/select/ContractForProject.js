@@ -20,8 +20,8 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import styles from '../list/Style.less';
-import ContractAddModal from '../add/ContractAddModal.js';
-import ContractViewTabs from '../contractTabsInfo/ContractViewTabs.js';
+import ContractAddModal from '../../Contract/ContractAddModal.js';
+import ContractViewTabs from '../../Contract/ContractViewTabs.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

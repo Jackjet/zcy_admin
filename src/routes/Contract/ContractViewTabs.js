@@ -20,12 +20,12 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
-import StandardTable from '../../../components/StandardTable';
-import ProcedureList from '../projectTabsInfo/ProcedureProject.js';
-import ReceiptPlanAddModal from '../add/ReceiptPlanAddModal';
-import ReceiptPlanEditModal from '../edit/ReceiptPlanEditModal';
-import ReceiptPlanViewModal from '../select/ReceiptPlanViewModal';
-import styles from './style.less';
+import StandardTable from '../../components/StandardTable/index';
+import ProcedureList from '../project/projectTabsInfo/ProcedureProject.js';
+import ReceiptPlanAddModal from '../project/add/ReceiptPlanAddModal';
+import ReceiptPlanEditModal from '../project/edit/ReceiptPlanEditModal';
+import ReceiptPlanViewModal from '../project/select/ReceiptPlanViewModal';
+import styles from '../project/contractTabsInfo/style.less';
 
 
 const statusMap = ['default', 'processing', 'success', 'error'];

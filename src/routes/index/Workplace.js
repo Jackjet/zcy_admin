@@ -436,7 +436,7 @@ export default class Workplace extends PureComponent {
                   >日常管理
                   </Link>
                 </div>
-                <Calendar fullscreen={false} />
+                <Calendar  fullscreen={false} />
               </div>
             </Card>
           </Col>

@@ -865,24 +865,24 @@ class ProjectCheckTabs extends PureComponent {
                   )}
                   { ( `${choiceOption.indexOf("底稿")}` > `-1` ) && (
                     <span>
-                       <Row className={styles['fn-mb-15']}>
-                    <Col span={24} pull={4}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                        {getFieldDecorator('attachment ', {
-                          initialValue: '1',
-                        })(
-                          <Upload {...props2}>
-                            <Button type="primary">
-                              <Icon type="upload" /> 上传底稿附件
-                            </Button>
-                            <span>
-                              *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                            </span>
-                          </Upload>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                            {getFieldDecorator('attachment ', {
+                              initialValue: '1',
+                            })(
+                              <Upload {...props2}>
+                                <Button type="primary">
+                                  <Icon type="upload" /> 上传底稿附件
+                                </Button>
+                                <span>
+                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                </span>
+                              </Upload>
+                            )}
+                            </Form.Item>
+                        </Col>
+                      </Row>
                     </span>
                   )}
                   { ( `${choiceOption.indexOf("报告")}` > `-1` ) && (
