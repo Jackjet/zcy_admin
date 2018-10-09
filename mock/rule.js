@@ -16,7 +16,7 @@ for (let i = 0; i < 46; i += 1) {
     dictTypeName: `一个任务名称 ${i}`,
     code: '小杨',
     remarks: '这是一段描述',
-    name: '这个字段是名字',
+    projectName: '这个字段是名字',
     no: `AAA ${i}`,
 
     contractCode: `合同编码${i}`,
@@ -45,12 +45,30 @@ for (let i = 0; i < 46; i += 1) {
     customerForBusinessName:`客户名称${i}`,
 
     projectCode:`项目编号${i}`,
+    projectType:[`工程造价业务项目`,`可研报告`,`招标代理业务项目`][Math.floor(Math.random() * 10) % 3],
     projectStatus: Math.floor(Math.random() * 10) % 7,
     organizeCode:`${i}`,
 
     visitCus:`拜访对象${i}`,
     visitMethod:`拜访方式${i}`,
     withBusiness:`关联商机${i}`,
+
+    projectYears:[`2018`,`2017`,`2016`][Math.floor(Math.random() * 10) % 3],
+
+    cusApplyCode:`客户申请单编码${i}`,
+    cusApplyName:`客户申请单名称${i}`,
+    cusApplyLinkman:`客户申请单联系人${i}`,
+    cusApplyCompany:`客户申请单公司${i}`,
+    cusApplyMobilePhone:`客户申请单手机号码${i}`,
+    cusApplyStatus: Math.floor(Math.random() * 10) % 2,
+
+    cusCode:`客户编码${i}`,
+    cusName:`客户名称${i}`,
+    cusLinkman:`客户联系人${i}`,
+    cusCompany:`客户公司${i}`,
+    cusMobilePhone:`客户手机号码${i}`,
+    cusStatus: Math.floor(Math.random() * 10) % 2,
+
 
   });
 }

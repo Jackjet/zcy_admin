@@ -16,15 +16,15 @@ import {
   Divider,
   Layout,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddModal from '../add/CustomerAddmodal';
-import CustomerViewTabs from './CustomerViewTabs.js';
+import CustomerAddModal from './CusAddModal';
+import CustomerViewTabs from './CusTabsViewModal.js';
 import EditableTable from '../EditableTable/EditableTable';
-import ContactsAddModal from '../add/ContactsAddModal';
-import CustomerDistributionModal from '../add/CustomerDistributionModal';
-import CustomerEditModal from '../edit/CustomerEditModal';
+import ContactsAddModal from '../CusApplyBill/ContactsAddModal';
+import CustomerDistributionModal from './CustomerDistributionModal';
+import CustomerEditModal from './CusEditModal';
 
 const {confirm} = Modal;
 const { Content,  Sider } = Layout;
@@ -378,7 +378,7 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  showViewMessage =(flag, text, record, index)=> {
+  showViewMessage =(flag, text, record)=> {
     this.setState({
       tabsViewVisible: !!flag,
       rowInfo: record,
@@ -538,22 +538,21 @@ export default class CustomerList extends PureComponent {
     const columns = [
       {
         title: '编码',
-        dataIndex: 'customerCode',
-        width: 100,
+        dataIndex: 'cusCode',
         fixed: 'left',
       },
       {
         title: '名称',
-        dataIndex: 'customerName',
+        dataIndex: 'cusName',
 
       },
       {
         title: '联系人',
-        dataIndex: 'linkman',
+        dataIndex: 'cusLinkman',
       },
       {
         title: '所属公司',
-        dataIndex: 'company',
+        dataIndex: 'cusCompany',
       },
       {
         title: '行业',
@@ -599,11 +598,11 @@ export default class CustomerList extends PureComponent {
       },
       {
         title: '手机',
-        dataIndex: 'mobilePhone',
+        dataIndex: 'cusMobilePhone',
       },
       {
         title: '状态',
-        dataIndex: 'customerStatus',
+        dataIndex: 'cusStatus',
         filters: [
           {
             text: status[0],
@@ -651,25 +650,15 @@ export default class CustomerList extends PureComponent {
       },
     ];
 
-    const CustomerAddMethods = {
+    const ParentMethods = {
       handleCustomerAddVisible: this.handleCustomerAddVisible,
       handleCustomerAdd: this.handleCustomerAdd,
-    };
-    const CustomerEditMethods = {
       handleCustomerEditVisible: this.handleCustomerEditVisible,
-    };
-    const ContactsAddMethods = {
       handleContactsVisible: this.handleContactsVisible,
-    };
-    const parentMethods = {
       handleTabsViewVisible: this.handleTabsViewVisible,
       handleSalesVisible: this.handleSalesVisible,
-    };
-
-    const customerDistributionMethods = {
       handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,
     };
-
     return (
       <PageHeaderLayout>
         <Card>
@@ -717,12 +706,12 @@ export default class CustomerList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CustomerAddModal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ContactsAddMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
-        <SalesManage {...parentMethods} salesVisible={salesVisible} />
-        <CustomerDistributionModal {...customerDistributionMethods} customerDistributionVisible={customerDistributionVisible} />
+        <CustomerAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
+        <CustomerEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
+        <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
+        <CustomerViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
+        <SalesManage {...ParentMethods} salesVisible={salesVisible} />
+        <CustomerDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
       </PageHeaderLayout>
     );
   }

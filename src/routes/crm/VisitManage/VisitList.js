@@ -15,13 +15,15 @@ import {
   Select,
   Divider,
 } from 'antd';
-import StandardTable from 'components/StandardTable';
-
-import styles from './VisitListcheck.less';
-import VisitListAddModal from '../add/VisitListAddModal';
+import StandardTable from '../../../components/StandardTable';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import styles from './style.less';
+import VisitListAddModal from './VisitListAddModal';
+import VisitListViewModal from './VisitListViewModal';
+import VisitListEditModal from './VisitListEditModal';
 
 const { Option } = Select;
-const confirm = Modal.confirm;
+const  { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
@@ -34,9 +36,13 @@ const getValue = obj =>
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class VisitListCheck extends PureComponent {
+export default class VisitList  extends PureComponent {
   state = {
-    modalVisible: false,
+    visitAddVisible: false,
+    visitViewVisible: false,
+    visitEditVisible: false,
+    followUpVisible: false,
+    rowInfo:{},
     selectedRows: [],
     formValues: {},
   };
@@ -147,9 +153,21 @@ export default class VisitListCheck extends PureComponent {
   };
 
   // 点击新增显示弹窗
-  handleModalVisible = flag => {
+  handleVisitAddVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      visitAddVisible: !!flag,
+    });
+  };
+
+  handleVisitViewVisible = flag => {
+    this.setState({
+      visitViewVisible: !!flag,
+    });
+  };
+
+  handleVisitEditVisible = flag => {
+    this.setState({
+      visitEditVisible: !!flag,
     });
   };
 
@@ -162,9 +180,9 @@ export default class VisitListCheck extends PureComponent {
       },
     });
 
-    message.success('添加成功');
+    message.success('添加成功111');
     this.setState({
-      modalVisible: false,
+      visitAddVisible: false,
     });
   };
 
@@ -180,6 +198,20 @@ export default class VisitListCheck extends PureComponent {
       },
     });
   };
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      visitViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      visitEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
 
   // 查询表单
   renderSimpleForm() {
@@ -189,7 +221,7 @@ export default class VisitListCheck extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="拜访对象">
-              {getFieldDecorator('no')(
+              {getFieldDecorator('visit')(
                 <Select placeholder="请选择拜访对象" style={{ width: 200 }}>
                   <Option value="0">请选择</Option>
                   <Option value="1">初期沟通</Option>
@@ -211,9 +243,6 @@ export default class VisitListCheck extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
-                新建
-              </Button>
             </span>
           </Col>
         </Row>
@@ -223,23 +252,23 @@ export default class VisitListCheck extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, followUpVisible , rowInfo } = this.state;
     const columns = [
       {
         title: '拜访对象',
-        dataIndex: 'dictID',
+        dataIndex: 'visitCus',
       },
       {
         title: '关联商机',
-        dataIndex: 'code',
+        dataIndex: 'withBusiness',
       },
       {
         title: '拜访方式',
-        dataIndex: 'dictTypeName',
+        dataIndex: 'visitMethod',
       },
       {
         title: '拜访日期',
-        dataIndex: 'remarks',
+        dataIndex: 'visitDate',
       },
       {
         title: '交流内容',
@@ -247,17 +276,15 @@ export default class VisitListCheck extends PureComponent {
       },
       {
         title: '参与人员',
-        dataIndex: 'remarks',
+        dataIndex: 'person',
       },
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
-            <a href="">查看</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
             <Divider type="vertical" />
-            <a href="">编辑</a>
-            <Divider type="vertical" />
-            <a href="">删除</a>
+            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
           </Fragment>
         ),
       },
@@ -269,24 +296,32 @@ export default class VisitListCheck extends PureComponent {
       </Menu>
     );
 
-    const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
+    const visitAddMethods = {
+      handleVisitAddVisible: this.handleVisitAddVisible,
+    };
+
+    const visitViewMethods = {
+      handleVisitViewVisible: this.handleVisitViewVisible,
+    };
+
+    const visitEditMethods = {
+      handleVisitEditVisible: this.handleVisitEditVisible,
     };
 
     return (
-      <div>
-        <Card bordered={false}>
+      <PageHeaderLayout>
+        <Card>
           <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                拜访新增
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleVisitAddVisible}>
+                新建拜访
               </Button>
               {selectedRows.length > 0 && (
                 <span>
                   <Dropdown overlay={menu}>
                     <Button>
-                      批量操作 <Icon type="down" />
+                      批量删除 <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>
@@ -302,8 +337,10 @@ export default class VisitListCheck extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-      </div>
+        <VisitListAddModal {...visitAddMethods} visitAddVisible={visitAddVisible} />
+        <VisitListViewModal {...visitViewMethods} visitViewVisible={visitViewVisible} rowInfo={rowInfo} />
+        <VisitListEditModal {...visitEditMethods} visitEditVisible={visitEditVisible} rowInfo={rowInfo} />
+      </PageHeaderLayout>
     );
   }
 }

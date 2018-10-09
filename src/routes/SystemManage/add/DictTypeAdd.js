@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input } from 'antd';
+import { Card, Form, Col, Row, Input, Modal } from 'antd';
 import { connect } from 'dva';
 import styles from './DictTypeAdd.less';
+import {message} from "antd/lib/index";
 
 const { TextArea } = Input;
 const fieldLabels = {
@@ -50,41 +51,109 @@ class DictTypeAdd extends PureComponent {
     }
   };
   render() {
-    const { form } = this.props;
-    const { getFieldDecorator } = form;
+    const { dispatch, modalVisible, form, handleAdd, handleModalVisible } = this.props;
+    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const validate = () => {
+      validateFieldsAndScroll((error, values) => {
+        if (!error) {
+          // submit the values
+          dispatch({
+            type: 'rule/add',
+            payload: values,
+          });
+          message.success('添加成功');
+          handleModalVisible(false);
+        }
+      });
+    };
+    const errors = getFieldsError();
+    const getErrorInfo = () => {
+      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
+      if (!errors || errorCount === 0) {
+        return null;
+      }
+      const scrollToField = fieldKey => {
+        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
+        if (labelNode) {
+          labelNode.scrollIntoView(true);
+        }
+      };
+      const errorList = Object.keys(errors).map(key => {
+        if (!errors[key]) {
+          return null;
+        }
+        return (
+          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
+            <Icon type="cross-circle-o" className={styles.errorIcon} />
+            <div className={styles.errorMessage}>{errors[key][0]}</div>
+            <div className={styles.errorField}>{fieldLabels[key]}</div>
+          </li>
+        );
+      });
+      return (
+        <span className={styles.errorIcon}>
+          <Popover
+            title="表单校验信息"
+            content={errorList}
+            overlayClassName={styles.errorPopover}
+            trigger="click"
+            getPopupContainer={trigger => trigger.parentNode}
+          >
+            <Icon type="exclamation-circle" />
+          </Popover>
+          {errorCount}
+        </span>
+      );
+    };
+    const cancelDate = () => {
+      form.resetFields();
+      handleModalVisible(false);
+    };
     return (
       <div>
-        <Card>
-          <Form layout="inline">
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...codeSpace} label={fieldLabels.code}>
-                  {getFieldDecorator('code', {
-                    rules: [{ required: true, message: '请输入编码' }],
-                  })(<Input placeholder="请输入编码" style={{ width: 200 }} />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...dictTypeNameSpace} label={fieldLabels.dictTypeName}>
-                  {getFieldDecorator('dictTypeName', {
-                    rules: [{ required: true, message: '请选择字典类别名称' }],
-                  })(<Input placeholder="请选择字典类别名称" style={{ width: 200 }} />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row className={styles['row-h']}>
-              <Col span={24}>
-                <Form.Item {...remarksSpace} label={fieldLabels.remarks}>
-                  {getFieldDecorator('remarks')(
-                    <TextArea placeholder="请输入备注" style={{ width: 200, height: 100 }} />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Card>
+        <Modal
+          title="数据字典类型信息新增"
+          style={{ top: 20 }}
+          // 对话框是否可见
+          visible={modalVisible}
+          width="30%"
+          // 点击蒙层是否允许关闭
+          maskClosable={false}
+          onOk={validate}
+          onCancel={cancelDate}
+        >
+          <Card>
+            <Form layout="inline">
+              <Row className={styles['row-h']}>
+                <Col span={24}>
+                  <Form.Item {...codeSpace} label={fieldLabels.code}>
+                    {getFieldDecorator('code', {
+                      rules: [{ required: true, message: '请输入编码' }],
+                    })(<Input placeholder="请输入编码" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['row-h']}>
+                <Col span={24}>
+                  <Form.Item {...dictTypeNameSpace} label={fieldLabels.dictTypeName}>
+                    {getFieldDecorator('dictTypeName', {
+                      rules: [{ required: true, message: '请选择字典类别名称' }],
+                    })(<Input placeholder="请选择字典类别名称" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['row-h']}>
+                <Col span={24}>
+                  <Form.Item {...remarksSpace} label={fieldLabels.remarks}>
+                    {getFieldDecorator('remarks')(
+                      <TextArea placeholder="请输入备注" style={{ width: 200, height: 100 }} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        </Modal>
       </div>
     );
   }

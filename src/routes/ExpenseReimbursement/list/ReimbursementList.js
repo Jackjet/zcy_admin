@@ -17,14 +17,10 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import ExpenseApplyAddModal from '../add/ExpenseApplyAddModal';
+import ReimbursementListViewModal from '../view/ReimbursementListViewModal';
 import ReimbursementListAddModal from '../add/ReimbursementListAddModal';
+import ReimbursementListEditModal from '../edit/ReimbursementListEditModal';
 import styles from './style.less';
-/*import CustomerAddModal from '../add/CustomerAddmodal';
-import CustomerViewTabs from './CustomerViewTabs.js';
-import ContactsAddModal from '../add/ContactsAddModal';
-import CustomerDistributionModal from '../add/CustomerDistributionModal';
-import CustomerEditModal from '../edit/CustomerEditModal';*/
 
 
 
@@ -59,6 +55,9 @@ export default class ReimbursementList extends PureComponent {
     // 客户查看状态
     tabsViewVisible: false,
     reimbursementListAddModalVisible: false,
+
+    reimbursementListViewModalVisible:false,
+    reimbursementListEditModalVisible:false,
 
     customerDistributionVisible: false,
 
@@ -240,6 +239,18 @@ export default class ReimbursementList extends PureComponent {
     });
   };
 
+  handleReimbursementListViewModalVisible = flag => {
+    this.setState({
+      reimbursementListViewModalVisible: !!flag,
+    });
+  };
+
+  handleReimbursementListEditModalVisible = flag => {
+    this.setState({
+      reimbursementListEditModalVisible: !!flag,
+    });
+  };
+
 
   // 添加表单数据
   handleCustomerAdd = fields => {
@@ -300,14 +311,14 @@ export default class ReimbursementList extends PureComponent {
   // 弹窗展示当前行的数据
   showEditMessage =(flag, record)=> {
     this.setState({
-      customerEditVisible: !!flag,
+      reimbursementListEditModalVisible: !!flag,
       rowInfo: record,
     });
   };
 
   showViewMessage =(flag, text, record, index)=> {
     this.setState({
-      tabsViewVisible: !!flag,
+      reimbursementListViewModalVisible: !!flag,
       rowInfo: record,
     });
   };
@@ -449,8 +460,9 @@ export default class ReimbursementList extends PureComponent {
     const { rule: { data }, loading } = this.props;
     const {
       selectedRows,
-
+      reimbursementListViewModalVisible,
       reimbursementListAddModalVisible,
+      reimbursementListEditModalVisible,
       customerAddVisible,
       customerEditVisible,
       contactsVisible,
@@ -559,6 +571,14 @@ export default class ReimbursementList extends PureComponent {
       handleReimbursementListAddModalVisible: this.handleReimbursementListAddModalVisible,
     };
 
+    const ReimbursementListViewMethods = {
+      handleReimbursementListViewModalVisible: this.handleReimbursementListViewModalVisible,
+    };
+
+    const ReimbursementListEditMethods = {
+      handleReimbursementListEditModalVisible: this.handleReimbursementListEditModalVisible,
+    };
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -602,13 +622,8 @@ export default class ReimbursementList extends PureComponent {
           </div>
         </Card>
         <ReimbursementListAddModal {...ReimbursementListAddMethods} reimbursementListAddModalVisible={reimbursementListAddModalVisible} />
-        {/*<CustomerAddModal {...CustomerAddMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...CustomerEditMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ContactsAddMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...parentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />*/}
-        {/*
-        <CustomerDistributionModal {...customerDistributionMethods} customerDistributionVisible={customerDistributionVisible} />
-*/}
+        <ReimbursementListViewModal {...ReimbursementListViewMethods} reimbursementListViewModalVisible={reimbursementListViewModalVisible} rowInfo={rowInfo} />
+        <ReimbursementListEditModal {...ReimbursementListEditMethods} reimbursementListEditModalVisible={reimbursementListEditModalVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

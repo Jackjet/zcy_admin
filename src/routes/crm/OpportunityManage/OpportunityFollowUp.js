@@ -226,7 +226,7 @@ class BusinessFollowUp extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={15} push={3}>
-                  <Form.Item >
+                  <Form.Item {...formItemLayout} >
                     {getFieldDecorator('personal', {
                     })(
                       <div>
@@ -246,8 +246,8 @@ class BusinessFollowUp extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={12} pull={4}>
-                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.remarks}>
+                <Col span={23} pull={5}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(
                       <TextArea placeholder="请输入备注" />
                     )}

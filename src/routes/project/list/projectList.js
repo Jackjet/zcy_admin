@@ -200,6 +200,13 @@ export default class projectList extends PureComponent {
     });
   };
 
+  showProjectApplyAddVisible = (flag, record) => {
+    this.setState({
+      projectApplyAddVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
   handleProjectChildrenAddVisible = flag => {
     this.setState({
       projectChildrenAddVisible: !!flag,
@@ -456,7 +463,7 @@ export default class projectList extends PureComponent {
       },
       {
         title: '项目名称',
-        dataIndex: 'name',
+        dataIndex: 'projectName',
       },
       {
         title: '负责人',
@@ -514,11 +521,11 @@ export default class projectList extends PureComponent {
       },
       {
         title: '客户名称',
-        dataIndex: 'cusname',
+        dataIndex: 'cusName',
       },
       {
         title: '客户联系人',
-        dataIndex: 'cuslinkmen',
+        dataIndex: 'cusLinkmen',
       },
       {
         title: '执行时间',
@@ -533,7 +540,7 @@ export default class projectList extends PureComponent {
         fixed: 'right',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.handleProjectApplyAddVisible(true)} >项目过程</a>
+            <a onClick={() =>this.showProjectApplyAddVisible(true, record)} >项目过程</a>
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
@@ -604,7 +611,7 @@ export default class projectList extends PureComponent {
         <ProjectChildrenAddModal {...projectChildrenAddMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...projectTabsMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal {...projectEditMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
-        <ProjectApplyAddModal {...projectApplyAddMethods} projectApplyAddVisible={projectApplyAddVisible} />
+        <ProjectApplyAddModal {...projectApplyAddMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

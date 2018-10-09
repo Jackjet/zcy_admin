@@ -20,11 +20,6 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import ExpenseApplyAddModal from '../add/ExpenseApplyAddModal';
 import ReimbursementListAddModal from '../add/ReimbursementListAddModal';
 import styles from './style.less';
-/*import CustomerAddModal from '../add/CustomerAddmodal';
-import CustomerViewTabs from './CustomerViewTabs.js';
-import ContactsAddModal from '../add/ContactsAddModal';
-import CustomerDistributionModal from '../add/CustomerDistributionModal';
-import CustomerEditModal from '../edit/CustomerEditModal';*/
 
 
 

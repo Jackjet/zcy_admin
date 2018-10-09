@@ -110,7 +110,7 @@ class RoleManageAddModal extends PureComponent {
         title="角色基本信息新增"
         style={{ top: 20 }}
         visible={RoleManageAddVisible}
-        width="55%"
+        width="30%"
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}

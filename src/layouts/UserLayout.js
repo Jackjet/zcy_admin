@@ -39,7 +39,7 @@ class UserLayout extends React.PureComponent {
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.head}>
-                  <h3>项目管理平台</h3>
+                <h3>项目管理平台</h3>
               </div>
             </div>
             <Switch>

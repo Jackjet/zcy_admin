@@ -132,7 +132,7 @@ class AssignPermissionsModal extends PureComponent {
         title="分配权限"
         style={{ top: 20 }}
         visible={AssignPermissionsVisible}
-        width="55%"
+        width="35%"
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
@@ -141,7 +141,7 @@ class AssignPermissionsModal extends PureComponent {
         <Card>
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
-              <Col span={24} push={3}>
+              <Col span={23} push={5}>
                 <Form.Item {...formItemLayout} >
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '自动生成' }],
@@ -149,6 +149,10 @@ class AssignPermissionsModal extends PureComponent {
                     <Transfer
                       dataSource={mockData}
                       titles={['可授权','已分配']}
+                      listStyle={{
+                        width: 120,
+                        height: 150,
+                      }}
                       targetKeys={this.state.targetKeys}
                       selectedKeys={this.state.selectedKeys}
                       onChange={this.handleChange}

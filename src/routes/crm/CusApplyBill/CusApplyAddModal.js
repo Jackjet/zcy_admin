@@ -9,20 +9,20 @@ import {
   Popover,
   Modal,
   Card,
+  message,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
-import {message} from "antd/lib/index";
+
 
 const { Option } = Select;
-const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
 const fieldLabels = {
-  customerCode: '客户编号',
-  customerName: '客户名称',
-  contactsNature: '联系人业务性质',
-  status: '状态',
-  mobilePhone: '移动电话',
-  contacts: '联系人',
+  cusApplyCode: '客户编号',
+  cusApplyName: '客户名称',
+  cusApplyNature: '联系人业务性质',
+  cusApplyStatus: '状态',
+  cusApplyMobilePhone: '移动电话',
+  cusApplyContacts: '联系人',
 };
 const formItemLayout = {
   labelCol: {
@@ -35,7 +35,7 @@ const formItemLayout = {
   },
 };
 
-class CustomerApplyAddModal extends PureComponent {
+class CusApplyAddModal extends PureComponent {
   state = {
     width: '100%',
     levelOptionData: [],
@@ -49,17 +49,6 @@ class CustomerApplyAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-
-  handleLevelChange = () => {
-    this.setState({
-      levelOptionData: CustomerOption.map((data) => {
-        const value = `${data}`;
-        return <Option key={value}>{value}</Option>;
-      }),
-    });
-  };
-
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -68,26 +57,25 @@ class CustomerApplyAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , customerApplyAddVisible, handleCustomerApplyAddVisible} = this.props;
+    const { form, dispatch, submitting , cusApplyAddVisible, handleCusApplyAddVisible} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { levelOptionData, industryOptionData, incomeTaxOptionData, statusOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          form.resetFields();
           // submit the values
           dispatch({
             type: 'rule/add',
             payload: values,
           });
-          handleCustomerApplyAddVisible(false);
+          handleCusApplyAddVisible(false);
+          form.resetFields();
           message.success('成功申请用户');
         }
       });
     };
     const onCancel = () => {
       form.resetFields();
-      handleCustomerApplyAddVisible(false);
+      handleCusApplyAddVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -132,7 +120,7 @@ class CustomerApplyAddModal extends PureComponent {
       <Modal
         title="客户申请单信息新增"
         style={{ top: 20 }}
-        visible={customerApplyAddVisible}
+        visible={cusApplyAddVisible}
         width="40%"
         maskClosable={false}
         onOk={validate}
@@ -144,8 +132,8 @@ class CustomerApplyAddModal extends PureComponent {
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.customerCode}>
-                    {getFieldDecorator('customerCode', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyCode}>
+                    {getFieldDecorator('cusApplyCode', {
                       rules: [{ required: false, message: '请输入客户编码' }],
                     })(<Input readOnly placeholder="新增自动产生" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -153,8 +141,8 @@ class CustomerApplyAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
-                    {getFieldDecorator('customerName', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyName}>
+                    {getFieldDecorator('cusApplyName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
                     })(
                       <Input onMouseEnter={this.handleLevelChange} placeholder="请输入客户名称" style={{ width: 200 }} />
@@ -164,8 +152,8 @@ class CustomerApplyAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.contactsNature}>
-                    {getFieldDecorator('contactsNature', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyNature}>
+                    {getFieldDecorator('cusApplyNature', {
                       rules: [{ required: false, message: '请选择联系人业务性质' }],
                     })(
                       <Select placeholder="请选择联系人业务性质" style={{ width: 200 }} >
@@ -179,22 +167,20 @@ class CustomerApplyAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.status}>
-                    {getFieldDecorator('status', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyStatus}>
+                    {getFieldDecorator('cusApplyStatus', {
                       rules: [{ required: false, message: '请选择状态' }],
+                      initialValue:`待审核`,
                     })(
-                      <Select placeholder="请选择状态" style={{ width: 200 }} >
-                        <Option key="1" >启用</Option>
-                        <Option key="2" >禁用</Option>
-                      </Select>
-                        )}
+                      <Input readOnly placeholder="请选择状态" style={{ width: 200 }} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.contacts}>
-                    {getFieldDecorator('contacts', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyContacts}>
+                    {getFieldDecorator('cusApplyContacts', {
                       rules: [{ required: false, message: '请输入联系人' }],
                     })(
                       <Input placeholder="请输入联系人" style={{ width: 200 }} />
@@ -204,8 +190,8 @@ class CustomerApplyAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
-                    {getFieldDecorator('mobilePhone', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyMobilePhone}>
+                    {getFieldDecorator('cusApplyMobilePhone', {
                       rules: [{ required: false, message: '请输出联系电话' }],
                     })(
                       <Input placeholder="请输出联系电话" style={{ width: 200 }} />
@@ -223,4 +209,4 @@ class CustomerApplyAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(CustomerApplyAddModal));
+}))(Form.create()(CusApplyAddModal));

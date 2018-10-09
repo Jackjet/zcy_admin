@@ -22,7 +22,7 @@ import {
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './DictManage.less';
-import DictTypeAdd from '../add/DictTypeAdd';
+import DictManageAdd from '../add/DictManageAdd';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -34,31 +34,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
-  return (
-    <Modal
-      title="客户基本信息新增"
-      style={{ top: 20 }}
-      visible={modalVisible}
-      mask={'true'}
-      width={'60%'}
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <DictTypeAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -255,9 +230,6 @@ export default class TableList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
-                新建
-              </Button>
             </span>
           </Col>
         </Row>
@@ -414,6 +386,9 @@ export default class TableList extends PureComponent {
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
+                  <Button style={{ marginLeft: 8 }} type="primary" onClick={() => this.handleModalVisible(true)}>
+                    新建
+                  </Button>
                   {selectedRows.length > 0 && (
                     <span>
                       <Dropdown overlay={menu}>
@@ -436,7 +411,7 @@ export default class TableList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <DictManageAdd {...parentMethods} modalVisible={modalVisible} />
       </PageHeaderLayout>
     );
   }

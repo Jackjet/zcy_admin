@@ -121,7 +121,7 @@ class RoleManageViewModal extends PureComponent {
         <Card>
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
-              <Col span={24}>
+              <Col span={23} push={2}>
                 <Form.Item {...formItemLayout} >
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],

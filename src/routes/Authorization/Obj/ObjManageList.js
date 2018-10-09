@@ -273,15 +273,15 @@ export default class ObjManageList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入编码名称" />
+              {getFieldDecorator('code')(
+                <Input placeholder="请输入编码" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="名称">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入编码名称" />
+              {getFieldDecorator('name')(
+                <Input placeholder="请输入名称" />
               )}
             </FormItem>
           </Col>

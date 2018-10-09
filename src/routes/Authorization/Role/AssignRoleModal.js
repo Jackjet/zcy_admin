@@ -183,14 +183,13 @@ class AssignRoleModal extends PureComponent {
                   })(
                     <Search
                       placeholder="组织"
-                      onSearch=""
                     />
                   )}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['fn-mb-15']}>
-              <Col span={24} push={2} >
+              <Col span={23} push={4} >
                 <Form.Item {...formItemLayout} >
                   {getFieldDecorator('describe', {
                     rules: [{ required: true, message: '请输入描述' }],

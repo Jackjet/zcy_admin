@@ -16,14 +16,14 @@ import {
   Divider,
   Badge,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import BusinessAddModal from '../add/BusinessAddModal.js';
-import BusinessFollowUp from '../add/BusinessFollowUp';
-import BusinessEditModal from '../edit/BusinessEditModal.js';
-import BusinessOppView from '../select/BusinessOppView.js';
-import BusinessStateModal from '../add/BusinessStateModal';
+import BusinessAddModal from './OpportunityAddModal.js';
+import BusinessFollowUp from './OpportunityFollowUp';
+import BusinessEditModal from './OpportunityEditModal.js';
+import BusinessOppView from './OpportunityViewModal.js';
+import BusinessStateModal from './OpportunityStateModal';
 import ProjectAddModal from '../../project/add/ProjectAddModal';
 
 const statusMap = ['success', 'warning','default'];

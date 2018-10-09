@@ -263,15 +263,23 @@ export default class InvoiceApplyList  extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
-            <a type="primary" onClick={() => this.handleInvoiceViewVisible(true)}>
+            <a onClick={() => this.handleInvoiceViewVisible(true)}>
               查看
             </a>
             <Divider type="vertical" />
-            <a type="primary" onClick={() => this.handleInvoiceEditVisible(true)}>
+            <a onClick={() => this.handleInvoiceEditVisible(true)}>
               编辑
             </a>
             <Divider type="vertical" />
-            <a type="primary" onClick={() => this.handleInvoicingVisible(true)}>
+            <a>
+              开票
+            </a>
+            <Divider type="vertical" />
+            <a>
+              作废
+            </a>
+            <Divider type="vertical" />
+            <a onClick={() => this.handleInvoicingVisible(true)}>
               删除
             </a>
           </Fragment>

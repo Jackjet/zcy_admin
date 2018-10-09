@@ -18,12 +18,12 @@ import {
   message,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './Style.less';
-import ContractAddModal from '../../Contract/ContractAddModal.js';
-import ContractViewTabs from '../../Contract/ContractViewTabs.js';
-import ContractEditModal from '../../Contract/ContractEditModal.js';
+import StandardTable from '../../components/StandardTable/index';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import styles from '../project/list/Style.less';
+import ContractAddModal from './ContractAddModal.js';
+import ContractViewTabs from './ContractViewTabs.js';
+import ContractEditModal from './ContractEditModal.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

@@ -1,40 +1,48 @@
 import React, { PureComponent } from 'react';
 import {
   Card,
-  Button,
   Form,
   Icon,
   Col,
   Row,
-  DatePicker,
   // TimePicker,
   Input,
-  InputNumber,
   Select,
   Popover,
-  Cascader,
   Modal,
+  Transfer,
+  Menu,
+  Tree,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const { TreeNode }= Tree;
+const { SubMenu, MenuItemGroup } = Menu;
 const { TextArea } = Input;
 const { Option } = Select;
+
+const mockData = [];
+for (let i = 0; i < 10; i+=1) {
+  mockData.push({
+    key: i.toString(),
+    title: `人员${i + 1}`,
+  });
+};
 const fieldLabels = {
-  businessCode: '编码',
+  number: '编码',
   businessName: '商机名称',
-  customerForBusinessName: '客户名称',
+  customerName: '客户名称',
   customerContact: '客户联系人',
   mobilePhone: '联系电话',
   businessState: '商机状态',
   customerDemand: '客户需求',
   remarks: '备注',
   platform:'商机平台',
-  executor:'执行人',
   submissionPerson:'商机提供人',
+  executor:'执行人',
+  assignor:'分配人',
 };
-
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -45,6 +53,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+
 
 const formItemLayoutTextArea = {
   style:{
@@ -61,9 +70,11 @@ const formItemLayoutTextArea = {
   },
 };
 
-class BusinessOppView extends PureComponent {
+class BusinessEditModal extends PureComponent {
   state = {
     width: '100%',
+    targetKeys:[],
+    selectedKeys: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -71,6 +82,15 @@ class BusinessOppView extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleChange = (nextTargetKeys) => {
+    this.setState({ targetKeys: nextTargetKeys });
+  };
+
+  handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -78,10 +98,13 @@ class BusinessOppView extends PureComponent {
       this.setState({ width });
     }
   };
+
+
   render() {
-    const { form, dispatch, submitting, handleBusinessViewVisible, businessViewVisible, rowInfo } = this.props;
+    const { form, dispatch, submitting, handleBusinessEditVisible, businessEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const okHandle = () => handleBusinessViewVisible();
+    const { selectedKeys } = this.state;
+    const okHandle = () => handleBusinessEditVisible();
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -90,6 +113,7 @@ class BusinessOppView extends PureComponent {
             type: 'form/submitAdvancedForm',
             payload: values,
           });
+          handleBusinessEditVisible(false);
         }
       });
     };
@@ -134,32 +158,25 @@ class BusinessOppView extends PureComponent {
     };
     return (
       <Modal
-        title="商机信息查看"
+        title="商机分配"
         style={{ top: 20 }}
-        visible={businessViewVisible}
+        visible={businessEditVisible}
         width="55%"
         maskClosable={false}
         onOk={okHandle}
-        onCancel={() => handleBusinessViewVisible()}
-        footer={
-          (null,
-            (
-              <Button onClick={okHandle} type="primary">
-                关闭
-              </Button>
-            ))
-        }
+        onCancel={() => handleBusinessEditVisible()}
+        okText='分配'
       >
         <div>
           <Card>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.businessCode}>
-                    {getFieldDecorator('businessCode', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
+                    {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                       initialValue:`${rowInfo.businessCode}`,
-                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="不重复的数字" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -167,18 +184,17 @@ class BusinessOppView extends PureComponent {
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
                       initialValue:`${rowInfo.businessName}`,
-                    })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
+                    })(<Input readOnly placeholder="商机描述" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.businessState}>
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
-                      initialValue:`新建`,
                     })(
-                      <Select disabled placeholder="请选择商机状态" style={{ width: 150 }}>
-                        <Option value="1">新建</Option>
-                        <Option value="2">已分配</Option>
+                      <Select readOnly placeholder="请选择商机状态" style={{ width: 150 }}>
+                        <Option value="1">提交审核</Option>
+                        <Option value="2">跟进中</Option>
                         <Option value="3">成功</Option>
                         <Option value="4">失败</Option>
                       </Select>
@@ -188,8 +204,8 @@ class BusinessOppView extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.customerForBusinessName}>
-                    {getFieldDecorator('customerForBusinessNameName', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
+                    {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
                       initialValue:`${rowInfo.customerForBusinessName}`,
                     })(<Input readOnly placeholder="请输入客户名称" style={{ width: 150 }} />)}
@@ -220,40 +236,72 @@ class BusinessOppView extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.executor}>
-                    {getFieldDecorator('executor', {
-                    })(
-                      <Input readOnly placeholder="执行人" style={{ width: 150 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.submissionPerson}>
                     {getFieldDecorator('submissionPerson', {
                     })(
-                      <Input readOnly placeholder="商机提供人" style={{ width: 150 }} />
+                      <Input placeholder="商机提供人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.customerDemand}>
-                    {getFieldDecorator('customerDemand', {
-                      rules: [{ required: true, message: '请输入客户需求' }],
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
+                    {getFieldDecorator('assignor', {
                     })(
-                      <TextArea readOnly placeholder="请输入客户需求" />
+                      <div className={styles.divBorder}>
+                        <Tree>
+                          <TreeNode title="杭州至诚" key="0-0">
+                            <TreeNode title="管理层1" key="0-0-0" >
+                              <TreeNode title="员工1" key="0-0-0-0"  />
+                              <TreeNode title="员工2" key="0-0-0-1" />
+                            </TreeNode>
+                            <TreeNode title="管理层2" key="0-0-1">
+                              <TreeNode title="小卒1" key="0-0-1-0" />
+                              <TreeNode title="小卒2" key="0-0-1-1" />
+                            </TreeNode>
+                          </TreeNode>
+                          <TreeNode title="义务至诚" key="0-1">
+                            <TreeNode title="董事会" key="0-1-0" >
+                              <TreeNode title="主管1" key="0-1-0-0"  />
+                              <TreeNode title="主管2" key="0-1-0-1" />
+                            </TreeNode>
+                            <TreeNode title="财务部" key="0-1-1">
+                              <TreeNode title="会计1" key="0-1-1-0" />
+                            </TreeNode>
+                          </TreeNode>
+                        </Tree>
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={15} offset={1}>
+                  <Form.Item {...formItemLayout} >
+                    {getFieldDecorator('personal', {
+                    })(
+                      <div>
+                        <Transfer
+                          dataSource={mockData}
+                          titles={['可选人员', '已选人员']}
+                          targetKeys={this.state.targetKeys}
+                          selectedKeys={selectedKeys}
+                          onChange={this.handleChange}
+                          onSelectChange={this.handleSelectChange}
+                          render={item => item.title}
+                        />
+                      </div>
+
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.remarks}>
+                <Col span={23} pull={5}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
                     })(
-                      <TextArea readOnly placeholder="请输入备注" />
+                      <TextArea placeholder="请输入备注" />
                     )}
                   </Form.Item>
                 </Col>
@@ -269,4 +317,4 @@ class BusinessOppView extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(BusinessOppView));
+}))(Form.create()(BusinessEditModal));

@@ -79,18 +79,18 @@ export const getRouterData = app => {
     '/workplace': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
     },
-    '/crm/customer': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerList')),
-    },
     '/crm/customerApply': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/CustomerApplyList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
+    },
+    '/crm/customer': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/CusInfoManage/CusBill')),
     },
     '/crm/business': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/BusinessOpportunity')
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/OpportunityManage/OpportunityBill')
       ),
     },
     '/crm/visit': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/list/VisitList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/VisitManage/VisitList')),
     },
     '/system/dictType': {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),

@@ -106,7 +106,7 @@ function onChange(value) {
 };
 
 
-class ReimbursementListAddModal extends PureComponent {
+class ReimbursementListViewModal extends PureComponent {
   state = {
     width: '100%',
     panelOptionData: [],
@@ -234,7 +234,14 @@ class ReimbursementListAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , reimbursementListAddModalVisible, handleReimbursementListAddModalVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting ,
+      reimbursementListViewModalVisible,
+      handleReimbursementListViewModalVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { panelOptionData, choiceCheckBox, dataSource } = this.state;
     const validate = () => {
@@ -246,13 +253,13 @@ class ReimbursementListAddModal extends PureComponent {
             type: 'rule/add',
             payload: values,
           });
-          handleReimbursementListAddModalVisible(false);
+          handleReimbursementListViewModalVisible(false);
         }
       });
     };
     const onCancel = () => {
       form.resetFields();
-      handleReimbursementListAddModalVisible(false);
+      handleReimbursementListViewModalVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -371,9 +378,9 @@ class ReimbursementListAddModal extends PureComponent {
     ];
     return (
       <Modal
-        title="费用报销申请单信息"
+        title="费用报销申请单信息查看"
         style={{ top: 20 }}
-        visible={reimbursementListAddModalVisible}
+        visible={reimbursementListViewModalVisible}
         width="80%"
         maskClosable={false}
         onOk={validate}
@@ -404,6 +411,7 @@ class ReimbursementListAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="状态">
                     {getFieldDecorator('status', {
                       rules: [{ required: true, message: '状态' }],
+                      initialValue:`${rowInfo.status}`,
                     })(
                       <Input placeholder="状态" style={{ width: 200 }} />
                     )}
@@ -515,4 +523,4 @@ class ReimbursementListAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ReimbursementListAddModal));
+}))(Form.create()(ReimbursementListViewModal));

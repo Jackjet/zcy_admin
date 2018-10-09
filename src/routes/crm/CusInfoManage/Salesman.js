@@ -16,8 +16,8 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
-import styles from './ContactsView.less';
-import VisitListAddModal from '../add/VisitListAddModal';
+import styles from './style.less';
+import VisitListAddModal from '../VisitManage/VisitListAddModal';
 
 const { Option } = Select;
 const { confirm } = Modal;

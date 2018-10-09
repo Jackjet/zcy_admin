@@ -15,13 +15,18 @@ import {
   Modal,
   Divider,
   Upload,
+  Collapse,
+  Table,
+  Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
+import EditableCell from '../../../components/EditableTable/index';
 import styles from './style.less';
 
+const { TextArea } = Input;
 const { Option } = Select;
-
+const { Panel } = Collapse;
 const ProjectTypeOption = ['工程造价业务项目', '可研报告', '招标代理业务项目'];
 
 
@@ -93,6 +98,34 @@ class ProjectAddModal extends PureComponent {
   state = {
     width: '100%',
     projectOptionData:[],
+    dataSource: [
+      {
+        key: '0',
+        project: '汪工',
+        departure: '杭州',
+        startData: '2018-7-27',
+        togetherPerson: '3',
+        endData: '2018-7-29',
+        daySum: '1',
+        Vehicle: '动车',
+        ticketSum: '3',
+        remarks: '无',
+
+      },
+      {
+        key: '0',
+        project: '申工',
+        departure: '义务',
+        startData: '2018-7-27',
+        togetherPerson: '3',
+        endData: '2018-7-29',
+        daySum: '1',
+        Vehicle: '高铁',
+        ticketSum: '3',
+        remarks: '无',
+      },
+    ],
+    count: 2,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -100,6 +133,21 @@ class ProjectAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.setState({ dataSource });
+      }
+    };
+  };
+  onDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  };
 
 
   onOpenChange = openKeys => {
@@ -113,13 +161,23 @@ class ProjectAddModal extends PureComponent {
     }
   };
 
-  handleProjectChange = () => {
-    const optionData = ProjectTypeOption.map((data, index) => {
-      const val = `${data}`;
-      return <Option key={val}>{val}</Option>;
-    });
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
+    const newData = {
+      key: count,
+      remarks: `London, Park Lane no. ${count}`,
+      project: `小杨 ${count}`,
+      departure: '新昌',
+      startData: '2018-7-26',
+      togetherPerson: '3',
+      endData: '2018-7-29',
+      daySum: '1',
+      Vehicle: '大巴',
+      ticketSum: '3',
+    };
     this.setState({
-      projectOptionData: optionData,
+      dataSource: [...dataSource, newData],
+      count: count + 1,
     });
   };
 
@@ -133,7 +191,7 @@ class ProjectAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { projectOptionData } = this.state;
+    const { projectOptionData, dataSource } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -191,6 +249,82 @@ class ProjectAddModal extends PureComponent {
         </span>
       );
     };
+    const columns = [
+      {
+        title: '项目',
+        dataIndex: 'project',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
+        ),
+      },
+      {
+        title: '出发地',
+        dataIndex: 'departure',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'type')} />
+        ),
+      },
+      {
+        title: '出发时间',
+        dataIndex: 'startData',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'mobilePhone')} />
+        ),
+      },
+      {
+        title: '同行人数',
+        dataIndex: 'togetherPerson',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'endData',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '天数',
+        dataIndex: 'daySum',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '交通工具',
+        dataIndex: 'Vehicle',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '票数',
+        dataIndex: 'ticketSum',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '备注',
+        dataIndex: 'remarks',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
+        ),
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return this.state.dataSource.length > 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+              <a href=" ">删除</a>
+            </Popconfirm>
+          ) : null;
+        },
+      },
+    ];
     return (
       <Modal
         title="项目基本信息新增"
@@ -222,9 +356,7 @@ class ProjectAddModal extends PureComponent {
                       rules: [{ required: true, message: '请选择项目类别' }],
                       initialValue:`${choiceTypeValue}`,
                     })(
-                      <Select readOnly onChange={this.handleGetOptionValue} onMouseEnter={this.handleProjectChange} placeholder="请选择项目类别" style={{ width: 200 }}>
-                        {projectOptionData}
-                      </Select>
+                      <Input readOnly placeholder="请选择项目类别" style={{ width: 200 }} />
                     )}
                   </Form.Item>
                 </Col>
@@ -443,6 +575,196 @@ class ProjectAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
+              <Collapse defaultActiveKey={['1','2','3']} >
+                { ( `${choiceTypeValue}` === `工程造价业务项目` )&& (
+                  <Panel header="工程造价业务项目" key="1">
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='项目个数'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="项目个数" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='送审金额'>
+                          {getFieldDecorator('contractCode')(
+                            <Input style={{ width: '100%' }} placeholder="送审金额" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核减额'>
+                          {getFieldDecorator('partner')(
+                            <Input style={{ width: '100%' }} placeholder="合伙人" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核增额'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="核增额" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='建筑面积'>
+                          {getFieldDecorator('contractCode')(
+                            <Input style={{ width: '100%' }} placeholder="建筑面积" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核定或预算总造价'>
+                          {getFieldDecorator('partner')(
+                            <Input style={{ width: '100%' }} placeholder="核定或预算总造价" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={23} pull={5}>
+                        <Form.Item {...formItemLayout} label='备注'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <TextArea style={{ width: '100%' }} placeholder="备注" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
+                { ( `${choiceTypeValue}` === `可研报告` ) && (
+                  <Panel header="可研报告" key="2">
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='项目个数'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="项目个数" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='送审金额'>
+                          {getFieldDecorator('contractCode')(
+                            <Input style={{ width: '100%' }} placeholder="送审金额" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核减额'>
+                          {getFieldDecorator('partner')(
+                            <Input style={{ width: '100%' }} placeholder="合伙人" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核增额'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="核增额" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='建筑面积'>
+                          {getFieldDecorator('contractCode')(
+                            <Input style={{ width: '100%' }} placeholder="建筑面积" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='核定或预算总造价'>
+                          {getFieldDecorator('partner')(
+                            <Input style={{ width: '100%' }} placeholder="核定或预算总造价" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={23} pull={5}>
+                        <Form.Item {...formItemLayout} label='备注'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <TextArea style={{ width: '100%' }} placeholder="备注" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
+                { ( `${choiceTypeValue}` === `招标代理业务项目`) && (
+                  <Panel header="招标代理业务项目" key="3">
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='招标公告发布'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <DatePicker  style={{ width: '100%' }} placeholder="招标公告发布" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='招标文件发布'>
+                          {getFieldDecorator('contractCode')(
+                            <DatePicker  style={{ width: '100%' }} placeholder="招标文件发布" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='开标日期'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <DatePicker  style={{ width: '100%' }} placeholder="开标日期" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='结束日期'>
+                          {getFieldDecorator('contractCode')(
+                            <DatePicker  style={{ width: '100%' }} placeholder="结束日期" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='项目个数'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="项目个数" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='控制价'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <Input style={{ width: '100%' }} placeholder="控制价" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item {...formItemLayout} label='中标价'>
+                          {getFieldDecorator('contractCode')(
+                            <Input style={{ width: '100%' }} placeholder="中标价" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={21} pull={3}>
+                        <Form.Item {...formItemLayout} label='备注'>
+                          {getFieldDecorator('shigongdanwei')(
+                            <TextArea style={{ width: '100%' }} placeholder="备注" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
+              </Collapse>
             </Form>
           </Card>
         </div>

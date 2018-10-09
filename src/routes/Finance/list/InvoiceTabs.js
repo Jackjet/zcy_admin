@@ -570,7 +570,7 @@ class InvoiceTabs extends PureComponent {
                             {getFieldDecorator('invoiceMoney', {
                               rules: [{ required: false, message: '请输入开票金额' }],
                             })(
-                              <Input placeholder="请输入开票金额" style={{ width: 150 }} />
+                              <Input disabled placeholder="自动计算带出" style={{ width: 150 }} />
                             )}
                           </Form.Item>
                         </Col>

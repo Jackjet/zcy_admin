@@ -10,53 +10,52 @@ import {
   Col,
   Row,
   Input,
-  Select,
   Popover,
   Cascader,
   Collapse,
-  Divider,
   Badge,
 } from 'antd';
 import { connect } from 'dva';
-import StandardTable from 'components/StandardTable';
-import VisitListViewModal from '../select/VisitListViewModal.js';
-import Salesman from '../../crm/select/Salesman.js';
+import StandardTable from '../../../components/StandardTable';
+import VisitListViewModal from '../VisitManage/VisitListViewModal.js';
+import Salesman from './Salesman.js';
 import ProjectInfo from '../../project/select/ProjectInfo';
 import ContractViewInfo from '../../project/select/ContractInfo';
-
 import styles from './style.less';
 
 const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
 const statusMap = ['default', 'processing', 'success', 'error'];
-const customerStatus = ['启用', '禁用'];
+const cusStatus = ['启用', '禁用'];
+
+const { TextArea } = Input;
 const { Panel } = Collapse;
-const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
 const fieldLabels = {
-  customerCode: '客户编码',
-  customerLevel: '客户等级',
+  cusCode: '客户编码',
+  cusLevel: '客户等级',
   industry: '所属行业',
-  customerName: '客户名称',
+  cusName: '客户名称',
   dateRange: '生效日期',
   simpleName: '简称',
   pinyin: ' 拼 音 码 ',
   url: '网站主页',
   taxCode: '税务登记号',
-  mobilePhone: '移动手机',
+  cusMobilePhone: '移动手机',
   email: '电子邮箱',
-  companyPhone: '公司电话',
+  cusCompanyPhone: '公司电话',
   postalCode: '邮政编码',
   region: '所在区域',
   incomeTax: '所得税征收方式',
-  company: '所属公司',
+  cusCompany: '所属公司',
   address: '详细地址',
   remark: '备注',
-  customerStatus: '状态',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
+  cusStatus: '状态',
+  cusCompanyName:'单位名称',
+  cusCompanyAddress:'单位地址',
   taxNumber:'税号',
   openAccountBank:'开户银行',
   bankAccount:'银行账户',
@@ -95,74 +94,6 @@ const optionshz = [
     ],
   },
 ];
-
-function onChange(value) {
-  console.log(value);
-}
-const cnumcol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-
-const cpinyincol = {
-  style: {
-    paddingLeft: 13,
-  },
-};
-
-const simplenamecol = {
-  style: {
-    paddingLeft: 72,
-  },
-};
-
-const companyphonecol = {
-  style: {
-    paddingLeft: 37,
-  },
-};
-
-const addresscol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-const urlcol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-
-const remarkcol = {
-  style: {
-    paddingLeft: 34,
-  },
-};
-
-const companycol = {
-  style: {
-    paddingLeft: 10,
-  },
-};
-
-const statuscol = {
-  style: {
-    paddingLeft: 27,
-  },
-};
-
-const formhz11 = {
-  wrapperCol: {
-    style: {
-      width: '91.66666667%',
-    },
-  },
-  style: {
-    width: '105%',
-  },
-};
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -290,6 +221,10 @@ class CustomerViewTabs extends PureComponent {
         }
       });
     };
+    const cancelDate = () => {
+      form.resetFields();
+      handleTabsViewVisible(false);
+    };
     const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
@@ -329,7 +264,6 @@ class CustomerViewTabs extends PureComponent {
         </span>
       );
     };
-
 
     const columnsContacts = [
       {
@@ -523,13 +457,13 @@ class CustomerViewTabs extends PureComponent {
     };
     return (
       <Modal
-        title="查看"
+        title="客户基本信息查看"
         style={{ top: 20 }}
         visible={tabsViewVisible}
         width="80%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleTabsViewVisible()}
+        onCancel={cancelDate}
         footer={null}
       >
         <Tabs defaultActiveKey="1">
@@ -545,189 +479,179 @@ class CustomerViewTabs extends PureComponent {
               <Panel header="客户基本信息" key="1">
                 <div>
                   <Card>
-                    <Form layout="inline">
+                    <Form layout="horizontal">
                       <Row className={styles['fn-mb-15']}>
-                        <Col>
-                          <Form.Item {...formhz11} label={fieldLabels.customerName}>
-                            {getFieldDecorator('customerName', {
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusName}>
+                            {getFieldDecorator('cusName', {
                               rules: [{ required: true, message: '请输入客户名称' }],
-                              initialValue :`${rowInfo.customerName}`,
-                            })(<Input readOnly placeholder="请输入客户名称" className={styles['ant-input-lg']} />)}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className={styles['row-h']}>
-                        <Col span={8}>
-                          <Form.Item label={fieldLabels.customerLevel}>
-                            {getFieldDecorator('customerLevel', {
-                              rules: [{ required: true, message: '请选择客户等级' }],
-                            })(
-                              <Input readOnly placeholder="请选择客户等级" style={{ width: 200 }} />
-                            )}
+                              initialValue :`${rowInfo.cusName}`,
+                            })(<Input readOnly placeholder="请输入客户名称" />)}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item label={fieldLabels.industry}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.industry}>
                             {getFieldDecorator('industry', {
                               rules: [{ required: true, message: '请选择行业' }],
-                              initialValue:`${industry[rowInfo.industry]}`,
+                              initialValue :`${industry[rowInfo.industry]}`,
                             })(
-                              <Input readOnly placeholder="请选择行业" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择行业" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item label={fieldLabels.incomeTax}>
-                            {getFieldDecorator('incomeTax', {
-                              rules: [{ required: true, message: '请选择所得税征收方式' }],
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusCompany}>
+                            {getFieldDecorator('cusCompany', {
+                              rules: [{ required: true, message: '所属公司' }],
+                              initialValue :`${rowInfo.cusCompany}`,
                             })(
-                              <Input readOnly placeholder="请选择所得税征收方式" style={{ width: 200 }} />
+                              <Input readOnly placeholder="所属公司" />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
-                      <Row className={styles['row-h']}>
+                      <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
-                          <Form.Item {...cnumcol} label={fieldLabels.customerCode}>
-                            {getFieldDecorator('customerCode', {
-                              rules: [{ required: false, message: '请输入客户编码' }],
-                              initialValue:`${rowInfo.customerCode}`,
+                          <Form.Item {...formItemLayout} label={fieldLabels.incomeTax}>
+                            {getFieldDecorator('incomeTax', {
+                              rules: [{ required: false, message: '请选择所得税征收方式' }],
                             })(
-                              <Input readOnly placeholder="请输入客户编码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请选择所得税征收方式" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item {...cpinyincol} label={fieldLabels.pinyin}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.taxCode}>
+                            {getFieldDecorator('taxCode', {
+                              rules: [{ required: false, message: '请输入税务登记号' }],
+                            })(
+                              <Input readOnly placeholder="请输入税务登记号" />
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusStatus}>
+                            {getFieldDecorator('cusStatus', {
+                              rules: [{ required: true, message: '状态' }],
+                              initialValue :`${cusStatus[rowInfo.cusStatus]}`,
+                            })(
+                              <Input readOnly placeholder="请选择状态" />
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusCode}>
+                            {getFieldDecorator('cusCode', {
+                              rules: [{ required: false, message: '请输入客户编码' }],
+                              initialValue:`${rowInfo.cusCode}`,
+                            })(
+                              <Input readOnly placeholder="请输入客户编码" />
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.pinyin}>
                             {getFieldDecorator('pinyin', {
                               rules: [{ required: false, message: '请输入拼音码' }],
                             })(
-                              <Input readOnly placeholder="请输入拼音码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入拼音码" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item {...simplenamecol} label={fieldLabels.simpleName}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.simpleName}>
                             {getFieldDecorator('simpleName', {
                               rules: [{ required: false, message: '请输入简称' }],
-                            })(<Input readOnly placeholder="请输入简称" style={{ width: 200 }} />
+                            })(<Input readOnly placeholder="请输入简称" />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
 
-                      <Row className={styles['row-h']}>
+                      <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
-                          <Form.Item label={fieldLabels.mobilePhone}>
-                            {getFieldDecorator('mobilePhone', {
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusMobilePhone}>
+                            {getFieldDecorator('cusMobilePhone', {
                               rules: [{ required: true, message: '请输入手机号码' }],
-                              initialValue:`${rowInfo.mobilePhone}`,
+                              initialValue :`${rowInfo.cusMobilePhone}`,
                             })(
-                              <Input readOnly placeholder="请输入手机号码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入手机号码" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item label={fieldLabels.email}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.email}>
                             {getFieldDecorator('email', {
-                              rules: [{ required: true, message: '请输入电子邮箱' }],
+                              rules: [{ required: false, message: '请输入电子邮箱' }],
                             })(
-                              <Input readOnly placeholder="请输入电子邮箱" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入电子邮箱" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={8}>
-                          <Form.Item {...companyphonecol} label={fieldLabels.companyPhone}>
-                            {getFieldDecorator('companyPhone', {
-                              rules: [{ required: true, message: '请输入公司电话' }],
+                          <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyPhone}>
+                            {getFieldDecorator('cusCompanyPhone', {
+                              rules: [{ required: false, message: '请输入公司电话' }],
                             })(
-                              <Input readOnly placeholder="请输入公司电话" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入公司电话" />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
 
-                      <Row className={styles['row-h']}>
+                      <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
-                          <Form.Item label={fieldLabels.postalCode}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.postalCode}>
                             {getFieldDecorator('postalCode', {
-                              rules: [{ required: true, message: '请输入邮政编码' }],
+                              rules: [{ required: false, message: '请输入邮政编码' }],
                             })(
-                              <Input readOnly placeholder="请输入邮政编码" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入邮政编码" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
-                          <Form.Item label={fieldLabels.region}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.region}>
                             {getFieldDecorator('region', {
                               rules: [{ required: true, message: '请选择所在区域' }],
                             })(
-                              <Input
+                              <Cascader
                                 readOnly
+                                options={optionshz}
                                 placeholder="请选择所在区域"
-                                style={{ width: 603 }}
                               />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
-                      <Row className={styles['row-h']}>
+                      <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
-                          <Form.Item {...urlcol} label={fieldLabels.url}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.url}>
                             {getFieldDecorator('url', {
                               rules: [{ required: false, message: '请输入网站主页' }],
                             })(
-                              <Input readOnly placeholder="请输入网站主页" style={{ width: 200 }} />
+                              <Input readOnly placeholder="请输入网站主页" />
                             )}
                           </Form.Item>
                         </Col>
                         <Col span={16}>
-                          <Form.Item {...addresscol} label={fieldLabels.address}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.address}>
                             {getFieldDecorator('address', {
                               rules: [{ required: false, message: '请输入详细地址' }],
                             })(
-                              <Input readOnly placeholder="请输入详细地址" style={{ width: 603 }} />
+                              <Input readOnly placeholder="请输入详细地址" />
                             )}
                           </Form.Item>
                         </Col>
                       </Row>
-                      <Row className={styles['row-h']}>
-                        <Col span={8}>
-                          <Form.Item label={fieldLabels.taxCode}>
-                            {getFieldDecorator('taxCode', {
-                              rules: [{ required: false, message: '请输入税务登记号' }],
-                            })(
-                              <Input readOnly placeholder="请输入税务登记号" style={{ width: 200 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                        <Col span={16}>
-                          <Form.Item {...remarkcol} label={fieldLabels.remark}>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={23} pull={5}>
+                          <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                             {getFieldDecorator('remark', {
                               rules: [{ required: false, message: '请输入备注' }],
                             })(
-                              <Input readOnly placeholder="请输入备注" style={{ width: 603 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className={styles['row-h']}>
-                        <Col span={8}>
-                          <Form.Item {...statuscol} label={fieldLabels.customerStatus}>
-                            {getFieldDecorator('customerStatus', {
-                              rules: [{ required: true, message: '状态' }],
-                              initialValue:`${customerStatus[rowInfo.customerStatus]}`,
-                            })(
-                              <Input readOnly placeholder="请选择状态" disable style={{ width: 200 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                        <Col span={16}>
-                          <Form.Item {...companycol} label={fieldLabels.company}>
-                            {getFieldDecorator('company', {
-                              rules: [{ required: true, message: '公司' }],
-                            })(
-                              <Input readOnly placeholder="所属公司" style={{ width: 603 }} />
+                              <TextArea readOnly placeholder="请输入备注" />
                             )}
                           </Form.Item>
                         </Col>
@@ -737,49 +661,51 @@ class CustomerViewTabs extends PureComponent {
                 </div>
               </Panel>
               <Panel header="开票信息" key="2">
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
-                      {getFieldDecorator('companyName', {
-                        rules: [{ required: true, message: '请输入单位名称' }],
-                      })(<Input readOnly placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
-                      {getFieldDecorator('companyAddress', {
-                        rules: [{ required: true, message: '请输入单位地址' }],
-                      })(<Input readOnly placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
-                      {getFieldDecorator('taxNumber', {
-                        rules: [{ required: true, message: '请输入税号' }],
-                      })(<Input readOnly placeholder="请输入税号" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
-                      {getFieldDecorator('openAccountBank', {
-                        rules: [{ required: true, message: '请输入开户银行' }],
-                      })(<Input readOnly placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
-                      {getFieldDecorator('bankAccount', {
-                        rules: [{ required: true, message: '请输入银行账户' }],
-                      })(<Input readOnly placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                </Row>
+                <Card>
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyName}>
+                        {getFieldDecorator('cusCompanyName', {
+                          rules: [{ required: false, message: '请输入单位名称' }],
+                        })(<Input readOnly placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyAddress}>
+                        {getFieldDecorator('cusCompanyAddress', {
+                          rules: [{ required: false, message: '请输入单位地址' }],
+                        })(<Input readOnly placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
+                        {getFieldDecorator('taxNumber', {
+                          rules: [{ required: false, message: '请输入税号' }],
+                        })(<Input readOnly placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
+                        {getFieldDecorator('openAccountBank', {
+                          rules: [{ required: false, message: '请输入开户银行' }],
+                        })(<Input readOnly placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
+                        {getFieldDecorator('bankAccount', {
+                          rules: [{ required: false, message: '请输入银行账户' }],
+                        })(<Input readOnly placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Card>
               </Panel>
               <Panel header="客户联系人" key="3">
                 <div>
-                  <Card bordered={false}>
+                  <Card>
                     <div className={styles.tableList}>
                       <StandardTable
                         selectedRows={selectedRows}

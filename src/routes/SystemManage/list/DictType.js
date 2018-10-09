@@ -20,39 +20,12 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './DictType.less';
 import DictTypeAdd from '../add/DictTypeAdd';
 
-const { Content, Sider } = Layout;
 const { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleAdd(fieldsValue);
-      form.resetFields();
-    });
-  };
-  return (
-    <Modal
-      title="客户基本信息新增"
-      style={{ top: 150 }}
-      // 对话框是否可见
-      visible={modalVisible}
-      width="30%"
-      // 点击蒙层是否允许关闭
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <DictTypeAdd />
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -226,9 +199,6 @@ export default class TableList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
-                新建
-              </Button>
             </span>
           </Col>
         </Row>
@@ -260,13 +230,13 @@ export default class TableList extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
-            <a href="">查看</a>
+            <a>查看</a>
             <Divider type="vertical" />
-            <a href="">编辑</a>
+            <a>编辑</a>
             <Divider type="vertical" />
-            <Button onClick={this.showDeleteConfirm} type="dashed">
+            <a onClick={this.showDeleteConfirm} >
               删除
-            </Button>
+            </a>
           </Fragment>
         ),
       },
@@ -289,6 +259,9 @@ export default class TableList extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleModalVisible}>
+                新建
+              </Button>
               {selectedRows.length > 0 && (
                 <span>
                   <Dropdown overlay={menu}>
@@ -309,7 +282,7 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <DictTypeAdd {...parentMethods} modalVisible={modalVisible} />
       </PageHeaderLayout>
     );
   }

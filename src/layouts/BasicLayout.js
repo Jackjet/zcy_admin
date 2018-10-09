@@ -101,6 +101,7 @@ class BasicLayout extends React.PureComponent {
     companyId:'',
     companyName:'',
     menuData:'',
+    MenuCollapseStatus: false,
   };
 
 
@@ -229,6 +230,21 @@ class BasicLayout extends React.PureComponent {
       type: 'global/changeLayoutCollapsed',
       payload: collapsed,
     });
+    this.setState({
+      MenuCollapseStatus: collapsed,
+    })
+  };
+  getLayoutStyle = () => {
+    const { MenuCollapseStatus } = this.state;
+    if(!MenuCollapseStatus){
+      return{
+        padding: 0, zIndex: 1, position: 'fixed', width: '88.5%',
+      }
+    }else{
+      return{
+        padding: 0, zIndex: 1, position: 'fixed', width: '96%',
+      }
+    }
   };
   handleNoticeClear = type => {
     message.success(`清空了${type}`);
@@ -302,7 +318,7 @@ class BasicLayout extends React.PureComponent {
       notices,
       routerData,
       match,
-      location
+      location,
     } = this.props;
     const bashRedirect = this.getBashRedirect();
 
@@ -328,7 +344,7 @@ class BasicLayout extends React.PureComponent {
           onCollapse={this.handleMenuCollapse}
         />
         <Layout>
-          <Header style={{ padding: 0 }}>
+          <Header style={{padding: 0}}>
             <GlobalHeader
               logo={logo}
               currentUser={currentUser}
@@ -342,7 +358,7 @@ class BasicLayout extends React.PureComponent {
               onNoticeVisibleChange={this.handleNoticeVisibleChange}
             />
           </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>
+          <Content style={{ margin: '24px 24px 0', height: '100%', paddingTop: 64 }}>
             <Switch>
               {redirectData.map(item => (
                 <Redirect key={item.from} exact from={item.from} to={item.to} />

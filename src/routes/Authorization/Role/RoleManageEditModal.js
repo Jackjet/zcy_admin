@@ -110,7 +110,7 @@ class RoleManageEditModal extends PureComponent {
         title="角色基本信息编辑"
         style={{ top: 20 }}
         visible={RoleManageEditVisible}
-        width="55%"
+        width="30%"
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
