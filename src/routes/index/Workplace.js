@@ -350,6 +350,16 @@ export default class Workplace extends PureComponent {
                 </div>
               </Badge>
             </Col>
+            <Col span={2}>
+              <Badge count={6}>
+                <div className={styles["gutter-box5"]} >
+                  <h4>项目指派消息</h4>
+                  <p>
+                    指派10个，6个待处理
+                  </p>
+                </div>
+              </Badge>
+            </Col>
           </Row>
         </Card>
         <div style={{fontSize: 20, marginBottom: 20, color: "black" }}>
@@ -412,7 +422,17 @@ export default class Workplace extends PureComponent {
                 <h5 >费用申请单</h5>
               </Link>
             </Col>
-            <Col span={4} />
+            <Col span={4} >
+              <Link
+                className={styles["shortcut-box5"]}
+                to="/projectAllow/projectAllocation"
+                onClick={this.handleArea}
+              >
+                <div ><Icon className={styles.iconhz}  type="star" />
+                </div>
+                <h5 >项目指派</h5>
+              </Link>
+            </Col>
           </Row>
         </Card>
         <Row gutter={24} className={styles["row-h"]}>
