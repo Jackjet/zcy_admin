@@ -270,6 +270,7 @@ export default class projectList extends PureComponent {
           <Menu.Item key='1'>工程造价业务项目</Menu.Item>
           <Menu.Item key='2'>可研报告</Menu.Item>
           <Menu.Item key='3'>招标代理业务项目</Menu.Item>
+          <Menu.Item key='4'>司法鉴定</Menu.Item>
         </SubMenu>
       </Menu>
     );

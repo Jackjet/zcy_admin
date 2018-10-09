@@ -539,12 +539,11 @@ export default class CustomerList extends PureComponent {
       {
         title: '编码',
         dataIndex: 'cusCode',
-        fixed: 'left',
+       /* fixed: 'left',*/
       },
       {
         title: '名称',
         dataIndex: 'cusName',
-
       },
       {
         title: '联系人',
@@ -693,7 +692,7 @@ export default class CustomerList extends PureComponent {
                     )}
                   </div>
                   <StandardTable
-                    scroll={{ x: 1500}}
+                   /* scroll={{ x: 1500}}*/
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}

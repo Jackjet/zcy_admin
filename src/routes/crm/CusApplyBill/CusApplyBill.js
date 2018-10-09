@@ -577,7 +577,6 @@ export default class CusApplyBill extends PureComponent {
                     )}
                   </div>
                   <StandardTable
-                    scroll={{ x: 1500}}
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}

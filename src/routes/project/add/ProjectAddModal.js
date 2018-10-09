@@ -417,7 +417,7 @@ class ProjectAddModal extends PureComponent {
                       rules: [{ required: true, message: '请选择客户联系人' }],
                     })(
                       <div>
-                        <Input placeholder="请选择客户联系人" style={{ width: '70%' }} />
+                        <Input placeholder="请选择客户联系人" style={{ width: '63%' }} />
                         <Divider type="vertical" />
                         <a>新增联系人</a>
                       </div>
@@ -481,7 +481,11 @@ class ProjectAddModal extends PureComponent {
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label='合同编号'>
                     {getFieldDecorator('contractCode')(
-                      <Input style={{ width: '100%' }} placeholder="合同编号" />
+                      <div>
+                        <Input style={{ width: '68%' }} placeholder="合同编号" />
+                        <Divider type="vertical" />
+                        <a>新增合同</a>
+                      </div>
                     )}
                   </Form.Item>
                 </Col>

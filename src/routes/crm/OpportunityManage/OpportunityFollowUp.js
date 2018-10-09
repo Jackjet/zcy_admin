@@ -70,6 +70,10 @@ class BusinessFollowUp extends PureComponent {
     this.setState({ targetKeys });
   };
 
+  handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -140,7 +144,7 @@ class BusinessFollowUp extends PureComponent {
         style={{ top: 20 }}
         // 对话框是否可见
         visible={followUpVisible}
-        width="50%"
+        width="65%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
@@ -184,10 +188,8 @@ class BusinessFollowUp extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={12} pull={4}>
-                  <Form.Item {...formItemLayoutTextArea} label={fieldLabels.communication}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.communication}>
                     {getFieldDecorator('communication')(
                       <TextArea placeholder="请输入交流内容" />
                     )}
@@ -195,11 +197,11 @@ class BusinessFollowUp extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={7} push={2}>
-                  <Form.Item {...formItemLayout} label='参与人员'>
+                <Col span={3}>
+                  <Form.Item label='参与人员'>
                     {getFieldDecorator('assignor', {
                     })(
-                      <div className={styles.divBorder}>
+                      <div className={styles["architecture1"]}>
                         <Tree>
                           <TreeNode title="杭州至诚" key="0-0">
                             <TreeNode title="管理层1" key="0-0-0" >
@@ -225,12 +227,16 @@ class BusinessFollowUp extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-                <Col span={15} push={3}>
+                <Col span={21}>
                   <Form.Item {...formItemLayout} >
                     {getFieldDecorator('personal', {
                     })(
-                      <div>
+                      <div className={styles["fn-left"]} >
                         <Transfer
+                          listStyle={{
+                            width: 200,
+                            height: 228,
+                          }}
                           dataSource={mockData}
                           titles={['可选人员', '已选人员']}
                           targetKeys={this.state.targetKeys}
