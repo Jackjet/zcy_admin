@@ -215,8 +215,23 @@ class CommissionSettingAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col>
+                <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.commissionCoefficient}>
+                    {getFieldDecorator('commissionCoefficient', {
+                      rules: [{ required: false, message: '请输入提成比例系数' }],
+                    })(
+                      <InputNumber
+                        defaultValue={0}
+                        min={0}
+                        max={100}
+                        formatter={value => `${value}%`}
+                        parser={value => value.replace('%', '')}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item {...formhz11} label="考评比例系数">
                     {getFieldDecorator('commissionCoefficient', {
                       rules: [{ required: false, message: '请输入提成比例系数' }],
                     })(

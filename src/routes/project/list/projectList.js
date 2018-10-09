@@ -537,16 +537,17 @@ export default class projectList extends PureComponent {
 
       {
         title: '操作',
-        width: 200,
+        width: 240,
         fixed: 'right',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showProjectApplyAddVisible(true, record)} >项目过程</a>
+            <a onClick={() =>this.showProjectApplyAddVisible(true, record)} >审批环节</a>
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
             <a onClick={this.handleDeleteClick} >删除</a>
             <Divider type="vertical" />
+            <a>销毁申请</a>
           </Fragment>
         ),
       },
