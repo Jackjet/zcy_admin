@@ -101,9 +101,28 @@ const menuData = [
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
+    ],
+  },
+  {
+    name: '考评管理',
+    icon: 'folder-add',
+    path: 'kaopingManage',
+    children: [
+      {
+        key: 'projectinfoList',
+        name: '指标库',
+        path: 'projectinfo',
+      },
       {
         key: 'kaopingp',
-        name: '项目考评管理',
+        name: '项目考评',
+        path: 'workplan2',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        key: 'kaopingp',
+        name: '年度考评',
         path: 'workplan2',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
@@ -251,6 +270,11 @@ const menuData = [
         name: '价格格库',
         path: 'priceIssue',
       },
+      {
+        key: 'cljgku',
+        name: '合同模版',
+        path: 'contractDemo',
+      },
 
     ],
   },
@@ -279,6 +303,11 @@ const menuData = [
         name: '档案标签库架',
         path: 'danbqkuj',
       },
+      {
+        key: 'xiaohuidangan',
+        name: '销毁档案',
+        path: 'xiaohuidangan',
+      },
     ],
   },
 
@@ -289,8 +318,18 @@ const menuData = [
     children: [
       {
         key: 'hehuorenseting',
-        name: '合伙人设置',
+        name: '合伙人类别',
         path: 'hehuorsetting',
+      },
+      {
+        key: 'hehuorenseting1',
+        name: '分管合伙人范围查询',
+        path: 'hehuorsetting1',
+      },
+      {
+        key: 'hehuorenseting2',
+        name: '报表查询',
+        path: 'hehuorsetting2',
       },
 
     ],

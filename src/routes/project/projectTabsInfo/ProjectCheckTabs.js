@@ -18,6 +18,8 @@ import {
   Tree,
   Transfer,
   Popover,
+  Table,
+  Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
@@ -25,6 +27,7 @@ import StandardTable from 'components/StandardTable';
 import ProcedureList from './ProcedureProject.js';
 import ReportAddModal from '../add/ReportAddModal';
 import ReportEditModal from '../edit/ReportEditModal';
+import EditableCell from '../EditableTable/EditableCell';
 import ReportViewModal from '../select/ReportViewModal';
 
 import styles from '../list/Style.less';
@@ -94,6 +97,21 @@ class ProjectCheckTabs extends PureComponent {
     targetKeys:[],
     selectedKeys: [],
     selectedRows:{},
+    dataSource: [
+      {
+        key: '0',
+        name: '汪工',
+        phone: '123456',
+        remarks: 'aaa',
+      },
+      {
+        key: '1',
+        name: '申工',
+        phone: '456789',
+        remarks: 'bbb',
+      },
+    ],
+    count: 2,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -205,6 +223,34 @@ class ProjectCheckTabs extends PureComponent {
     });
   };
 
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.setState({ dataSource });
+      }
+    };
+  };
+  onDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  };
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
+    const newData = {
+      key: count,
+      name: `小杨 ${count}`,
+      phone: 18,
+      remarks: `London, Park Lane no. ${count}`,
+    };
+    this.setState({
+      dataSource: [...dataSource, newData],
+      count: count + 1,
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -287,6 +333,7 @@ class ProjectCheckTabs extends PureComponent {
       selectedKeys,
       checkBoxOptionData,
       choiceOption,
+      dataSource,
     } = this.state;
     const fieldLabels = {
       number: '项目编码',
@@ -312,6 +359,52 @@ class ProjectCheckTabs extends PureComponent {
       demand: '客户需求',
       attachment: '附件',
     };
+    const columnsLinkMan = [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
+        ),
+      },
+      {
+        title: '联系人类型',
+        dataIndex: 'type',
+        render: (text, record) => (
+          <div>
+            <Select style={{ width: 130 }}>
+              <Option value="0">主联系人</Option>
+              <Option value="1">法人</Option>
+            </Select>
+          </div>
+        ),
+      },
+      {
+        title: '联系电话',
+        dataIndex: 'mobilePhone',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
+        ),
+      },
+      {
+        title: '办公电话',
+        dataIndex: 'officePhone',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'remarks')} />
+        ),
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return this.state.dataSource.length > 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+              <a href=" ">Delete</a>
+            </Popconfirm>
+          ) : null;
+        },
+      },
+    ];
     const columnsProject = [
       {
         title: '合同编码',
@@ -987,38 +1080,37 @@ class ProjectCheckTabs extends PureComponent {
             key="5"
           >
             <div>
-            <Card bordered={false}>
-              <div className={styles.tableList}>
-                <StandardTable
-                  selectedRows={selectedRows}
-                  loading={loading}
-                  data={data}
-                  columns={columnsPlan}
-                  onSelectRow={this.handleSelectRows}
-                  onChange={this.handleStandardTableChange}
-                />
-              </div>
-            </Card>
-          </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
-                <Icon type="calendar" />工作日记
-              </span>
-            }
-            key="6"
-          >
-            <div>
               <Card bordered={false}>
                 <div className={styles.tableList}>
                   <StandardTable
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}
-                    columns={columnsWorkDiary}
+                    columns={columnsPlan}
                     onSelectRow={this.handleSelectRows}
                     onChange={this.handleStandardTableChange}
+                  />
+                </div>
+              </Card>
+            </div>
+          </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <Icon type="calendar" />过程管理
+              </span>
+            }
+            key="6"
+          >
+            <div>
+              <Card>
+                <div>
+                  <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                    新增联系人
+                  </Button>
+                  <Table
+                    dataSource={dataSource}
+                    columns={columnsLinkMan}
                   />
                 </div>
               </Card>
