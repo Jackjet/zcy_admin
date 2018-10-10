@@ -353,9 +353,9 @@ export default class Workplace extends PureComponent {
             <Col span={2}>
               <Badge count={6}>
                 <div className={styles["gutter-box5"]} >
-                  <h4>项目指派消息</h4>
+                  <h4>项目指派</h4>
                   <p>
-                    指派10个，6个待处理
+                    指派10个，待处理6个,完成4个
                   </p>
                 </div>
               </Badge>

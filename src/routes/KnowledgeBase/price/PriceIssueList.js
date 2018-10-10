@@ -16,11 +16,13 @@ import {
   message,
   Divider,
   Popconfirm,
+  Layout
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import StandardTable from '../../../components/StandardTable/index';
 import styles from './Style.less';
 
-
+const { Content,  Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -178,19 +180,58 @@ export default class PriceIssueList extends PureComponent {
         mode="inline"
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
+        style={{ width: 210 }}
+        onClick={this.handleGetMenuValue}
       >
         <SubMenu
           key="sub1"
           title={
             <span>
-              <span>至诚</span>
+              <span>材料价格类别</span>
             </span>
           }
         >
-          <Menu.Item key="1">浙江至诚会计师事务所有限公司</Menu.Item>
-          <Menu.Item key="2">杭州至诚税务师事务所有限公司</Menu.Item>
-          <Menu.Item key="3">浙江中嘉资产评估有限公司</Menu.Item>
+            <SubMenu
+              key="sub2"
+              title={
+                <span>
+              <span>有材料价格</span>
+            </span>
+              }
+            >
+              <SubMenu
+                key="sub21"
+                title={
+                  <span>
+              <span>建筑材料</span>
+            </span>
+                }
+              >
+                <Menu.Item key="211">水泥
+                </Menu.Item>
+                <Menu.Item key="212" title={'水泥制品'}>水泥制品</Menu.Item>
+                <Menu.Item key="213" title={'砖、瓦、砂、石、灰'}>砖、瓦、砂、石、灰</Menu.Item>
+
+              </SubMenu>
+
+            </SubMenu>
+
+          <SubMenu
+            key="sub3"
+            title={
+              <span>
+              <span>无材料价格</span>
+            </span>
+            }
+          >
+            <Menu.Item key="1">有材料价格
+
+
+            </Menu.Item>
+            <Menu.Item key="2">无材料价格</Menu.Item>
+
+          </SubMenu>
+
         </SubMenu>
       </Menu>
     );
@@ -235,13 +276,23 @@ export default class PriceIssueList extends PureComponent {
       {
         title: '材料类型',
         dataIndex: 'organizeCode',
+        width: 90,
+        align: 'center',
+        fixed: 'left',
       },
       {
-        title: '名称',
+        title: '材料名称',
         dataIndex: 'organizeName',
+        width: 90,
+        align: 'center',
+        fixed: 'left',
       },
       {
-        title: '规格',
+        title: '规格型号',
+        dataIndex: 'phone',
+      },
+      {
+        title: '单位',
         dataIndex: 'phone',
       },
       {
@@ -249,7 +300,11 @@ export default class PriceIssueList extends PureComponent {
         dataIndex: 'fzperson',
       },
       {
-        title: '价格',
+        title: '含税信息价格',
+        dataIndex: 'status',
+      },
+      {
+        title: '除税信息价格',
         dataIndex: 'status',
       },
     ];
@@ -269,42 +324,49 @@ export default class PriceIssueList extends PureComponent {
     );
 
     return (
-      <div>
+      <PageHeaderLayout>
         <Card bordered={false}>
-         {/* <div className={styles.leftBlock}>{this.treeMenu()}</div>*/}
-          <div>
-            <div className={styles.tableList}>
-             {/* <div className={styles.tableListForm}>{this.renderForm()}</div>*/}
-              <div className={styles.tableListOperator}>
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick=''
-                >
-                  导入
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={210} style={{ background: '#fff' }}>
+              {this.treeMenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick=''
+                  >
+                    导入
+                  </Button>
+                  {selectedRows.length > 0 && (
+                    <span>
                     <Dropdown overlay={batchMenu}>
                       <Button>
                         批量操作 <Icon type="down" />
                       </Button>
                     </Dropdown>
                   </span>
-                )}
+                  )}
+                </div>
+                <StandardTable
+                  scroll={{ x: 1500}}
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-          </div>
+            </Content>
+          </Layout>
         </Card>
-      </div>
+      </PageHeaderLayout>
+
+
     );
   }
 }
