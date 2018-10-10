@@ -176,9 +176,9 @@ class orgUnitAdd2 extends PureComponent {
             </Row>
             <Row className={styles['row-h']}>
               <Col span={12}>
-                <Form.Item label="负责人" style={{ paddingLeft: 24 }}>
+                <Form.Item label="公司负责人" style={{ paddingLeft: 24 }}>
                   {getFieldDecorator('principal', {
-                    rules: [{ required: false, message: '请选择负责人' }],
+                    rules: [{ required: false, message: '请选择公司负责人' }],
                   })(
                     <Select style={{ width: 200 }}>
                       <Option value="0">员工A</Option>

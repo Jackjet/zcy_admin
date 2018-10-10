@@ -21,9 +21,12 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
+import ChoiceCusModal from "./ChoiceCusModal";
+import ConstructUnitModal from "./ConstructUnitModal";
 import EditableCell from '../../../components/EditableTable/index';
 import styles from './style.less';
 
+const { Search } = Input;
 const { TextArea } = Input;
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -126,6 +129,10 @@ class ProjectAddModal extends PureComponent {
       },
     ],
     count: 2,
+    choiceCusVisible: false,
+    getCusValue: "客户A",
+    constructUnitVisible: false,
+    getConstructUnitValue: "施工单位A",
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -148,8 +155,6 @@ class ProjectAddModal extends PureComponent {
     const dataSource = [...this.state.dataSource];
     this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
   };
-
-
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -159,6 +164,30 @@ class ProjectAddModal extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
+  };
+
+  handleChoiceCusVisible = flag => {
+    this.setState({
+      choiceCusVisible: !!flag,
+    });
+  };
+
+  handleGetCusValue = (cus) => {
+    this.setState({
+      getCusValue: cus,
+    });
+  };
+
+  handleConstructUnitVisible = flag => {
+    this.setState({
+      constructUnitVisible: !!flag,
+    });
+  };
+
+  handleGetConstructUnitValue = (unit) => {
+    this.setState({
+      getConstructUnitValue: unit,
+    });
   };
 
   handleAdd = () => {
@@ -191,7 +220,7 @@ class ProjectAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { projectOptionData, dataSource } = this.state;
+    const { projectOptionData, dataSource, choiceCusVisible, getCusValue, constructUnitVisible, getConstructUnitValue } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -325,6 +354,12 @@ class ProjectAddModal extends PureComponent {
         },
       },
     ];
+    const parentMethods={
+      handleChoiceCusVisible: this.handleChoiceCusVisible,
+      handleGetCusValue: this.handleGetCusValue,
+      handleConstructUnitVisible: this.handleConstructUnitVisible,
+      handleGetConstructUnitValue: this.handleGetConstructUnitValue,
+    };
     return (
       <Modal
         title="项目基本信息新增"
@@ -405,9 +440,13 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.customer}>
                     {getFieldDecorator('customer', {
                       rules: [{ required: true, message: '请选择客户' }],
-                      initialValue:`${rowInfo.customerName}` === 'undefined'?'':`${rowInfo.customerName}`,
+                      initialValue:`${getCusValue}`,
                     })(
-                      <Input placeholder="请选择客户" style={{ width: '100%' }} />
+                      <Search
+                        placeholder="请选择客户"
+                        onSearch={this.handleChoiceCusVisible}
+                        style={{ width: 200 }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -463,6 +502,15 @@ class ProjectAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
+                    {getFieldDecorator('fzperson', {
+                      rules: [{ required: true, message: '部门负责人' }],
+                    })(
+                      <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.fee}>
                     {getFieldDecorator('fee', {
                       rules: [{ required: true, message: '请输入项目费用' }],
@@ -473,8 +521,14 @@ class ProjectAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label='施工单位'>
-                    {getFieldDecorator('shigongdanwei')(
-                      <Input style={{ width: '100%' }} placeholder="施工单位" />
+                    {getFieldDecorator('shigongdanwei',{
+                      initialValue:`${getConstructUnitValue}`,
+                    })(
+                      <Search
+                        placeholder="施工单位"
+                        onSearch={this.handleConstructUnitVisible}
+                        style={{ width: 200 }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -509,6 +563,17 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.endDate}>
                     {getFieldDecorator('endDate')(
                       <DatePicker style={{ width: '100%' }} placeholder="请输入结束日期" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} />
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="指派编号">
+                    {getFieldDecorator('zhipaiCode')(
+                      <Search
+                        placeholder="指派编号+弹出项目指派列表"
+                        style={{ width: 200 }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -771,6 +836,8 @@ class ProjectAddModal extends PureComponent {
               </Collapse>
             </Form>
           </Card>
+          <ChoiceCusModal {...parentMethods} choiceCusVisible={choiceCusVisible} />
+          <ConstructUnitModal {...parentMethods} constructUnitVisible={constructUnitVisible} />
         </div>
       </Modal>
 
