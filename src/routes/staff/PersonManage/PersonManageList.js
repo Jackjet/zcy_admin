@@ -6,23 +6,33 @@ import {
   Card,
   Form,
   Input,
+  Select,
   Icon,
   Button,
   Dropdown,
   Menu,
+  DatePicker,
+  Modal,
   message,
   Divider,
   Popconfirm,
   Layout,
+  Badge,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import styles from './DepartmentList.less';
-import DepartmentAddModal from '../add/DepartmentAddModal';
-import DepartmentViewModal from '../select/DepartmentViewModal';
-import DepartmentEditModal from '../edit/DepartmentEditModal';
+import StandardTable from '../../../components/StandardTable/index';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import PersonAddModal from './PersonAddModal';
+import PersonViewModal from './PersonViewModal';
+import PersonEditModal from './PersonEditModal';
+import styles from './style.less';
 
-const { Content, Sider } = Layout;
+const { Content,  Sider } = Layout;
+const statusMap = ['default', 'processing', 'success', 'error'];
+const status = ['离职', '在职', '已上线', '异常'];
+const { Search } = Input;
 const FormItem = Form.Item;
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -33,11 +43,11 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class DepartmentList extends PureComponent {
+export default class PersonManageList extends PureComponent {
   state = {
-    DepartmentAddVisible: false,
-    DepartmentViewVisible: false,
-    DepartmentEditVisible: false,
+    PersonAddVisible: false,
+    PersonViewVisible: false,
+    PersonEditVisible: false,
     rowInfo:``,
     expandForm: false,
     selectedRows: [],
@@ -164,34 +174,34 @@ export default class DepartmentList extends PureComponent {
     });
   };
 
-  handleDepartmentAddVisible = flag => {
+  handlePersonAddVisible = flag => {
     this.setState({
-      DepartmentAddVisible: !!flag,
+      PersonAddVisible: !!flag,
     });
   };
 
-  handleDepartmentViewVisible = flag => {
+  handlePersonViewVisible = flag => {
     this.setState({
-      DepartmentViewVisible: !!flag,
+      PersonViewVisible: !!flag,
     });
   };
 
-  handleDepartmentEditVisible = flag => {
+  handlePersonEditVisible = flag => {
     this.setState({
-      DepartmentEditVisible: !!flag,
+      PersonEditVisible: !!flag,
     });
   };
 
   showViewMessage =(flag, text, record)=> {
     this.setState({
-      DepartmentViewVisible: !!flag,
+      PersonViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
   showEditMessage =(flag, record)=> {
     this.setState({
-      DepartmentEditVisible: !!flag,
+      PersonEditVisible: !!flag,
       rowInfo: record,
     });
   };
@@ -200,7 +210,7 @@ export default class DepartmentList extends PureComponent {
     this.props.dispatch({
       type: 'rule/remove',
       payload: {
-        organizeCode: record.organizeCode,
+        no: record.no,
       },
       callback: () => {
         this.setState({
@@ -253,9 +263,7 @@ export default class DepartmentList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入编码名称" />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
             </FormItem>
           </Col>
 
@@ -279,62 +287,72 @@ export default class DepartmentList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, DepartmentAddVisible, DepartmentViewVisible, DepartmentEditVisible, rowInfo } = this.state;
-
+    const { selectedRows, PersonAddVisible, PersonViewVisible, PersonEditVisible, rowInfo } = this.state;
     const columns = [
       {
-        title: '部门编号',
-        dataIndex: 'organizeCode',
+        title: '工号',
+        dataIndex: 'no',
       },
       {
-        title: '部门名称',
-        dataIndex: 'departmentName',
+        title: '姓名',
+        dataIndex: 'name',
       },
       {
-        title: '上级部门',
-        dataIndex: 'superiorDepartment',
+        title: '性别',
+        dataIndex: 'phone',
+      },
+
+      {
+        title: '岗位',
+        dataIndex: 'fzperson',
       },
       {
-        title: '备注',
-        dataIndex: 'remarks',
+        title: '移动电话',
+        dataIndex: 'company',
+      },
+      {
+        title: '办公电话',
+        dataIndex: 'address',
       },
       {
         title: '状态',
         dataIndex: 'status',
-      },
-      {
-        title: '所属公司',
-        dataIndex: 'company',
+        filters: [
+          {
+            text: status[0],
+            value: 0,
+          },
+          {
+            text: status[1],
+            value: 1,
+          },
+          {
+            text: status[2],
+            value: 2,
+          },
+          {
+            text: status[3],
+            value: 3,
+          },
+        ],
+        onFilter: (value, record) => record.status.toString() === value,
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
+        },
       },
       {
         title: '操作',
-        render: (text, record, index) => (
+        render: (record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
+            <a onClick={()=>this.showViewMessage(true,record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={()=>this.showEditMessage(true,record)}>编辑</a>
             <Divider type="vertical" />
-            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
-              <a>删除</a>
-            </Popconfirm>
-            <Divider type="vertical" />
-            <Dropdown overlay={downMenu}>
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
+            <a onClick={()=>this.showDeleteMessage(true,record)}>删除</a>
           </Fragment>
         ),
       },
     ];
-
-    const downMenu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="turnOn">停用</Menu.Item>
-        <Menu.Item key="turnOff">启用</Menu.Item>
-      </Menu>
-    );
-
     const batchMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -342,23 +360,15 @@ export default class DepartmentList extends PureComponent {
       </Menu>
     );
 
-    const DepartmentAddMethods = {
-      handleDepartmentAddVisible: this.handleDepartmentAddVisible,
+    const parentMethods = {
+      handlePersonAddVisible: this.handlePersonAddVisible,
+      handlePersonViewVisible: this.handlePersonViewVisible,
+      handlePersonEditVisible: this.handlePersonEditVisible,
     };
-
-    const DepartmentViewMethods = {
-      handleDepartmentViewVisible: this.handleDepartmentViewVisible,
-    };
-
-    const DepartmentEditMethods = {
-      handleDepartmentEditVisible: this.handleDepartmentEditVisible,
-    };
-
-
 
     return (
-      <div>
-        <Card bordered={false}>
+      <PageHeaderLayout>
+        <Card>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
@@ -370,7 +380,7 @@ export default class DepartmentList extends PureComponent {
                   <Button
                     icon="plus"
                     type="primary"
-                    onClick={() => this.handleDepartmentAddVisible(true)}
+                    onClick={() => this.handlePersonAddVisible(true)}
                   >
                     新建
                   </Button>
@@ -395,11 +405,11 @@ export default class DepartmentList extends PureComponent {
               </div>
             </Content>
           </Layout>
-          <DepartmentAddModal {...DepartmentAddMethods} DepartmentAddVisible={DepartmentAddVisible} />
-          <DepartmentViewModal {...DepartmentViewMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
-          <DepartmentEditModal {...DepartmentEditMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
+          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible}  />
+          <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} />
+          <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} />
         </Card>
-      </div>
+      </PageHeaderLayout>
     );
   }
 }

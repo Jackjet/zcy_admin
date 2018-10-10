@@ -142,11 +142,22 @@ class ContractAddModal extends PureComponent {
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectCode}>
-                    {getFieldDecorator('projectCode', {
-                      rules: [{ required: true, message: '不重复的数字自动生成' }],
+                  <Form.Item {...formItemLayout} label="指派编号">
+                    {getFieldDecorator('authorizedAgent', {
+                      rules: [{ required: true, message: '指派编号' }],
                     })(
-                      <Input placeholder="不重复的数字自动生成" style={{width:'100%'}} />
+                      <Input placeholder="默认带出" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
+                    {getFieldDecorator('projectName', {
+                      rules: [{ required: true, message: '请输入项目名称' }],
+                    })(
+                      <Input placeholder="请输入项目名称" style={{width:'100%'}} />
                     )}
                   </Form.Item>
                 </Col>
@@ -198,17 +209,6 @@ class ContractAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formItemLayout} label="指派编号">
-                    {getFieldDecorator('authorizedAgent', {
-                      rules: [{ required: false, message: '指派编号' }],
-                    })(
-                      <Input placeholder="默认带出" />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col>
                   <Form.Item {...formItemLayout} label="创建时间">
                     {getFieldDecorator('establishDate', {
                       rules: [{ required: false, message: '创建时间' }],
@@ -219,14 +219,25 @@ class ContractAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
-                    {getFieldDecorator('projectName', {
-                      rules: [{ required: true, message: '请输入项目名称' }],
+                  <Form.Item {...formItemLayout} label="完成时间">
+                    {getFieldDecorator('finishDate', {
+                      rules: [{ required: false, message: '完成时间' }],
+                      initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}+3天`,
                     })(
-                      <Input placeholder="请输入项目名称" style={{width:'100%'}} />
+                      <Input placeholder="执行（项目创建）时间" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formItemLayout} label="实际完成时间">
+                    {getFieldDecorator('actualDate', {
+                      rules: [{ required: false, message: '实际完成时间' }],
+                    })(
+                      <Input placeholder="实际完成时间" />
                     )}
                   </Form.Item>
                 </Col>

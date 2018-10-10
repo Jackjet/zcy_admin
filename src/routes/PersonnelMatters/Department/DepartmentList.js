@@ -6,24 +6,23 @@ import {
   Card,
   Form,
   Input,
-  Select,
   Icon,
   Button,
   Dropdown,
   Menu,
-  DatePicker,
-  Modal,
   message,
   Divider,
   Popconfirm,
+  Layout,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import styles from './UserList.less';
+import StandardTable from '../../../components/StandardTable/index';
+import styles from './DepartmentList.less';
+import DepartmentAddModal from './DepartmentAddModal';
+import DepartmentViewModal from '../../department/select/DepartmentViewModal';
+import DepartmentEditModal from '../../department/edit/DepartmentEditModal';
 
-const { Search } = Input;
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -34,11 +33,11 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class UserList extends PureComponent {
+export default class DepartmentList extends PureComponent {
   state = {
-    OrgUnitAddVisible: false,
-    OrgUnitViewVisible: false,
-    OrgUnitEditVisible: false,
+    DepartmentAddVisible: false,
+    DepartmentViewVisible: false,
+    DepartmentEditVisible: false,
     rowInfo:``,
     expandForm: false,
     selectedRows: [],
@@ -165,34 +164,34 @@ export default class UserList extends PureComponent {
     });
   };
 
-  handleOrgUnitAddVisible = flag => {
+  handleDepartmentAddVisible = flag => {
     this.setState({
-      OrgUnitAddVisible: !!flag,
+      DepartmentAddVisible: !!flag,
     });
   };
 
-  handleOrgUnitViewVisible = flag => {
+  handleDepartmentViewVisible = flag => {
     this.setState({
-      OrgUnitViewVisible: !!flag,
+      DepartmentViewVisible: !!flag,
     });
   };
 
-  handleOrgUnitEditVisible = flag => {
+  handleDepartmentEditVisible = flag => {
     this.setState({
-      OrgUnitEditVisible: !!flag,
+      DepartmentEditVisible: !!flag,
     });
   };
 
   showViewMessage =(flag, text, record)=> {
     this.setState({
-      OrgUnitViewVisible: !!flag,
+      DepartmentViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
   showEditMessage =(flag, record)=> {
     this.setState({
-      OrgUnitEditVisible: !!flag,
+      DepartmentEditVisible: !!flag,
       rowInfo: record,
     });
   };
@@ -214,11 +213,11 @@ export default class UserList extends PureComponent {
 
   confirm = () => {
     message.success('Click on Yes');
-  }
+  };
 
   cancel = () => {
     message.error('Click on No');
-  }
+  };
 
   rootSubmenuKeys = ['sub1'];
 
@@ -252,43 +251,15 @@ export default class UserList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            <FormItem label="用户">
+          <Col md={8} sm={24}>
+            <FormItem label="关键字">
               {getFieldDecorator('no')(
-                <Input placeholder="默认当前用户" />
+                <Input placeholder="请输入编码名称" />
               )}
             </FormItem>
           </Col>
 
-          <Col md={12} sm={24}>
-            <FormItem label="组织">
-              {getFieldDecorator('subordinateUnit', {
-                rules: [{ required: false, message: '请输入所属单位' }],
-              })(
-                <Search
-                  placeholder="请输入所属单位"
-                  onSearch=""
-                />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-
-          <Col md={12} sm={24}>
-            <FormItem label="指定用户的主角色">
-              {getFieldDecorator('subordinateUnit', {
-                rules: [{ required: false, message: '请输入所属单位' }],
-              })(
-                <Select placeholder="请输入所属单位" >
-                  <Option value="1" >aaa</Option>
-                  <Option value="2" >bbb</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-
-          {/*<Col md={12} sm={24}>
+          <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -297,7 +268,7 @@ export default class UserList extends PureComponent {
                 重置
               </Button>
             </span>
-          </Col>*/}
+          </Col>
         </Row>
       </Form>
     );
@@ -308,38 +279,33 @@ export default class UserList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
+    const { selectedRows, DepartmentAddVisible, DepartmentViewVisible, DepartmentEditVisible, rowInfo } = this.state;
 
     const columns = [
       {
-        title: '组织编号',
+        title: '部门编号',
         dataIndex: 'organizeCode',
       },
       {
-        title: '组织名称',
-        dataIndex: 'organizeName',
+        title: '部门名称',
+        dataIndex: 'departmentName',
       },
       {
-        title: '电话',
-        dataIndex: 'phone',
+        title: '上级部门',
+        dataIndex: 'superiorDepartment',
       },
       {
-        title: '负责人',
-        dataIndex: 'fzperson',
+        title: '备注',
+        dataIndex: 'remarks',
       },
       {
         title: '状态',
         dataIndex: 'status',
       },
       {
-        title: '分公司',
+        title: '所属公司',
         dataIndex: 'company',
       },
-      {
-        title: '地址',
-        dataIndex: 'address',
-      },
-
       {
         title: '操作',
         render: (text, record, index) => (
@@ -376,16 +342,16 @@ export default class UserList extends PureComponent {
       </Menu>
     );
 
-    const OrgUnitAddMethods = {
-      handleOrgUnitAddVisible: this.handleOrgUnitAddVisible,
+    const DepartmentAddMethods = {
+      handleDepartmentAddVisible: this.handleDepartmentAddVisible,
     };
 
-    const OrgUnitViewMethods = {
-      handleOrgUnitViewVisible: this.handleOrgUnitViewVisible,
+    const DepartmentViewMethods = {
+      handleDepartmentViewVisible: this.handleDepartmentViewVisible,
     };
 
-    const OrgUnitEditMethods = {
-      handleOrgUnitEditVisible: this.handleOrgUnitEditVisible,
+    const DepartmentEditMethods = {
+      handleDepartmentEditVisible: this.handleDepartmentEditVisible,
     };
 
 
@@ -393,37 +359,45 @@ export default class UserList extends PureComponent {
     return (
       <div>
         <Card bordered={false}>
-          <div>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick={() => this.handleOrgUnitAddVisible(true)}
-                >
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={batchMenu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
+          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+            <Sider width={140} style={{ background: '#fff' }}>
+              {this.treeMenu()}
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280}}>
+              <div className={styles.tableList}>
+                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListOperator}>
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() => this.handleDepartmentAddVisible(true)}
+                  >
+                    新建
+                  </Button>
+                  {selectedRows.length > 0 && (
+                    <span>
+                      <Dropdown overlay={batchMenu}>
+                        <Button>
+                          批量操作 <Icon type="down" />
+                        </Button>
+                      </Dropdown>
+                    </span>
+                  )}
+                </div>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columns}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </div>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
-          </div>
+            </Content>
+          </Layout>
+          <DepartmentAddModal {...DepartmentAddMethods} DepartmentAddVisible={DepartmentAddVisible} />
+          <DepartmentViewModal {...DepartmentViewMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
+          <DepartmentEditModal {...DepartmentEditMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
         </Card>
       </div>
     );

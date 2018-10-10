@@ -185,7 +185,7 @@ class CommissionSettingAddModal extends PureComponent {
     const subordinateUnitMethods={
       handleSubordinateUnitVisible: this.handleSubordinateUnitVisible,
       handleChangeUnitValue: this.handleChangeUnitValue,
-    }
+    };
 
     return (
 

@@ -518,14 +518,13 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: true, message: '请选择年度' }],
                         })(
                           <Select disabled placeholder="请选择年度" >
-                            <Option value="xiao">请选择</Option>
-                            <Option value="z">2018</Option>
-                            <Option value="f">2019</Option>
-                            <Option value="fd">2020</Option>
-                            <Option value="sn">2021</Option>
-                            <Option value="zf">2022</Option>
-                            <Option value="sy">2023</Option>
-                            <Option value="jr">2024</Option>
+                            <Option key="z">2018</Option>
+                            <Option key="f">2019</Option>
+                            <Option key="fd">2020</Option>
+                            <Option key="sn">2021</Option>
+                            <Option key="zf">2022</Option>
+                            <Option key="sy">2023</Option>
+                            <Option key="jr">2024</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -549,8 +548,8 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: true, message: '请输入项目名称' }],
                         })(
                           <Select disabled placeholder="请输入项目名称" >
-                            <Option value="c">项目A</Option>
-                            <Option value="h">项目B</Option>
+                            <Option key="c">项目A</Option>
+                            <Option key="h">项目B</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -562,9 +561,9 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: true, message: '请选择合同性质' }],
                         })(
                           <Select disabled placeholder="请选择合同性质" >
-                            <Option value="c">工程</Option>
-                            <Option value="h">建设</Option>
-                            <Option value="h">其它</Option>
+                            <Option key="c">工程</Option>
+                            <Option key="h">建设</Option>
+                            <Option key="h">其它</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -579,14 +578,14 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: false, message: '对方公司' }],
                         })(
                           <Select disabled placeholder="对方公司" >
-                            <Option value="xiao">请选择</Option>
-                            <Option value="z">公司A</Option>
-                            <Option value="f">公司B</Option>
-                            <Option value="fd">公司C</Option>
-                            <Option value="sn">公司D</Option>
-                            <Option value="zf">公司E</Option>
-                            <Option value="sy">公司F</Option>
-                            <Option value="jr">公司H</Option>
+                            <Option key="xiao">请选择</Option>
+                            <Option key="z">公司A</Option>
+                            <Option key="f">公司B</Option>
+                            <Option key="fd">公司C</Option>
+                            <Option key="sn">公司D</Option>
+                            <Option key="zf">公司E</Option>
+                            <Option key="sy">公司F</Option>
+                            <Option key="jr">公司H</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -597,14 +596,14 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: false, message: '客户授权代理人' }],
                         })(
                           <Select disabled placeholder="请选择客户授权代理人" >
-                            <Option value="xiao">请选择</Option>
-                            <Option value="z">公司A</Option>
-                            <Option value="f">公司B</Option>
-                            <Option value="fd">公司C</Option>
-                            <Option value="sn">公司D</Option>
-                            <Option value="zf">公司E</Option>
-                            <Option value="sy">公司F</Option>
-                            <Option value="jr">公司H</Option>
+                            <Option key="xiao">请选择</Option>
+                            <Option key="z">公司A</Option>
+                            <Option key="f">公司B</Option>
+                            <Option key="fd">公司C</Option>
+                            <Option key="sn">公司D</Option>
+                            <Option key="zf">公司E</Option>
+                            <Option key="sy">公司F</Option>
+                            <Option key="jr">公司H</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -669,8 +668,8 @@ class ContractViewTabs extends PureComponent {
                           rules: [{ required: true, message: '请选择负责人' }],
                         })(
                           <Select disabled placeholder="请选择负责人" >
-                            <Option value="c">公司员工1</Option>
-                            <Option value="h">公司员工2</Option>
+                            <Option key="c">公司员工1</Option>
+                            <Option key="h">公司员工2</Option>
                           </Select>
                         )}
                       </Form.Item>

@@ -17,6 +17,7 @@ import {
   Modal,
   message,
   Divider,
+  Radio,
 } from 'antd';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -24,7 +25,9 @@ import styles from './Style.less';
 import ContractAddModal from './ContractAddModal.js';
 import ContractViewTabs from './ContractViewTabs.js';
 import ContractEditModal from './ContractEditModal.js';
+import ContractTypeModal from './ContractTypeModal';
 
+const {RadioGroup} = Radio.Group;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Content,  Sider } = Layout;
@@ -41,7 +44,7 @@ const getValue = obj =>
 @Form.create()
 export default class ContractList extends PureComponent {
   state = {
-    contractVisible: false,
+    contractAddVisible: false,
     contractEditVisible: false,
     contractTabsVisible: false,
     expandForm: false,
@@ -51,6 +54,7 @@ export default class ContractList extends PureComponent {
     openKeys: ['sub1'],
     choiceTypeKey: 0,
     choiceTypeValue:'',
+    contractTypeVisible: false,
   };
   componentDidMount() {
     this.props.dispatch({
@@ -185,8 +189,20 @@ export default class ContractList extends PureComponent {
       return false;
     }
     this.setState({
-      contractVisible: !!flag,
+      contractTypeVisible: !!flag,
     });
+  };
+
+  handleContractTypeVisible = flag => {
+      this.setState({
+        contractTypeVisible: !!flag,
+      });
+  };
+
+  handleContractAddVisible = flag => {
+    this.setState({
+      contractAddVisible: !!flag,
+    })
   };
 
   handleContractEditVisible = flag => {
@@ -210,7 +226,7 @@ export default class ContractList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      contractVisible: false,
+      contractAddVisible: false,
     });
   };
   rootSubmenuKeys = ['sub1'];
@@ -404,7 +420,15 @@ export default class ContractList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo, choiceTypeValue } = this.state;
+    const {
+      selectedRows,
+      contractAddVisible,
+      contractEditVisible,
+      contractTabsVisible,
+      rowInfo,
+      choiceTypeValue,
+      contractTypeVisible,
+    } = this.state;
 
     const columns = [
       {
@@ -493,10 +517,15 @@ export default class ContractList extends PureComponent {
     };
     const contractAddMethods = {
       handleAdd: this.handleAdd,
-      handleContractVisible: this.handleContractVisible,
+      handleContractAddVisible: this.handleContractAddVisible,
     };
     const contractEditMethods = {
       handleContractEditVisible: this.handleContractEditVisible,
+    };
+
+    const parentMethods = {
+      handleContractTypeVisible: this.handleContractTypeVisible,
+      handleContractAddVisible: this.handleContractAddVisible,
     };
 
     return (
@@ -536,9 +565,10 @@ export default class ContractList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ContractAddModal {...contractAddMethods} contractVisible={contractVisible} choiceTypeValue={choiceTypeValue} />
+        <ContractAddModal {...contractAddMethods} contractAddVisible={contractAddVisible} choiceTypeValue={choiceTypeValue} />
         <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
         <ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
+        <ContractTypeModal {...parentMethods} contractTypeVisible={contractTypeVisible} />
       </PageHeaderLayout>
     );
   }

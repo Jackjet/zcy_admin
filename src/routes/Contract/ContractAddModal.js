@@ -15,11 +15,16 @@ import {
   Upload,
   Button,
   Popover,
+  Radio,
+  Divider,
 } from 'antd';
 import { connect } from 'dva';
+import ContractTemplateModal from './ContractTemplateModal';
 import styles from '../project/add/style.less';
 
+
 const { Search }= Input;
+const RadioGroup = Radio.Group;
 const fileList = [
   {
     uid: -1,
@@ -83,6 +88,8 @@ class ContractAddModal extends PureComponent {
   state = {
     width: '100%',
     contractOptionData:[],
+    contractTemplateVisible: false,
+    contractTemplateValue: "杭州至诚云合同模版",
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -90,6 +97,18 @@ class ContractAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleContractTemplateVisible = flag => {
+    this.setState({
+      contractTemplateVisible: !!flag,
+    });
+  };
+
+  handleGetContractTemplateValue = (Template) => {
+    this.setState({
+      contractTemplateValue: Template,
+    });
+  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -99,9 +118,9 @@ class ContractAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, contractVisible, handleContractVisible, choiceTypeValue } = this.props;
+    const { form, dispatch, submitting, contractAddVisible, handleContractAddVisible, choiceTypeValue } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const {contractOptionData} = this.state;
+    const {contractOptionData, contractTemplateVisible, contractTemplateValue} = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -111,9 +130,12 @@ class ContractAddModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleContractVisible(false);
+          handleContractAddVisible(false);
         }
       });
+    };
+    const cancel = () => {
+      handleContractAddVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -154,15 +176,20 @@ class ContractAddModal extends PureComponent {
         </span>
       );
     };
+    const parentMethods = {
+      handleContractTemplateVisible: this.handleContractTemplateVisible,
+      handleGetContractTemplateValue: this.handleGetContractTemplateValue,
+    };
     return (
       <Modal
         title="合同基本信息新增"
         style={{ top: 20 }}
-        visible={contractVisible}
+        visible={contractAddVisible}
         width="75%"
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleContractVisible()}
+        onCancel={cancel}
+        destroyOnClose='true'
       >
         <div>
           <Card>
@@ -351,6 +378,26 @@ class ContractAddModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
+
+                <Col span={5} push={1} >
+                  <Form.Item {...formItemLayout} label="项目模版">
+                    {getFieldDecorator('contractTemplate', {
+                      rules: [{ required: true, message: '项目模版' }],
+                      initialValue:`${contractTemplateValue}`,
+                    })(
+                      <Search
+                        placeholder="项目模版"
+                        onSearch={this.handleContractTemplateVisible}
+                      />
+                    )}
+                  </Form.Item>
+
+                </Col>
+                <Col span={2} style={{paddingLeft: 60}}>
+                  <Divider type="vertical" />
+                  <a>预览</a>
+                </Col>
+
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} offset={2}>
@@ -379,6 +426,7 @@ class ContractAddModal extends PureComponent {
               </Row>
             </Form>
           </Card>
+          <ContractTemplateModal {...parentMethods} contractTemplateVisible={contractTemplateVisible}  />
         </div>
       </Modal>
 

@@ -337,8 +337,8 @@ export default class AllocationList extends PureComponent {
 
     const columns = [
       {
-        title: '项目编码',
-        dataIndex: 'projectCode',
+        title: '指派编号',
+        dataIndex: 'assignCode',
         align: 'center',
       },
       {
