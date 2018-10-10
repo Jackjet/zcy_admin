@@ -106,24 +106,24 @@ const menuData = [
   {
     name: '考评管理',
     icon: 'folder-add',
-    path: 'kaopingManage',
+    path: 'PerformTarget',
     children: [
       {
-        key: 'projectinfoList',
+        key: 'PerformTargetTypeList',
         name: '指标库',
-        path: 'projectinfo',
+        path: 'TypeList',
       },
       {
-        key: 'kaopingp',
+        key: 'projectPerformTarget',
         name: '项目考评',
-        path: 'workplan2',
+        path: 'projectPerformTarget',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
       {
-        key: 'kaopingp',
+        key: 'YearPerformTarget',
         name: '年度考评',
-        path: 'workplan2',
+        path: 'YearPerformTarget',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -273,7 +273,7 @@ const menuData = [
       {
         key: 'cljgku',
         name: '合同模版',
-        path: 'contractDemo',
+        path: 'ContractTemplate',
       },
 
     ],
@@ -314,17 +314,17 @@ const menuData = [
   {
     name: '合伙人管理',
     icon: 'usergroup-add',
-    path: 'hehuorenmanager',
+    path: 'Partnermanager',
     children: [
       {
-        key: 'hehuorenseting',
+        key: 'PartnerType',
         name: '合伙人类别',
-        path: 'hehuorsetting',
+        path: 'PartnerType',
       },
       {
-        key: 'hehuorenseting1',
+        key: 'PartnerScope',
         name: '分管合伙人范围查询',
-        path: 'hehuorsetting1',
+        path: 'PartnerScope',
       },
       {
         key: 'hehuorenseting2',
@@ -344,6 +344,25 @@ const menuData = [
         key: 'reportlist',
         name: '报表分析',
         path: 'reportInfo',
+
+      },
+      {
+        key: 'partnertotal',
+        name: '合伙人项目统计',
+        path: 'partnertotal',
+
+      },
+      {
+        key: 'moveintotal',
+        name: '调入项目统计，别的合伙人团队给我做的项目统计',
+        path: 'moveintotal',
+
+      },
+      {
+        key: 'moveouttotal',
+        name: '调出项目统计，我帮别的合伙人团队做的项目统计',
+        path: 'moveouttotal',
+
       },
     ],
   },

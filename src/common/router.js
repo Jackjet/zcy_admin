@@ -161,9 +161,31 @@ export const getRouterData = app => {
       name: '项目知识库管理',
     },
     '/zhiku/priceIssue': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/list/PriceIssueList')),
-      name: '项目知识库管理',
+      component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/price/PriceIssueList')),
+      name: '价格管理',
     },
+    '/zhiku/ContractTemplate': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/KnowledgeBase/ContractTemplate')),
+      name: '合同模板',
+    },
+
+
+    '/PerformTarget/TypeList': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/TypeList')),
+      name: '指标库',
+    },
+
+    '/PerformTarget/projectPerformTarget': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/TypeList')),
+      name: '项目考评',
+    },
+
+
+    '/PerformTarget/YearPerformTarget': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/TypeList')),
+      name: '年度考评',
+    },
+
     '/ExpenseReimbursement/ExpenseApply': {
     component: dynamicWrapper(app, [], () => import('../routes/ExpenseReimbursement/list/ExpenseApplyList')),
       name: '费用申请单',
@@ -188,6 +210,18 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/ArchivesTabsBase')),
       name: '档案标签库架',
     },
+
+
+    '/Partnermanager/PartnerType': {
+      component: dynamicWrapper(app, [], () => import('../routes/partner/type/PartnerType')),
+      name: '合伙人类别',
+    },
+    '/Partnermanager/PartnerScope': {
+      component: dynamicWrapper(app, [], () => import('../routes/partner/scope/PartnerScope')),
+      name: '合伙人范围查询',
+    },
+
+
     '/schedule/schedulelist': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/calendarAll')),
     },
