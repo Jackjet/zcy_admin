@@ -16,7 +16,6 @@ import {
   Select,
   Divider,
   Collapse,
-  Badge,
 } from 'antd';
 
 import StandardTable from 'components/StandardTable';
@@ -32,9 +31,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['success', 'error', 'processing'];
-const status = ['已入库', '已销毁', '销毁审批中'];
-
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -233,7 +229,7 @@ export default class ArchivesWarehousing extends PureComponent {
         <div>
           <p>档案名称:{record.archivesName}</p>
           <p>销毁人:{record.archivesCode}</p>
-          <p>销毁时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+          <p>销毁世时间为:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
         </div>
       ),
       keyboard:false,
@@ -295,69 +291,20 @@ export default class ArchivesWarehousing extends PureComponent {
         dataIndex: 'archivesCode',
       },
       {
-        title: '项目编号',
-        dataIndex: 'projectCode',
-      },
-      {
-        title: '项目名称',
-        dataIndex: 'projectName',
-      },
-      {
-        title: '客户',
-        dataIndex: 'Cus',
-      },
-      {
         title: '档案名称',
         dataIndex: 'archivesName',
       },
       {
-        title: '档案管理员',
-        dataIndex: 'archivesManager',
+        title: '销毁人',
+        dataIndex: 'archives',
       },
       {
-        title: '归档日期',
-        dataIndex: 'fileDate',
+        title: '销毁日期',
+        dataIndex: 'archivesDate',
       },
       {
-        title: '档案状态',
-        dataIndex: 'archivesStatus',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          }],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
-      },
-      {
-        title: '存放位置',
-        dataIndex: 'savePlace',
-      },
-      {
-        title: '操作',
-        render: (text, record) => (
-          <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            <Divider type="vertical" />
-            {
-              (`${record.archivesStatus}` === "0" ) && (
-                <a onClick={() =>this.handleDestroyApply(record)}>销毁申请</a>
-              )
-            }
-          </Fragment>
-        ),
+        title: '备注',
+        dataIndex: 'remarks',
       },
     ];
 

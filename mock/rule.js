@@ -46,7 +46,7 @@ for (let i = 0; i < 46; i += 1) {
 
     projectCode:`项目编号${i}`,
     projectType:[`工程造价业务项目`,`可研报告`,`招标代理业务项目`][Math.floor(Math.random() * 10) % 3],
-    projectStatus: Math.floor(Math.random() * 10) % 7,
+    projectStatus: Math.floor(Math.random() * 10) % 9,
     organizeCode:`${i}`,
 
     visitCus:`拜访对象${i}`,
@@ -68,6 +68,10 @@ for (let i = 0; i < 46; i += 1) {
     cusCompany:`客户公司${i}`,
     cusMobilePhone:`客户手机号码${i}`,
     cusStatus: Math.floor(Math.random() * 10) % 2,
+
+    archivesCode:`档案编号${i}`,
+    archivesName:`档案名称${i}`,
+    archivesStatus:Math.floor(Math.random() * 10) % 3,
 
 
   });
