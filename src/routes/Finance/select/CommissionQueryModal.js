@@ -179,6 +179,10 @@ class CommissionQueryModal extends PureComponent {
         dataIndex: 'linkman',
       },
       {
+        title: '项目奖惩比例',
+        dataIndex: 'linkman',
+      },
+      {
         title: '分配金额',
         dataIndex: 'address',
       },
@@ -203,7 +207,7 @@ class CommissionQueryModal extends PureComponent {
     return (
 
       <Modal
-        title="客户基本信息新增"
+        title="提成比例设置"
         style={{ top: 20 }}
         visible={commissionViewVisible}
         width="90%"

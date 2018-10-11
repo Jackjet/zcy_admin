@@ -75,7 +75,7 @@ const menuData = [
         name: '项目信息管理',
         path: 'projectinfo',
       },
-      {
+     /* {
         key: 'workplanList',
         name: '工时计划管理',
         path: 'workplan',
@@ -93,14 +93,21 @@ const menuData = [
         ],
         // hideInBreadcrumb: true,
         // hideInMenu: true,
-      },
-      {
+      },*/
+     /* {
         key: 'workrocord',
         name: '项目工作记录',
         path: 'workplan1',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
-      },
+      },*/
+     /* {
+        key: 'projectDestroy',
+        name: '项目销毁',
+        path: 'projectDestroy',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },*/
     ],
   },
   {
@@ -304,9 +311,9 @@ const menuData = [
         path: 'danbqkuj',
       },
       {
-        key: 'xiaohuidangan',
+        key: 'ArchivesDestroy',
         name: '销毁档案',
-        path: 'xiaohuidangan',
+        path: 'ArchivesDestroy',
       },
     ],
   },

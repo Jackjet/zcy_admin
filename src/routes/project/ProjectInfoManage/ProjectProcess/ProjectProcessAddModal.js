@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Select, DatePicker, Modal, Popover, message, Icon } from 'antd';
 import { connect } from 'dva';
-import styles from './style.less';
+import styles from '../../add/style.less';
 
 
 const { Option } = Select;
@@ -28,7 +28,7 @@ const formItemLayout = {
   },
 };
 
-class WorkDiaryAdd extends PureComponent {
+class ProjectProcessAddModal extends PureComponent {
   state = {
     width: '90%',
   };
@@ -46,7 +46,7 @@ class WorkDiaryAdd extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, workDiaryVisible, handleWorkDiaryVisible } = this.props;
+    const { form, dispatch, submitting, projectProcessAddVisible, handleProjectProcessAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -57,10 +57,8 @@ class WorkDiaryAdd extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          this.setState({
-            workDiaryVisible: false,
-          });
         }
+        handleProjectProcessAddVisible(false);
       });
     };
     const errors = getFieldsError();
@@ -104,15 +102,15 @@ class WorkDiaryAdd extends PureComponent {
     };
     return (
       <Modal
-        title="工作日记新增"
-        style={{ top: 150 }}
+        title="项目计划新增"
+        style={{ top: 20 }}
         // 对话框是否可见
-        visible={workDiaryVisible}
-        width="30%"
+        visible={projectProcessAddVisible}
+        width="40%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleWorkDiaryVisible()}
+        onCancel={() => handleProjectProcessAddVisible(false)}
       >
         <div>
           <Card>
@@ -221,4 +219,4 @@ class WorkDiaryAdd extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(WorkDiaryAdd));
+}))(Form.create()(ProjectProcessAddModal));

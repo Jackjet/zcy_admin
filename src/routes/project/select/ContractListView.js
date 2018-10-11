@@ -22,7 +22,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ContractListView.less';
 import ContractAddModal from '../../Contract/ContractAddModal.js';
-import ProjectCheckTabs from '../projectTabsInfo/ProjectCheckTabs.js';
+import ProjectCheckTabs from '../projectTabsInfo/ProjectViewTabs.js';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

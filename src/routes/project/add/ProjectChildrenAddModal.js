@@ -228,6 +228,7 @@ class ProjectChildrenAddModal extends PureComponent {
     });
     return (
       <Modal
+        style={{top:20}}
         title="项目基本信息新增"
         visible={projectChildrenAddVisible}
         width='85%'

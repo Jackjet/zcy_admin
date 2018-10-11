@@ -20,9 +20,10 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './Style.less';
+import StandardTable from '../../../../components/StandardTable/index';
+import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
+import styles from '../../list/Style.less';
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;

@@ -24,7 +24,6 @@ import {
 import { connect } from 'dva';
 import moment from "moment/moment";
 import StandardTable from 'components/StandardTable';
-import ProcedureList from './ProcedureProject.js';
 import ReportAddModal from '../add/ReportAddModal';
 import ReportEditModal from '../edit/ReportEditModal';
 import EditableCell from '../EditableTable/EditableCell';
@@ -120,9 +119,40 @@ class ProjectCheckTabs extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.setState({ dataSource });
+      }
+    };
+  };
+  onDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  };
+
   handleChange = (nextTargetKeys) => {
     this.setState({ targetKeys: nextTargetKeys });
   };
+
+
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
+    const newData = {
+      key: count,
+      name: `小杨 ${count}`,
+      phone: 18,
+      remarks: `London, Park Lane no. ${count}`,
+    };
+    this.setState({
+      dataSource: [...dataSource, newData],
+      count: count + 1,
+    });
+  };
+
 
   handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
@@ -223,33 +253,6 @@ class ProjectCheckTabs extends PureComponent {
     });
   };
 
-  onCellChange = (key, dataIndex) => {
-    return value => {
-      const dataSource = [...this.state.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.setState({ dataSource });
-      }
-    };
-  };
-  onDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-  };
-  handleAdd = () => {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      name: `小杨 ${count}`,
-      phone: 18,
-      remarks: `London, Park Lane no. ${count}`,
-    };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1,
-    });
-  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -594,7 +597,7 @@ class ProjectCheckTabs extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.name}>
                         {getFieldDecorator('name', {
                           rules: [{ required: true, message: '请输入项目名称' }],
-                          initialValue:`${rowInfo.name}`,
+                          initialValue:`${rowInfo.projectName}`,
                         })(
                           <Input disabled placeholder="请输入项目名称" className={styles['ant-input-lg']} />
                         )}
@@ -812,97 +815,93 @@ class ProjectCheckTabs extends PureComponent {
               </Card>
             </div>
           </TabPane>
-          <TabPane
-            tab={
-              <span>
-                <Icon type="api" />流程图
-              </span>
-            }
-            key="2"
-          >
-            <ProcedureList />
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
+          {
+            (`${rowInfo.projectStatus}` !== '8') && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="team" />项目组员
               </span>
-            }
-            key="3"
-          >
-            <div>
-              <Card>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={5} offset={6}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
-                      {getFieldDecorator('assignor', {
+                }
+                key="3"
+              >
+                <div>
+                  <Card>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={5} offset={6}>
+                        <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
+                          {getFieldDecorator('assignor', {
 
-                      })(
-                        <div className={styles.divBorder}>
-                          <Tree>
-                            <TreeNode title="杭州至诚" key="0-0">
-                              <TreeNode title="管理层1" key="0-0-0" >
-                                <TreeNode title="员工1" key="0-0-0-0"  />
-                                <TreeNode title="员工2" key="0-0-0-1" />
-                              </TreeNode>
-                              <TreeNode title="管理层2" key="0-0-1">
-                                <TreeNode title="小卒1" key="0-0-1-0" />
-                                <TreeNode title="小卒2" key="0-0-1-1" />
-                              </TreeNode>
-                            </TreeNode>
-                            <TreeNode title="义务至诚" key="0-1">
-                              <TreeNode title="董事会" key="0-1-0" >
-                                <TreeNode title="主管1" key="0-1-0-0"  />
-                                <TreeNode title="主管2" key="0-1-0-1" />
-                              </TreeNode>
-                              <TreeNode title="财务部" key="0-1-1">
-                                <TreeNode title="会计1" key="0-1-1-0" />
-                              </TreeNode>
-                            </TreeNode>
-                          </Tree>
-                        </div>
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col span={13} >
-                    <Form.Item >
-                      {getFieldDecorator('personal', {
-                      })(
-                        <div>
-                          <Transfer
-                            dataSource={mockData}
-                            titles={['可选人员', '已选人员']}
-                            targetKeys={this.state.targetKeys}
-                            listStyle={{
-                              width: 200,
-                              height: 200,
-                            }}
-                            selectedKeys={selectedKeys}
-                            onChange={this.handleChange}
-                            onSelectChange={this.handleSelectChange}
-                            render={item => item.title}
-                          />
-                        </div>
+                          })(
+                            <div className={styles.divBorder}>
+                              <Tree>
+                                <TreeNode title="杭州至诚" key="0-0">
+                                  <TreeNode title="管理层1" key="0-0-0" >
+                                    <TreeNode title="员工1" key="0-0-0-0"  />
+                                    <TreeNode title="员工2" key="0-0-0-1" />
+                                  </TreeNode>
+                                  <TreeNode title="管理层2" key="0-0-1">
+                                    <TreeNode title="小卒1" key="0-0-1-0" />
+                                    <TreeNode title="小卒2" key="0-0-1-1" />
+                                  </TreeNode>
+                                </TreeNode>
+                                <TreeNode title="义务至诚" key="0-1">
+                                  <TreeNode title="董事会" key="0-1-0" >
+                                    <TreeNode title="主管1" key="0-1-0-0"  />
+                                    <TreeNode title="主管2" key="0-1-0-1" />
+                                  </TreeNode>
+                                  <TreeNode title="财务部" key="0-1-1">
+                                    <TreeNode title="会计1" key="0-1-1-0" />
+                                  </TreeNode>
+                                </TreeNode>
+                              </Tree>
+                            </div>
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={13} >
+                        <Form.Item >
+                          {getFieldDecorator('personal', {
+                          })(
+                            <div>
+                              <Transfer
+                                dataSource={mockData}
+                                titles={['可选人员', '已选人员']}
+                                targetKeys={this.state.targetKeys}
+                                listStyle={{
+                                  width: 200,
+                                  height: 200,
+                                }}
+                                selectedKeys={selectedKeys}
+                                onChange={this.handleChange}
+                                onSelectChange={this.handleSelectChange}
+                                render={item => item.title}
+                              />
+                            </div>
 
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                </div>
+              </TabPane>
+            )
+          }
+          {
+            (`${rowInfo.projectStatus}` !=="8") && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="exception" />资料清单
               </span>
-            }
-            key="8"
-          >
-            <div>
-              <Card>
-                <Form layout="horizontal">
-                  {/*<Row className={styles['fn-mb-15']}>
+                }
+                key="8"
+              >
+                <div>
+                  <Card>
+                    <Form layout="horizontal">
+                      {/*<Row className={styles['fn-mb-15']}>
                     <Col span={24} pull={4}>
                       <Form.Item {...formItemLayout} label="请选择上传附件类型">
                         {getFieldDecorator('checkBoxOption ', {
@@ -920,22 +919,22 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                   </Row>*/}
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={24}>
-                      <Checkbox.Group
-                        style={{ width: '100%' }} >
-                        <Row>
-                          <Col span={6}><Checkbox value="A">A</Checkbox></Col>
-                          <Col span={6}><Checkbox value="B">B</Checkbox></Col>
-                          <Col span={6}><Checkbox value="C">C</Checkbox></Col>
-                          <Col span={6}><Checkbox value="D">D</Checkbox></Col>
-                          <Col span={6}><Checkbox value="E">E</Checkbox></Col>
-                        </Row>
-                      </Checkbox.Group>
-                    </Col>
-                  </Row>
-                  { ( `${choiceOption.indexOf("资料")}` > `-1` ) && (
-                    <span>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24}>
+                          <Checkbox.Group
+                            style={{ width: '100%' }} >
+                            <Row>
+                              <Col span={6}><Checkbox value="A">A</Checkbox></Col>
+                              <Col span={6}><Checkbox value="B">B</Checkbox></Col>
+                              <Col span={6}><Checkbox value="C">C</Checkbox></Col>
+                              <Col span={6}><Checkbox value="D">D</Checkbox></Col>
+                              <Col span={6}><Checkbox value="E">E</Checkbox></Col>
+                            </Row>
+                          </Checkbox.Group>
+                        </Col>
+                      </Row>
+                      { ( `${choiceOption.indexOf("资料")}` > `-1` ) && (
+                        <span>
                       <Row className={styles['fn-mb-15']}>
                         <Col span={24} pull={4}>
                           <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
@@ -955,9 +954,9 @@ class ProjectCheckTabs extends PureComponent {
                         </Col>
                       </Row>
                     </span>
-                  )}
-                  { ( `${choiceOption.indexOf("底稿")}` > `-1` ) && (
-                    <span>
+                      )}
+                      { ( `${choiceOption.indexOf("底稿")}` > `-1` ) && (
+                        <span>
                       <Row className={styles['fn-mb-15']}>
                         <Col span={24} pull={4}>
                           <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
@@ -977,9 +976,9 @@ class ProjectCheckTabs extends PureComponent {
                         </Col>
                       </Row>
                     </span>
-                  )}
-                  { ( `${choiceOption.indexOf("报告")}` > `-1` ) && (
-                    <span>
+                      )}
+                      { ( `${choiceOption.indexOf("报告")}` > `-1` ) && (
+                        <span>
                       <Row className={styles['fn-mb-15']}>
                         <Col span={24} pull={4}>
                           <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
@@ -999,9 +998,9 @@ class ProjectCheckTabs extends PureComponent {
                         </Col>
                       </Row>
                     </span>
-                  )}
-                  { ( `${choiceOption.indexOf("工程")}` > `-1` ) && (
-                    <span>
+                      )}
+                      { ( `${choiceOption.indexOf("工程")}` > `-1` ) && (
+                        <span>
                       <Row className={styles['fn-mb-15']}>
                         <Col span={24} pull={4}>
                           <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
@@ -1021,9 +1020,9 @@ class ProjectCheckTabs extends PureComponent {
                         </Col>
                       </Row>
                     </span>
-                  )}
-                  { ( `${choiceOption.indexOf("合同")}` > `-1` ) && (
-                    <span>
+                      )}
+                      { ( `${choiceOption.indexOf("合同")}` > `-1` ) && (
+                        <span>
                       <Row className={styles['fn-mb-15']}>
                         <Col span={24} pull={4}>
                           <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
@@ -1043,79 +1042,93 @@ class ProjectCheckTabs extends PureComponent {
                         </Col>
                       </Row>
                     </span>
-                  )}
-                </Form>
-              </Card>
-            </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
+                      )}
+                    </Form>
+                  </Card>
+                </div>
+              </TabPane>
+            )
+          }
+          {
+            (`${rowInfo.projectStatus}` !=="8") && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="switcher" />所属合同
               </span>
-            }
-            key="4"
-          >
-            <div>
-              <Card bordered={false}>
-                <div className={styles.tableList}>
-                  <StandardTable
-                    selectedRows={selectedRows}
-                    loading={loading}
-                    data={data}
-                    columns={columnsProject}
-                    onSelectRow={this.handleSelectRows}
-                    onChange={this.handleStandardTableChange}
-                  />
+                }
+                key="4"
+              >
+                <div>
+                  <Card bordered={false}>
+                    <div className={styles.tableList}>
+                      <StandardTable
+                        selectedRows={selectedRows}
+                        loading={loading}
+                        data={data}
+                        columns={columnsProject}
+                        onSelectRow={this.handleSelectRows}
+                        onChange={this.handleStandardTableChange}
+                      />
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
+              </TabPane>
+            )
+          }
+          {
+            (`${rowInfo.projectStatus}` !=="8") && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="line-chart" />项目计划
               </span>
-            }
-            key="5"
-          >
-            <div>
-              <Card bordered={false}>
-                <div className={styles.tableList}>
-                  <StandardTable
-                    selectedRows={selectedRows}
-                    loading={loading}
-                    data={data}
-                    columns={columnsPlan}
-                    onSelectRow={this.handleSelectRows}
-                    onChange={this.handleStandardTableChange}
-                  />
+                }
+                key="5"
+              >
+                <div>
+                  <Card bordered={false}>
+                    <div className={styles.tableList}>
+                      <StandardTable
+                        selectedRows={selectedRows}
+                        loading={loading}
+                        data={data}
+                        columns={columnsPlan}
+                        onSelectRow={this.handleSelectRows}
+                        onChange={this.handleStandardTableChange}
+                      />
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
+              </TabPane>
+            )
+          }
+          {
+            (`${rowInfo.projectStatus}` !=="8") && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="calendar" />过程管理
               </span>
-            }
-            key="6"
-          >
-            <div>
-              <Card>
+                }
+                key="6"
+              >
                 <div>
-                  <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                    新增联系人
-                  </Button>
-                  <Table
-                    dataSource={dataSource}
-                    columns={columnsLinkMan}
-                  />
+                  <Card>
+                    <div>
+                      <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                        新增联系人
+                      </Button>
+                      <Table
+                        dataSource={dataSource}
+                        columns={columnsLinkMan}
+                      />
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
-          </TabPane>
+              </TabPane>
+            )
+          }
           <TabPane
             tab={
               <span>
@@ -1147,53 +1160,56 @@ class ProjectCheckTabs extends PureComponent {
               <ReportViewModal {...reportViewMethods} reportViewVisible={reportViewVisible} rowInfoCurrent={rowInfoCurrent} />
             </div>
           </TabPane>
-          <TabPane
-            tab={
-              <span>
+          {
+            (`${rowInfo.projectStatus}` !=="8") && (
+              <TabPane
+                tab={
+                  <span>
                 <Icon type="exception" />项目交流
               </span>
-            }
-            key="9"
-          >
-            <div>
-              <Card>
-                <Form layout="horizontal">
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={24} pull={4}>
-                      <Form.Item {...formItemLayout} label="交流内容">
-                        {getFieldDecorator('communicationContent ', {
-                        })(
-                          <TextArea placeholder="交流内容" style={{ width: 200 }} />
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={24} pull={4}>
-                      <Form.Item {...formItemLayout} label="交流时间">
-                        {getFieldDecorator('communicationTime ', {
-                          initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}`,
-                        })(
-                          <Input placeholder="交流时间" style={{ width: 200 }} />
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={24} pull={4}>
-                      <Form.Item {...formItemLayout} label="@人员">
-                        {getFieldDecorator('personnel', {
-                        })(
-                          <Input placeholder="@人员" style={{ width: 200 }} />
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card>
-            </div>
-          </TabPane>
-
+                }
+                key="9"
+              >
+                <div>
+                  <Card>
+                    <Form layout="horizontal">
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label="交流内容">
+                            {getFieldDecorator('communicationContent ', {
+                            })(
+                              <TextArea placeholder="交流内容" style={{ width: 200 }} />
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label="交流时间">
+                            {getFieldDecorator('communicationTime ', {
+                              initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}`,
+                            })(
+                              <Input placeholder="交流时间" style={{ width: 200 }} />
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row className={styles['fn-mb-15']}>
+                        <Col span={24} pull={4}>
+                          <Form.Item {...formItemLayout} label="@人员">
+                            {getFieldDecorator('personnel', {
+                            })(
+                              <Input placeholder="@人员" style={{ width: 200 }} />
+                            )}
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card>
+                </div>
+              </TabPane>
+            )
+          }
         </Tabs>
       </Modal>
     );

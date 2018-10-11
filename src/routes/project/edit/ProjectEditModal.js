@@ -206,7 +206,7 @@ class ProjectEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
-                      initialValue:`${rowInfo.name}`,
+                      initialValue:`${rowInfo.projectName}`,
                     })(<Input placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>

@@ -22,7 +22,7 @@ import StandardTable from 'components/StandardTable';
 import ArchivesAddModal from '../add/ArchivesAddModal';
 import ArchivesViewModal from '../select/ArchivesViewModal';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './style.less';
+import styles from '../list/style.less';
 
 const { Option } = Select;
 const confirm = Modal.confirm;
@@ -326,23 +326,6 @@ export default class ArchivesWarehousing extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListOperator}>
-              <Button
-                type="primary"
-                onClick={() => this.handleArchivesAddVisible(true)}
-              >
-                新建档案
-              </Button>
-              {selectedRows.length > 0 && (
-                <span>
-                  <Dropdown overlay={menu}>
-                    <Button>
-                      批量删除 <Icon type="down" />
-                    </Button>
-                  </Dropdown>
-                </span>
-              )}
-            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
