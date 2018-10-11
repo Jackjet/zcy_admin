@@ -21,12 +21,14 @@ import {
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
-import ProjectAddModal from '../add/ProjectAddModal.js';
+import ProjectAddModal from './ProjectAddModal.js';
 import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal.js';
-import ProjectApplyAddModal from '../add/ProjectApplyAddModal.js';
+import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal.js';
+import ProjectApplyAddModal from './ProjectApplyAddModal.js';
 import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
 import ProjectEditModal from '../edit/ProjectEditModal.js';
+import AppraisalList from './Appraisal/AppraisalList';
 
 const { confirm } = Modal;
 const {Content, Sider} = Layout;
@@ -61,6 +63,8 @@ export default class projectList extends PureComponent {
     formValues: {},
     openKeys: ['sub1'],
     projectPlanAddVisible: false,
+    projectProcessAddVisible: false,
+    appraisalVisible: false,
   };
 
   componentDidMount() {
@@ -209,6 +213,12 @@ export default class projectList extends PureComponent {
     });
   };
 
+  handleProjectProcessAddVisible = flag => {
+    this.setState({
+      projectProcessAddVisible: !!flag,
+    });
+  };
+
   showProjectApplyAddVisible = (flag, record) => {
     this.setState({
       projectApplyAddVisible: !!flag,
@@ -221,6 +231,14 @@ export default class projectList extends PureComponent {
       projectChildrenAddVisible: !!flag,
     });
   };
+
+  handleAppraisalVisible = flag => {
+    this.setState({
+      appraisalVisible: !!flag,
+    });
+  };
+
+
 
   handleProjectEditVisible = flag => {
     this.setState({
@@ -490,6 +508,8 @@ export default class projectList extends PureComponent {
       projectChildrenAddVisible,
       choiceTypeValue,
       projectPlanAddVisible,
+      projectProcessAddVisible,
+      appraisalVisible,
     } = this.state;
 
     const columns = [
@@ -605,7 +625,7 @@ export default class projectList extends PureComponent {
             <Divider type="vertical" />
             {
               (`${record.projectStatus}` === '9') && (
-                <a>启动考评</a>
+                <a onClick={() =>this.handleAppraisalVisible(true)}>启动考评</a>
               )
             }
           </Fragment>
@@ -622,6 +642,8 @@ export default class projectList extends PureComponent {
       handleProjectTabsVisible: this.handleProjectTabsVisible,
       handleProjectEditVisible: this.handleProjectEditVisible,
       handleProjectPlanAddVisible: this.handleProjectPlanAddVisible,
+      handleProjectProcessAddVisible: this.handleProjectProcessAddVisible,
+      handleAppraisalVisible: this.handleAppraisalVisible,
     };
 
     return (
@@ -649,7 +671,7 @@ export default class projectList extends PureComponent {
                       <Button type="primary">
                         新增工时
                       </Button>
-                      <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
+                      <Button type="primary" onClick={() => this.handleProjectProcessAddVisible(true)}>
                         新增过程汇报
                       </Button>
                     </span>
@@ -674,6 +696,8 @@ export default class projectList extends PureComponent {
         <ProjectEditModal {...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
         <ProjectPlanAddModal {...parentMethods} projectPlanAddVisible={projectPlanAddVisible} />
         <ProjectApplyAddModal {...parentMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
+        <ProjectProcessAddModal {...parentMethods} projectProcessAddVisible={projectProcessAddVisible}  />
+        <AppraisalList {...parentMethods} appraisalVisible={appraisalVisible} />
       </PageHeaderLayout>
     );
   }

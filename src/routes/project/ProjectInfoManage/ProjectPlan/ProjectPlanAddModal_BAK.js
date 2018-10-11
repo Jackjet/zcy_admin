@@ -117,44 +117,85 @@ class ProjectPlanAddModal extends PureComponent {
             <Form layout="horizontal">
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="阶段">
+                  <Form.Item {...formItemLayout} label={fieldLabels.projectCode}>
                     {getFieldDecorator('projectCode', {
-                      rules: [{ required: true, message: '阶段' }],
+                      rules: [{ required: true, message: '请选择项目编号' }],
                     })(
-                      <Input placeholder="阶段" />
+                      <Select placeholder="请选择项目编号" style={{ width: 200 }}>
+                        <Option value="0">项目A</Option>
+                        <Option value="1">项目B</Option>
+                        <Option value="2">项目C</Option>
+                        <Option value="3">项目D</Option>
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="开始时间">
-                    {getFieldDecorator('startDate', {
-                      rules: [{ required: true, message: '开始时间' }],
+                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
+                    {getFieldDecorator('projectName', {
+                      rules: [{ required: true, message: '请选择输入项目名称' }],
+                    })(<Input placeholder="自动带出名称" style={{ width: 200 }} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={24} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.workStep}>
+                    {getFieldDecorator('workStep', {
+                      rules: [{ required: true, message: '请选择工作步骤' }],
                     })(
-                      <Input placeholder="开始时间" style={{ width: 200 }} />
+                      <Select placeholder="请选择工作步骤" style={{ width: 200 }}>
+                        <Option value="0">前期（业务尽调、签约、计划等）</Option>
+                        <Option value="1">审计外勤</Option>
+                        <Option value="2">一级复核</Option>
+                        <Option value="3">与被审计单位的沟通</Option>
+                        <Option value="4">底稿整理</Option>
+                        <Option value="5">报告撰写</Option>
+                        <Option value="6">复核后修改</Option>
+                        <Option value="7">正式报告出具</Option>
+                        <Option value="8">档案整理及移交</Option>
+                        <Option value="9">其他</Option>
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="结束时间">
-                    {getFieldDecorator('endDate', {
-                      rules: [{ required: true, message: '结束时间' }],
-                    })(
-                      <Input placeholder="结束时间" style={{ width: 200 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="实际完成时间">
+                  <Form.Item {...formItemLayout} label={fieldLabels.logContent}>
                     {getFieldDecorator('logContent', {
-                      rules: [{ required: true, message: '实际完成时间' }],
-                    })(
-                      <Input placeholder="实际完成时间" style={{ width: 200 }} />
+                      rules: [{ required: true, message: '请输入日志内容' }],
+                    })(<TextArea placeholder="请输入日志内容" style={{ minHeight: 32 }} rows={4} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={24} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.workDate}>
+                    {getFieldDecorator('workDate')(<DatePicker placeholder="请选择工作日期" />)}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={24} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.lengthTime}>
+                    {getFieldDecorator('lengthTime')(
+                      <Select placeholder="请选择时长" style={{ width: 200 }}>
+                        <Option value="0">0.5</Option>
+                        <Option value="1">1</Option>
+                        <Option value="2">2</Option>
+                        <Option value="3">3</Option>
+                        <Option value="4">4</Option>
+                        <Option value="5">5</Option>
+                        <Option value="6">6</Option>
+                        <Option value="7">7</Option>
+                        <Option value="8">8</Option>
+                        <Option value="9">9</Option>
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
@@ -162,10 +203,8 @@ class ProjectPlanAddModal extends PureComponent {
 
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="备注">
-                    {getFieldDecorator('beizhu')(
-                      <Input placeholder="备注" style={{ width: 200 }} />
-                    )}
+                  <Form.Item {...formItemLayout} label={fieldLabels.noteTaker}>
+                    {getFieldDecorator('noteTaker')(<Input placeholder="请输入记录人" />)}
                   </Form.Item>
                 </Col>
               </Row>

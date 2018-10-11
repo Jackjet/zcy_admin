@@ -102,7 +102,7 @@ class ProjectProcessAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="项目计划新增"
+        title="项目过程管理新增"
         style={{ top: 20 }}
         // 对话框是否可见
         visible={projectProcessAddVisible}
@@ -117,15 +117,14 @@ class ProjectProcessAddModal extends PureComponent {
             <Form layout="horizontal">
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectCode}>
+                  <Form.Item {...formItemLayout} label="项目频度">
                     {getFieldDecorator('projectCode', {
-                      rules: [{ required: true, message: '请选择项目编号' }],
+                      rules: [{ required: true, message: '项目频度' }],
                     })(
-                      <Select placeholder="请选择项目编号" style={{ width: 200 }}>
-                        <Option value="0">项目A</Option>
-                        <Option value="1">项目B</Option>
-                        <Option value="2">项目C</Option>
-                        <Option value="3">项目D</Option>
+                      <Select placeholder="项目频度" style={{ width: 200 }}>
+                        <Option value="0">日</Option>
+                        <Option value="1">周</Option>
+                        <Option value="2">月</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -133,20 +132,20 @@ class ProjectProcessAddModal extends PureComponent {
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
+                  <Form.Item {...formItemLayout} label="计划时间">
                     {getFieldDecorator('projectName', {
-                      rules: [{ required: true, message: '请选择输入项目名称' }],
-                    })(<Input placeholder="自动带出名称" style={{ width: 200 }} />)}
+                      rules: [{ required: true, message: '计划时间' }],
+                    })(<Input placeholder="计划时间" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.workStep}>
+                  <Form.Item {...formItemLayout} label="工程阶段">
                     {getFieldDecorator('workStep', {
-                      rules: [{ required: true, message: '请选择工作步骤' }],
+                      rules: [{ required: true, message: '工程阶段' }],
                     })(
-                      <Select placeholder="请选择工作步骤" style={{ width: 200 }}>
+                      <Select placeholder="工程阶段" style={{ width: 200 }}>
                         <Option value="0">前期（业务尽调、签约、计划等）</Option>
                         <Option value="1">审计外勤</Option>
                         <Option value="2">一级复核</Option>
@@ -164,38 +163,11 @@ class ProjectProcessAddModal extends PureComponent {
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.logContent}>
+                  <Form.Item {...formItemLayout} label="完成情况">
                     {getFieldDecorator('logContent', {
-                      rules: [{ required: true, message: '请输入日志内容' }],
-                    })(<TextArea placeholder="请输入日志内容" style={{ minHeight: 32 }} rows={4} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.workDate}>
-                    {getFieldDecorator('workDate')(<DatePicker placeholder="请选择工作日期" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.lengthTime}>
-                    {getFieldDecorator('lengthTime')(
-                      <Select placeholder="请选择时长" style={{ width: 200 }}>
-                        <Option value="0">0.5</Option>
-                        <Option value="1">1</Option>
-                        <Option value="2">2</Option>
-                        <Option value="3">3</Option>
-                        <Option value="4">4</Option>
-                        <Option value="5">5</Option>
-                        <Option value="6">6</Option>
-                        <Option value="7">7</Option>
-                        <Option value="8">8</Option>
-                        <Option value="9">9</Option>
-                      </Select>
+                      rules: [{ required: true, message: '完成情况' }],
+                    })(
+                      <TextArea placeholder="完成情况" style={{ minHeight: 32 }} rows={4} />
                     )}
                   </Form.Item>
                 </Col>
@@ -203,8 +175,20 @@ class ProjectProcessAddModal extends PureComponent {
 
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.noteTaker}>
-                    {getFieldDecorator('noteTaker')(<Input placeholder="请输入记录人" />)}
+                  <Form.Item {...formItemLayout} label="遇到的问题">
+                    {getFieldDecorator('workDate')(
+                      <TextArea placeholder="遇到的问题" style={{ minHeight: 32 }} rows={4} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={24} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label="协助">
+                    {getFieldDecorator('lengthTime')(
+                      <TextArea placeholder="协助" style={{ minHeight: 32 }} rows={4} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>

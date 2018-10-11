@@ -453,11 +453,11 @@ class ProjectCheckTabs extends PureComponent {
       },
       {
         title: '计划开始时间',
-        dataIndex: 'code',
+        dataIndex: 'startDate',
       },
       {
         title: '计划结束时间',
-        dataIndex: 'dictTypeName',
+        dataIndex: 'endDate',
       },
       {
         title: '实际完成时间',
@@ -465,10 +465,6 @@ class ProjectCheckTabs extends PureComponent {
       },
       {
         title: '备注',
-        dataIndex: 'dictTypeName',
-      },
-      {
-        title: '操作',
         dataIndex: 'dictTypeName',
       },
     ];

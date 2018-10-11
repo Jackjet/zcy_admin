@@ -21,10 +21,10 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
-import ChoiceCusModal from "./ChoiceCusModal";
-import ConstructUnitModal from "./ConstructUnitModal";
+import ChoiceCusModal from "../add/ChoiceCusModal";
+import ConstructUnitModal from "../add/ConstructUnitModal";
 import EditableCell from '../../../components/EditableTable/index';
-import styles from './style.less';
+import styles from '../add/style.less';
 
 const { Search } = Input;
 const { TextArea } = Input;
@@ -484,11 +484,11 @@ class ProjectAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
+                  <Form.Item {...formItemLayout} label="项目负责人">
                     {getFieldDecorator('fzperson', {
                       rules: [{ required: true, message: '项目负责人' }],
                     })(
-                      <Select placeholder="负责公司" style={{ width: '100%' }}>
+                      <Select placeholder="项目负责人" style={{ width: '100%' }}>
                         <Option value="xiao">请选择</Option>
                         <Option value="z">公司A</Option>
                         <Option value="f">公司B</Option>
@@ -502,9 +502,9 @@ class ProjectAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
+                  <Form.Item {...formItemLayout} label="项目部门">
                     {getFieldDecorator('fzperson', {
-                      rules: [{ required: true, message: '部门负责人' }],
+                      rules: [{ required: true, message: '项目部门' }],
                     })(
                       <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
                     )}
@@ -665,7 +665,7 @@ class ProjectAddModal extends PureComponent {
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label='核减额'>
                           {getFieldDecorator('partner')(
-                            <Input style={{ width: '100%' }} placeholder="合伙人" />
+                            <Input style={{ width: '100%' }} placeholder="核减额" />
                           )}
                         </Form.Item>
                       </Col>
@@ -724,7 +724,7 @@ class ProjectAddModal extends PureComponent {
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label='核减额'>
                           {getFieldDecorator('partner')(
-                            <Input style={{ width: '100%' }} placeholder="合伙人" />
+                            <Input style={{ width: '100%' }} placeholder="核减额" />
                           )}
                         </Form.Item>
                       </Col>

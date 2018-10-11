@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../components/StandardTable/index';
 import styles from '../select/style.less';
-import ProjectAddModal from '../add/ProjectAddModal.js';
+import ProjectAddModal from '../ProjectInfoManage/ProjectAddModal.js';
 import ProjectCheckTabs from '../projectTabsInfo/ProjectViewTabs.js';
 import ProjectInfo from './ProjectInfo.js';
 
