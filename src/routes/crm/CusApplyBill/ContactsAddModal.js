@@ -17,7 +17,7 @@ import {
   Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
-import EditableCell from '../EditableTable/EditableCell';
+import EditableCell from '../../EditableTable/EditableCell';
 import styles from './style.less';
 
 

@@ -1,96 +1,64 @@
 import React, { PureComponent, Fragment } from 'react';
+import { connect } from 'dva';
 import {
-  Tabs,
-  Icon,
-  Form,
-  Modal,
-  Card,
-  Select,
-  message,
   Row,
   Col,
-  Input,
-  Checkbox,
-  DatePicker,
-  Popover,
-  Divider,
+  Card,
+  Form,
+  Icon,
   Button,
-  Badge,
-  Upload,
+  Dropdown,
+  Menu,
+  Modal,
+  message,
+  Select,
+  Divider,
+  Layout,
+  Input,
 } from 'antd';
-import { connect } from 'dva';
-import moment from "moment/moment";
-import StandardTable from '../../../../components/StandardTable/index';
+import StandardTable from '../../../../components/StandardTable';
+import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
+import EditableCell from '../../../EditableTable/EditableCell';
 import styles from './Style.less';
 
 
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+const {Content, Sider} = Layout;
+const { Option } = Select;
+const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-const { Option } = Select;
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-const ContractTypeOption = ["工程造价业务项目","咨询报告","招标"];
-const fileList = [
-  {
-    uid: -1,
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: -2,
-    name: 'yyy.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-];
-const props2 = {
-  action: '//jsonplaceholder.typicode.com/posts/',
-  listType: 'picture',
-  defaultFileList: [...fileList],
-  className: styles['upload-list-inline'],
-};
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-class Evaluation extends PureComponent {
+// PureComponent优化Component的性能
+export default class Evaluation extends PureComponent {
   state = {
-    EvaluationVisible:false,
-    width: '100%',
-    rowInfoCurrent:{},
-    choiceCheckBox:'',
-    contractOptionData:[],
-    selectedRows: {},
+    workDiaryVisible: false,
+    selectedRows: [],
+    formValues: {},
+    dataSource:[],
   };
-  componentDidMount() {
-    window.addEventListener('resize', this.resizeFooterToolbar);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeFooterToolbar);
-  }
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'rule/fetch',
+    });
+  }
+  // 选中的条数已经选中的价格的和   参数（页码，过滤，把东西分类检出）
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+
+    // Object.keys()方法会返回一个由一个给定对象的自身可枚举属性组成的数组,
+    // reduce方法有两个参数，第一个参数是一个callback，用于针对数组项的操作；
+    // 第二个参数则是传入的初始值，这个初始值用于单个数组项的操作。
+    // 需要注意的是，reduce方法返回值并不是数组，而是形如初始值的经过叠加处理后的操作。
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -113,101 +81,159 @@ class Evaluation extends PureComponent {
       payload: params,
     });
   };
+  // 重置查询的值
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    this.setState({
+      formValues: {},
+    });
+    dispatch({
+      type: 'rule/fetch',
+      payload: {},
+    });
+  };
 
+  // 批量处理的操作选择
+  handleMenuClick = e => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    switch (e.key) {
+      case 'remove':
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: selectedRows.map(row => row.no).join(','),
+          },
+          callback: () => {
+            this.setState({
+              selectedRows: [],
+            });
+          },
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 选中的行
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
 
-  handleDeleteClick = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
+  // 查询功能
+  handleSearch = e => {
+    e.preventDefault();
 
-    if (!selectedRows) return;
+    const { dispatch, form } = this.props;
 
-    dispatch({
-      type: 'rule/remove',
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'rule/fetch',
+        payload: values,
+      });
+    });
+  };
+
+  // 点击新增显示弹窗
+  handleWorkDiaryVisible = flag => {
+    this.setState({
+      workDiaryVisible: !!flag,
+    });
+  };
+
+  // 新增功能实现
+  handleAdd = fields => {
+    this.props.dispatch({
+      type: 'rule/add',
       payload: {
-        no: selectedRows.map(row => row.no).join(','),
+        description: fields.desc,
       },
-      callback: () => {
+    });
+
+    message.success('添加成功');
+    this.setState({
+      workDiaryVisible: false,
+    });
+  };
+
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
         this.setState({
-          selectedRows: [],
-        });
-      },
-    });
+          dataSource,
+        })
+        ;
+      }
+    };
   };
 
-  handleChoiceContractType = () =>{
-    const optionData = ContractTypeOption.map((data, index) => {
-      const value = `${data}`;
-      return <Option value={value}>{value}</Option>;
-    });
-    this.setState({
-      contractOptionData: optionData,
-    });
-  };
+  renderSimpleForm() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
+            <FormItem label="指标总平均分">
+              {getFieldDecorator('aveScore')(
+                <Input readOnly placeholder="指标总平局分" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="指标数">
+              {getFieldDecorator('years', {
+                rules: [{ required: true, message: '指标数' }],
+              })(
+                <Input readOnly placeholder="指标数" style={{ width: 200 }} />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="指标总分">
+              {getFieldDecorator('sumScore', {
+                rules: [{ required: true, message: '指标总分' }],
+              })(
+                <Input readOnly placeholder="指标总分" style={{ width: 200 }} />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
 
-  handleGetOptionValue=(value)=>{
-    this.setState({
-      choiceCheckBox:`${value}`,
-    });
-  };
-
-  handleReceiptPlanAddVisible = flag => {
-    this.setState({
-      receiptPlanAddVisible: !!flag,
-    });
-  };
-  handleReceiptPlanEditVisible = flag => {
-    this.setState({
-      receiptPlanEditVisible: !!flag,
-    });
-  };
-  handleReceiptPlanViewVisible = flag => {
-    this.setState({
-      receiptPlanViewVisible: !!flag,
-    });
-  };
-
-  showEditMessage =(flag, record)=> {
-    this.setState({
-      receiptPlanEditVisible: !!flag,
-      rowInfoCurrent: record,
-    });
-  };
-
-  showViewMessage =(flag, record)=> {
-    this.setState({
-      receiptPlanViewVisible: !!flag,
-      rowInfoCurrent: record,
-    });
-  };
-
-  resizeFooterToolbar = () => {
-    const sider = document.querySelectorAll('.ant-layout-sider')[0];
-    const width = `calc(100% - ${sider.style.width})`;
-    if (this.state.width !== width) {
-      this.setState({ width });
-    }
-  };
   render() {
-    const { TabPane } = Tabs;
-    const { form, dispatch, submitting, contractTabsVisible, handleContractTabsVisible, rowInfo, rule: { data }, loading } = this.props;
+    const { form, dispatch, rule: { data }, loading, EvaluationVisible, handleEvaluationVisible } = this.props;
+    const { selectedRows } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows, receiptPlanAddVisible, receiptPlanEditVisible, receiptPlanViewVisible, rowInfoCurrent, choiceCheckBox, contractOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          form.resetFields();
           // submit the values
           dispatch({
             type: 'rule/add',
             payload: values,
           });
-          message.success('添加成功bbb');
-          handleContractTabsVisible(false);
+          message.success('添加成功');
+          handleEvaluationVisible(false);
         }
       });
     };
@@ -250,442 +276,55 @@ class Evaluation extends PureComponent {
         </span>
       );
     };
-
-    const fieldLabels = {
-      contractCode: '合同编码',
-      contractType: '合同类别',
-      years: '年度',
-      projectName: '项目名称',
-      contractStatus: '合同性质',
-      contractTitle: '合同标题',
-      dfCompany: '对方公司',
-      authorizedAgent: '客户授权代理人',
-      PartyAcompany: '甲方公司',
-      PartyBcompany: '乙方公司',
-      fatherContract: '父合同',
-      signDate: '签订日期',
-      paymentMethod: '付款方式',
-      businessType: '业务类别',
-      contractSignPlace: '合同签订地点',
-      contractSubject: '合同标的',
-      startDate: '开始日期',
-      endDate: '结束日期',
-      totalAmount: '合同金额',
-      fzperson: '项目负责人',
-      remark: '备注',
-    };
-    const columnsProject = [
+    const columns = [
       {
-        title: '项目编号',
-        dataIndex: 'no',
-        render: text => (
-          <a className={styles.a} onClick={() => this.handleCheckVisible(true)}>
-            {text}
-          </a>
-        ),
+        title: '考评指标',
+        dataIndex: 'appraisalProject',
       },
       {
-        title: '项目名称',
-        dataIndex: 'name',
-        render: text => (
-          <a className={styles.a} onDoubleClick={() => this.handleCheckVisible(true)}>
-            {text}
-          </a>
-        ),
+        title: '指标说明',
+        dataIndex: 'appraisalExplain',
       },
       {
-        title: '负责人',
-        dataIndex: 'linkman',
+        title: '指标考评分',
+        dataIndex: 'appraisalScore',
       },
       {
-        title: '项目状态',
-        dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
-      },
-      {
-        title: '负责公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '项目费用',
-        dataIndex: 'fee',
-      },
-      {
-        title: '客户名称',
-        dataIndex: 'cusname',
-      },
-      {
-        title: '客户联系人',
-        dataIndex: 'cuslinkmen',
-      },
-      {
-        title: '执行时间',
-        dataIndex: 'updatedAt',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-    ];
-    const columnsReceiptPlan = [
-      {
-        title: '收款阶段名称',
-        dataIndex: 'no',
-      },
-      {
-        title: '收款比例',
-        dataIndex: 'name',
-      },
-      {
-        title: '收款金额（元）',
-        dataIndex: 'linkman',
-      },
-      {
-        title: '收款时间',
-        dataIndex: 'status',
-      },
-      {
-        title: '收款的条件说明',
-        dataIndex: 'company',
-      },
-      {
-        title: '状态',
-        dataIndex: 'fee',
-      },
-      {
-        title: '操作',
+        title: '实际考评的分',
+        dataIndex: 'appraisalGetScore',
         render: (text, record) => (
-          <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
-          </Fragment>
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'appraisalGetScore')} />
         ),
       },
     ];
-    const columnsReceiptInfo = [
-      {
-        title: '合同标题',
-        dataIndex: 'no',
-      },
-      {
-        title: '开票金额（元）',
-        dataIndex: 'name',
-      },
-      {
-        title: '收款金额（元）',
-        dataIndex: 'linkman',
-      },
-      {
-        title: '收款时间',
-        dataIndex: 'status',
-      },
-      {
-        title: '收款类型',
-        dataIndex: 'company',
-      },
-      {
-        title: '承办人',
-        dataIndex: 'fee',
-      },
-      {
-        title: '备注',
-        dataIndex: 'fee',
-      },
-    ];
-    const columnsInvoiceInfo = [
-      {
-        title: '发票号',
-        dataIndex: 'no',
-      },
-      {
-        title: '合同编号',
-        dataIndex: 'name',
-      },
-      {
-        title: '发票金额（元）',
-        dataIndex: 'linkman',
-      },
-      {
-        title: '开票时间',
-        dataIndex: 'status',
-      },
-      {
-        title: '状态',
-        dataIndex: 'company',
-      },
-      {
-        title: '开票人',
-        dataIndex: 'fee',
-      },
-      {
-        title: '备注',
-        dataIndex: 'fee',
-      },
-    ];
-
     return (
-
-      <Modal
-        title="(协议)合同基本信息查看"
-        style={{ top: 20 }}
-        visible={contractTabsVisible}
-        width="75%"
-        maskClosable={false}
-        onOk={validate}
-        onCancel={() => handleContractTabsVisible()}
-        footer={null}
-      >
-
-            <div>
-              <Card>
-                <Form layout="horizontal">
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
-                        {getFieldDecorator('contractCode', {
-                          rules: [{ required: true, message: '不重复的数字' }],
-                          initialValue:`${rowInfo.contractCode}`,
-                        })(
-                          <Input disabled placeholder="自动生成" />
-                        )}
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.contractType}>
-                        {getFieldDecorator('contractType', {
-                          rules: [{ required: true, message: '请选择合同类别' }],
-                        })(
-                          <Select disabled onChange={this.handleGetOptionValue} onMouseEnter={this.handleChoiceContractType} placeholder="请选择合同类别" >
-                            {contractOptionData}
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.years}>
-                        {getFieldDecorator('years', {
-                          rules: [{ required: true, message: '请选择年度' }],
-                        })(
-                          <Select disabled placeholder="请选择年度" >
-                            <Option key="z">2018</Option>
-                            <Option key="f">2019</Option>
-                            <Option key="fd">2020</Option>
-                            <Option key="sn">2021</Option>
-                            <Option key="zf">2022</Option>
-                            <Option key="sy">2023</Option>
-                            <Option key="jr">2024</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
-                        {getFieldDecorator('contractTitle', {
-                          rules: [{ required: true, message: '请输入合同标题' }],
-                        })(
-                          <Input disabled placeholder="请输入合同标题" />
-                        )}
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
-                        {getFieldDecorator('projectName', {
-                          rules: [{ required: true, message: '请输入项目名称' }],
-                        })(
-                          <Select disabled placeholder="请输入项目名称" >
-                            <Option key="c">项目A</Option>
-                            <Option key="h">项目B</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8} >
-                      <Form.Item {...formItemLayout} label={fieldLabels.contractStatus}>
-                        {getFieldDecorator('contractStatus', {
-                          rules: [{ required: true, message: '请选择合同性质' }],
-                        })(
-                          <Select disabled placeholder="请选择合同性质" >
-                            <Option key="c">工程</Option>
-                            <Option key="h">建设</Option>
-                            <Option key="h">其它</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.dfCompany}>
-                        {getFieldDecorator('dfCompany', {
-                          rules: [{ required: false, message: '对方公司' }],
-                        })(
-                          <Select disabled placeholder="对方公司" >
-                            <Option key="xiao">请选择</Option>
-                            <Option key="z">公司A</Option>
-                            <Option key="f">公司B</Option>
-                            <Option key="fd">公司C</Option>
-                            <Option key="sn">公司D</Option>
-                            <Option key="zf">公司E</Option>
-                            <Option key="sy">公司F</Option>
-                            <Option key="jr">公司H</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.authorizedAgent}>
-                        {getFieldDecorator('authorizedAgent', {
-                          rules: [{ required: false, message: '客户授权代理人' }],
-                        })(
-                          <Select disabled placeholder="请选择客户授权代理人" >
-                            <Option key="xiao">请选择</Option>
-                            <Option key="z">公司A</Option>
-                            <Option key="f">公司B</Option>
-                            <Option key="fd">公司C</Option>
-                            <Option key="sn">公司D</Option>
-                            <Option key="zf">公司E</Option>
-                            <Option key="sy">公司F</Option>
-                            <Option key="jr">公司H</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={23} pull={5}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.businessType}>
-                        {getFieldDecorator('businessType')(
-                          <Checkbox.Group disabled style={{ width: '100%' }}>
-                            <Row>
-                              { ( choiceCheckBox === `工程造价业务项目`|| choiceCheckBox===`咨询报告` ) && (
-                                <span>
-                                  <Col span={6}>
-                                    <Checkbox value="A">预算编制</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="B">结算编制</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="D">咨询审核</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="E">预算审核</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="F">结算审核</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="H">咨询报告</Checkbox>
-                                  </Col>
-                                </span>
-                              )}
-                              { ( choiceCheckBox === `招标`|| choiceCheckBox===`咨询报告` ) && (
-                                <span>
-                                  <Col span={6}>
-                                    <Checkbox value="G">政府采购招标代理</Checkbox>
-                                  </Col>
-                                  <Col span={6}>
-                                    <Checkbox value="C">建设工程招标代理</Checkbox>
-                                  </Col>
-                                </span>
-                              )}
-                            </Row>
-                          </Checkbox.Group>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.totalAmount}>
-                        {getFieldDecorator('totalAmount', {
-                          rules: [{ required: true, message: '请输入总金额' }],
-                        })(<Input disabled placeholder="请输入合同标题" />)}
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
-                        {getFieldDecorator('fzperson', {
-                          rules: [{ required: true, message: '请选择负责人' }],
-                        })(
-                          <Select disabled placeholder="请选择负责人" >
-                            <Option key="c">公司员工1</Option>
-                            <Option key="h">公司员工2</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={23} offset={2}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                        {getFieldDecorator('  attachment ', {
-                          initialValue: '1',
-                        })(
-                          <Upload {...props2}>
-                            <Button type="primary">
-                              <Icon type="upload" /> 上传附件
-                            </Button>
-                            <span>
-                              *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                            </span>
-                          </Upload>
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row className={styles['fn-mb-15']}>
-                    <Col span={23} pull={5}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.remark}>
-                        {getFieldDecorator('remark')(
-                          <TextArea disable placeholder="请输入备注信息" rows={4}  style={{width:'170%'}} />
-                        )}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card>
-            </div>
-      </Modal>
+        <Modal
+          title="考评"
+          style={{ top: 20 }}
+          visible={EvaluationVisible}
+          width="80%"
+          maskClosable={false}
+          onOk={validate}
+          onCancel={() => handleEvaluationVisible(false)}
+        >
+          <Card bordered={false}>
+            <Layout style={{ padding: '24px 0', background: '#fff' }}>
+              <Content style={{ padding: '0 24px', minHeight: 280}}>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+                  <StandardTable
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
+                </div>
+              </Content>
+            </Layout>
+          </Card>
+        </Modal>
     );
   }
 }
-
-export default connect(({ global, loading }) => ({
-  collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(Evaluation));

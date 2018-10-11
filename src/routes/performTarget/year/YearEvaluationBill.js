@@ -22,6 +22,7 @@ import {
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './YearEvaluationBill.less';
 import Evaluation from './evaluation/Evaluation';
+import EvaluationViewModal from './evaluation/EvaluationViewModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -50,11 +51,6 @@ export default class YearEvaluationBill extends PureComponent {
     choiceTypeKey: 0,
     choiceTypeValue:'',
   };
-
-
-
-
-
   componentDidMount() {
     this.props.dispatch({
       type: 'rule/fetch',
@@ -191,16 +187,19 @@ export default class YearEvaluationBill extends PureComponent {
       contractVisible: !!flag,
     });
   };
-
   handleContractEditVisible = flag => {
     this.setState({
       contractEditVisible: !!flag,
     });
   };
-
-  handleEvaluationMethodsVisible = flag => {
+  handleEvaluationViewVisible = flag => {
     this.setState({
-      EvaluationMethodsVisible: !!flag,
+      EvaluationViewVisible: !!flag,
+    });
+  };
+  handleEvaluationVisible = flag => {
+    this.setState({
+      EvaluationVisible: !!flag,
     });
   };
   handleAdd = fields => {
@@ -217,16 +216,12 @@ export default class YearEvaluationBill extends PureComponent {
     });
   };
   rootSubmenuKeys = ['sub1'];
-
-
-
   handleGetMenuValue = (MenuValue) => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });
   };
-
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -255,7 +250,26 @@ export default class YearEvaluationBill extends PureComponent {
     );
   }
 
+  renderForm() {
+    return this.renderSimpleForm();
+  }
+  // 考评
 
+  showEvaluation =(flag, record)=> {
+    this.setState({
+      EvaluationVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+
+  // 查看考评
+  showViewEvaluation =(flag, record)=> {
+    this.setState({
+      EvaluationViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -284,54 +298,36 @@ export default class YearEvaluationBill extends PureComponent {
     );
   }
 
-  renderForm() {
-    return this.renderSimpleForm();
-  }
-
-
-  // 考评
-  showEvaluation =(flag, record)=> {
-    this.setState({
-      EvaluationVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-  //查看考评
-  showViewEvaluation =(flag, record)=> {
-    this.setState({
-      EvaluationViewVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-
-
-
-
   render() {
-    let _this = this;
     const { rule: { data }, loading } = this.props;
-    const { EvaluationVisible,  rowInfo } = this.state;
+    const { EvaluationVisible,  rowInfo, EvaluationViewVisible } = this.state;
+    // 主表格头
+    const mainColumns = [
+      { title: '公司编码', dataIndex: 'name', key: 'name' },
+      { title: '公司名称', dataIndex: 'platform', key: 'platform' },
+    ];
 
+    const mainData = [];
+    for (let i = 0; i < 1; i+=1) {
+      mainData.push({
+        key: i,
+        name: `xxx至诚审计${i}`,
+        platform: '杭州至诚事务所'+i,
 
-
-
-    function NestedTable() {
-
-      // 项目
-      const expandedRowRenderpriject = () => {
-        const columns = [
+      });
+    }
+    // 项目
+    const expandedRowRenderProject = () => {
+      // 项目头
+      const projectColumns = [
           { title: '项目编码', dataIndex: 'date', key: 'date' },
           { title: '项目名称', dataIndex: 'name', key: 'name' },
           { title: '项目状态', key: 'state', render: () => <span><Badge status="success" />完成、审核、生成报告</span> },
           { title: '考评分', dataIndex: 'upgradeNum', key: 'upgradeNum' },
-
         ];
-
-        const data = [];
-        for (let i = 0; i < 2; ++i) {
-          data.push({
+      const projectData = [];
+      for (let i = 0; i < 2; i+=1) {
+          projectData.push({
             key: i,
             date: '项目code0+i',
             name: '杭州市地铁审计项目'+i,
@@ -340,20 +336,18 @@ export default class YearEvaluationBill extends PureComponent {
         }
         return (
           <Table
-            columns={columns}
-            dataSource={data}
+            columns={projectColumns}
+            dataSource={projectData}
             pagination={false}
-            bordered={true}
+            bordered='true'
           />
         );
       };
 
-
-
-
-      //人员
-      const expandedRowRenderPerson = () => {
-        const columns = [
+    // 人员
+    const expandedRowRenderPerson = () => {
+        //  人员头
+        const personColumns = [
           { title: '人员编码', dataIndex: 'date', key: 'date' },
           { title: '人员姓名', dataIndex: 'name', key: 'name' },
           { title: '是否合伙人', key: 'state', render: () => <span><Badge status="success" />是、否</span> },
@@ -364,50 +358,45 @@ export default class YearEvaluationBill extends PureComponent {
             key: 'operation',
             render: (text,record) => (
               <Fragment>
-                <a onClick={() =>showEvaluation(true, record)} >考评</a>
+                <a onClick={() =>this.showEvaluation(true, record)} >考评</a>
                 <Divider type="vertical" />
                 <a onClick={() =>this.showViewEvaluation(true, record)} >查看</a>
               </Fragment>
             ),
           },
         ];
-
-        const data = [];
-        for (let i = 0; i < 4; ++i) {
-          data.push({
+        const personData = [];
+        for (let i = 0; i < 4; i+=1) {
+          personData.push({
             key: i,
-            date: '人员code'+i,
-            name: '张三'+i,
-            upgradeNum:  i==1 ? '执行合伙人' : i==2 ? '管理合伙人' : i==3 ? '技术合伙人' : '合伙人',
+            date: `人员code${i}`,
+            name: `张三${i}`,
+            upgradeNum:  i===1 ? '执行合伙人' : i===2 ? '管理合伙人' : i===3 ? '技术合伙人' : '合伙人',
             score:  10.5,
           });
         }
         return (
           <Table
-            columns={columns}
-            dataSource={data}
+            columns={personColumns}
+            dataSource={personData}
             pagination={false}
-            expandedRowRender={expandedRowRenderpriject}
-            bordered={true}
+            expandedRowRender={expandedRowRenderProject}
+            bordered='true'
           />
         );
       };
 
-
-
-
-      //部门
-      const expandedRowRenderDepartment = () => {
-        const columns = [
+    // 部门
+    const expandedRowRenderDepartment = () => {
+        // 部门头
+        const departmentColumns = [
           { title: '部门编码', dataIndex: 'date', key: 'date' },
           { title: '部门项目', dataIndex: 'name', key: 'name' },
           { title: '合伙人', key: 'state', render: () => <span><Badge status="success" />张三、李四</span> },
-
         ];
-
-        const data = [];
-        for (let i = 0; i < 3; ++i) {
-          data.push({
+        const departmentData = [];
+        for (let i = 0; i < 3; i+=1) {
+          departmentData.push({
             key: i,
             date: '部门code'+i,
             name: '审计一部',
@@ -415,8 +404,8 @@ export default class YearEvaluationBill extends PureComponent {
         }
         return (
           <Table
-            columns={columns}
-            dataSource={data}
+            columns={departmentColumns}
+            dataSource={departmentData}
             pagination={false}
             expandedRowRender={expandedRowRenderPerson}
             bordered={false}
@@ -424,37 +413,10 @@ export default class YearEvaluationBill extends PureComponent {
         );
       };
 
-      //主表格
-      const columns = [
-        { title: '公司编码', dataIndex: 'name', key: 'name' },
-        { title: '公司名称', dataIndex: 'platform', key: 'platform' },
-      ];
-
-      const data = [];
-      for (let i = 0; i < 1; ++i) {
-        data.push({
-          key: i,
-          name: 'xxx至诚审计'+i,
-          platform: '杭州至诚事务所'+i,
-
-        });
-      }
-
-      return (
-        <Table
-          className="components-table-demo-nested"
-          columns={columns}
-          expandedRowRender={expandedRowRenderDepartment}
-          dataSource={data}
-          bordered={false}
-          pagination={false}
-        />
-      );
-    }
-
 
     const EvaluationMethods = {
-      handleEvaluationVisible: this.handleEvaluationMethodsVisible,
+      handleEvaluationViewVisible: this.handleEvaluationViewVisible,
+      handleEvaluationVisible: this.handleEvaluationVisible,
     };
 
     return (
@@ -467,14 +429,19 @@ export default class YearEvaluationBill extends PureComponent {
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
-
-                <NestedTable />
+                <Table
+                  columns={mainColumns}
+                  expandedRowRender={expandedRowRenderDepartment}
+                  dataSource={mainData}
+                  bordered={false}
+                  pagination={false}
+                />
               </div>
             </Content>
           </Layout>
         </Card>
         <Evaluation {...EvaluationMethods} EvaluationVisible={EvaluationVisible} rowInfo={rowInfo} />
-        {/*<ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />*/}
+        <EvaluationViewModal {...EvaluationMethods} EvaluationViewVisible={EvaluationViewVisible} rowInfo={rowInfo}  />
       </PageHeaderLayout>
     );
   }
