@@ -20,6 +20,7 @@ import {
 import { connect } from 'dva';
 import styles from './Style.less';
 
+const { Search } = Input;
 const RadioGroup = Radio.Group;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -230,101 +231,45 @@ class TemAuthorization extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={1}>
-                  <FormItem {...formItemLayout} label="项目">
+                  <FormItem {...formItemLayout} label="授权人">
                     {getFieldDecorator('project', {
                       rules: [
                         {
                           required: true,
-                          message: '请输入目标描述',
+                          message: '授权人',
                         },
                       ],
                     })(
-                      <TextArea
-                        style={{ minHeight: 32 }}
-                        placeholder="项目名称"
-                        rows={4}
-                      />
+                      <Search placeholder="授权人" />
                     )}
                   </FormItem>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={1}>
-                  <FormItem {...formItemLayout} label="出勤类型">
+                  <FormItem {...formItemLayout} label="委托人">
                     {getFieldDecorator('standard', {
                       rules: [
                         {
                           required: true,
-                          message: '请选择出勤类型',
+                          message: '委托人',
                         },
                       ],
                     })(
-                      <Select >
-                        <Option value='1' >内勤</Option>
-                        <Option value='2' >外勤</Option>
-                      </Select>
+                      <Search placeholder="委托人" />
                     )}
                   </FormItem>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={1}>
-                  <FormItem
-                    {...formItemLayout}
-                    label='时间段'
-                  >
-                    {getFieldDecorator('client',{
-                      initialValue:RadioGroupValue,
-                    })(
-                      <RadioGroup onChange={this.onRadioGroupChange}>
-                        <Radio value={1}>全天</Radio>
-                        <Radio value={2}>上午</Radio>
-                        <Radio value={3}>下午</Radio>
-                      </RadioGroup>
-                    )}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={23} pull={1}>
-                  <FormItem
-                    {...formItemLayout}
-                    label='日程主题'
-                  >
-                    {getFieldDecorator('invites')(
-                      <Input placeholder="自动生成上午、下午、全天--项目名（出勤类型），反之手工填写" />
-                    )}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={23} pull={1}>
-                  <FormItem
-                    {...formItemLayout}
-                    label='提醒'
-                  >
-                    {getFieldDecorator('weight')(
-                      <Select placeholder="无" >
-                        <Option value={1}>准时</Option>
-                        <Option value={2}>15分钟前</Option>
-                        <Option value={3}>30分钟前</Option>
-                        <Option value={4}>1小时前</Option>
-                        <Option value={5}>2小时前</Option>
-                        <Option value={6}>一天前</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={23} pull={1}>
-                  <FormItem {...formItemLayout} label="备注">
+                  <FormItem {...formItemLayout} label="说明">
                     <div>
                       {getFieldDecorator('public', {
                       })(
                         <TextArea
                           style={{ minHeight: 32 }}
-                          placeholder="输入备注"
+                          placeholder="输入说明"
                           rows={4}
                         />
                       )}
