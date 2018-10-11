@@ -182,13 +182,13 @@ export const getRouterData = app => {
     },
 
     '/PerformTarget/projectPerformTarget': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/TypeList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/project/ProjectEvaluationBill')),
       name: '项目考评',
     },
 
 
     '/PerformTarget/YearPerformTarget': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/TypeList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/performTarget/year/YearEvaluationBill')),
       name: '年度考评',
     },
 
