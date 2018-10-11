@@ -115,7 +115,10 @@ class ContactsAddModal extends PureComponent {
       const target = dataSource.find(item => item.key === key);
       if (target) {
         target[dataIndex] = value;
-        this.setState({ dataSource });
+        this.setState({
+          dataSource,
+        })
+        ;
       }
     };
   };

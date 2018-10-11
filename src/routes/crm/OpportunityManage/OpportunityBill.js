@@ -24,7 +24,7 @@ import BusinessFollowUp from './OpportunityFollowUp';
 import BusinessEditModal from './OpportunityEditModal.js';
 import BusinessOppView from './OpportunityViewModal.js';
 import BusinessStateModal from './OpportunityStateModal';
-import ProjectAddModal from '../../project/add/ProjectAddModal';
+import ProjectAddModal from '../../project/ProjectInfoManage/ProjectAddModal';
 
 const statusMap = ['success', 'warning','default'];
 const status = ['已跟进', '未分配','已分配'];

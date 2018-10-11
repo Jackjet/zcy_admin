@@ -54,6 +54,7 @@ for (let i = 0; i < 46; i += 1) {
     withBusiness:`关联商机${i}`,
 
     projectYears:[`2018`,`2017`,`2016`][Math.floor(Math.random() * 10) % 3],
+    projectRate: [`天`,`周`,`月`][Math.floor(Math.random() * 10) % 3],
 
     cusApplyCode:`客户申请单编码${i}`,
     cusApplyName:`客户申请单名称${i}`,
@@ -73,6 +74,15 @@ for (let i = 0; i < 46; i += 1) {
     archivesName:`档案名称${i}`,
     archivesStatus:Math.floor(Math.random() * 10) % 3,
 
+    appraisalProject:`考评项目${i}`,
+    appraisalExplain:[`按时完成`,`超时完成-3分`,`提前完成+1分`][Math.floor(Math.random() * 10) % 3],
+    appraisalScore:`10`,
+    appraisalGetScore: Math.floor(Math.random() * 100) % 10,
+
+    planDate:`计划时间${i}`,
+    stage:`工程阶段${i}`,
+    problem:`问题${i}`,
+    assist:`协助${i}`,
 
   });
 }

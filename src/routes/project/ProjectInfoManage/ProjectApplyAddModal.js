@@ -27,8 +27,12 @@ import {
 import moment from "moment/moment";
 import StandardTable from 'components/StandardTable';
 import { connect } from 'dva';
-import styles from './style.less';
+import styles from '../add/style.less';
 
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 const { Step } = Steps;
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
@@ -332,6 +336,28 @@ class ProjectApplyAddModal extends PureComponent {
       {
         title: '备注',
         dataIndex: 'remarks',
+      },
+    ];
+    const columnsProcess = [
+      {
+        title: '项目频度',
+        dataIndex: 'projectRate',
+      },
+      {
+        title: '计划时间',
+        dataIndex: 'planDate',
+      },
+      {
+        title: '工程阶段',
+        dataIndex: 'stage',
+      },
+      {
+        title: '问题',
+        dataIndex: 'problem',
+      },
+      {
+        title: '协助',
+        dataIndex: 'assist',
       },
     ];
     return (
@@ -869,45 +895,14 @@ class ProjectApplyAddModal extends PureComponent {
                 </Row>
               </Panel>
               <Panel header="过程管理" key="11">
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
-                      {getFieldDecorator('companyName', {
-                        rules: [{ required: true, message: '请输入单位名称' }],
-                      })(<Input placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
-                      {getFieldDecorator('companyAddress', {
-                        rules: [{ required: true, message: '请输入单位地址' }],
-                      })(<Input placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
-                      {getFieldDecorator('taxNumber', {
-                        rules: [{ required: true, message: '请输入税号' }],
-                      })(<Input placeholder="请输入税号" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row className={styles['fn-mb-15']}>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
-                      {getFieldDecorator('openAccountBank', {
-                        rules: [{ required: true, message: '请输入开户银行' }],
-                      })(<Input placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
-                      {getFieldDecorator('bankAccount', {
-                        rules: [{ required: true, message: '请输入银行账户' }],
-                      })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
-                    </Form.Item>
-                  </Col>
-                </Row>
+                <StandardTable
+                  selectedRows={selectedRows}
+                  loading={loading}
+                  data={data}
+                  columns={columnsProcess}
+                  onSelectRow={this.handleSelectRows}
+                  onChange={this.handleStandardTableChange}
+                />
               </Panel>
               <Panel header="生成合同" key="4">
                 <Row className={styles['fn-mb-15']}>
