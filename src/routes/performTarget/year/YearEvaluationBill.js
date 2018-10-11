@@ -21,6 +21,7 @@ import {
 } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './YearEvaluationBill.less';
+import Evaluation from './evaluation/Evaluation';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -31,6 +32,7 @@ const getValue = obj =>
     .map(key => obj[key])
 .join(',');
 
+
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -38,9 +40,8 @@ const getValue = obj =>
 @Form.create()
 export default class YearEvaluationBill extends PureComponent {
   state = {
-    contractVisible: false,
-    contractEditVisible: false,
-    contractTabsVisible: false,
+    EvaluationVisible: false,
+    EvaluationViewVisible: false,
     expandForm: false,
     selectedRows: [],
     rowInfo:{},
@@ -49,6 +50,11 @@ export default class YearEvaluationBill extends PureComponent {
     choiceTypeKey: 0,
     choiceTypeValue:'',
   };
+
+
+
+
+
   componentDidMount() {
     this.props.dispatch({
       type: 'rule/fetch',
@@ -192,9 +198,9 @@ export default class YearEvaluationBill extends PureComponent {
     });
   };
 
-  handleContractTabsVisible = flag => {
+  handleEvaluationMethodsVisible = flag => {
     this.setState({
-      contractTabsVisible: !!flag,
+      EvaluationMethodsVisible: !!flag,
     });
   };
   handleAdd = fields => {
@@ -212,19 +218,7 @@ export default class YearEvaluationBill extends PureComponent {
   };
   rootSubmenuKeys = ['sub1'];
 
-  showViewMessage =(flag, record)=> {
-    this.setState({
-      contractTabsVisible: !!flag,
-      rowInfo: record,
-    });
-  };
 
-  showEditMessage =(flag, record)=> {
-    this.setState({
-      contractEditVisible: !!flag,
-      rowInfo: record,
-    });
-  };
 
   handleGetMenuValue = (MenuValue) => {
     this.setState({
@@ -268,9 +262,9 @@ export default class YearEvaluationBill extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={24}>
           <Col span={6}>
-            <FormItem label="编码">
+            <FormItem label="公司">
               {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入编码" />
+                <Input placeholder="请选择公司" />
               )}
             </FormItem>
           </Col>
@@ -283,108 +277,65 @@ export default class YearEvaluationBill extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 清空
               </Button>
-
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
-              </Button>
             </span>
           </Col>
         </Row>
       </Form>
     );
   }
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="编码">
-              {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="名称">
-              {getFieldDecorator('contractName')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
 
-
-        </Row>
-
-
-
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </span>
-        </div>
-      </Form>
-    );
-  }
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    return this.renderSimpleForm();
   }
+
+
+  // 考评
+  showEvaluation =(flag, record)=> {
+    this.setState({
+      EvaluationVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  //查看考评
+  showViewEvaluation =(flag, record)=> {
+    this.setState({
+      EvaluationViewVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+
+
+
 
   render() {
+    let _this = this;
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo, choiceTypeValue } = this.state;
+    const { EvaluationVisible,  rowInfo } = this.state;
 
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          Action 1
-        </Menu.Item>
-        <Menu.Item>
-          Action 2
-        </Menu.Item>
-      </Menu>
-    );
+
+
 
     function NestedTable() {
-      const expandedRowRender = () => {
+
+      // 项目
+      const expandedRowRenderpriject = () => {
         const columns = [
-          { title: '考评日期', dataIndex: 'date', key: 'date' },
-          { title: '考评项目', dataIndex: 'name', key: 'name' },
-          { title: '考评性质', key: 'state', render: () => <span><Badge status="success" />增分、减分</span> },
+          { title: '项目编码', dataIndex: 'date', key: 'date' },
+          { title: '项目名称', dataIndex: 'name', key: 'name' },
+          { title: '项目状态', key: 'state', render: () => <span><Badge status="success" />完成、审核、生成报告</span> },
           { title: '考评分', dataIndex: 'upgradeNum', key: 'upgradeNum' },
-          {
-            title: '操作',
-            dataIndex: 'operation',
-            key: 'operation',
-            render: () => (
-              <span className="table-operation">
-            <a href="javascript:;">Pause</a>
-            <a href="javascript:;">Stop</a>
-            <Dropdown overlay={menu}>
-              <a href="javascript:;">
-                More <Icon type="down" />
-              </a>
-            </Dropdown>
-          </span>
-            ),
-          },
+
         ];
 
         const data = [];
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i < 2; ++i) {
           data.push({
             key: i,
-            date: '2018-12-24 23:12:00',
-            name: '商机、知识、启动快慢，拖延周期',
-            upgradeNum:  56,
+            date: '项目code0+i',
+            name: '杭州市地铁审计项目'+i,
+            upgradeNum:  10+i,
           });
         }
         return (
@@ -397,27 +348,95 @@ export default class YearEvaluationBill extends PureComponent {
         );
       };
 
+
+
+
+      //人员
+      const expandedRowRenderPerson = () => {
+        const columns = [
+          { title: '人员编码', dataIndex: 'date', key: 'date' },
+          { title: '人员姓名', dataIndex: 'name', key: 'name' },
+          { title: '是否合伙人', key: 'state', render: () => <span><Badge status="success" />是、否</span> },
+          { title: '总分', dataIndex: 'score', key: 'score' },
+          {
+            title: '操作',
+            dataIndex: 'operation',
+            key: 'operation',
+            render: (text,record) => (
+              <Fragment>
+                <a onClick={() =>showEvaluation(true, record)} >考评</a>
+                <Divider type="vertical" />
+                <a onClick={() =>this.showViewEvaluation(true, record)} >查看</a>
+              </Fragment>
+            ),
+          },
+        ];
+
+        const data = [];
+        for (let i = 0; i < 4; ++i) {
+          data.push({
+            key: i,
+            date: '人员code'+i,
+            name: '张三'+i,
+            upgradeNum:  i==1 ? '执行合伙人' : i==2 ? '管理合伙人' : i==3 ? '技术合伙人' : '合伙人',
+            score:  10.5,
+          });
+        }
+        return (
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            expandedRowRender={expandedRowRenderpriject}
+            bordered={true}
+          />
+        );
+      };
+
+
+
+
+      //部门
+      const expandedRowRenderDepartment = () => {
+        const columns = [
+          { title: '部门编码', dataIndex: 'date', key: 'date' },
+          { title: '部门项目', dataIndex: 'name', key: 'name' },
+          { title: '合伙人', key: 'state', render: () => <span><Badge status="success" />张三、李四</span> },
+
+        ];
+
+        const data = [];
+        for (let i = 0; i < 3; ++i) {
+          data.push({
+            key: i,
+            date: '部门code'+i,
+            name: '审计一部',
+          });
+        }
+        return (
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            expandedRowRender={expandedRowRenderPerson}
+            bordered={false}
+          />
+        );
+      };
+
       //主表格
       const columns = [
-        { title: '项目编码', dataIndex: 'name', key: 'name' },
-        { title: '项目名称', dataIndex: 'platform', key: 'platform' },
-        { title: '项目考评分', dataIndex: 'version', key: 'version' },
-        { title: '合伙人', dataIndex: 'upgradeNum', key: 'upgradeNum' },
-        { title: '项目经理', dataIndex: 'creator', key: 'creator' },
-        { title: '项目启动时间', dataIndex: 'createdAt', key: 'createdAt' },
-        { title: '备注', key: 'operation', render: () => <a href="javascript:;">Publish</a> },
+        { title: '公司编码', dataIndex: 'name', key: 'name' },
+        { title: '公司名称', dataIndex: 'platform', key: 'platform' },
       ];
 
       const data = [];
-      for (let i = 0; i < 3; ++i) {
+      for (let i = 0; i < 1; ++i) {
         data.push({
           key: i,
-          name: 'xxx项目'+i,
-          platform: '项目名称'+i,
-          version: 10+i,
-          upgradeNum: '张'+i,
-          creator: 'Jack',
-          createdAt: '2018-12-24 23:12:00',
+          name: 'xxx至诚审计'+i,
+          platform: '杭州至诚事务所'+i,
+
         });
       }
 
@@ -425,12 +444,18 @@ export default class YearEvaluationBill extends PureComponent {
         <Table
           className="components-table-demo-nested"
           columns={columns}
-          expandedRowRender={expandedRowRender}
+          expandedRowRender={expandedRowRenderDepartment}
           dataSource={data}
-          bordered={true}
+          bordered={false}
+          pagination={false}
         />
       );
     }
+
+
+    const EvaluationMethods = {
+      handleEvaluationVisible: this.handleEvaluationMethodsVisible,
+    };
 
     return (
       <PageHeaderLayout>
@@ -448,6 +473,8 @@ export default class YearEvaluationBill extends PureComponent {
             </Content>
           </Layout>
         </Card>
+        <Evaluation {...EvaluationMethods} EvaluationVisible={EvaluationVisible} rowInfo={rowInfo} />
+        {/*<ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />*/}
       </PageHeaderLayout>
     );
   }
