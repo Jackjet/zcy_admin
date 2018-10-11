@@ -11,6 +11,8 @@ import ScheduleAddModal from '../schedule/ScheduleAddModal';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { getTimeDistance } from '../../utils/utils';
 import styles from './Workplace.less';
+import TemAuthorizationModal from '../projectTemAuth/TemAuthorization';
+import ProjectAssignmentModal from '../projectassignment/AssignmentAddModal';
 
 
 const { RangePicker } = DatePicker;
@@ -69,6 +71,8 @@ function callback(key){
 }))
 export default class Workplace extends PureComponent {
   state = {
+    projectTemAuthVisible:false,
+    projectAssigVisible:false,
     ScheduleAddVisible: false,
     rangePickerValue: getTimeDistance('year'),
   };
@@ -107,6 +111,24 @@ export default class Workplace extends PureComponent {
     window.scrollTo(0,0)
   };
 
+  //项目临时授权
+  handleProjectTemAuthAddVisible=(flag)=>{
+    this.setState({
+      projectTemAuthVisible: !!flag,
+    });
+  }
+
+  //项目指派
+  handleProjectAssignmentAddVisible=(flag)=>{
+    this.setState({
+      projectAssigVisible: !!flag,
+    });
+  }
+
+
+
+
+  //新增日程
   handleScheduleAddVisible = (flag)=>{
     this.setState({
       ScheduleAddVisible:!!flag,
@@ -183,7 +205,7 @@ export default class Workplace extends PureComponent {
   }
 
   render() {
-    const { ScheduleAddVisible, rangePickerValue } = this.state;
+    const { ScheduleAddVisible,projectTemAuthVisible,projectAssigVisible,rangePickerValue } = this.state;
     const moreCharts =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多图表</span></a>;
     const moreMessage =<a onClick={() =>this.handleLink()}><span style={{paddingRight:15}}>更多</span> </a>;
     const {
@@ -288,17 +310,28 @@ export default class Workplace extends PureComponent {
       total: 50,
     };
 
+    //新增日程
     const ScheduleAddMethods = {
       handleScheduleAddVisible: this.handleScheduleAddVisible,
     };
 
+    //项目临时授权
+    const ProjectTemAuthAddMethods = {
+      handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
+    };
+
+    //项目指派
+    const ProjectAssignmentAddMethods = {
+      handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
+    };
+
     return (
       <PageHeaderLayout content={pageHeaderContent} extraContent={extraContent}>
-        <div style={{fontSize: 20, marginTop: 20 , marginBottom: 20, color: "black" }}>
-          近期事物
+        <div className={styles.header}>
+          <div className={styles["fn-right"]}><Icon type="edit" theme="outlined" /></div>
+          <h3 className={styles.headerh3}>近期事物</h3>
         </div>
-        <Card style={{marginBottom: 20}}>
-
+        <Card style={{marginBottom: 20,borderRadius:6}}>
           <Row gutter={8}>
             <Col span={2}>
               <Badge count={0}>
@@ -362,11 +395,34 @@ export default class Workplace extends PureComponent {
             </Col>
           </Row>
         </Card>
-        <div style={{fontSize: 20, marginBottom: 20, color: "black" }}>
-          快捷常用工具
+        <div className={styles.header}>
+          <div className={styles["fn-right"]}><Icon type="edit" theme="outlined" /></div>
+          <h3 className={styles.headerh3}>快捷常用工具</h3>
         </div>
-        <Card style={{marginBottom: 20}}>
-          <Row gutter={32}>
+        <Card style={{marginBottom: 20,borderRadius:6 ,boxShadow: "2 2 2 #fff"}}>
+          <Row gutter={20}>
+            <Col span={4}>
+              <Link
+                className={styles["shortcut-box1"]}
+                to="/crm/customer"
+                onClick={this.handleArea}
+              >
+                <div ><Icon className={styles.iconhz}  type="star" />
+                </div>
+                <h5 >客户信息管理</h5>
+              </Link>
+            </Col>
+            <Col span={4}>
+              <Link
+                className={styles["shortcut-box1"]}
+                to="/crm/customer"
+                onClick={this.handleArea}
+              >
+                <div ><Icon className={styles.iconhz}  type="star" />
+                </div>
+                <h5 >客户信息管理</h5>
+              </Link>
+            </Col>
             <Col span={4}>
               <Link
                 className={styles["shortcut-box1"]}
@@ -423,15 +479,21 @@ export default class Workplace extends PureComponent {
               </Link>
             </Col>
             <Col span={4} >
-              <Link
+              <a
                 className={styles["shortcut-box5"]}
-                to="/projectAllow/projectAllocation"
-                onClick={this.handleArea}
+                type="primary" onClick={()=>this.handleProjectAssignmentAddVisible(true)}
               >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
                 <h5 >项目指派</h5>
-              </Link>
+              </a>
+            </Col>
+            <Col span={4}>
+                <a className={styles["shortcut-box3"]} type="primary" onClick={()=>this.handleProjectTemAuthAddVisible(true)} >
+                <div ><Icon className={styles.iconhz}  type="star" />
+                </div>
+                <h5 >项目临时授权</h5>
+              </a>
             </Col>
           </Row>
         </Card>
@@ -791,6 +853,8 @@ export default class Workplace extends PureComponent {
           </Col>
         </Row>
         <ScheduleAddModal {...ScheduleAddMethods} ScheduleAddVisible={ScheduleAddVisible} />
+        <TemAuthorizationModal {...ProjectTemAuthAddMethods} projectTemAuthVisible={projectTemAuthVisible} />
+        <ProjectAssignmentModal {...ProjectAssignmentAddMethods} projectAssigVisible={projectAssigVisible} />
       </PageHeaderLayout>
     );
   }
