@@ -331,7 +331,7 @@ export default class Workplace extends PureComponent {
           <div className={styles["fn-right"]}><Icon type="edit" theme="outlined" /></div>
           <h3 className={styles.headerh3}>近期事物</h3>
         </div>
-        <Card style={{marginBottom: 20,borderRadius:6}}>
+        <Card className={styles.cardstyle}>
           <Row gutter={8}>
             <Col span={2}>
               <Badge count={0}>
@@ -399,9 +399,9 @@ export default class Workplace extends PureComponent {
           <div className={styles["fn-right"]}><Icon type="edit" theme="outlined" /></div>
           <h3 className={styles.headerh3}>快捷常用工具</h3>
         </div>
-        <Card style={{marginBottom: 20,borderRadius:6 ,boxShadow: "2 2 2 #fff"}}>
+        <Card className={styles.cardstyle}>
           <Row gutter={20}>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box1"]}
                 to="/crm/customer"
@@ -412,7 +412,7 @@ export default class Workplace extends PureComponent {
                 <h5 >客户信息管理</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box1"]}
                 to="/crm/customer"
@@ -423,7 +423,7 @@ export default class Workplace extends PureComponent {
                 <h5 >客户信息管理</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box1"]}
                 to="/crm/customer"
@@ -434,7 +434,7 @@ export default class Workplace extends PureComponent {
                 <h5 >客户信息管理</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box2"]}
                 to='/project/projectinfo'
@@ -445,7 +445,7 @@ export default class Workplace extends PureComponent {
                 <h5 >项目信息管理</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box3"]}
                 to='/schedule/schedulelist'
@@ -456,7 +456,7 @@ export default class Workplace extends PureComponent {
                 <h5 >日常管理</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box4"]}
                 to="/HR/organize"
@@ -467,7 +467,7 @@ export default class Workplace extends PureComponent {
                 <h5 >组织结构</h5>
               </Link>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles["shortcut-box5"]}
                 to="/ExpenseReimbursement/ExpenseApply"
@@ -478,7 +478,7 @@ export default class Workplace extends PureComponent {
                 <h5 >费用申请单</h5>
               </Link>
             </Col>
-            <Col span={4} >
+            <Col xl={4} md={6} sm={8} xs={12}>
               <a
                 className={styles["shortcut-box5"]}
                 type="primary" onClick={()=>this.handleProjectAssignmentAddVisible(true)}
@@ -488,7 +488,7 @@ export default class Workplace extends PureComponent {
                 <h5 >项目指派</h5>
               </a>
             </Col>
-            <Col span={4}>
+            <Col xl={4} md={6} sm={8} xs={12}>
                 <a className={styles["shortcut-box3"]} type="primary" onClick={()=>this.handleProjectTemAuthAddVisible(true)} >
                 <div ><Icon className={styles.iconhz}  type="star" />
                 </div>
@@ -501,7 +501,7 @@ export default class Workplace extends PureComponent {
           <Col xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card
               className={styles.projectList}
-              style={{ marginBottom: 24, height: "auto" }}
+              style={{ marginBottom: 24, height: "auto",borderRadius:6 }}
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
@@ -571,13 +571,12 @@ export default class Workplace extends PureComponent {
             </Card>
           </Col>
         </Row>
-        <Row gutter={24} className={styles["row-h"]}>
-          <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+        <Row gutter={24} className={styles["row-h"]} >
+          <Col xl={24} lg={24} md={24} sm={24} xs={24} style={{ borderRadius: 6}}>
             <Card
-              bodyStyle={{ padding: 0, height: "auto" }}
+              bodyStyle={{ padding: 0 }} className={styles.cardstyle}
               bordered={false}
-              title="日程"
-              loading={activitiesLoading}
+
             >
               <div className="calendar-all" id="homeCalendarCon">
                 <div className={styles['ant-fullcalendar-header-buttonhz']}>
@@ -598,7 +597,7 @@ export default class Workplace extends PureComponent {
           <Col>
             <Card
               className={styles.projectList}
-              style={{ marginBottom: 24 }}
+              style={{ marginBottom: 24 ,borderRadius:6}}
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
@@ -798,7 +797,7 @@ export default class Workplace extends PureComponent {
             </Card>
           </Col>
           <Col>
-            <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
+            <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}  style={{borderRadius:6}}>
               <div className={styles.salesCard}>
                 <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
                   <TabPane tab="销售额" key="sales">
