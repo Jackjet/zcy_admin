@@ -17,13 +17,10 @@ import {
   Modal,
   message,
   Divider,
+  Table, Badge
 } from 'antd';
-import StandardTable from '../../components/StandardTable/index';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import styles from './TypeList.less';
-import ContractAddModal from './TypeAdd';
-import ContractViewTabs from '../Contract/ContractViewTabs.js';
-import ContractEditModal from '../Contract/ContractEditModal.js';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import styles from './ProjectEvaluationBill.less';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -39,7 +36,7 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class TypeList extends PureComponent {
+export default class ProjectEvaluationBill extends PureComponent {
   state = {
     contractVisible: false,
     contractEditVisible: false,
@@ -250,26 +247,30 @@ export default class TypeList extends PureComponent {
           key="sub1"
           title={
             <span>
-              <span>指标类别</span>
+              <span>项目类别</span>
             </span>
           }
         >
-          <Menu.Item key="1">商机指标</Menu.Item>
-          <Menu.Item key="2">知识共享</Menu.Item>
-          <Menu.Item key="3">项目指标</Menu.Item>
+          <Menu.Item key='0'>全部</Menu.Item>
+          <Menu.Item key='1'>工程造价业务项目</Menu.Item>
+          <Menu.Item key='2'>可研报告</Menu.Item>
+          <Menu.Item key='3'>招标代理业务项目</Menu.Item>
+          <Menu.Item key='4'>司法鉴定</Menu.Item>
         </SubMenu>
       </Menu>
     );
   }
+
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={24}>
           <Col span={6}>
-            <FormItem label="指标编码">
+            <FormItem label="编码">
               {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入指标编码" />
+                <Input placeholder="请输入编码" />
               )}
             </FormItem>
           </Col>
@@ -298,14 +299,14 @@ export default class TypeList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="指标编码">
+            <FormItem label="编码">
               {getFieldDecorator('contractCode')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="指标名称">
+            <FormItem label="名称">
               {getFieldDecorator('contractName')(
                 <Input placeholder="请输入" />
               )}
@@ -341,73 +342,95 @@ export default class TypeList extends PureComponent {
     const { rule: { data }, loading } = this.props;
     const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo, choiceTypeValue } = this.state;
 
-    const columns = [
-      {
-        title: '指标编码',
-        dataIndex: 'contractCode',
-        width: 100,
-        align: 'center',
-        fixed: 'left',
-      },
-      {
-        title: '指标名称',
-        dataIndex: 'contractName',
-        width: 130,
-        align: 'center',
-      },
-      {
-        title: '指标描述',
-        dataIndex: 'partnerEnterprise',
-        align: 'center',
-      },
-
-      {
-        title: '指标性质',
-        dataIndex: 'businessType',
-        align: 'center',
-      },
-      {
-        title: '分值',
-        dataIndex: 'signTime',
-        align: 'center',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-
-      {
-        title: '操作',
-        align: 'center',
-        fixed: 'right',
-        width: 150,
-        render: (text,record) => (
-          <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
-          </Fragment>
-        ),
-      },
-    ];
-
     const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
+      <Menu>
+        <Menu.Item>
+          Action 1
+        </Menu.Item>
+        <Menu.Item>
+          Action 2
+        </Menu.Item>
       </Menu>
     );
 
-    const contractTabsMethods = {
-      handleContractTabsVisible: this.handleContractTabsVisible,
-    };
-    const contractAddMethods = {
-      handleAdd: this.handleAdd,
-      handleContractVisible: this.handleContractVisible,
-    };
-    const contractEditMethods = {
-      handleContractEditVisible: this.handleContractEditVisible,
-    };
+    function NestedTable() {
+      const expandedRowRender = () => {
+        const columns = [
+          { title: '考评日期', dataIndex: 'date', key: 'date' },
+          { title: '考评项目', dataIndex: 'name', key: 'name' },
+          { title: '考评性质', key: 'state', render: () => <span><Badge status="success" />增分、减分</span> },
+          { title: '考评分', dataIndex: 'upgradeNum', key: 'upgradeNum' },
+          {
+            title: '操作',
+            dataIndex: 'operation',
+            key: 'operation',
+            render: () => (
+              <span className="table-operation">
+            <a href="javascript:;">Pause</a>
+            <a href="javascript:;">Stop</a>
+            <Dropdown overlay={menu}>
+              <a href="javascript:;">
+                More <Icon type="down" />
+              </a>
+            </Dropdown>
+          </span>
+            ),
+          },
+        ];
+
+        const data = [];
+        for (let i = 0; i < 3; ++i) {
+          data.push({
+            key: i,
+            date: '2018-12-24 23:12:00',
+            name: '商机、知识、启动快慢，拖延周期',
+            upgradeNum:  56,
+          });
+        }
+        return (
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            bordered={true}
+          />
+        );
+      };
+
+      //主表格
+      const columns = [
+        { title: '项目编码', dataIndex: 'name', key: 'name' },
+        { title: '项目名称', dataIndex: 'platform', key: 'platform' },
+        { title: '项目考评分', dataIndex: 'version', key: 'version' },
+        { title: '合伙人', dataIndex: 'upgradeNum', key: 'upgradeNum' },
+        { title: '项目经理', dataIndex: 'creator', key: 'creator' },
+        { title: '项目启动时间', dataIndex: 'createdAt', key: 'createdAt' },
+        { title: '备注', key: 'operation', render: () => <a href="javascript:;">Publish</a> },
+      ];
+
+      const data = [];
+      for (let i = 0; i < 3; ++i) {
+        data.push({
+          key: i,
+          name: 'xxx项目'+i,
+          platform: '项目名称'+i,
+          version: 10+i,
+          upgradeNum: '张'+i,
+          creator: 'Jack',
+          createdAt: '2018-12-24 23:12:00',
+        });
+      }
+
+      return (
+        <Table
+          className="components-table-demo-nested"
+          columns={columns}
+          expandedRowRender={expandedRowRender}
+          dataSource={data}
+          bordered={true}
+        />
+      );
+    }
 
     return (
       <PageHeaderLayout>
@@ -419,36 +442,12 @@ export default class TypeList extends PureComponent {
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
-                <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
-                    新建
-                  </Button>
-                  {selectedRows.length > 0 && (
-                    <span>
-                      <Dropdown overlay={menu}>
-                        <Button>
-                          批量操作 <Icon type="down" />
-                        </Button>
-                      </Dropdown>
-                    </span>
-                  )}
-                </div>
-                <StandardTable
 
-                  selectedRows={selectedRows}
-                  loading={loading}
-                  data={data}
-                  columns={columns}
-                  onSelectRow={this.handleSelectRows}
-                  onChange={this.handleStandardTableChange}
-                />
+                <NestedTable />
               </div>
             </Content>
           </Layout>
         </Card>
-        <ContractAddModal {...contractAddMethods} contractVisible={contractVisible} choiceTypeValue={choiceTypeValue} />
-        <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
-        <ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

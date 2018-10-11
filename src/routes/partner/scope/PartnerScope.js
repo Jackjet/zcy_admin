@@ -122,7 +122,7 @@ export default class PartnerScope extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
 
-            <Table columns={columns} rowSelection={rowSelection} dataSource={data} />,
+            <Table  bordered={true} columns={columns} rowSelection={rowSelection} dataSource={data} />,
 
           </div>
         </Card>

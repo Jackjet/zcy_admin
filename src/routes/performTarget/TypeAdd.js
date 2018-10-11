@@ -35,6 +35,7 @@ const fileList = [
     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
+
 ];
 const props2 = {
   action: '//jsonplaceholder.typicode.com/posts/',
@@ -47,7 +48,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
   contractCode: '指标编码',
-  contractType: '门槛值',
+  contractType: '分值',
   years: '达标值',
   projectName: '指标名称',
   contractStatus: '挑战值',
@@ -159,7 +160,7 @@ class TypeAdd extends PureComponent {
         title="指标信息新增"
         style={{ top: 20 }}
         visible={contractVisible}
-        width="75%"
+        width="50%"
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleContractVisible()}
@@ -167,8 +168,8 @@ class TypeAdd extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
+              <Row  className={styles['fn-mb-15']}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
@@ -177,7 +178,7 @@ class TypeAdd extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
                     {getFieldDecorator('fzperson', {
                       rules: [{ required: true, message: '请选择指标性质' }],
@@ -193,15 +194,15 @@ class TypeAdd extends PureComponent {
 
 
               </Row>
-              <Row className={styles['fn-mb-15']}>
+              <Row className={styles['fn-mb-15']} >
 
-                <Col span={8} >
+                <Col span={12} >
                   <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
                     {getFieldDecorator('contractTitle')(<TextArea placeholder="请输入指标名称信息" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
 
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.contractType}>
                     {getFieldDecorator('contractType', {
                       rules: [{ required: true, message: '分值' }],
@@ -214,52 +215,21 @@ class TypeAdd extends PureComponent {
 
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.dfCompany}>
                     {getFieldDecorator('dfCompany')(<TextArea placeholder="请输入指标描述" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
 
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.contractStatus}>
-                    {getFieldDecorator('contractStatus', {
-                      rules: [{ required: true, message: '请输入挑战值' }],
-                    })(
-                      <Input placeholder="请输入挑战值" />
-                    )}
-                  </Form.Item>
-                </Col>
-
-
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
-
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.authorizedAgent}>
                     {getFieldDecorator('authorizedAgent')(<TextArea placeholder="请输入评价标准" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
                 </Col>
-
-
-
-
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
-                    {getFieldDecorator('fzperson', {
-                      rules: [{ required: true, message: '请选择负责人' }],
-                    })(
-                      <Select placeholder="请选择负责人" >
-                        <Option key={1}>公司员工1</Option>
-                        <Option key={2}>公司员工2</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
               </Row>
 
               <Row className={styles['fn-mb-15']}>
-                <Col span={23} pull={5}>
+                <Col span={24} pull={4}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                     {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />)}
                   </Form.Item>
