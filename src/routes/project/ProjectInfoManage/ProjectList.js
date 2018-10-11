@@ -18,13 +18,14 @@ import {
   Layout,
   Modal,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './Style.less';
+import styles from '../list/Style.less';
 import ProjectAddModal from '../add/ProjectAddModal.js';
+import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal.js';
 import ProjectApplyAddModal from '../add/ProjectApplyAddModal.js';
 import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
-import ProjectViewTabs from '../projectTabsInfo/ProjectCheckTabs.js';
+import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
 import ProjectEditModal from '../edit/ProjectEditModal.js';
 
 const { confirm } = Modal;
@@ -36,8 +37,8 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'default', 'processing', 'warning', 'error'];
-const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核','已销毁'];
+const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'default', 'processing', 'warning', 'error','success'];
+const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核','已销毁','完成'];
 
 
 @connect(({ rule, loading }) => ({
@@ -59,6 +60,7 @@ export default class projectList extends PureComponent {
     rowInfo:{},
     formValues: {},
     openKeys: ['sub1'],
+    projectPlanAddVisible: false,
   };
 
   componentDidMount() {
@@ -199,6 +201,11 @@ export default class projectList extends PureComponent {
   handleProjectApplyAddVisible = flag => {
     this.setState({
       projectApplyAddVisible: !!flag,
+    });
+  };
+  handleProjectPlanAddVisible = flag => {
+    this.setState({
+      projectPlanAddVisible: !!flag,
     });
   };
 
@@ -482,6 +489,7 @@ export default class projectList extends PureComponent {
       projectEditVisible,
       projectChildrenAddVisible,
       choiceTypeValue,
+      projectPlanAddVisible,
     } = this.state;
 
     const columns = [
@@ -490,9 +498,9 @@ export default class projectList extends PureComponent {
         dataIndex: 'no',
         width: 150,
         fixed: 'left',
-        render: (text, record, index) => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record, index)} >{text}</a>
+            <a onClick={() =>this.showViewMessage(true, record)} >{text}</a>
           </Fragment>
         ),
       },
@@ -544,6 +552,10 @@ export default class projectList extends PureComponent {
             text: status[8],
             value: 8,
           },
+          {
+            text: status[9],
+            value: 9,
+          },
         ],
         onFilter: (value, record) => record.projectStatus.toString() === value,
         render(val) {
@@ -575,7 +587,7 @@ export default class projectList extends PureComponent {
 
       {
         title: '操作',
-        width: 240,
+        width: 300,
         fixed: 'right',
         render: (text, record) => (
           <Fragment>
@@ -590,30 +602,26 @@ export default class projectList extends PureComponent {
                 <a onClick={() =>this.handleDestroyApply(record)}>销毁申请</a>
               )
             }
+            <Divider type="vertical" />
+            {
+              (`${record.projectStatus}` === '9') && (
+                <a>启动考评</a>
+              )
+            }
           </Fragment>
         ),
       },
     ];
 
 
-    const projectAddMethods = {
+    const parentMethods = {
       handleAdd: this.handleAdd,
       handleProjectVisible: this.handleProjectVisible,
-    };
-
-    const projectApplyAddMethods = {
       handleProjectApplyAddVisible: this.handleProjectApplyAddVisible,
-    };
-    const projectChildrenAddMethods = {
       handleProjectChildrenAddVisible: this.handleProjectChildrenAddVisible,
-    };
-
-
-    const projectTabsMethods = {
       handleProjectTabsVisible: this.handleProjectTabsVisible,
-    };
-    const projectEditMethods = {
       handleProjectEditVisible: this.handleProjectEditVisible,
+      handleProjectPlanAddVisible: this.handleProjectPlanAddVisible,
     };
 
     return (
@@ -635,6 +643,15 @@ export default class projectList extends PureComponent {
                       <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
                         新增子项目
                       </Button>
+                      <Button type="primary" onClick={() => this.handleProjectPlanAddVisible(true)}>
+                        新增项目计划
+                      </Button>
+                      <Button type="primary">
+                        新增工时
+                      </Button>
+                      <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
+                        新增过程汇报
+                      </Button>
                     </span>
                   )}
                 </div>
@@ -651,11 +668,12 @@ export default class projectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
-        <ProjectChildrenAddModal {...projectChildrenAddMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
-        <ProjectViewTabs {...projectTabsMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
-        <ProjectEditModal {...projectEditMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
-        <ProjectApplyAddModal {...projectApplyAddMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
+        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
+        <ProjectChildrenAddModal {...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
+        <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
+        <ProjectEditModal {...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
+        <ProjectPlanAddModal {...parentMethods} projectPlanAddVisible={projectPlanAddVisible} />
+        <ProjectApplyAddModal {...parentMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

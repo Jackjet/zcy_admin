@@ -3,6 +3,7 @@ import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
 import ProjectsRepository from "../routes/KnowledgeBase/ProjectsRepository";
+import ProjectArchives from "../routes/project/ProjectArchives/ProjectArchives";
 
 let routerDataCache;
 
@@ -105,7 +106,7 @@ export const getRouterData = app => {
       name: '项目指派',
     },
     '/project/projectinfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/projectList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectInfoManage/ProjectList')),
       name: '项目信息管理',
     },
     '/contractManager/ContractInfo': {
@@ -129,9 +130,14 @@ export const getRouterData = app => {
       name: '工作报告',
     },
     '/project/workRecord': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/list/WorkRecord')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectInfoManage/ProjectPlan/ProjectPlanList')),
       name: '项目工作记录',
     },
+    '/project/projectDestroy': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectArchives/ProjectArchives')),
+      name: '项目销毁',
+    },
+
     '/fi/fiInvoice/businessCirculation': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Finance/list/Circulation')),
       name: '业务流转',
@@ -210,6 +216,11 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/list/ArchivesTabsBase')),
       name: '档案标签库架',
     },
+    '/dangan/ArchivesDestroy': {
+      component: dynamicWrapper(app, [], () => import('../routes/ArchivesManage/ArchivesDestroy/ArchivesDestroy')),
+      name: '档案销毁',
+    },
+
 
 
     '/Partnermanager/PartnerType': {

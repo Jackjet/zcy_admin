@@ -373,12 +373,16 @@ export default class CommissionQuery extends PureComponent {
           <div>
             <div className={styles.tableList}>
               <div className={styles.tableListOperator}>
-                <Button
-                  type="primary"
-                  onClick={() => this.handleCommissionViewVisible(true)}
-                >
-                  提成设置
-                </Button>
+                {
+                  (selectedRows.length === 1)&&(
+                    <Button
+                      type="primary"
+                      onClick={() => this.handleCommissionViewVisible(true)}
+                    >
+                      提成比例设置
+                    </Button>
+                  )
+                }
               </div>
               <StandardTable
                 selectedRows={selectedRows}

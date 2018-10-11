@@ -21,7 +21,7 @@ import {
 import { connect } from 'dva';
 import moment from "moment/moment";
 import StandardTable from '../../components/StandardTable/index';
-import ProcedureList from '../project/projectTabsInfo/ProcedureProject.js';
+import ProcedureList from './ProcedureProject.js';
 import ReceiptPlanAddModal from '../project/add/ReceiptPlanAddModal';
 import ReceiptPlanEditModal from '../project/edit/ReceiptPlanEditModal';
 import ReceiptPlanViewModal from '../project/select/ReceiptPlanViewModal';

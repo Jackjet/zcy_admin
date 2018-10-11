@@ -18,12 +18,9 @@ import {
   Badge,
   Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './ProjectListView.less';
-import ProjectAddModal from '../add/ProjectAddModal.js';
-import ProjectCheckTabs from '../projectTabsInfo/ProjectViewTabs.js';
-import ProjectInfo from '../select/ProjectInfo.js';
+import StandardTable from '../../components/StandardTable/index';
+import styles from './Style.less';
+import picture from './test.png';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -32,9 +29,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
-
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
   const okHandle = () => {
@@ -47,14 +41,14 @@ const CreateForm = Form.create()(props => {
 
   return (
     <Modal
-      title="项目基本信息新增"
+      title="收款计划基本信息新增"
       visible={modalVisible}
-      width="90%"
+      width="50%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <ProjectAddModal />
+      a
     </Modal>
   );
 });
@@ -63,32 +57,15 @@ const CheckProjectList = Form.create()(props => {
   const okHandle = () => handleCheckVisible();
   return (
     <Modal
-      title="项目详细信息查看"
+      title="收款计划基本信息查看"
       visible={checkVisible}
-      width="90%"
+      width="50%"
       maskClosable={false}
       onOk={okHandle}
       onCancel={() => handleCheckVisible()}
       footer={null}
     >
-      <ProjectCheckTabs />
-    </Modal>
-  );
-});
-const ProjectViewInfo = Form.create()(props => {
-  const { projectViewVisible, handleProjectViewVisible } = props;
-  const okHandle = () => handleProjectViewVisible();
-  return (
-    <Modal
-      title="项目基本信息查看"
-      visible={projectViewVisible}
-      width="90%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleProjectViewVisible()}
-      footer={null}
-    >
-      <ProjectInfo />
+      a
     </Modal>
   );
 });
@@ -98,11 +75,10 @@ const ProjectViewInfo = Form.create()(props => {
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class projectList extends PureComponent {
+export default class ProcedureList extends PureComponent {
   state = {
     modalVisible: false,
     checkVisible: false,
-    projectViewVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -237,12 +213,6 @@ export default class projectList extends PureComponent {
   handleCheckVisible = flag => {
     this.setState({
       checkVisible: !!flag,
-    });
-  };
-
-  handleProjectViewVisible = flag => {
-    this.setState({
-      projectViewVisible: !!flag,
     });
   };
 
@@ -419,91 +389,35 @@ export default class projectList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, checkVisible, projectViewVisible } = this.state;
+    const { selectedRows, modalVisible, checkVisible } = this.state;
     const columns = [
       {
-        title: '项目编号',
+        title: '编号',
         dataIndex: 'no',
-        render: text => (
-          <a className={styles.a} onClick={() => this.handleCheckVisible(true)}>
-            {text}
-          </a>
-        ),
       },
       {
-        title: '项目名称',
+        title: '环节名称',
         dataIndex: 'name',
-        render: text => (
-          <a className={styles.a} onDoubleClick={() => this.handleCheckVisible(true)}>
-            {text}
-          </a>
-        ),
       },
       {
-        title: '负责人',
+        title: '执行人',
         dataIndex: 'linkman',
       },
       {
-        title: '项目状态',
+        title: '审批意见',
         dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
       },
       {
-        title: '负责公司',
+        title: '创建时间',
         dataIndex: 'company',
       },
       {
-        title: '项目费用',
+        title: '完成时间',
         dataIndex: 'fee',
       },
       {
-        title: '客户名称',
-        dataIndex: 'cusname',
-      },
-      {
-        title: '客户联系人',
-        dataIndex: 'cuslinkmen',
-      },
-      {
-        title: '执行时间',
-        dataIndex: 'updatedAt',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-      {
-        title: '操作',
-        render: () => (
-          <Fragment>
-            <a href="">编辑</a>
-            <Divider type="vertical" />
-            <Dropdown overlay={downhz}>
-              <a>
-                更多 <Icon type="down" />
-              </a>
-            </Dropdown>
-          </Fragment>
-        ),
+        title: '消耗时间',
+        dataIndex: 'fee',
       },
     ];
 
@@ -527,7 +441,6 @@ export default class projectList extends PureComponent {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       handleCheckVisible: this.handleCheckVisible,
-      handleProjectViewVisible: this.handleProjectViewVisible,
     };
 
     return (
@@ -543,10 +456,12 @@ export default class projectList extends PureComponent {
               onChange={this.handleStandardTableChange}
             />
           </div>
+          <div>
+            <img src={picture} alt="流程图" />
+          </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} />
         <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
-        <ProjectViewInfo {...parentMethods} projectViewVisible={projectViewVisible} />
       </div>
     );
   }

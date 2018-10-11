@@ -10,18 +10,21 @@ import {
   Select,
   Icon,
   Button,
-  Dropdown,
   Menu,
   DatePicker,
-  Modal,
   message,
   Badge,
   Divider,
+  Layout,
+  Modal,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import styles from './style.less';
-import picture from './test.png';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import styles from '../list/Style.less';
 
+
+const { confirm } = Modal;
+const {Content, Sider} = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -29,61 +32,31 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
-    });
-  };
+const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'default', 'processing', 'warning', 'error'];
+const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核','已销毁'];
 
-  return (
-    <Modal
-      title="收款计划基本信息新增"
-      visible={modalVisible}
-      width="50%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      a
-    </Modal>
-  );
-});
-const CheckProjectList = Form.create()(props => {
-  const { checkVisible, handleCheckVisible } = props;
-  const okHandle = () => handleCheckVisible();
-  return (
-    <Modal
-      title="收款计划基本信息查看"
-      visible={checkVisible}
-      width="50%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleCheckVisible()}
-      footer={null}
-    >
-      a
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class ProcedureList extends PureComponent {
+export default class ProjectArchives extends PureComponent {
   state = {
-    modalVisible: false,
-    checkVisible: false,
+    projectVisible: false,
+    projectApplyAddVisible: false,
+    projectChildrenAddVisible: false,
+    projectEditVisible: false,
+    projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
+    choiceTypeKey: '0',
+    choiceTypeValue:'',
+    rowInfo:{},
     formValues: {},
     openKeys: ['sub1'],
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -166,8 +139,8 @@ export default class ProcedureList extends PureComponent {
           },
         });
         break;
-      case 'check':
-        this.handleCheckVisible(true);
+      case 'view':
+        this.handleProjectViewVisible(true);
         break;
       default:
         break;
@@ -204,15 +177,49 @@ export default class ProcedureList extends PureComponent {
     });
   };
 
-  handleModalVisible = flag => {
+  handleProjectVisible = flag => {
+    if(this.state.choiceTypeKey === "0" ){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请选择工程类别');
+      return false;
+    } else {
+      this.setState({
+        projectVisible: !!flag,
+      });
+    }
+  };
+  handleProjectApplyAddVisible = flag => {
     this.setState({
-      modalVisible: !!flag,
+      projectApplyAddVisible: !!flag,
     });
   };
 
-  handleCheckVisible = flag => {
+  showProjectApplyAddVisible = (flag, record) => {
     this.setState({
-      checkVisible: !!flag,
+      projectApplyAddVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  handleProjectChildrenAddVisible = flag => {
+    this.setState({
+      projectChildrenAddVisible: !!flag,
+    });
+  };
+
+  handleProjectEditVisible = flag => {
+    this.setState({
+      projectEditVisible: !!flag,
+    });
+  };
+
+  handleProjectTabsVisible = flag => {
+    this.setState({
+      projectTabsVisible: !!flag,
     });
   };
 
@@ -226,13 +233,20 @@ export default class ProcedureList extends PureComponent {
 
     message.success('添加成功');
     this.setState({
-      modalVisible: false,
+      projectVisible: false,
     });
   };
 
   rootSubmenuKeys = ['sub1'];
 
-  treemenu() {
+  handleGetMenuValue = (MenuValue) => {
+    this.setState({
+      choiceTypeKey: MenuValue.key,
+      choiceTypeValue: MenuValue.item.props.children,
+    });
+  };
+
+  treeMenu() {
     const { SubMenu } = Menu;
     return (
       <Menu
@@ -240,6 +254,7 @@ export default class ProcedureList extends PureComponent {
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
         style={{ width: 140 }}
+        onClick={this.handleGetMenuValue}
       >
         <SubMenu
           key="sub1"
@@ -249,15 +264,80 @@ export default class ProcedureList extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">咨询报告</Menu.Item>
-          <Menu.Item key="3">招标代理业务项目</Menu.Item>
-          <Menu.Item key="4">打包项目</Menu.Item>
-          <Menu.Item key="5">2010年免审批工程造价、招投标项目</Menu.Item>
+          <Menu.Item key='0'>全部</Menu.Item>
+          <Menu.Item key='1'>工程造价业务项目</Menu.Item>
+          <Menu.Item key='2'>可研报告</Menu.Item>
+          <Menu.Item key='3'>招标代理业务项目</Menu.Item>
+          <Menu.Item key='4'>司法鉴定</Menu.Item>
         </SubMenu>
       </Menu>
     );
   }
+
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
+  showViewMessage =(flag, record)=> {
+    this.setState({
+      projectTabsVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  showEditMessage =(flag, record)=> {
+    this.setState({
+      projectEditVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  handleDestroyApply = (record) => {
+    const { dispatch } = this.props;
+    confirm({
+      title: `申请删除项目编码为：${record.projectCode}`,
+      content:(
+        <div>
+          <p>项目名称:{record.projectName}</p>
+          <p>销毁人:{record.projectName}</p>
+          <p>销毁时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+        </div>
+      ),
+      keyboard:false,
+      cancelText:'取消',
+      okText:'确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: record.no,
+          },
+        });
+        message.success('申请成功')
+      },
+      onCancel() {
+
+      },
+    });
+    this.setState({
+      selectedRows: [],
+    });
+  };
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -290,14 +370,14 @@ export default class ProcedureList extends PureComponent {
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
-                查询
+                搜索
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+                清空
               </Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                更多 <Icon type="down" />
-              </a>
+              <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                高级搜索
+              </Button>
             </span>
           </Col>
         </Row>
@@ -389,65 +469,68 @@ export default class ProcedureList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, modalVisible, checkVisible } = this.state;
+    const {
+      selectedRows,
+      projectVisible,
+      projectApplyAddVisible,
+      projectTabsVisible,
+      rowInfo,
+      projectEditVisible,
+      projectChildrenAddVisible,
+      choiceTypeValue,
+    } = this.state;
+
     const columns = [
       {
-        title: '编号',
-        dataIndex: 'no',
+        title: '项目编号',
+        dataIndex: 'projectCode',
       },
       {
-        title: '环节名称',
-        dataIndex: 'name',
+        title: '项目名称',
+        dataIndex: 'projectName',
       },
       {
-        title: '执行人',
+        title: '销毁人',
         dataIndex: 'linkman',
       },
       {
-        title: '审批意见',
-        dataIndex: 'status',
+        title: '销毁时间',
+        dataIndex: 'projectStatus',
       },
       {
-        title: '创建时间',
+        title: '备注',
         dataIndex: 'company',
-      },
-      {
-        title: '完成时间',
-        dataIndex: 'fee',
-      },
-      {
-        title: '消耗时间',
-        dataIndex: 'fee',
-      },
+      }
     ];
 
-    const downhz = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="check">查看</Menu.Item>
-        <Menu.Item key="del">删除</Menu.Item>
-        <Menu.Item key="cancel">停用</Menu.Item>
-        <Menu.Item key="cancelcancel">启用</Menu.Item>
-      </Menu>
-    );
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
-
-    const parentMethods = {
+    const projectAddMethods = {
       handleAdd: this.handleAdd,
-      handleModalVisible: this.handleModalVisible,
-      handleCheckVisible: this.handleCheckVisible,
+      handleProjectVisible: this.handleProjectVisible,
+    };
+
+    const projectApplyAddMethods = {
+      handleProjectApplyAddVisible: this.handleProjectApplyAddVisible,
+    };
+    const projectChildrenAddMethods = {
+      handleProjectChildrenAddVisible: this.handleProjectChildrenAddVisible,
+    };
+
+
+    const projectTabsMethods = {
+      handleProjectTabsVisible: this.handleProjectTabsVisible,
+    };
+    const projectEditMethods = {
+      handleProjectEditVisible: this.handleProjectEditVisible,
     };
 
     return (
-      <div>
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderForm()}</div>
             <StandardTable
+              scroll={{ x: 1500}}
               selectedRows={selectedRows}
               loading={loading}
               data={data}
@@ -456,13 +539,8 @@ export default class ProcedureList extends PureComponent {
               onChange={this.handleStandardTableChange}
             />
           </div>
-          <div>
-            <img src={picture} alt="流程图" />
-          </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
-        <CheckProjectList {...parentMethods} checkVisible={checkVisible} />
-      </div>
+      </PageHeaderLayout>
     );
   }
 }
