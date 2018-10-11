@@ -20,7 +20,7 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import CustomerApplyAddModal from './CusApplyAddModal';
 import CustomerApplyViewTabs from './CusApplyTabsViewModal.js';
-import EditableTable from '../EditableTable/EditableTable';
+import EditableTable from '../../EditableTable/EditableTable';
 import ContactsAddModal from './ContactsAddModal';
 import CustomerApplyEditModal from './CusApplyEditModal';
 

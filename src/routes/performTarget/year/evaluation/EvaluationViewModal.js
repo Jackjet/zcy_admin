@@ -13,12 +13,16 @@ import {
   message,
   Select,
   Divider,
+  Layout,
+  Input,
 } from 'antd';
 import StandardTable from '../../../../components/StandardTable';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import EditableCell from '../../EditableTable/EditableCell';
+import EditableCell from '../../../EditableTable/EditableCell';
 import styles from './Style.less';
 
+
+const {Content, Sider} = Layout;
 const { Option } = Select;
 const FormItem = Form.Item;
 const getValue = obj =>
@@ -32,7 +36,7 @@ const getValue = obj =>
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class AppraisalList extends PureComponent {
+export default class EvaluationViewModal extends PureComponent {
   state = {
     workDiaryVisible: false,
     selectedRows: [],
@@ -181,37 +185,35 @@ export default class AppraisalList extends PureComponent {
     };
   };
 
-  // 查询表单
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            <FormItem label="项目名称">
-              {getFieldDecorator('no')(
-                <Select placeholder="请选择项目名称" style={{ width: 200 }}>
-                  <Option value="0">请选择</Option>
-                  <Option value="1">项目A</Option>
-                  <Option value="2">项目B</Option>
-                  <Option value="3">项目C</Option>
-                  <Option value="4">项目D</Option>
-                </Select>
+          <Col md={8} sm={24}>
+            <FormItem label="指标总平均分">
+              {getFieldDecorator('aveScore')(
+                <Input readOnly placeholder="指标总平局分" />
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                搜索
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleWorkDiaryVisible}>
-                新建
-              </Button>
-            </span>
+          <Col md={8} sm={24}>
+            <FormItem label="指标数">
+              {getFieldDecorator('years', {
+                rules: [{ required: true, message: '指标数' }],
+              })(
+                <Input readOnly placeholder="指标数" style={{ width: 200 }} />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="指标总分">
+              {getFieldDecorator('sumScore', {
+                rules: [{ required: true, message: '指标总分' }],
+              })(
+                <Input readOnly placeholder="指标总分" style={{ width: 200 }} />
+              )}
+            </FormItem>
           </Col>
         </Row>
       </Form>
@@ -219,7 +221,7 @@ export default class AppraisalList extends PureComponent {
   }
 
   render() {
-    const { form, dispatch, rule: { data }, loading, appraisalVisible, handleAppraisalVisible } = this.props;
+    const { form, dispatch, rule: { data }, loading, EvaluationViewVisible, handleEvaluationViewVisible } = this.props;
     const { selectedRows } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
@@ -231,7 +233,7 @@ export default class AppraisalList extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleAppraisalVisible(false);
+          handleEvaluationViewVisible(false);
         }
       });
     };
@@ -296,30 +298,33 @@ export default class AppraisalList extends PureComponent {
       },
     ];
     return (
-      <PageHeaderLayout>
-        <Modal
-          title="考评设置"
+      <Modal
+          title="考评查看"
           style={{ top: 20 }}
-          visible={appraisalVisible}
+          visible={EvaluationViewVisible}
           width="80%"
           maskClosable={false}
           onOk={validate}
-          onCancel={() => handleAppraisalVisible(false)}
+          onCancel={() => handleEvaluationViewVisible(false)}
         >
           <Card bordered={false}>
-            <div className={styles.tableList}>
-              <StandardTable
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
+            <Layout style={{ padding: '24px 0', background: '#fff' }}>
+              <Content style={{ padding: '0 24px', minHeight: 280}}>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+                  <StandardTable
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
+                </div>
+              </Content>
+            </Layout>
           </Card>
         </Modal>
-      </PageHeaderLayout>
     );
   }
 }

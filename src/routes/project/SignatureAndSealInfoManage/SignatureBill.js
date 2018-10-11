@@ -8,7 +8,6 @@ import {
   Input,
   Select,
   Button,
-  Menu,
   DatePicker,
   Modal,
   message,
@@ -19,73 +18,42 @@ import {
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddModal from './CusAddModal';
-import CustomerViewTabs from './CusTabsViewModal.js';
-import EditableTable from '../../EditableTable/EditableTable';
-import ContactsAddModal from '../CusApplyBill/ContactsAddModal';
-import CustomerDistributionModal from './CustomerDistributionModal';
-import CustomerEditModal from './CusEditModal';
 
-const {confirm} = Modal;
-const { Content,  Sider } = Layout;
+
+
+const { confirm } = Modal;
+const { Content } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-
 const getValue = obj =>
   Object.keys(obj).map(key => obj[key]).join(',');
-
-const statusMap = ['success', 'error'];
-const status = ['启用', '停用'];
+const statusMap = ['success', 'processing'];
+const status = ['已审核', '审核中'];
 const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
 
-
-// 设置业务员
-const SalesManage = Form.create()(props => {
-  const { salesVisible, handleSalesVisible } = props;
-  const okHandle = () => {
-    handleSalesVisible();
-  };
-  return (
-    <Modal
-      title="业务员基本信息管理"
-      style={{ top: 20 }}
-      visible={salesVisible}
-      width="40%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleSalesVisible()}
-    >
-      <div className={styles.editPerson}>
-        <EditableTable />
-      </div>
-    </Modal>
-  );
-});
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class CustomerList extends PureComponent {
+export default class SignatureBill extends PureComponent {
   state = {
     // 客户增加状态
-    customerAddVisible: false,
+    cusApplyAddVisible: false,
 
     // 客户编辑状态
-    customerEditVisible: false,
+    cusApplyEditVisible: false,
+
+    // 客户查看状态
+    cusApplyTabsViewVisible: false,
 
     // 联系人状态
     contactsVisible: false,
 
-    // 客户查看状态
-    tabsViewVisible: false,
-
     // 业务员状态
     salesVisible: false,
-
-    customerDistributionVisible: false,
 
     // 高级搜索是否隐藏状态
     expandForm: false,
@@ -110,28 +78,15 @@ export default class CustomerList extends PureComponent {
     });
   }
 
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
-
-  // 分页
+  // 公共列表组建分页
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
     const params = {
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
@@ -141,14 +96,13 @@ export default class CustomerList extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
       type: 'rule/fetch',
       payload: params,
     });
   };
 
-  // 搜索重置方法
+  // 搜索(重置)方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -168,7 +122,7 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 选中行删除方法
+  // 选中行批量删除方法
   handleDeleteMoreClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -194,8 +148,9 @@ export default class CustomerList extends PureComponent {
     this.setState({
       selectedRows: [],
     });
-  };
+  }
 
+  // 当前行删除按钮操作
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -241,9 +196,7 @@ export default class CustomerList extends PureComponent {
   // 查询方法
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
@@ -251,11 +204,9 @@ export default class CustomerList extends PureComponent {
         // ??
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
         type: 'rule/fetch',
         payload: values,
@@ -264,17 +215,17 @@ export default class CustomerList extends PureComponent {
   };
 
   // 隐藏和显示客户增加界面
-  handleCustomerAddVisible = flag => {
+  handleCusApplyAddVisible = flag => {
     this.props.form.setFields();
     this.setState({
-      customerAddVisible: !!flag,
+      cusApplyAddVisible: !!flag,
     });
   };
 
   // 隐藏和显示客户编辑界面
-  handleCustomerEditVisible = (flag) => {
+  handleCusApplyEditVisible = (flag) => {
     this.setState({
-      customerEditVisible: !!flag,
+      cusApplyEditVisible: !!flag,
     });
   };
 
@@ -289,102 +240,74 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-
-  handleTabsViewVisible = flag => {
+  // 隐藏和显示客户申请查看Tabs
+  handleCusApplyTabsViewVisible = flag => {
     this.setState({
-      tabsViewVisible: !!flag,
-    });
-  };
-  handleCustomerDistributionVisible = flag => {
-    this.setState({
-      customerDistributionVisible: !!flag,
+      cusApplyTabsViewVisible: !!flag,
     });
   };
 
+  // 隐藏和显示业务员申请查看Tabs
   handleSalesVisible = flag => {
     if(this.state.selectedRows.length>1){
       message.warning('不支持多行选择');
       return false;
     }
-
     this.setState({
       salesVisible: !!flag,
     });
   };
 
-  // 添加表单数据
-  handleCustomerAdd = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      customerAddVisible: false,
-    });
-  };
-  handleAddContact = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-    message.success('添加成功');
-    this.setState({
-      contactsVisible: false,
-    });
-  };
-
-
-  // 左边菜单树
-  rootSubmenuKeys = ['sub1'];
-  treeMenu() {
-    const { SubMenu }= Menu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>客户等级</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">贵宾客户</Menu.Item>
-          <Menu.Item key="2">一般客户</Menu.Item>
-          <Menu.Item key="3">重要客户</Menu.Item>
-          <Menu.Item key="4">潜在客户</Menu.Item>
-          <Menu.Item key="5">施工单位</Menu.Item>
-          <Menu.Item key="6">无</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
-
-  // 弹窗展示当前行的数据
+  // 弹窗编辑当前行的数据
   showEditMessage =(flag, record)=> {
     this.setState({
-      customerEditVisible: !!flag,
+      cusApplyEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
+  // 弹窗查看当前行的数据
   showViewMessage =(flag, text, record)=> {
     this.setState({
-      tabsViewVisible: !!flag,
+      cusApplyTabsViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
+  // 简单查询
+  renderSimpleForm() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
+            <FormItem label="关键字">
+              {getFieldDecorator('customerCode',{
+
+              })(
+                <div>
+                  <Input placeholder="请输入客户编码和名称" />
+                </div>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                高级搜索
+              </Button>
+            </span>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
 
   // 高级搜索
   renderAdvancedForm() {
@@ -485,214 +408,73 @@ export default class CustomerList extends PureComponent {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
-  // 简单查询
-  renderSimpleForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="关键字">
-              {getFieldDecorator('customerCode',{
-
-              })(
-                <div>
-                  <Input placeholder="请输入客户编码和名称" />
-                </div>
-
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                搜索
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
-              </Button>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
   render() {
-
     const { rule: { data }, loading } = this.props;
     const {
       selectedRows,
-      customerAddVisible,
-      customerEditVisible,
+      cusApplyAddVisible,
+      cusApplyEditVisible,
       contactsVisible,
-      tabsViewVisible,
+      cusApplyTabsViewVisible,
       salesVisible,
-      customerDistributionVisible,
       rowInfo,
     } = this.state;
 
     const columns = [
       {
-        title: '编码',
-        dataIndex: 'cusCode',
-       /* fixed: 'left',*/
+        title: '签章项目',
+        dataIndex: 'cusApplyCode',
+        width: 150,
+        fixed:'left',
       },
       {
-        title: '名称',
-        dataIndex: 'cusName',
+        title: '签章时间',
+        dataIndex: 'cusApplyName',
       },
       {
-        title: '联系人',
-        dataIndex: 'cusLinkman',
+        title: '项目环节',
+        dataIndex: 'cusApplyLinkman',
       },
       {
-        title: '所属公司',
-        dataIndex: 'cusCompany',
+        title: '签章人',
+        dataIndex: 'cusApplyCompany',
       },
       {
-        title: '行业',
+        title: '签章事由',
         dataIndex: 'industry',
-        filters: [
-          {
-            text: industry[0],
-            value: 0,
-          },
-          {
-            text: industry[1],
-            value: 1,
-          },
-          {
-            text: industry[2],
-            value: 2,
-          },
-          {
-            text: industry[3],
-            value: 3,
-          },
-          {
-            text: industry[4],
-            value: 4,
-          },
-          {
-            text: industry[5],
-            value: 5,
-          },
-          {
-            text: industry[6],
-            value: 6,
-          },
-          {
-            text: industry[7],
-            value: 7,
-          },
-        ],
-        onFilter: (value, record) => record.industry.toString() === value,
-        render(val) {
-          return <Badge status text={industry[val]} />;
-        },
       },
-      {
-        title: '手机',
-        dataIndex: 'cusMobilePhone',
-      },
-      {
-        title: '状态',
-        dataIndex: 'cusStatus',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
-      },
-      {
+      /*{
         title: '操作',
         width: 200,
-        fixed: 'right',
+        fixed:'right',
         render: (text, record, index) => (
           <Fragment>
             <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
             <Divider type="vertical" />
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            {
-              record.customerStatus === 1 && (
-                <span>
-                  <Divider type="vertical" />
-                  <a>启用</a>
-                </span>
-              )
-            }
-            {
-              record.customerStatus === 0 && (
-                <span>
-                  <Divider type="vertical" />
-                  <a>停用</a>
-                </span>
-              )
-            }
             <Divider type="vertical" />
             <a onClick={this.handleDeleteClick} >删除</a>
           </Fragment>
         ),
-      },
+      },*/
     ];
 
     const ParentMethods = {
-      handleCustomerAddVisible: this.handleCustomerAddVisible,
-      handleCustomerAdd: this.handleCustomerAdd,
-      handleCustomerEditVisible: this.handleCustomerEditVisible,
+      handleCusApplyAddVisible: this.handleCusApplyAddVisible,
+      handleCusApplyEditVisible: this.handleCusApplyEditVisible,
       handleContactsVisible: this.handleContactsVisible,
-      handleTabsViewVisible: this.handleTabsViewVisible,
+      handleCusApplyTabsViewVisible: this.handleCusApplyTabsViewVisible,
       handleSalesVisible: this.handleSalesVisible,
-      handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,
     };
+
     return (
       <PageHeaderLayout>
         <Card>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
-            <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
-            </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div>
                 <div className={styles.tableList}>
-                  <div className={styles.tableListForm}>{this.renderForm()}</div>
-                  <div className={styles.tableListOperator}>
-                    {selectedRows.length > 0 && (
-                      <span>
-                        <Button
-                          type="primary"
-                          onClick={() => this.handleCustomerDistributionVisible(true)}
-                        >
-                          客户分配
-                        </Button>
-                        <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
-                          设置联系人
-                        </Button>
-                      </span>
-                    )}
-                    {selectedRows.length > 1 && (
-                      <span>
-                        <Button type="primary" onClick={() => this.handleDeleteMoreClick(true)}>
-                          批量删除
-                        </Button>
-                      </span>
-                    )}
-                  </div>
                   <StandardTable
-                   /* scroll={{ x: 1500}}*/
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}
@@ -705,12 +487,6 @@ export default class CustomerList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CustomerAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
-        <SalesManage {...ParentMethods} salesVisible={salesVisible} />
-        <CustomerDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
       </PageHeaderLayout>
     );
   }

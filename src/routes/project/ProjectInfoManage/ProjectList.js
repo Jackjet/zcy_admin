@@ -29,6 +29,7 @@ import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
 import ProjectEditModal from '../edit/ProjectEditModal.js';
 import AppraisalList from './Appraisal/AppraisalList';
+import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
 
 const { confirm } = Modal;
 const {Content, Sider} = Layout;
@@ -65,6 +66,7 @@ export default class projectList extends PureComponent {
     projectPlanAddVisible: false,
     projectProcessAddVisible: false,
     appraisalVisible: false,
+    signatureAddVisible: false,
   };
 
   componentDidMount() {
@@ -249,6 +251,12 @@ export default class projectList extends PureComponent {
   handleProjectTabsVisible = flag => {
     this.setState({
       projectTabsVisible: !!flag,
+    });
+  };
+
+  handleSignatureAddVisible = flag => {
+    this.setState({
+      signatureAddVisible: !!flag,
     });
   };
 
@@ -510,6 +518,7 @@ export default class projectList extends PureComponent {
       projectPlanAddVisible,
       projectProcessAddVisible,
       appraisalVisible,
+      signatureAddVisible,
     } = this.state;
 
     const columns = [
@@ -616,16 +625,28 @@ export default class projectList extends PureComponent {
             <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
             <Divider type="vertical" />
             <a onClick={this.handleDeleteClick} >删除</a>
-            <Divider type="vertical" />
             {
               (`${record.projectStatus}` !== '8') && (
-                <a onClick={() =>this.handleDestroyApply(record)}>销毁申请</a>
+                <span>
+                  <Divider type="vertical" />
+                  <a onClick={() =>this.handleDestroyApply(record)}>销毁申请</a>
+                </span>
               )
             }
-            <Divider type="vertical" />
+            {
+              (`${record.projectStatus}` === "4") && (
+                <span>
+                  <Divider type="vertical" />
+                  <a onClick={() =>this.handleSignatureAddVisible(true,record)}>签章申请</a>
+                </span>
+              )
+            }
             {
               (`${record.projectStatus}` === '9') && (
-                <a onClick={() =>this.handleAppraisalVisible(true)}>启动考评</a>
+                <span>
+                  <Divider type="vertical" />
+                  <a onClick={() =>this.handleAppraisalVisible(true)}>启动考评</a>
+                </span>
               )
             }
           </Fragment>
@@ -644,6 +665,7 @@ export default class projectList extends PureComponent {
       handleProjectPlanAddVisible: this.handleProjectPlanAddVisible,
       handleProjectProcessAddVisible: this.handleProjectProcessAddVisible,
       handleAppraisalVisible: this.handleAppraisalVisible,
+      handleSignatureAddVisible: this.handleSignatureAddVisible,
     };
 
     return (
@@ -698,6 +720,7 @@ export default class projectList extends PureComponent {
         <ProjectApplyAddModal {...parentMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
         <ProjectProcessAddModal {...parentMethods} projectProcessAddVisible={projectProcessAddVisible}  />
         <AppraisalList {...parentMethods} appraisalVisible={appraisalVisible} />
+        <SignatureAddModal {...parentMethods}  signatureAddVisible={signatureAddVisible} />
       </PageHeaderLayout>
     );
   }

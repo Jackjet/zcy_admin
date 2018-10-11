@@ -75,6 +75,11 @@ const menuData = [
         name: '项目信息管理',
         path: 'projectinfo',
       },
+      {
+        key: 'signatureInfoManage',
+        name: '签章信息管理',
+        path: 'signatureInfoManage',
+      },
      /* {
         key: 'workplanList',
         name: '工时计划管理',
