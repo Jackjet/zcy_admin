@@ -48,26 +48,6 @@ const fieldLabels = {
   address: '地址',
   remarks: '备注',
 };
-
-// 照片上传方法明细
-const props = {
-  name: 'file',
-  action: '//jsonplaceholder.typicode.com/posts/',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -82,6 +62,14 @@ const formItemLayout = {
 class PersonEditModal extends PureComponent {
   state = {
     width: '90%',
+    previewVisible: false,
+    previewImage: '',
+    fileList: [{
+      uid: '-1',
+      name: 'xxx.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    }],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -89,6 +77,19 @@ class PersonEditModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+
+  handleCancel = () => this.setState({ previewVisible: false });
+
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    });
+  };
+
+  handleChange = ({ fileList }) => this.setState({ fileList });
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -97,6 +98,7 @@ class PersonEditModal extends PureComponent {
     }
   };
   render() {
+    const { previewVisible, previewImage, fileList } = this.state;
     const { form, dispatch, submitting , PersonEditVisible, handlePersonEditVisible, rowInfo} = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
@@ -156,6 +158,12 @@ class PersonEditModal extends PureComponent {
         </span>
       );
     };
+    const uploadButton = (
+      <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">上传头像</div>
+      </div>
+    );
     return (
       <Modal
         title="人员信息编辑"
@@ -170,7 +178,7 @@ class PersonEditModal extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Row className={styles['fn-mb-15']}>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.account}>
                     {getFieldDecorator('account', {
@@ -189,58 +197,31 @@ class PersonEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择姓名' }],
+                    })(
+                      <div className="clearfix">
+                        <Upload
+                          action="//jsonplaceholder.typicode.com/posts/"
+                          listType="picture-card"
+                          fileList={fileList}
+                          onPreview={this.handlePreview}
+                          onChange={this.handleChange}
+                        >
+                          {fileList.length >= 1 ? null : uploadButton}
+                        </Upload>
+                        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                        </Modal>
+                      </div>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
+                    {getFieldDecorator('name', {
+                      rules: [{ required: true, message: '请选择姓名' }],
                     })(<Input placeholder="请选择姓名" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.branchOffice}>
-                    {getFieldDecorator('branchOffice', {
-                      rules: [{ required: true, message: '请选择所属分公司' }],
-                    })(
-                      <Select placeholder="请选择所属分公司">
-                        <Option value="g">至诚</Option>
-                        <Option value="y">事务所有限公司</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.department}>
-                    {getFieldDecorator('department', {
-                      rules: [{ required: true, message: '请选择部门' }],
-                    })(<Input placeholder="请选择部门" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.station}>
-                    {getFieldDecorator('station', {
-                      rules: [{ required: true, message: '请选择所属岗位' }],
-                    })(
-                      <Select placeholder="请选择所属岗位" >
-                        <Option value="g">总经理</Option>
-                        <Option value="y">开发部</Option>
-                        <Option value="s">审计部</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.rank}>
-                    {getFieldDecorator('rank', {
-                      rules: [{ required: true, message: '请选择职级' }],
-                    })(
-                      <Select placeholder="请选择职级" >
-                        <Option value="1">合伙人1</Option>
-                        <Option value="2">合伙人2</Option>
-                        <Option value="3">合伙人3</Option>
-                      </Select>
-                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -255,26 +236,13 @@ class PersonEditModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
+              </Row>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.nation}>
                     {getFieldDecorator('nation', {
                       rules: [{ required: true, message: '请选择民族' }],
                     })(<Input placeholder="请选择民族" />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.workingCondition}>
-                    {getFieldDecorator('workingCondition', {
-                      rules: [{ required: true, message: '请选择工作状态' }],
-                    })(
-                      <Select placeholder="请选择工作状态" >
-                        <Option value="1">在职</Option>
-                        <Option value="2">外派</Option>
-                        <Option value="3">请假</Option>
-                      </Select>
-                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -298,9 +266,77 @@ class PersonEditModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
+              <Row>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.branchOffice}>
+                    {getFieldDecorator('branchOffice', {
+                      rules: [{ required: true, message: '请选择所属分公司' }],
+                    })(
+                      <Select placeholder="请选择所属分公司">
+                        <Option value="g">至诚</Option>
+                        <Option value="y">事务所有限公司</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.rank}>
+                    {getFieldDecorator('rank', {
+                      rules: [{ required: true, message: '请选择职级' }],
+                    })(
+                      <Select placeholder="请选择职级" >
+                        <Option value="1">合伙人1</Option>
+                        <Option value="2">合伙人2</Option>
+                        <Option value="3">合伙人3</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.workingCondition}>
+                    {getFieldDecorator('workingCondition', {
+                      rules: [{ required: true, message: '请选择工作状态' }],
+                    })(
+                      <Select placeholder="请选择工作状态" >
+                        <Option value="1">在职</Option>
+                        <Option value="2">外派</Option>
+                        <Option value="3">请假</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.department}>
+                    {getFieldDecorator('department', {
+                      rules: [{ required: true, message: '请选择部门' }],
+                    })(<Input placeholder="请选择部门" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.station}>
+                    {getFieldDecorator('station', {
+                      rules: [{ required: true, message: '请选择所属岗位' }],
+                    })(
+                      <Select placeholder="请选择所属岗位" >
+                        <Option value="g">总经理</Option>
+                        <Option value="y">开发部</Option>
+                        <Option value="s">审计部</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.hiredate}>
+                    {getFieldDecorator('hiredate', {
+                      rules: [{ required: true, message: '请输入入职时间' }],
+                    })(<DatePicker placeholder="请输入入职时间" />)}
+                  </Form.Item>
+                </Col>
 
-              <Row className={styles['fn-mb-15']}>
-
+              </Row>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.maritalStatus}>
                     {getFieldDecorator('maritalStatus', {
@@ -346,14 +382,7 @@ class PersonEditModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.hiredate}>
-                    {getFieldDecorator('hiredate', {
-                      rules: [{ required: true, message: '请输入入职时间' }],
-                    })(<DatePicker placeholder="请输入入职时间" />)}
-                  </Form.Item>
-                </Col>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.identityCard}>
                     {getFieldDecorator('identityCard', {
@@ -368,22 +397,20 @@ class PersonEditModal extends PureComponent {
                     })(<DatePicker placeholder="请输入生日" />)}
                   </Form.Item>
                 </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.photo}>
-                    {getFieldDecorator('photo', {
-                      rules: [{ required: true, message: '请上传照片' }],
+                  <Form.Item {...formItemLayout} label="是否合伙人">
+                    {getFieldDecorator('partner', {
+                      rules: [{ required: true, message: '合伙人' }],
                     })(
-                      <Upload {...props}>
-                        <Button>
-                          <Icon type="upload" /> 请上传照片
-                        </Button>
-                      </Upload>
+                      <Select placeholder="合伙人"  >
+                        <Option value={1}>是</Option>
+                        <Option value={2}>否</Option>
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
+              </Row>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.fax}>
                     {getFieldDecorator('fax', {
@@ -398,8 +425,22 @@ class PersonEditModal extends PureComponent {
                     })(<Input placeholder="请输入电子邮箱" />)}
                   </Form.Item>
                 </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="合伙人类别">
+                    {getFieldDecorator('partnerType', {
+                      rules: [{ required: true, message: '合伙人类别' }],
+                    })(
+                      <Select placeholder="合伙人类别"  >
+                        <Option value={1}>执行合伙人</Option>
+                        <Option value={2}>管理合伙人</Option>
+                        <Option value={3}>技术合伙人</Option>
+                        <Option value={4}>合伙人</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
               </Row>
-              <Row className={styles['fn-mb-15']}>
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.homePhone}>
                     {getFieldDecorator('homePhone', {
@@ -407,24 +448,15 @@ class PersonEditModal extends PureComponent {
                     })(<Input placeholder="请输入住宅电话" />)}
                   </Form.Item>
                 </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.officePhone}>
-                    {getFieldDecorator('officePhone', {
-                      rules: [{ required: true, message: '请输入办公电话' }],
-                    })(<Input placeholder="请输入办公电话" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.homePhone}>
-                    {getFieldDecorator('homePhone', {
-                      rules: [{ required: true, message: '请输入住宅电话' }],
-                    })(<Input placeholder="请输入住宅电话" />)}
+                <Col span={14} pull={2}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.address}>
+                    {getFieldDecorator('address')(
+                      <Input placeholder="请输入地址" />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
-
-              <Row className={styles['fn-mb-15']}>
-
+              <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.officePhone}>
                     {getFieldDecorator('officePhone', {
@@ -436,28 +468,18 @@ class PersonEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: true, message: '请输入移动电话' }],
-                    })(<Input placeholder="请输入移动电话" style={{ width: 200 }} />)}
+                    })(<Input placeholder="请输入移动电话" />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.virtualTelephone}>
                     {getFieldDecorator('virtualTelephone', {
                       rules: [{ required: true, message: '请输入虚拟短号' }],
-                    })(<Input placeholder="请输入虚拟短号" style={{ width: 200 }} />)}
+                    })(<Input placeholder="请输入虚拟短号" />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={23} pull={5}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.address}>
-                    {getFieldDecorator('address')(
-                      <Input placeholder="请输入地址" style={{ width: 400 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
+              <Row>
                 <Col span={23} pull={5}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(

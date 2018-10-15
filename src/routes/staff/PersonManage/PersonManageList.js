@@ -24,6 +24,7 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './PersonAddModal';
 import PersonViewModal from './PersonViewModal';
 import PersonEditModal from './PersonEditModal';
+import DistributionRoleModal from './DistributionRoleModal';
 import styles from './style.less';
 
 const { Content,  Sider } = Layout;
@@ -53,6 +54,7 @@ export default class PersonManageList extends PureComponent {
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
+    DistributionRoleVisible: false,
   };
 
   componentDidMount() {
@@ -206,6 +208,14 @@ export default class PersonManageList extends PureComponent {
     });
   };
 
+  handleDistributionRoleVisible =(flag)=> {
+    this.setState({
+      DistributionRoleVisible: !!flag,
+    });
+  };
+
+
+
   showDeleteMessage =(flag, record)=> {
     this.props.dispatch({
       type: 'rule/remove',
@@ -287,7 +297,7 @@ export default class PersonManageList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, PersonAddVisible, PersonViewVisible, PersonEditVisible, rowInfo } = this.state;
+    const { selectedRows, PersonAddVisible, PersonViewVisible, PersonEditVisible, rowInfo ,DistributionRoleVisible } = this.state;
     const columns = [
       {
         title: '工号',
@@ -357,6 +367,8 @@ export default class PersonManageList extends PureComponent {
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
+        <Menu.Item key="1">批量分配角色</Menu.Item>
+        <Menu.Item key="2">批量分配权限</Menu.Item>
       </Menu>
     );
 
@@ -364,6 +376,7 @@ export default class PersonManageList extends PureComponent {
       handlePersonAddVisible: this.handlePersonAddVisible,
       handlePersonViewVisible: this.handlePersonViewVisible,
       handlePersonEditVisible: this.handlePersonEditVisible,
+      handleDistributionRoleVisible :this.handleDistributionRoleVisible,
     };
 
     return (
@@ -386,6 +399,25 @@ export default class PersonManageList extends PureComponent {
                   </Button>
                   {selectedRows.length > 0 && (
                     <span>
+                      <Button
+                        type="primary"
+                      >
+                        分配权限
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => this.handleDistributionRoleVisible(true)}
+                      >
+                        分配角色
+                      </Button>
+                      <Button
+                        type="primary"
+                      >
+                        组织范围维护
+                      </Button>
+                      <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
+                        设置联系人
+                      </Button>
                       <Dropdown overlay={batchMenu}>
                         <Button>
                           批量操作 <Icon type="down" />
@@ -408,6 +440,7 @@ export default class PersonManageList extends PureComponent {
           <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible}  />
           <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} />
           <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} />
+          <DistributionRoleModal {...parentMethods} DistributionRoleVisible={DistributionRoleVisible} />
         </Card>
       </PageHeaderLayout>
     );

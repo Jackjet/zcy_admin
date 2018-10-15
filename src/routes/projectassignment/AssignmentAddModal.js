@@ -204,56 +204,6 @@ class AssignmentAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
-                    {getFieldDecorator('projectName', {
-                      rules: [{ required: true, message: '请输入项目名称' }],
-                    })(
-                      <Input placeholder="请输入项目名称" style={{width:'100%'}} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayout} label={fieldLabels.projectType}>
-                    {getFieldDecorator('projectType', {
-                      rules: [{ required: true, message: '请选择项目类别' }],
-                    })(
-                      <Select placeholder="请选择项目类别" style={{width:'100%'}} >
-                      <Option value="xiao">请选择</Option>
-                      <Option value="z">工程造价业务</Option>
-                      <Option value="f">科研报告</Option>
-                      <Option value="fd">招标代理</Option>
-                      <Option value="sn">司法鉴定</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayout} label={fieldLabels.year}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: true, message: '请选择年度' }],
-                      initialValue:`${moment().format('YYYY')}`,
-                    })(
-                      <Select placeholder="请选择年度" style={{width:'100%'}} >
-                        <Option value="xiao">请选择</Option>
-                        <Option value="z">2018</Option>
-                        <Option value="f">2019</Option>
-                        <Option value="fd">2020</Option>
-                        <Option value="sn">2021</Option>
-                        <Option value="zf">2022</Option>
-                        <Option value="sy">2023</Option>
-                        <Option value="jr">2024</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row className={styles['fn-mb-15']}>
-                <Col>
                   <Form.Item {...formItemLayout} label="项目经理">
                     {getFieldDecorator('authorizedAgent', {
                       rules: [{ required: false, message: '项目经理' }],
@@ -270,19 +220,7 @@ class AssignmentAddModal extends PureComponent {
                       rules: [{ required: false, message: '创建时间' }],
                       initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}`,
                     })(
-                      <Input placeholder="执行（项目创建）时间" />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col>
-                  <Form.Item {...formItemLayout} label="完成时间">
-                    {getFieldDecorator('finishDate', {
-                      rules: [{ required: false, message: '完成时间' }],
-                      initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}+3天`,
-                    })(
-                      <Input placeholder="执行（项目创建）时间" />
+                      <Input placeholder="执行（项目创建）时间[隐藏]" />
                     )}
                   </Form.Item>
                 </Col>
@@ -293,7 +231,7 @@ class AssignmentAddModal extends PureComponent {
                     {getFieldDecorator('actualDate', {
                       rules: [{ required: false, message: '实际完成时间' }],
                     })(
-                      <Input placeholder="实际完成时间" />
+                      <Input placeholder="实际完成时间 [隐藏]" />
                     )}
                   </Form.Item>
                 </Col>

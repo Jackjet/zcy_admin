@@ -171,6 +171,10 @@ class CommissionQueryModal extends PureComponent {
         dataIndex: 'customerCode',
       },
       {
+        title: '考核分',
+        dataIndex: 'kaiheScore',
+      },
+      {
         title: '分配角色',
         dataIndex: 'customerName',
       },

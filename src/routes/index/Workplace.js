@@ -4,7 +4,7 @@ import numeral from 'numeral';
 import { connect } from 'dva';
 import { Link,routerRedux } from 'dva/router';
 import DataSet from '@antv/data-set';
-import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button, Divider, DatePicker} from 'antd';
+import { Row, Col, Card, List, Avatar, Tabs, Icon, Calendar ,Badge,Button, Divider, DatePicker, Select} from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import ScheduleAddModal from '../schedule/ScheduleAddModal';
@@ -14,12 +14,12 @@ import styles from './Workplace.less';
 import TemAuthorizationModal from '../projectTemAuth/TemAuthorization';
 import ProjectAssignmentModal from '../projectassignment/AssignmentAddModal';
 
-
+const { Option } = Select;
 const { RangePicker } = DatePicker;
 const rankingListData = [];
 for (let i = 0; i < 7; i += 1) {
   rankingListData.push({
-    title: `工专路 ${i} 号店`,
+    title: `审计部 ${i} 杭州`,
     total: 323234,
   });
 }
@@ -623,7 +623,7 @@ export default class Workplace extends PureComponent {
                       >
                         <Coord type='theta' radius={0.75} innerRadius={0.6} />
                         <Axis name="percent" />
-                        <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-85} />
+                        <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-140} />
                         <Tooltip
                           showTitle={false}
                           itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
@@ -804,12 +804,18 @@ export default class Workplace extends PureComponent {
                     <Row>
                       <Col xl={16} lg={12} md={12} sm={24} xs={24}>
                         <div className={styles.salesBar}>
+                          <div>
+                            <Select defaultValue={0} style={{ width: 130 }}>
+                              <Option value={0}>杭州至诚</Option>
+                              <Option value={1}>义务至诚</Option>
+                            </Select>
+                          </div>
                           <Bar height={292} title="销售额趋势" data={salesData} />
                         </div>
                       </Col>
                       <Col xl={8} lg={12} md={12} sm={24} xs={24}>
                         <div className={styles.salesRank}>
-                          <h4 className={styles.rankingTitle}>门店销售额排名</h4>
+                          <h4 className={styles.rankingTitle}>部门销售额排名</h4>
                           <ul className={styles.rankingList}>
                             {rankingListData.map((item, i) => (
                               <li key={item.title}>
