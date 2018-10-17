@@ -254,9 +254,8 @@ export default class TypeList extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key="1">商机指标</Menu.Item>
-          <Menu.Item key="2">知识共享</Menu.Item>
-          <Menu.Item key="3">项目指标</Menu.Item>
+          <Menu.Item key="1">质量考核</Menu.Item>
+          <Menu.Item key="2">项目考核</Menu.Item>
         </SubMenu>
       </Menu>
     );
