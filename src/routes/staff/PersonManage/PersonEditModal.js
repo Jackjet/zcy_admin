@@ -178,23 +178,48 @@ class PersonEditModal extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Row>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.account}>
-                    {getFieldDecorator('account', {
-                      rules: [{ required: true, message: '请输入帐号' }],
-                    })(<Input placeholder="请输入帐号" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.employeeNumber}>
-                    {getFieldDecorator('employeeNumber', {
-                      rules: [{ required: true, message: '请输入工号' }],
-                    })(<Input placeholder="请输入工号" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
+              <div>
+                <div>
+                  <Row>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.account}>
+                        {getFieldDecorator('account', {
+                          rules: [{ required: true, message: '请输入帐号' }],
+                        })(<Input placeholder="请输入帐号" />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.employeeNumber}>
+                        {getFieldDecorator('employeeNumber', {
+                          rules: [{ required: true, message: '请输入工号' }],
+                        })(<Input placeholder="请输入工号" />)}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.name}>
+                        {getFieldDecorator('name', {
+                          rules: [{ required: true, message: '请选择姓名' }],
+                        })(<Input placeholder="请选择姓名" />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.sex}>
+                        {getFieldDecorator('sex', {
+                          rules: [{ required: true, message: '请选择性别' }],
+                        })(
+                          <Select placeholder="请选择性别" >
+                            <Option value="1">男</Option>
+                            <Option value="2">女</Option>
+                          </Select>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </div>
+                <div className={styles.pictureRight}>
+                  <Form.Item {...formItemLayout} >
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择姓名' }],
                     })(
@@ -214,29 +239,8 @@ class PersonEditModal extends PureComponent {
                       </div>
                     )}
                   </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
-                    {getFieldDecorator('name', {
-                      rules: [{ required: true, message: '请选择姓名' }],
-                    })(<Input placeholder="请选择姓名" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.sex}>
-                    {getFieldDecorator('sex', {
-                      rules: [{ required: true, message: '请选择性别' }],
-                    })(
-                      <Select placeholder="请选择性别" >
-                        <Option value="1">男</Option>
-                        <Option value="2">女</Option>
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
+                </div>
+              </div>
               <Row>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.nation}>
@@ -448,10 +452,20 @@ class PersonEditModal extends PureComponent {
                     })(<Input placeholder="请输入住宅电话" />)}
                   </Form.Item>
                 </Col>
-                <Col span={14} pull={2}>
+                <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.address}>
                     {getFieldDecorator('address')(
                       <Input placeholder="请输入地址" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="缺醒组织">
+                    {getFieldDecorator('address1')(
+                      <Select placeholder="缺醒组织" >
+                        <Option value="1">组织1</Option>
+                        <Option value="2">组织2</Option>
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>

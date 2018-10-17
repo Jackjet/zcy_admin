@@ -196,8 +196,8 @@ class ProjectCheckTabs extends PureComponent {
   handleCheckBoxChange = () => {
     this.setState({
       checkBoxOptionData: CheckBoxOption.map((data) => {
-        const value = `${data}`;
-        return <Col span={6}><Checkbox value="value">value</Checkbox></Col>;
+        const val = `${data}`;
+        return <Col span={6}><Checkbox value={val}>{val}</Checkbox></Col>;
       }),
     });
   };
@@ -889,8 +889,8 @@ class ProjectCheckTabs extends PureComponent {
               <TabPane
                 tab={
                   <span>
-                <Icon type="exception" />资料清单
-              </span>
+                    <Icon type="exception" />资料清单
+                  </span>
                 }
                 key="8"
               >

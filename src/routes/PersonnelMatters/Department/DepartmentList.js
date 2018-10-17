@@ -18,8 +18,8 @@ import {
 import StandardTable from '../../../components/StandardTable/index';
 import styles from './DepartmentList.less';
 import DepartmentAddModal from './DepartmentAddModal';
-import DepartmentViewModal from '../../department/select/DepartmentViewModal';
-import DepartmentEditModal from '../../department/edit/DepartmentEditModal';
+import DepartmentViewModal from '../../staff/DepartmentManage/select/DepartmentViewModal';
+import DepartmentEditModal from '../../staff/DepartmentManage/edit/DepartmentEditModal';
 
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;

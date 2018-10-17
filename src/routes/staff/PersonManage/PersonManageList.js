@@ -24,16 +24,18 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './PersonAddModal';
 import PersonViewModal from './PersonViewModal';
 import PersonEditModal from './PersonEditModal';
-import DistributionRoleModal from './DistributionRoleModal';
+import DistributionRoleModal from './Role/DistributionRoleModal';
+import DistributionAuthorityModal from './Authority/DistributionAuthorityModal';
+import BatchDisAuthorityModal from './Authority/BatchDisAuthorityModal';
+import BatchDisRoleModal from './Role/BatchDisRoleModal';
+import OrgRangeBill from './OrgRange/OrgRangeBill';
 import styles from './style.less';
 
 const { Content,  Sider } = Layout;
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['离职', '在职', '已上线', '异常'];
-const { Search } = Input;
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -55,6 +57,10 @@ export default class PersonManageList extends PureComponent {
     formValues: {},
     openKeys: ['sub1'],
     DistributionRoleVisible: false,
+    BatchDisRoleVisible: false,
+    DistributionAuthorityVisible: false,
+    BatchDisAuthorityVisible: false,
+    OrgRangeBillVisible: false,
   };
 
   componentDidMount() {
@@ -63,7 +69,6 @@ export default class PersonManageList extends PureComponent {
       type: 'rule/fetch',
     });
   }
-
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -74,19 +79,14 @@ export default class PersonManageList extends PureComponent {
       });
     }
   };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
-
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
     const params = {
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
@@ -141,6 +141,12 @@ export default class PersonManageList extends PureComponent {
           },
         });
         break;
+      case '1':
+        this.handleBatchDisRoleVisible(true);
+        break;
+      case '2':
+        this.handleBatchDisAuthorityVisible(true);
+        break;
       default:
         break;
     }
@@ -194,6 +200,46 @@ export default class PersonManageList extends PureComponent {
     });
   };
 
+  handleBatchDisRoleVisible = flag => {
+    this.setState({
+      BatchDisRoleVisible: !!flag,
+    });
+  };
+
+  handleDistributionAuthorityVisible = flag => {
+    if(this.state.selectedRows.length>1){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('不支持多行选择');
+      return false;
+    }
+    this.setState({
+      DistributionAuthorityVisible: !!flag,
+    });
+  };
+  handleBatchDisAuthorityVisible = flag =>{
+    this.setState({
+      BatchDisAuthorityVisible: !!flag,
+    })
+  };
+  handleOrgRangeBillVisible = flag =>{
+    if(this.state.selectedRows.length>1){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('不支持多行选择');
+      return false;
+    }
+    this.setState({
+      OrgRangeBillVisible: !!flag,
+    })
+  };
+
   showViewMessage =(flag, text, record)=> {
     this.setState({
       PersonViewVisible: !!flag,
@@ -209,12 +255,14 @@ export default class PersonManageList extends PureComponent {
   };
 
   handleDistributionRoleVisible =(flag)=> {
+    if(this.state.selectedRows.length>1){
+      message.warning('不支持多行选择');
+      return false;
+    }
     this.setState({
       DistributionRoleVisible: !!flag,
     });
   };
-
-
 
   showDeleteMessage =(flag, record)=> {
     this.props.dispatch({
@@ -297,7 +345,18 @@ export default class PersonManageList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, PersonAddVisible, PersonViewVisible, PersonEditVisible, rowInfo ,DistributionRoleVisible } = this.state;
+    const {
+      selectedRows,
+      PersonAddVisible,
+      PersonViewVisible,
+      PersonEditVisible,
+      rowInfo,
+      DistributionRoleVisible,
+      BatchDisRoleVisible,
+      DistributionAuthorityVisible,
+      BatchDisAuthorityVisible,
+      OrgRangeBillVisible,
+    } = this.state;
     const columns = [
       {
         title: '工号',
@@ -366,9 +425,11 @@ export default class PersonManageList extends PureComponent {
     const batchMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-        <Menu.Item key="1">批量分配角色</Menu.Item>
+        <Menu.Item key="cancelcancel">启用</Menu.Item>
+        <Menu.Item key="cancel">禁用</Menu.Item>
+        {/*<Menu.Item key="1">批量分配角色</Menu.Item>
         <Menu.Item key="2">批量分配权限</Menu.Item>
+        <Menu.Item key="3">批量组织维护</Menu.Item>*/}
       </Menu>
     );
 
@@ -377,6 +438,10 @@ export default class PersonManageList extends PureComponent {
       handlePersonViewVisible: this.handlePersonViewVisible,
       handlePersonEditVisible: this.handlePersonEditVisible,
       handleDistributionRoleVisible :this.handleDistributionRoleVisible,
+      handleBatchDisRoleVisible: this.handleBatchDisRoleVisible,
+      handleDistributionAuthorityVisible: this.handleDistributionAuthorityVisible,
+      handleBatchDisAuthorityVisible: this.handleBatchDisAuthorityVisible,
+      handleOrgRangeBillVisible: this.handleOrgRangeBillVisible,
     };
 
     return (
@@ -401,6 +466,7 @@ export default class PersonManageList extends PureComponent {
                     <span>
                       <Button
                         type="primary"
+                        onClick={() => this.handleDistributionAuthorityVisible(true)}
                       >
                         分配权限
                       </Button>
@@ -412,11 +478,9 @@ export default class PersonManageList extends PureComponent {
                       </Button>
                       <Button
                         type="primary"
+                        onClick={() => this.handleOrgRangeBillVisible(true)}
                       >
                         组织范围维护
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
-                        设置联系人
                       </Button>
                       <Dropdown overlay={batchMenu}>
                         <Button>
@@ -441,6 +505,10 @@ export default class PersonManageList extends PureComponent {
           <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} />
           <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} />
           <DistributionRoleModal {...parentMethods} DistributionRoleVisible={DistributionRoleVisible} />
+          <BatchDisRoleModal {...parentMethods} BatchDisRoleVisible={BatchDisRoleVisible} />
+          <DistributionAuthorityModal {...parentMethods} DistributionAuthorityVisible={DistributionAuthorityVisible} />
+          <BatchDisAuthorityModal {...parentMethods} BatchDisAuthorityVisible={BatchDisAuthorityVisible} />
+          <OrgRangeBill {...parentMethods} OrgRangeBillVisible={OrgRangeBillVisible} />
         </Card>
       </PageHeaderLayout>
     );

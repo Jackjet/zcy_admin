@@ -24,10 +24,10 @@ import styles from '../list/Style.less';
 import ProjectAddModal from './ProjectAddModal.js';
 import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal.js';
 import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal.js';
-import ProjectApplyAddModal from './ProjectApplyAddModal.js';
+import ProjectApplyAddModal from './ProjectApprovalLinkModal.js';
 import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
-import ProjectEditModal from '../edit/ProjectEditModal.js';
+import ProjectEditModal from './ProjectEditModal.js';
 import AppraisalList from './Appraisal/AppraisalList';
 import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
 

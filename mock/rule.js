@@ -48,6 +48,7 @@ for (let i = 0; i < 46; i += 1) {
     projectType:[`工程造价业务项目`,`可研报告`,`招标代理业务项目`][Math.floor(Math.random() * 10) % 3],
     projectStatus: Math.floor(Math.random() * 10) % 10,
     organizeCode:`${i}`,
+    BillSource:[`招标`,`合伙人`,`其他`][Math.floor(Math.random() * 10) % 3],
 
     visitCus:`拜访对象${i}`,
     visitMethod:`拜访方式${i}`,

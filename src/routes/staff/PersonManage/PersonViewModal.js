@@ -304,7 +304,6 @@ class PersonAddModal extends PureComponent {
                           </Col>
                         </Row>
                       </div>
-
                       <div className={styles.pictureRight}>
                         <Form.Item {...formItemLayout} >
                           {getFieldDecorator('name', {
@@ -328,8 +327,6 @@ class PersonAddModal extends PureComponent {
                         </Form.Item>
                       </div>
                     </div>
-
-
                     <Row>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.nation}>
@@ -541,10 +538,20 @@ class PersonAddModal extends PureComponent {
                           })(<Input placeholder="请输入住宅电话" />)}
                         </Form.Item>
                       </Col>
-                      <Col span={14} pull={2}>
+                      <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.address}>
                           {getFieldDecorator('address')(
                             <Input placeholder="请输入地址" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label="缺醒组织">
+                          {getFieldDecorator('address1')(
+                            <Select placeholder="缺醒组织" >
+                              <Option value="1">组织1</Option>
+                              <Option value="2">组织2</Option>
+                            </Select>
                           )}
                         </Form.Item>
                       </Col>

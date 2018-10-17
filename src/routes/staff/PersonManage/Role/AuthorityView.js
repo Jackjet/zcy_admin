@@ -6,12 +6,25 @@ import {
   Icon,
   Modal,
   Popover,
-  Tabs,
+  Input,
+  Row,
+  Col,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './UserListAdd.less';
+import styles from '../UserListAdd.less';
 
-const  { TabPane } = Tabs;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+const { TextArea } = Input;
 const fieldLabels = {
   account: '帐号',
   employeeNumber: '工号',
@@ -41,7 +54,7 @@ const fieldLabels = {
   address: '地址',
   remarks: '备注',
 };
-class PersonAddModal extends PureComponent {
+class AuthorityView extends PureComponent {
   state = {
     width: '90%',
   };
@@ -61,7 +74,7 @@ class PersonAddModal extends PureComponent {
   };
   render() {
     const { form, dispatch, submitting , AuthorityViewVisible, handleAuthorityViewVisible} = this.props;
-    const { validateFieldsAndScroll, getFieldsError } = form;
+    const { validateFieldsAndScroll, getFieldsError, getFieldDecorator } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -133,9 +146,17 @@ class PersonAddModal extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Tabs defaultActiveKey="2" type="card">
-                <TabPane tab="已分配" key="2">已分配的权限展示</TabPane>
-              </Tabs>
+              <Row>
+                <Col>
+                  <Form.Item {...formItemLayout} label="已分配的权限">
+                    {getFieldDecorator('workingCondition', {
+                      rules: [{ required: true, message: '已分配的权限' }],
+                    })(
+                      <TextArea placeholder="已分配的权限"  />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
             </Form>
           </Card>
         </div>
@@ -147,4 +168,4 @@ class PersonAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(PersonAddModal));
+}))(Form.create()(AuthorityView));

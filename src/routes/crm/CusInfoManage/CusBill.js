@@ -303,6 +303,11 @@ export default class CustomerList extends PureComponent {
 
   handleSalesVisible = flag => {
     if(this.state.selectedRows.length>1){
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
       message.warning('不支持多行选择');
       return false;
     }

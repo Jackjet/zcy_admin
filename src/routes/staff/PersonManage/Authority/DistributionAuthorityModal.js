@@ -14,16 +14,15 @@ import {
   Button,
 } from 'antd';
 import { connect } from 'dva';
-import AuthorityView from './AuthorityView';
-import styles from './style.less';
+import AuthorityView from '../Role/AuthorityView';
+import styles from '../style.less';
 
 const mockData = [];
 for (let i = 0; i < 20; i+=1) {
   mockData.push({
     key: i.toString(),
-    title: `content${i + 1}`,
-    description: `description of content${i + 1}`,
-    disabled: i % 3 < 1,
+    title: `权限${i + 1}`,
+    description: `权限描述${i + 1}`,
   });
 }
 
@@ -51,7 +50,7 @@ const formItemLayout = {
   },
 };
 
-class DistributionRoleModal extends PureComponent {
+class DistributionAuthorityModal extends PureComponent {
   state = {
     width: '100%',
     targetKeys: oriTargetKeys,
@@ -86,7 +85,7 @@ class DistributionRoleModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , DistributionRoleVisible, handleDistributionRoleVisible} = this.props;
+    const { form, dispatch, submitting , DistributionAuthorityVisible, handleDistributionAuthorityVisible} = this.props;
     const { targetKeys, selectedKeys, AuthorityViewVisible } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
@@ -97,15 +96,15 @@ class DistributionRoleModal extends PureComponent {
             type: 'rule/add',
             payload: values,
           });
-          handleDistributionRoleVisible(false);
+          handleDistributionAuthorityVisible(false);
           form.resetFields();
-          message.success('成功申请用户');
+          message.success('成功');
         }
       });
     };
     const onCancel = () => {
       form.resetFields();
-      handleDistributionRoleVisible(false);
+      handleDistributionAuthorityVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -151,9 +150,9 @@ class DistributionRoleModal extends PureComponent {
     };
     return (
       <Modal
-        title="分配角色"
+        title="分配权限"
         style={{ top: 20 }}
-        visible={DistributionRoleVisible}
+        visible={DistributionAuthorityVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
@@ -164,7 +163,7 @@ class DistributionRoleModal extends PureComponent {
           <Card>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
-                <Col span={16}>
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label="用户">
                     {getFieldDecorator('cusApplyCode', {
                       rules: [{ required: false, message: '请输入用户' }],
@@ -173,21 +172,22 @@ class DistributionRoleModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-                <Col span={8}>
-                  <Button
-                    type="primary"
-                    onClick={() => this.handleAuthorityViewVisible(true)}
-                  >
-                    查看权限
-                  </Button>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label="组织">
+                    {getFieldDecorator('cusApplyCode', {
+                      rules: [{ required: false, message: '组织' }],
+                    })(
+                      <Search readOnly placeholder="组织" style={{ width: 200 }} />
+                    )}
+                  </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
+                <Col span={23} offset={4}>
                   <Transfer
                     listStyle={{
-                      width: 150,
-                      height: 150,
+                      width: 300,
+                      height: 300,
                     }}
                     dataSource={mockData}
                     titles={['可分配角色', '已分配角色']}
@@ -211,4 +211,4 @@ class DistributionRoleModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DistributionRoleModal));
+}))(Form.create()(DistributionAuthorityModal));

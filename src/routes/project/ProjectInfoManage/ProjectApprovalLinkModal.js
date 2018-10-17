@@ -64,6 +64,7 @@ const props2 = {
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
+const { Search } = Input;
 const { TextArea } = Input;
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -393,8 +394,10 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.name}>
                       {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入项目名称' }],
-                        initialValue:`${rowInfo.projectName}`,
-                      })(<Input readOnly placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
+                        initialValue:`${rowInfo.customerName}` === 'undefined'?'':`${rowInfo.customerName}`,
+                      })(
+                        <Input readOnly placeholder="请输入项目名称" style={{width:'140%'}} />
+                      )}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -413,9 +416,9 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.years}>
                       {getFieldDecorator('years', {
                         rules: [{ required: true, message: '请选择年度' }],
-                        initialValue:`${rowInfo.projectYears}`,
+                        initialValue:`${moment().format('YYYY')}`,
                       })(
-                        <Input readOnly placeholder="请选择年度" style={{ width: 200 }} />
+                        <Input readOnly placeholder="请选择年度" style={{ width: '100%' }} />
                       )}
                     </Form.Item>
                   </Col>
@@ -423,22 +426,22 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.status}>
                       {getFieldDecorator('status', {
                         rules: [{ required: true, message: '请选择项目状态' }],
+                        initialValue:`新建`,
                       })(
-                        <Select readOnly placeholder="请选择项目状态" style={{ width: 200 }}>
-                          <Option value="c">启用</Option>
-                          <Option value="h">禁用</Option>
-                        </Select>
+                        <Input readOnly placeholder="请选择项目状态" style={{ width: '100%' }} />
                       )}
                     </Form.Item>
                   </Col>
                 </Row>
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.ProjectCode}>
-                      {getFieldDecorator('ProjectCode', {
+                    <Form.Item {...formItemLayout} label="项目编号">
+                      {getFieldDecorator('number', {
                         rules: [{ required: false, message: '请输入项目编码' }],
-                        initialValue:`${rowInfo.projectCode}`,
-                      })(<Input readOnly placeholder="请输入项目编码" style={{ width: 200 }} />)}
+                        initialValue:`${rowInfo.projectCode}` === 'undefined'?'':`${rowInfo.projectCode}`,
+                      })(
+                        <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
+                      )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -446,16 +449,12 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('customer', {
                         rules: [{ required: true, message: '请选择客户' }],
                       })(
-                        <Select readOnly placeholder="请选择客户" style={{ width: 200 }}>
-                          <Option value="xiao">请选择</Option>
-                          <Option value="z">客户A</Option>
-                          <Option value="f">客户B</Option>
-                          <Option value="fd">客户C</Option>
-                          <Option value="sn">客户D</Option>
-                          <Option value="zf">客户E</Option>
-                          <Option value="sy">客户F</Option>
-                          <Option value="jr">客户H</Option>
-                        </Select>
+                        <Input
+                          readOnly
+                          placeholder="请选择客户"
+                          onSearch={this.handleChoiceCusVisible}
+                          style={{ width: 200 }}
+                        />
                       )}
                     </Form.Item>
                   </Col>
@@ -464,16 +463,11 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('cuslink', {
                         rules: [{ required: true, message: '请选择客户联系人' }],
                       })(
-                        <Select readOnly placeholder="请选择客户联系人" style={{ width: 200 }}>
-                          <Option value="xiao">请选择</Option>
-                          <Option value="z">客户联系人A</Option>
-                          <Option value="f">客户联系人B</Option>
-                          <Option value="fd">客户联系人C</Option>
-                          <Option value="sn">客户联系人D</Option>
-                          <Option value="zf">客户联系人E</Option>
-                          <Option value="sy">客户联系人F</Option>
-                          <Option value="jr">客户联系人H</Option>
-                        </Select>
+                        <div>
+                          <Input readOnly placeholder="请选择客户联系人" style={{ width: '63%' }} />
+                          <Divider type="vertical" />
+                          <a>新增联系人</a>
+                        </div>
                       )}
                     </Form.Item>
                   </Col>
@@ -483,42 +477,113 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.fzcompany}>
                       {getFieldDecorator('fzcompany', {
                         rules: [{ required: true, message: '负责公司' }],
-                        initialValue:`${rowInfo.company}`,
                       })(
-                        <Input readOnly placeholder="负责公司" style={{ width: 200 }} />
+                        <Input readOnly placeholder="负责公司" style={{ width: '100%' }} />
                       )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
+                    <Form.Item {...formItemLayout} label="项目负责人">
                       {getFieldDecorator('fzperson', {
                         rules: [{ required: true, message: '项目负责人' }],
-                        initialValue:`${rowInfo.linkman}`,
                       })(
-                        <Input readOnly placeholder="负责公司" style={{ width: 200 }} />
+                        <Input readOnly placeholder="负责公司" style={{ width: '100%' }} />
                       )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.fee}>
-                      {getFieldDecorator('fee', {
-                        rules: [{ required: true, message: '请输入项目费用' }],
-                      })(<Input readOnly placeholder="请输入项目费用" style={{ width: 200 }} />)}
+                    <Form.Item {...formItemLayout} label="项目部门">
+                      {getFieldDecorator('fzperson', {
+                        rules: [{ required: true, message: '项目部门' }],
+                      })(
+                        <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
+                      )}
                     </Form.Item>
                   </Col>
                 </Row>
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.startdate}>
-                      {getFieldDecorator('startdate')(
-                        <DatePicker readOnly style={{ width: 200 }} placeholder="请输入开始日期" />
+                    <Form.Item {...formItemLayout} label={fieldLabels.fee}>
+                      {getFieldDecorator('fee', {
+                        rules: [{ required: true, message: '请输入项目费用' }],
+                      })(
+                        <Input readOnly placeholder="请输入项目费用" style={{ width: '100%' }} />
                       )}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label={fieldLabels.enddate}>
-                      {getFieldDecorator('enddate')(
-                        <DatePicker readOnly style={{ width: 200 }} placeholder="请输入结束日期" />
+                    <Form.Item {...formItemLayout} label="业务来源">
+                      {getFieldDecorator('billSource', {
+                        rules: [{ required: true, message: '业务来源' }],
+                        initialValue:`${rowInfo.BillSource}`,
+                      })(
+                        <Input readOnly placeholder="业务来源" style={{ width: '100%' }} />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  {
+                    (`${rowInfo.BillSource}`=== `合伙人`)&& (
+                      <Col span={8}>
+                        <Form.Item {...formItemLayout} label='合伙人'>
+                          {getFieldDecorator('partner')(
+                            <Input readOnly style={{ width: '100%' }} placeholder="合伙人" />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    )
+                  }
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label='施工单位'>
+                      {getFieldDecorator('shigongdanwei',{
+                      })(
+                        <Input
+                          readOnly
+                          placeholder="施工单位"
+                          onSearch={this.handleConstructUnitVisible}
+                          style={{ width: 200 }}
+                        />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label='合同编号'>
+                      {getFieldDecorator('contractCode')(
+                        <div>
+                          <Input readOnly style={{ width: '68%' }} placeholder="合同编号" />
+                          <Divider type="vertical" />
+                          <a>新增合同</a>
+                        </div>
+                      )}
+                    </Form.Item>
+                  </Col>
+
+                </Row>
+                <Row className={styles['fn-mb-15']}>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label='开始时间'>
+                      {getFieldDecorator('startDate')(
+                        <Input readOnly style={{ width: '100%' }} placeholder="请输入开始时间" />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label={fieldLabels.endDate}>
+                      {getFieldDecorator('endDate')(
+                        <Input readOnly style={{ width: '100%' }} placeholder="请输入结束日期" />
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8} />
+                  <Col span={8}>
+                    <Form.Item {...formItemLayout} label="指派编号">
+                      {getFieldDecorator('zhipaiCode')(
+                        <Input
+                          readOnly
+                          placeholder="指派编号+弹出项目指派列表"
+                          style={{ width: 200 }}
+                        />
                       )}
                     </Form.Item>
                   </Col>
@@ -527,33 +592,43 @@ class ProjectApplyAddModal extends PureComponent {
                 <Row className={styles['fn-mb-15']}>
                   <Col span={23} pull={5}>
                     <Form.Item {...formItemLayout} label={fieldLabels.biztype}>
-                      {getFieldDecorator('biztype')(
-                        <Checkbox.Group readOnly style={{ width: '100%' }}>
+                      {getFieldDecorator('biztype',{
+                      })(
+                        <Checkbox.Group style={{ width: '100%' }}>
                           <Row>
-                            <Col span={8}>
-                              <Checkbox value="A">预算编制</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="B">结算编制</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="C">建设工程招标代理</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="D">咨询审核</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="E">预算审核</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="F">结算审核</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="G">政府采购招标代理</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="H">咨询报告</Checkbox>
-                            </Col>
+                            { ( `${rowInfo.projectType}` === `工程造价业务项目`|| `${rowInfo.projectType}` ===`可研报告` ) && (
+                              <span>
+                                <Col span={8}>
+                                  <Checkbox value="A">预算编制</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="B">结算编制</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="D">咨询审核</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="E">预算审核</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="F">结算审核</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="H">咨询报告</Checkbox>
+                                </Col>
+                              </span>
+                            )}
+
+                            { ( `${rowInfo.projectType}` === `招标代理业务项目`|| `${rowInfo.projectType}`===`可研报告` ) && (
+                              <span>
+                                <Col span={8}>
+                                  <Checkbox value="G">政府采购招标代理</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                  <Checkbox value="C">建设工程招标代理</Checkbox>
+                                </Col>
+                              </span>
+                            )}
                           </Row>
                         </Checkbox.Group>
                       )}

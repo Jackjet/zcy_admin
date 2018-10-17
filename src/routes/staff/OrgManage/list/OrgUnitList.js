@@ -18,7 +18,7 @@ import {
   Popconfirm,
   Layout,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
+import StandardTable from '../../../../components/StandardTable/index';
 import styles from './OrgUnitList.less';
 import OrgUnitAddModal from '../add/OrgUnitAddModal';
 import OrgUnitViewModal from '../select/OrgUnitViewModal';

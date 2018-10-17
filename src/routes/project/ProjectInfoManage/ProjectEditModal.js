@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import moment from "moment/moment";
 import {
   Card,
   Button,
@@ -13,53 +14,18 @@ import {
   Popover,
   Checkbox,
   Modal,
-  Divider,
   Upload,
   Collapse,
-  Table,
-  Popconfirm,
+  Divider,
 } from 'antd';
 import { connect } from 'dva';
-import moment from "moment/moment";
-import ChoiceCusModal from "../add/ChoiceCusModal";
-import ConstructUnitModal from "../add/ConstructUnitModal";
-import EditableCell from '../../../components/EditableTable/index';
-import styles from '../add/style.less';
+import styles from '../edit/style.less';
 
-const { Search } = Input;
-const { TextArea } = Input;
-const { Option } = Select;
-const { Panel } = Collapse;
+const {Panel} = Collapse;
 const BillSourceOption = ['招标', '合伙人', '其他'];
-const CheckBoxOption = ['底稿','报告','工程','项目','合同'];
-const fieldLabels = {
-  number: '项目编码',
-  type: '项目类别',
-  years: '年度',
-  name: '项目名称',
-  dateRange: '生效日期',
-  cuslink: '客户联系人',
-  customer: '客户',
-  url: '网站主页',
-  taxcode: '税务登记号',
-  fzcompany: '负责公司',
-  fzperson: '项目负责人',
-  fee: '项目费用',
-  startDate: '开始日期',
-  endDate: '结束日期',
-  biztype: '业务类别',
-  content: '项目内容',
-  address: '详细地址',
-  remark: '备注',
-  status: '状态',
-  jfw: '交付物',
-  demand: '客户需求',
-  attachment:'附件',
-};
-
-
-
-
+const { Search } = Input;
+const { Option } = Select;
+const { TextArea } = Input;
 const fileList = [
   {
     uid: -1,
@@ -76,15 +42,36 @@ const fileList = [
     thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
 ];
-
 const props2 = {
   action: '//jsonplaceholder.typicode.com/posts/',
   listType: 'picture',
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
-
-
+const fieldLabels = {
+  number: '项目编码',
+  type: '项目类别',
+  years: '年度',
+  name: '项目名称',
+  dateRange: '生效日期',
+  cuslink: '客户联系人',
+  customer: '客户',
+  url: '网站主页',
+  taxcode: '税务登记号',
+  fzcompany: '负责公司',
+  fzperson: '项目负责人',
+  fee: '项目费用',
+  startdate: '开始日期',
+  enddate: '结束日期',
+  biztype: '业务类别',
+  content: '项目内容',
+  address: '详细地址',
+  remark: '备注',
+  status: '状态',
+  jfw: '交付物',
+  demand: '客户需求',
+  attachment:'附件',
+};
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -96,98 +83,20 @@ const formItemLayout = {
   },
 };
 
-
-
-
-class ProjectAddModal extends PureComponent {
+class ProjectEditModal extends PureComponent {
   state = {
     width: '100%',
-    projectOptionData:[],
     BillSourceOptionData:``,
-    BillSourceValue:``,
-    CusOptionData:``,
-    dataSource: [
-      {
-        key: '0',
-        project: '汪工',
-        departure: '杭州',
-        startData: '2018-7-27',
-        togetherPerson: '3',
-        endData: '2018-7-29',
-        daySum: '1',
-        Vehicle: '动车',
-        ticketSum: '3',
-        remarks: '无',
-
-      },
-      {
-        key: '0',
-        project: '申工',
-        departure: '义务',
-        startData: '2018-7-27',
-        togetherPerson: '3',
-        endData: '2018-7-29',
-        daySum: '1',
-        Vehicle: '高铁',
-        ticketSum: '3',
-        remarks: '无',
-      },
-    ],
-    count: 2,
-    choiceCusVisible: false,
-    getCusValue: "客户A",
-    constructUnitVisible: false,
-    getConstructUnitValue: "施工单位A",
+    BillSourceValue: ``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleBillSourceChange();
-    this.handleCheckBoxChange();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-
-  onCellChange = (key, dataIndex) => {
-    return value => {
-      const dataSource = [...this.state.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.setState({ dataSource });
-      }
-    };
-  };
-
-  onDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-  };
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
-  handleGetBillSourceValue = (val) => {
-    this.setState({
-      BillSourceValue: val,
-    });
-  };
-
-  /**
-   * 功能描述: 业务来源select动态加载方法
-   *
-   * @param:
-   * @return:
-   * @auther: fanghui_yang
-   * @date: 2018/10/16 15:32
-   */
   handleBillSourceChange = () => {
     const optionData = BillSourceOption.map((data, index) => {
       const val = `${data}`;
@@ -198,63 +107,12 @@ class ProjectAddModal extends PureComponent {
     });
   };
 
-
-  handleChoiceCusVisible = flag => {
+  handleGetBillSourceValue = (val) => {
     this.setState({
-      choiceCusVisible: !!flag,
+      BillSourceValue: val,
     });
   };
 
-  handleGetCusValue = (cus) => {
-    this.setState({
-      getCusValue: cus,
-    });
-  };
-
-  handleConstructUnitVisible = flag => {
-    this.setState({
-      constructUnitVisible: !!flag,
-    });
-  };
-
-  handleGetConstructUnitValue = (unit) => {
-    this.setState({
-      getConstructUnitValue: unit,
-    });
-  };
-
-  handleCheckBoxChange = () => {
-    this.setState({
-      CusOptionData: CheckBoxOption.map((data) => {
-        const val = `${data}`;
-        return <Option key={val}>{val}</Option>;
-      }),
-    });
-  };
-
-  handleGetCusSelectValue = (val) =>{
-    console.log(val)
-  };
-
-  handleAdd = () => {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      remarks: `London, Park Lane no. ${count}`,
-      project: `小杨 ${count}`,
-      departure: '新昌',
-      startData: '2018-7-26',
-      togetherPerson: '3',
-      endData: '2018-7-29',
-      daySum: '1',
-      Vehicle: '大巴',
-      ticketSum: '3',
-    };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1,
-    });
-  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -264,35 +122,20 @@ class ProjectAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectVisible, handleProjectVisible, choiceTypeValue, rowInfo } = this.props;
+    const { form, dispatch, submitting, projectEditVisible, handleProjectEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const {
-      BillSourceOptionData,
-      dataSource,
-      choiceCusVisible,
-      getCusValue,
-      constructUnitVisible,
-      getConstructUnitValue,
-      BillSourceValue,
-      CusOptionData,
-    } = this.state;
+    const { BillSourceOptionData, BillSourceValue } =this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
-
           dispatch({
             type: 'form/submitAdvancedForm',
             payload: values,
           });
-          form.resetFields();
-          handleProjectVisible(false);
+          handleProjectEditVisible(false);
         }
       });
-    };
-    const onCan = () => {
-      form.resetFields();
-      handleProjectVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -333,98 +176,15 @@ class ProjectAddModal extends PureComponent {
         </span>
       );
     };
-    const columns = [
-      {
-        title: '项目',
-        dataIndex: 'project',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
-        ),
-      },
-      {
-        title: '出发地',
-        dataIndex: 'departure',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'type')} />
-        ),
-      },
-      {
-        title: '出发时间',
-        dataIndex: 'startData',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'mobilePhone')} />
-        ),
-      },
-      {
-        title: '同行人数',
-        dataIndex: 'togetherPerson',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '结束时间',
-        dataIndex: 'endData',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '天数',
-        dataIndex: 'daySum',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '交通工具',
-        dataIndex: 'Vehicle',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '票数',
-        dataIndex: 'ticketSum',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '备注',
-        dataIndex: 'remarks',
-        render: (text, record) => (
-          <EditableCell value={text} onChange={this.onCellChange(record.key, 'officePhone')} />
-        ),
-      },
-      {
-        title: '操作',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          return this.state.dataSource.length > 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-              <a href=" ">删除</a>
-            </Popconfirm>
-          ) : null;
-        },
-      },
-    ];
-    const parentMethods={
-      handleChoiceCusVisible: this.handleChoiceCusVisible,
-      handleGetCusValue: this.handleGetCusValue,
-      handleConstructUnitVisible: this.handleConstructUnitVisible,
-      handleGetConstructUnitValue: this.handleGetConstructUnitValue,
-    };
     return (
       <Modal
-        title="项目基本信息新增"
-        style={{ top: 20 }}
-        visible={projectVisible}
-        width='85%'
+        title="项目基本信息编辑"
+        style={{top:20}}
+        visible={projectEditVisible}
+        width='90%'
         maskClosable={false}
         onOk={validate}
-        onCancel={onCan}
-        okText='提交'
+        onCancel={() => handleProjectEditVisible(false)}
       >
         <div>
           <Card>
@@ -444,7 +204,7 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.type}>
                     {getFieldDecorator('type', {
                       rules: [{ required: true, message: '请选择项目类别' }],
-                      initialValue:`${choiceTypeValue}`,
+                      initialValue:`${rowInfo.BillSource}`,
                     })(
                       <Input readOnly placeholder="请选择项目类别" style={{ width: 200 }} />
                     )}
@@ -454,7 +214,6 @@ class ProjectAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请选择年度' }],
-                      initialValue:`${moment().format('YYYY')}`,
                     })(
                       <Select placeholder="请选择年度" style={{ width: '100%' }}>
                         <Option value="xiao">请选择</Option>
@@ -496,14 +255,11 @@ class ProjectAddModal extends PureComponent {
                     {getFieldDecorator('customer', {
                       rules: [{ required: true, message: '请选择客户' }],
                     })(
-                      <Select
-                        mode="tags"
-                        style={{ width: '100%' }}
-                        placeholder="客户"
-                        onSelect={this.handleGetCusSelectValue}
-                      >
-                        {CusOptionData}
-                      </Select>
+                      <Search
+                        placeholder="请选择客户"
+                        onSearch={this.handleChoiceCusVisible}
+                        style={{ width: 200 }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -603,7 +359,7 @@ class ProjectAddModal extends PureComponent {
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label='施工单位'>
                     {getFieldDecorator('shigongdanwei',{
-                      initialValue:`${getConstructUnitValue}`,
+                      initialValue:`${rowInfo.BillSource}`,
                     })(
                       <Search
                         placeholder="施工单位"
@@ -635,7 +391,7 @@ class ProjectAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.endDate}>
+                  <Form.Item {...formItemLayout} label="结束时间">
                     {getFieldDecorator('endDate')(
                       <DatePicker style={{ width: '100%' }} placeholder="请输入结束日期" />
                     )}
@@ -661,7 +417,7 @@ class ProjectAddModal extends PureComponent {
                     })(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
-                          { ( `${choiceTypeValue}` === `工程造价业务项目`|| `${choiceTypeValue}` ===`可研报告` ) && (
+                          { ( `${rowInfo.projectType}` === `工程造价业务项目`|| `${rowInfo.projectType}` ===`可研报告` ) && (
                             <span>
                               <Col span={8}>
                                 <Checkbox value="A">预算编制</Checkbox>
@@ -684,7 +440,7 @@ class ProjectAddModal extends PureComponent {
                             </span>
                           )}
 
-                          { ( `${choiceTypeValue}` === `招标代理业务项目`|| `${choiceTypeValue}`===`可研报告` ) && (
+                          { ( `${rowInfo.projectType}` === `招标代理业务项目`|| `${rowInfo.projectType}`===`可研报告` ) && (
                             <span>
                               <Col span={8}>
                                 <Checkbox value="G">政府采购招标代理</Checkbox>
@@ -719,7 +475,7 @@ class ProjectAddModal extends PureComponent {
                 </Col>
               </Row>
               <Collapse defaultActiveKey={['1','2','3']} >
-                { ( `${choiceTypeValue}` === `工程造价业务项目` )&& (
+                { ( `${rowInfo.projectType}` === `工程造价业务项目` )&& (
                   <Panel header="工程造价业务项目" key="1">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
@@ -778,7 +534,7 @@ class ProjectAddModal extends PureComponent {
                     </Row>
                   </Panel>
                 )}
-                { ( `${choiceTypeValue}` === `可研报告` ) && (
+                { ( `${rowInfo.projectType}` === `可研报告` ) && (
                   <Panel header="可研报告" key="2">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
@@ -837,19 +593,19 @@ class ProjectAddModal extends PureComponent {
                     </Row>
                   </Panel>
                 )}
-                { ( `${choiceTypeValue}` === `招标代理业务项目`) && (
+                { ( `${rowInfo.projectType}` === `招标代理业务项目`) && (
                   <Panel header="招标代理业务项目" key="3">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
                         <Form.Item {...formItemLayout} label='招标公告发布'>
-                          {getFieldDecorator('shigongdanwei')(
+                          {getFieldDecorator('gonggaofabuDate')(
                             <DatePicker  style={{ width: '100%' }} placeholder="招标公告发布" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={12}>
                         <Form.Item {...formItemLayout} label='招标文件发布'>
-                          {getFieldDecorator('contractCode')(
+                          {getFieldDecorator('wenjianfabuDate')(
                             <DatePicker  style={{ width: '100%' }} placeholder="招标文件发布" />
                           )}
                         </Form.Item>
@@ -858,14 +614,14 @@ class ProjectAddModal extends PureComponent {
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
                         <Form.Item {...formItemLayout} label='开标日期'>
-                          {getFieldDecorator('shigongdanwei')(
+                          {getFieldDecorator('kaibiaoDate')(
                             <DatePicker  style={{ width: '100%' }} placeholder="开标日期" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={12}>
                         <Form.Item {...formItemLayout} label='结束日期'>
-                          {getFieldDecorator('contractCode')(
+                          {getFieldDecorator('endDate')(
                             <DatePicker  style={{ width: '100%' }} placeholder="结束日期" />
                           )}
                         </Form.Item>
@@ -910,8 +666,6 @@ class ProjectAddModal extends PureComponent {
               </Collapse>
             </Form>
           </Card>
-          <ChoiceCusModal {...parentMethods} choiceCusVisible={choiceCusVisible} />
-          <ConstructUnitModal {...parentMethods} constructUnitVisible={constructUnitVisible} />
         </div>
       </Modal>
 
@@ -922,4 +676,4 @@ class ProjectAddModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ProjectAddModal));
+}))(Form.create()(ProjectEditModal));

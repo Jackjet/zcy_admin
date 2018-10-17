@@ -311,6 +311,17 @@ class ContractAddModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} >
+                    {getFieldDecorator('authorizedAgent', {
+                      rules: [{ required: false, message: '非标合同' }],
+                    })(
+                      <Checkbox value={1} >
+                        非标合同
+                      </Checkbox>
+                    )}
+                  </Form.Item>
+                </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={5}>
@@ -413,6 +424,15 @@ class ContractAddModal extends PureComponent {
                           *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
                         </span>
                       </Upload>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={23} pull={5}>
+                  <Form.Item {...formItemLayout} label="补充协议">
+                    {getFieldDecorator('buchongxieyi')(
+                      <TextArea placeholder="请输入补充协议" rows={4} style={{width:'170%'}} />
                     )}
                   </Form.Item>
                 </Col>
