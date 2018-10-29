@@ -1,6 +1,9 @@
+
+import proxy from './proxy.config.prod.js';
 const path = require('path');
 
 export default {
+  proxy: proxy,
   entry: 'src/index.js',
   extraBabelPlugins: [
     ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }],
@@ -18,7 +21,10 @@ export default {
   html: {
     template: './src/index.ejs',
   },
+
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
+
 };
+

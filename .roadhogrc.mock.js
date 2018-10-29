@@ -1,3 +1,4 @@
+/*
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
 import { getActivities, getNotice, getFakeList } from './mock/api';
@@ -143,3 +144,4 @@ const proxy = {
 export default  (noProxy ? {} : delay(proxy, 1000));
 
 
+*/
