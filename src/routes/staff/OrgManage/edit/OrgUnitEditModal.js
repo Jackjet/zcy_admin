@@ -15,6 +15,8 @@ import { connect } from 'dva';
 
 import styles from './Style.less';
 
+
+const isBranchOption = ['否', '是'];
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -32,13 +34,27 @@ const formItemLayout = {
 class OrgUnitEditModal extends PureComponent {
   state = {
     width: '100%',
+    isBranchOptionData: '',
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.handleProjectChange();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleProjectChange = () => {
+    const optionData = isBranchOption.map((data, index) => {
+      const val = `${data}`;
+      const key = `${index}`;
+      return <Option value={key}>{val}</Option>;
+    });
+    this.setState({
+      isBranchOptionData: optionData,
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -49,21 +65,28 @@ class OrgUnitEditModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, OrgUnitEditVisible, handleOrgUnitEditVisible, rowInfo } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { isBranchOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
+        const companyId = `${rowInfo.id}`;
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
+            type: 'company/update',
+            payload: {
+              id: companyId,
+              ...values,
+            },
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                handleOrgUnitEditVisible(false);
+              }
+            },
           });
-          form.resetFields();
-          handleOrgUnitEditVisible(false);
         }
       });
     };
     const cancelDate = () => {
-      form.resetFields();
       handleOrgUnitEditVisible(false);
     };
     const errors = getFieldsError();
@@ -107,6 +130,8 @@ class OrgUnitEditModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="组织机构基本信息编辑"
         style={{ top: 20 }}
         visible={OrgUnitEditVisible}
@@ -123,8 +148,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="组织名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],
+                    initialValue:`${rowInfo.name}`,
                   })(
-                    <Input placeholder="请输入组织名称" />
+                    <Input autocomplete="off" placeholder="请输入组织名称" />
                   )}
                 </Form.Item>
               </Col>
@@ -135,10 +161,7 @@ class OrgUnitEditModal extends PureComponent {
                     rules: [{ required: true, message: '请选择上级组织' }],
                     initialValue:`至诚`,
                   })(
-                    <Select>
-                      <Option value="g">至诚</Option>
-                      <Option value="y">事务所有限公司</Option>
-                    </Select>
+                    <Input  />
                   )}
                 </Form.Item>
               </Col>
@@ -148,21 +171,20 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="组织编码">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '请输入组织编码' }],
-                    initialValue:`${rowInfo.organizeCode}`,
+                    initialValue:`${rowInfo.number}`,
                   })(
-                    <Input placeholder="请输入组织编码" />
+                    <Input readOnly placeholder="请输入组织编码" />
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('isCompany', {
+                  {getFieldDecorator('isBranch', {
                     rules: [{ required: true, message: '是否分公司' }],
-                    initialValue:`否`,
+                    initialValue:`${rowInfo.isBranch}`,
                   })(
-                    <Select>
-                      <Option value="0">否</Option>
-                      <Option value="1">是</Option>
+                    <Select placeholder="是否分公司" >
+                      {isBranchOptionData}
                     </Select>
                   )}
                 </Form.Item>
@@ -174,7 +196,7 @@ class OrgUnitEditModal extends PureComponent {
                   {getFieldDecorator('simpleName', {
                     rules: [{ required: false, message: '请输入简称' }],
                   })(
-                    <Input placeholder="请输入简称" />
+                    <Input  placeholder="请输入简称" />
                   )}
                 </Form.Item>
               </Col>
@@ -182,7 +204,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="英文名称">
                   {getFieldDecorator('englishName', {
                     rules: [{ required: false, message: '请输入英文名称' }],
-                  })(<Input placeholder="请输入英文名称" />)}
+                  })(
+                    <Input  placeholder="请输入英文名称" />
+                  )}
                 </Form.Item>
               </Col>
             </Row>
@@ -191,13 +215,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="负责人">
                   {getFieldDecorator('principal', {
                     rules: [{ required: false, message: '请选择负责人' }],
-                    initialValue:`请选择`,
+                    initialValue:`${rowInfo.principal}`,
                   })(
-                    <Select>
-                      <Option value="0">请选择</Option>
-                      <Option value="1">员工A</Option>
-                      <Option value="2">员工B</Option>
-                    </Select>
+                    <Input placeholder="请选择负责人"  />
                   )}
                 </Form.Item>
               </Col>
@@ -206,7 +226,7 @@ class OrgUnitEditModal extends PureComponent {
                   {getFieldDecorator('linkMan', {
                     rules: [{ required: false, message: '请输入联系人' }],
                   })(
-                    <Input placeholder="请输入联系人" />
+                    <Input  placeholder="请输入联系人" />
                   )}
                 </Form.Item>
               </Col>
@@ -217,7 +237,7 @@ class OrgUnitEditModal extends PureComponent {
                   {getFieldDecorator('mobilePhone', {
                     rules: [{ required: false, message: '请输入移动电话' }],
                   })(
-                    <Input placeholder="请输入移动电话" />
+                    <Input  placeholder="请输入移动电话" />
                   )}
                 </Form.Item>
               </Col>
@@ -226,7 +246,7 @@ class OrgUnitEditModal extends PureComponent {
                   {getFieldDecorator('phone', {
                     rules: [{ required: false, message: '请输入电话' }],
                   })(
-                    <Input placeholder="请输入电话" />
+                    <Input  placeholder="请输入电话" />
                   )}
                 </Form.Item>
               </Col>
@@ -234,10 +254,11 @@ class OrgUnitEditModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="电子邮箱">
-                  {getFieldDecorator('email', {
+                  {getFieldDecorator('enterpriseEmail', {
                     rules: [{ required: false, message: '请输入电子邮箱' }],
+                    initialValue:`${rowInfo.enterpriseEmail}`,
                   })(
-                    <Input placeholder="请输入电子邮箱" />
+                    <Input  placeholder="请输入电子邮箱" />
                   )}
                 </Form.Item>
               </Col>
@@ -245,8 +266,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="邮政编码">
                   {getFieldDecorator('postalCode', {
                     rules: [{ required: false, message: '请输入邮政编码' }],
+                    initialValue:`${rowInfo.postalCode}`,
                   })(
-                    <Input placeholder="请输入邮政编码" />
+                    <Input  placeholder="请输入邮政编码" />
                   )}
                 </Form.Item>
               </Col>
@@ -256,8 +278,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="传真">
                   {getFieldDecorator('fax', {
                     rules: [{ required: false, message: '请输入传真' }],
+                    initialValue:`${rowInfo.fax}`,
                   })(
-                    <Input placeholder="请输入传真" />
+                    <Input  placeholder="请输入传真" />
                   )}
                 </Form.Item>
               </Col>
@@ -265,8 +288,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="海关编码">
                   {getFieldDecorator('customsCode', {
                     rules: [{ required: false, message: '请输入海关编码' }],
+                    initialValue:`${rowInfo.customsCode}`,
                   })(
-                    <Input placeholder="请输入海关编码" />
+                    <Input  placeholder="请输入海关编码" />
                   )}
                 </Form.Item>
               </Col>
@@ -274,10 +298,11 @@ class OrgUnitEditModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="EDI编码">
-                  {getFieldDecorator('ediCode', {
+                  {getFieldDecorator('ediNum', {
                     rules: [{ required: false, message: '请输入EDI编码' }],
+                    initialValue:`${rowInfo.ediNum}`,
                   })(
-                    <Input placeholder="请输入EDI编码" />
+                    <Input  placeholder="请输入EDI编码" />
                   )}
                 </Form.Item>
               </Col>
@@ -285,8 +310,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="税务编码">
                   {getFieldDecorator('taxCode', {
                     rules: [{ required: false, message: '请输入税务编码' }],
+                    initialValue:`${rowInfo.taxCode}`,
                   })(
-                    <Input placeholder="请输入税务编码" />
+                    <Input  placeholder="请输入税务编码" />
                   )}
                 </Form.Item>
               </Col>
@@ -297,7 +323,7 @@ class OrgUnitEditModal extends PureComponent {
                   {getFieldDecorator('address', {
                     rules: [{ required: false, message: '请输入详细地址' }],
                   })(
-                    <TextArea placeholder="请输入详细地址" />
+                    <TextArea  placeholder="请输入详细地址" />
                   )}
                 </Form.Item>
               </Col>
@@ -305,8 +331,9 @@ class OrgUnitEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="网站首页">
                   {getFieldDecorator('url', {
                     rules: [{ required: false, message: '请输入网站首页' }],
+                    initialValue:`${rowInfo.url}`,
                   })(
-                    <Input placeholder="请输入网站首页" />
+                    <Input  placeholder="请输入网站首页" />
                   )}
                 </Form.Item>
               </Col>
@@ -314,8 +341,11 @@ class OrgUnitEditModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={21} pull={3}>
                 <Form.Item {...formItemLayout} label="备注">
-                  {getFieldDecorator('remark')(
-                    <TextArea placeholder="请输入备注信息" rows={2} />
+                  {getFieldDecorator('remarks', {
+                    rules: [{ required: false, message: '备注' }],
+                    initialValue:`${rowInfo.remarks}`,
+                  })(
+                    <TextArea  placeholder="请输入备注信息" rows={2} />
                   )}
                 </Form.Item>
               </Col>
@@ -329,5 +359,5 @@ class OrgUnitEditModal extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+  submitting: loading.effects['company/update'],
 }))(Form.create()(OrgUnitEditModal));

@@ -17,6 +17,7 @@ import {
   Divider,
   Popconfirm,
   Layout,
+  Badge,
 } from 'antd';
 import StandardTable from '../../../../components/StandardTable/index';
 import styles from './OrgUnitList.less';
@@ -24,18 +25,17 @@ import OrgUnitAddModal from '../add/OrgUnitAddModal';
 import OrgUnitViewModal from '../select/OrgUnitViewModal';
 import OrgUnitEditModal from '../edit/OrgUnitEditModal';
 
+const industry =['否','是'];
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class OrgUnitList extends PureComponent {
@@ -53,7 +53,16 @@ export default class OrgUnitList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+
+        }
+       },
     });
   }
 
@@ -91,7 +100,7 @@ export default class OrgUnitList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -103,7 +112,7 @@ export default class OrgUnitList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: {},
     });
   };
@@ -121,7 +130,7 @@ export default class OrgUnitList extends PureComponent {
     if (!selectedRows) return;
 
     switch (e.key) {
-      case 'remove':
+      /*case 'remove':
         dispatch({
           type: 'rule/remove',
           payload: {
@@ -133,7 +142,7 @@ export default class OrgUnitList extends PureComponent {
             });
           },
         });
-        break;
+        break;*/
       default:
         break;
     }
@@ -163,7 +172,7 @@ export default class OrgUnitList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -173,6 +182,21 @@ export default class OrgUnitList extends PureComponent {
     this.setState({
       OrgUnitAddVisible: !!flag,
     });
+    if(!flag){
+      this.props.dispatch({
+        type: 'company/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+       /* callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+
+           // this.props.data = res.data;
+          }
+        },*/
+      })
+    }
   };
 
   handleOrgUnitViewVisible = flag => {
@@ -185,6 +209,15 @@ export default class OrgUnitList extends PureComponent {
     this.setState({
       OrgUnitEditVisible: !!flag,
     });
+    if(!flag){
+      this.props.dispatch({
+        type: 'company/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+      })
+    }
   };
 
   showViewMessage =(flag, text, record)=> {
@@ -202,7 +235,7 @@ export default class OrgUnitList extends PureComponent {
   };
 
   showDeleteMessage =(flag, record)=> {
-    this.props.dispatch({
+    /*this.props.dispatch({
       type: 'rule/remove',
       payload: {
         organizeCode: record.organizeCode,
@@ -213,7 +246,7 @@ export default class OrgUnitList extends PureComponent {
         });
         message.success('删除成功!');
       },
-    });
+    });*/
   };
 
    confirm = () => {
@@ -283,17 +316,17 @@ export default class OrgUnitList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
 
     const columns = [
       {
         title: '组织编号',
-        dataIndex: 'organizeCode',
+        dataIndex: 'number',
       },
       {
         title: '组织名称',
-        dataIndex: 'organizeName',
+        dataIndex: 'name',
       },
       {
         title: '电话',
@@ -301,7 +334,7 @@ export default class OrgUnitList extends PureComponent {
       },
       {
         title: '负责人',
-        dataIndex: 'fzperson',
+        dataIndex: 'principal',
       },
       {
         title: '状态',
@@ -309,7 +342,23 @@ export default class OrgUnitList extends PureComponent {
       },
       {
         title: '分公司',
-        dataIndex: 'company',
+        dataIndex: 'isBranch',
+        align: 'center',
+        width: 100,
+        filters: [
+          {
+            text: industry[0],
+            value: 0,
+          },
+          {
+            text: industry[1],
+            value: 1,
+          },
+        ],
+        onFilter: (value, record) => record.industry.toString() === value,
+        render(val) {
+          return <Badge status text={industry[val]} />;
+        },
       },
       {
         title: '地址',

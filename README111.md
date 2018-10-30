@@ -114,3 +114,6 @@ Any Contribution of following ways will be welcome:
   
   this.props获取return（）;中的外面组建中的所有组建的属性。
   this.state获取当前组建的状态.
+  
+  2018/10/30
+    Input框 历史记录问题，点击 滚动后会发生可怕的事情

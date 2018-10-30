@@ -84,3 +84,35 @@ export async function fakeReset(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+// 组织查询
+export async function queryCompany(params) {
+  return request('/company/getCompanyInfosByCondition', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 组织更新
+export async function updateCompany(params) {
+  return request('/company/updateCompany', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+// 组织新建
+export async function addCompany(params) {
+  return request('/company/saveCompany', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
