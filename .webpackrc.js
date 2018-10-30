@@ -1,5 +1,5 @@
 
-import proxy from './proxy.config.prod.js';
+import proxy from './proxy.config.js';
 const path = require('path');
 
 export default {

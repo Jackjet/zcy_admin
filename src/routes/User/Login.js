@@ -27,6 +27,7 @@ export default class LoginPage extends Component {
   };
 
   onTabChange = type => {
+    console.log(type+"esfdsgsdgdfgdfhfgjg");
     this.setState({ type });
   };
 
@@ -91,6 +92,7 @@ export default class LoginPage extends Component {
     var obj = $("#qrcodeModal");
     if(state===1){
       obj.show();
+      this.onTabChange("qrcode");
     }else{
       obj.hide();
     }

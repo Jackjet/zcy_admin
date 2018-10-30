@@ -49,12 +49,12 @@ export default function request(url, options) {
   };
 
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
-    if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
+      if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+        if (!(newOptions.body instanceof FormData)) {
+          newOptions.headers = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
+            ...newOptions.headers,
       };
       newOptions.body = JSON.stringify(newOptions.body);
     } else {
