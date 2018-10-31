@@ -115,4 +115,29 @@ export async function addCompany(params) {
   });
 }
 
+// 组织删除
+export async function removeCompanyById(params) {
+  return request('/company/deleteCompanyById', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
+// 组织批量删除
+export async function removeCompanyByCondition(params) {
+  return request('/company/deleteCompanyByList', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
+
 

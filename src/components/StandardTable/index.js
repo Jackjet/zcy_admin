@@ -80,8 +80,8 @@ class StandardTable extends PureComponent {
       showSizeChanger: true,
       showQuickJumper: true,
       pageSizeOptions:['10','20','30','40','50'],
-      ...pagination,
       total: total,
+      ...pagination,
     };
 
     const rowSelection = {
@@ -117,7 +117,7 @@ class StandardTable extends PureComponent {
           />
         </div>
         <Table
-          bordered={true}
+          bordered="true"
           scroll={scroll}
           loading={loading}
           rowKey={rowKey || 'key'}

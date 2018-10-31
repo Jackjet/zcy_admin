@@ -1,4 +1,4 @@
-import { updateCompany, queryCompany, removeRule, addCompany } from '../services/api';
+import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition } from '../services/api';
 
 export default {
   namespace: 'company',
@@ -52,7 +52,15 @@ export default {
     },
 
     *remove({ payload, callback }, { call, put }) {
-      const response = yield call(removeRule, payload);
+      const response = yield call(removeCompanyById, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *removeMore({ payload, callback }, { call, put }) {
+      const response = yield call(removeCompanyByCondition, payload);
       yield put({
         type: 'save',
         payload: response,

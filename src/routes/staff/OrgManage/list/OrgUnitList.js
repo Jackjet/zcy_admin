@@ -48,6 +48,8 @@ export default class OrgUnitList extends PureComponent {
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
+    pageCurrent:``,
+    pageSizeCurrent:``,
   };
 
   componentDidMount() {
@@ -60,6 +62,9 @@ export default class OrgUnitList extends PureComponent {
       },
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
+
+        }else{
+          //
 
         }
        },
@@ -81,7 +86,7 @@ export default class OrgUnitList extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
+    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -90,11 +95,15 @@ export default class OrgUnitList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
@@ -130,19 +139,26 @@ export default class OrgUnitList extends PureComponent {
     if (!selectedRows) return;
 
     switch (e.key) {
-      /*case 'remove':
+      case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/removeMore',
           payload: {
-            no: selectedRows.map(row => row.no).join(','),
+            ids : selectedRows.map(row =>  row.id ).join(','),
           },
           callback: () => {
             this.setState({
               selectedRows: [],
             });
+            this.props.dispatch({
+              type: 'company/fetch',
+              payload: {
+                page: 1,
+                pageSize: 10,
+              },
+            })
           },
         });
-        break;*/
+        break;
       default:
         break;
     }
@@ -186,8 +202,8 @@ export default class OrgUnitList extends PureComponent {
       this.props.dispatch({
         type: 'company/fetch',
         payload: {
-          page: 1,
-          pageSize: 10,
+          page: this.state.pageCurrent,
+          pageSize: this.state.pageSizeCurrent,
         },
        /* callback: (res) => {
           if(res.meta.status !== '000000' ) {
@@ -235,26 +251,27 @@ export default class OrgUnitList extends PureComponent {
   };
 
   showDeleteMessage =(flag, record)=> {
-    /*this.props.dispatch({
-      type: 'rule/remove',
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/remove',
       payload: {
-        organizeCode: record.organizeCode,
+        id: record.id,
+        deleteFlag: 0,
       },
       callback: () => {
         this.setState({
           selectedRows: [],
         });
+        dispatch({
+          type: 'company/fetch',
+          payload: {
+            page: this.state.pageCurrent,
+            pageSize: this.state.pageSizeCurrent,
+          },
+        });
         message.success('删除成功!');
       },
-    });*/
-  };
-
-   confirm = () => {
-    message.success('Click on Yes');
-  };
-
-   cancel = () => {
-    message.error('Click on No');
+    });
   };
 
   rootSubmenuKeys = ['sub1'];

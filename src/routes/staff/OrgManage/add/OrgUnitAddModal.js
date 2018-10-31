@@ -137,7 +137,7 @@ class OrgUnitAddModal extends PureComponent {
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="上级组织">
                   {getFieldDecorator('parentOrg', {
-                    rules: [{ required: true, message: '请选择上级组织' }],
+                    rules: [{ required: false, message: '请选择上级组织' }],
                   })(
                     <Input  />
                   )}
@@ -157,7 +157,7 @@ class OrgUnitAddModal extends PureComponent {
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
                   {getFieldDecorator('isBranch', {
-                    rules: [{ required: true, message: '是否分公司' }],
+                    rules: [{ required: false, message: '是否分公司' }],
                   })(
                     <Select placeholder="是否分公司" >
                       <Option value={1}>是</Option>
