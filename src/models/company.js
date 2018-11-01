@@ -1,4 +1,4 @@
-import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition } from '../services/api';
+import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition, statusCancelCancel } from '../services/api';
 
 export default {
   namespace: 'company',
@@ -61,6 +61,22 @@ export default {
     },
     *removeMore({ payload, callback }, { call, put }) {
       const response = yield call(removeCompanyByCondition, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *cancelCancel({ payload, callback }, { call, put }) {
+      const response = yield call(statusCancelCancel, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *cancel({ payload, callback }, { call, put }) {
+      const response = yield call(statusCancelCancel, payload);
       yield put({
         type: 'save',
         payload: response,

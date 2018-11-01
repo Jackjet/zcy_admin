@@ -110,7 +110,7 @@ class OrgUnitAddModal extends PureComponent {
     };
     return (
       <Modal
-        destroyOnClose="true"
+       /* destroyOnClose="true"*/
         keyboard={false}
         title="组织机构基本信息新增"
         style={{ top: 20 }}

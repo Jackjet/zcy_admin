@@ -47,8 +47,8 @@ class OrgUnitEditModal extends PureComponent {
   handleProjectChange = () => {
     const optionData = isBranchOption.map((data, index) => {
       const val = `${data}`;
-      const key = `${index}`;
-      return <Option value={key}>{val}</Option>;
+      const keyWord = `${index}`;
+      return <Option key={keyWord} value={keyWord}>{val}</Option>;
     });
     this.setState({
       isBranchOptionData: optionData,
@@ -68,13 +68,13 @@ class OrgUnitEditModal extends PureComponent {
     const { isBranchOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
-        const companyId = `${rowInfo.id}`;
         if (!error) {
           // submit the values
           dispatch({
             type: 'company/update',
             payload: {
-              id: companyId,
+              id: rowInfo.id,
+              key: rowInfo.key,
               ...values,
             },
             callback: (res) => {

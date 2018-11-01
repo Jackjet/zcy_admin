@@ -117,7 +117,7 @@ class StandardTable extends PureComponent {
           />
         </div>
         <Table
-          bordered="true"
+          bordered={true}
           scroll={scroll}
           loading={loading}
           rowKey={rowKey || 'key'}

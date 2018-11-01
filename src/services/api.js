@@ -138,6 +138,29 @@ export async function removeCompanyByCondition(params) {
   });
 }
 
+// 组织状态启动
+export async function statusCancelCancel(params) {
+  return request('/company/cancelCancelStatus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+// 组织状态禁用
+export async function statusCancel(params) {
+  return request('/company/cancelCancelStatus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
 
 
 
