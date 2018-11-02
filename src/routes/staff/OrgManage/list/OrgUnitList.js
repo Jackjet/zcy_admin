@@ -128,6 +128,14 @@ export default class OrgUnitList extends PureComponent {
     dispatch({
       type: 'company/fetch',
       payload: {},
+      callback: (res) => {
+        message.config({
+          top: 100, // 提示框弹出位置
+          duration: 3, // 自动关闭延时，单位秒
+          maxCount: 1, // 最大显示数目
+        });
+        message.success('查询完成!');
+      },
     });
   }; // 搜索的重置方法
 
@@ -198,7 +206,6 @@ export default class OrgUnitList extends PureComponent {
 
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
 
       this.setState({
@@ -208,7 +215,9 @@ export default class OrgUnitList extends PureComponent {
         type: 'company/fetch',
         payload: values,
         callback: (res) => {
-          console.log(res);
+          if(res.meta.statusCode !== '000000'){
+            message.error("res.meta");  // 返回错误信息
+          }
           this.setState({
             selectedRows: [],
             pageCurrent: 1,
@@ -244,12 +253,12 @@ export default class OrgUnitList extends PureComponent {
           page: this.state.pageCurrent,
           pageSize: this.state.pageSizeCurrent,
         },
-       /* callback: (res) => {
+        callback: (res) => {
           if(res.meta.status !== '000000' ) {
 
            // this.props.data = res.data;
           }
-        },*/
+        },
       })
     }
   }; // 公司新增modal显隐方法
@@ -270,6 +279,12 @@ export default class OrgUnitList extends PureComponent {
         payload: {
           page: 1,
           pageSize: 10,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error("res.meta");  // 返回错误信息
+            // this.props.data = res.data;
+          }
         },
       })
     }
@@ -328,7 +343,10 @@ export default class OrgUnitList extends PureComponent {
         id:record.id,
         status: 1,
       },
-      callback: () => {
+      callback: (res) => {
+        if(res.meta.statusCode !== '000000'){
+          message.error("res.meta");  // 返回错误信息
+        }
         this.setState({
           selectedRows: [],
         });
@@ -360,7 +378,10 @@ export default class OrgUnitList extends PureComponent {
         id:record.id,
         status: 0,
       },
-      callback: () => {
+      callback: (res) => {
+        if(res.meta.statusCode !== '000000'){
+          message.error("res.meta");  // 返回错误信息
+        }
         this.setState({
           selectedRows: [],
         });
