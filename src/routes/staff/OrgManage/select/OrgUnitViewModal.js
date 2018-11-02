@@ -2,13 +2,9 @@ import React, { PureComponent } from 'react';
 import {
   Card,
   Form,
-  Icon,
   Col,
   Row,
-  DatePicker,
   Input,
-  Select,
-  Popover,
   Modal,
   Button,
 } from 'antd';
@@ -45,52 +41,13 @@ class OrgUnitViewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, OrgUnitViewVisible, handleOrgUnitViewVisible, rowInfo } = this.props;
-    const { getFieldDecorator, getFieldsError } = form;
+    const { form, OrgUnitViewVisible, handleOrgUnitViewVisible, rowInfo } = this.props;
+    const { getFieldDecorator } = form;
     const validate = () => {
       handleOrgUnitViewVisible(false);
     };
     const cancelDate = () => {
       handleOrgUnitViewVisible(false);
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
     };
     return (
       <Modal
@@ -102,9 +59,9 @@ class OrgUnitViewModal extends PureComponent {
         maskClosable={false}
         onCancel={cancelDate}
         okText='提交'
-        footer={[
-          <Button type="primary" onClick={validate}>知道了</Button>,
-        ]}
+        footer={
+          <Button type="primary" onClick={validate}>知道了</Button>
+        }  // 在button外面加上数据，会报迭代没有设置key属性值
       >
         <Card>
           <Form layout="horizontal">
@@ -322,5 +279,5 @@ class OrgUnitViewModal extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+  submitting: loading.effects['company/fetch'],
 }))(Form.create()(OrgUnitViewModal));

@@ -25,63 +25,43 @@ export default {
       }
     },
 
-    *update({ payload ,callback}, { call, put }) {
+    *update({ payload ,callback}, { call }) {
       const response = yield call(updateCompany, payload);
-      if (response.meta.status === '000000') {
-        yield put({
-          type: 'save',
-          payload: response,
-        });
-      }
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
 
-    *add({ payload, callback }, { call, put }) {
+    *add({ payload, callback }, { call}) {
       const response = yield call(addCompany, payload);
-      if (response.meta.status === '000000') {
-          yield put({
-            type: 'save',
-            payload: response,
-          });
-      }
       if (callback && typeof callback === 'function') {
           callback(response); // 返回结果
       }
     },
 
-    *remove({ payload, callback }, { call, put }) {
+    *remove({ payload, callback }, { call }) {
       const response = yield call(removeCompanyById, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      if (callback) callback();
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
-    *removeMore({ payload, callback }, { call, put }) {
+    *removeMore({ payload, callback }, { call }) {
       const response = yield call(removeCompanyByCondition, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      if (callback) callback();
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
-    *cancelCancel({ payload, callback }, { call, put }) {
+    *cancelCancel({ payload, callback }, { call }) {
       const response = yield call(statusCancelCancel, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      if (callback) callback();
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
-    *cancel({ payload, callback }, { call, put }) {
+    *cancel({ payload, callback }, { call }) {
       const response = yield call(statusCancelCancel, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      if (callback) callback();
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
   },
 

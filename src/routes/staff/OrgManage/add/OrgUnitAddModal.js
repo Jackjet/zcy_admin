@@ -10,11 +10,17 @@ import {
   Select,
   Popover,
   Modal,
+  message,
 } from 'antd';
 import { connect } from 'dva';
-
 import styles from './Style.less';
 
+
+message.config({
+  top: 100, // 提示框弹出位置
+  duration: 3, // 自动关闭延时，单位秒
+  maxCount: 1, // 最大显示数目
+});
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -48,69 +54,32 @@ class OrgUnitAddModal extends PureComponent {
   };
   render() {
     const { form, dispatch, submitting, OrgUnitAddVisible, handleOrgUnitAddVisible } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { getFieldDecorator, validateFields } = form;
     const validate = () => {
-      validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          // submit the values
-          dispatch({
-            type: 'company/add',
-            payload: values,
-            callback: (res) => {
-              if(res.meta.status === '000000' ) {
-                 handleOrgUnitAddVisible(false);
-              }
-            },
-          });
+      validateFields((error, values) => {
+          if (!error) {
+            // submit the values
+            dispatch({
+              type: 'company/add',
+              payload: values,
+              callback: (res) => {
+                if(res.meta.status === '000000' ) {
+                  handleOrgUnitAddVisible(false);
+                } else {
+                  message.error(res.meta.errmsg);
+                }
+              },
+            });
 
-        }
-      });
+          }
+        });
     };
     const cancelDate = () => {
       handleOrgUnitAddVisible(false);
     };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
-    };
     return (
       <Modal
-       /* destroyOnClose="true"*/
+        destroyOnClose="true"
         keyboard={false}
         title="组织机构基本信息新增"
         style={{ top: 20 }}
@@ -136,7 +105,7 @@ class OrgUnitAddModal extends PureComponent {
 
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="上级组织">
-                  {getFieldDecorator('parentOrg', {
+                  {getFieldDecorator('parentId', {
                     rules: [{ required: false, message: '请选择上级组织' }],
                   })(
                     <Input  />

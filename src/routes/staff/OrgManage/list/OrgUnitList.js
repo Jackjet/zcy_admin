@@ -17,12 +17,13 @@ import {
   Layout,
   Badge,
 } from 'antd';
+import moment from "moment/moment";
 import StandardTable from '../../../../components/StandardTable/index';
 import styles from './OrgUnitList.less';
 import OrgUnitAddModal from '../add/OrgUnitAddModal';
 import OrgUnitViewModal from '../select/OrgUnitViewModal';
 import OrgUnitEditModal from '../edit/OrgUnitEditModal';
-import moment from "moment/moment";
+
 
 const { confirm } = Modal;
 const statusMap = ['error', 'success', 'processing'];
@@ -30,7 +31,11 @@ const statusText = ['禁用' ,'启用' ,'提交'];
 const industry =['否','是'];
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
-
+message.config({
+  top: 100, // 提示框弹出位置
+  duration: 3, // 自动关闭延时，单位秒
+  maxCount: 1, // 最大显示数目
+});
 
 const getValue = obj =>
   Object.keys(obj)
@@ -129,12 +134,12 @@ export default class OrgUnitList extends PureComponent {
       type: 'company/fetch',
       payload: {},
       callback: (res) => {
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 3, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
-        });
-        message.success('查询完成!');
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+
       },
     });
   }; // 搜索的重置方法
@@ -215,23 +220,18 @@ export default class OrgUnitList extends PureComponent {
         type: 'company/fetch',
         payload: values,
         callback: (res) => {
-          if(res.meta.statusCode !== '000000'){
-            message.error("res.meta");  // 返回错误信息
+          if(res.meta.status !== '000000'){
+            message.error(res.meta.errmsg);  // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
           }
-          this.setState({
-            selectedRows: [],
-            pageCurrent: 1,
-            pageSizeCurrent: res.data.pagination.pageSize,
-          });
-          message.config({
-            top: 100, // 提示框弹出位置
-            duration: 3, // 自动关闭延时，单位秒
-            maxCount: 1, // 最大显示数目
-          });
-          message.success('查询完成!');
         },
       });
-      form.resetFields();
     });
   }; // 查询方法
 
@@ -255,8 +255,7 @@ export default class OrgUnitList extends PureComponent {
         },
         callback: (res) => {
           if(res.meta.status !== '000000' ) {
-
-           // this.props.data = res.data;
+            message.error(res.meta.errmsg);  // 返回错误信息
           }
         },
       })
@@ -282,15 +281,17 @@ export default class OrgUnitList extends PureComponent {
         },
         callback: (res) => {
           if(res.meta.status !== '000000' ) {
-            message.error("res.meta");  // 返回错误信息
+            message.error(res.meta.errmsg);  // 返回错误信息
             // this.props.data = res.data;
+          } else {
+            message.success("公司更新成功!")
           }
         },
       })
     }
   }; // 公司编辑modal显隐方法
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage =(flag, record)=> {
     this.setState({
       OrgUnitViewVisible: !!flag,
       rowInfo: record,
@@ -312,24 +313,24 @@ export default class OrgUnitList extends PureComponent {
         id: record.id,
         deleteFlag: 0,
       },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-        dispatch({
-          type: 'company/fetch',
-          payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
-            keyWord: this.state.formValues.keyWord,
-          },
-        });
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 2, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
-        });
-        message.success('公司删除成功!');
+      callback: ( res ) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'company/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.success('公司删除成功!');
+        }
+
       },
     });
   }; // 公司信息单个删除方法
@@ -379,7 +380,7 @@ export default class OrgUnitList extends PureComponent {
         status: 0,
       },
       callback: (res) => {
-        if(res.meta.statusCode !== '000000'){
+        if(res.meta.status !== '000000'){
           message.error("res.meta");  // 返回错误信息
         }
         this.setState({
@@ -392,11 +393,6 @@ export default class OrgUnitList extends PureComponent {
             pageSize: this.state.pageSizeCurrent,
             keyWord: this.state.formValues.keyWord,
           },
-        });
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 3, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
         });
         message.warning('公司已禁用!');
       },
@@ -531,11 +527,11 @@ export default class OrgUnitList extends PureComponent {
 
       {
         title: '操作',
-        render: (text, record, index) => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)} >编辑</a>
 
             {
             (statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
