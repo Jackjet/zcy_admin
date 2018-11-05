@@ -342,26 +342,29 @@ export default class OrgUnitList extends PureComponent {
         status: 1,
       },
       callback: (res) => {
-        if(res.meta.statusCode !== '000000'){
+        if(res.meta.status !== '000000'){
           message.error("res.meta");  // 返回错误信息
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'company/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.config({
+            top: 100, // 提示框弹出位置
+            duration: 3, // 自动关闭延时，单位秒
+            maxCount: 1, // 最大显示数目
+          });
+          message.success('编码规则启用成功!');
         }
-        this.setState({
-          selectedRows: [],
-        });
-        dispatch({
-          type: 'company/fetch',
-          payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
-            keyWord: this.state.formValues.keyWord,
-          },
-        });
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 3, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
-        });
-        message.success('公司启用成功!');
+
+
       },
     });
 
@@ -391,7 +394,7 @@ export default class OrgUnitList extends PureComponent {
             keyWord: this.state.formValues.keyWord,
           },
         });
-        message.warning('公司已禁用!');
+        message.warning('编码规则已禁用!');
       },
     });
 
