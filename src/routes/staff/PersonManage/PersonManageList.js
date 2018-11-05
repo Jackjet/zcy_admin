@@ -6,19 +6,16 @@ import {
   Card,
   Form,
   Input,
-  Select,
   Icon,
   Button,
   Dropdown,
   Menu,
-  DatePicker,
-  Modal,
   message,
   Divider,
-  Popconfirm,
   Layout,
   Badge,
 } from 'antd';
+import moment from "moment/moment";
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './PersonAddModal';
@@ -31,9 +28,16 @@ import BatchDisRoleModal from './Role/BatchDisRoleModal';
 import OrgRangeBill from './OrgRange/OrgRangeBill';
 import styles from './style.less';
 
+message.config({
+  top: 100,
+  duration: 2,
+  maxCount: 1,
+});
 const { Content,  Sider } = Layout;
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['离职', '在职', '已上线', '异常'];
+const statusMap = ['default', 'success'];
+const status = ['离职', '在职'];
+const sexStatusMap = ['warning', 'processing'];
+const sexValue = ['女', '男'];
 const FormItem = Form.Item;
 
 const getValue = obj =>
@@ -41,9 +45,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ person, loading }) => ({
+  person,
+  loading: loading.models.person,
 }))
 @Form.create()
 export default class PersonManageList extends PureComponent {
@@ -61,12 +65,25 @@ export default class PersonManageList extends PureComponent {
     DistributionAuthorityVisible: false,
     BatchDisAuthorityVisible: false,
     OrgRangeBillVisible: false,
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'person/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+
+        }else{
+       //
+        }
+      },
     });
   }
   onOpenChange = openKeys => {
@@ -81,24 +98,30 @@ export default class PersonManageList extends PureComponent {
   };
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
+    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
+
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'person/fetch',
       payload: params,
     });
   };
@@ -110,8 +133,15 @@ export default class PersonManageList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'person/fetch',
       payload: {},
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+      },
     });
   };
 
@@ -122,22 +152,42 @@ export default class PersonManageList extends PureComponent {
   };
 
   handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
+    const thisParam = this;
+    const nameUser = thisParam.state.selectedRows.map(row => row.name ).join(`,\n`);
     switch (e.key) {
       case 'remove':
-        dispatch({
-          type: 'rule/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
+        confirm({
+          title: '确定删除以下公司?',
+          content:(
+            <div>
+              <p>公司名称: {nameUser}</p>
+              <p>操作人:当前登录用户</p>
+              <p>时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+            </div>
+          ),
+          onOk() {
+            thisParam.props.dispatch({
+              type: 'person/removeMore',
+              payload: {
+                ids : thisParam.state.selectedRows.map(row => row.id ).join(','),
+              },
+              callback: () => {
+                thisParam.setState({
+                  selectedRows: [],
+                });
+                thisParam.props.dispatch({
+                  type: 'person/fetch',
+                  payload: {
+                    page: 1,
+                    pageSize: 10,
+                  },
+                });
+                message.success('人员已删除');
+              },
             });
+          },
+          onCancel() {
+            console.log('Cancel');
           },
         });
         break;
@@ -160,24 +210,30 @@ export default class PersonManageList extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
-        type: 'rule/fetch',
+        type: 'person/fetch',
         payload: values,
+        callback: (res) => {
+          if(res.meta.status !== '000000'){
+            message.error(res.meta.errmsg);  // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
@@ -186,6 +242,20 @@ export default class PersonManageList extends PureComponent {
     this.setState({
       PersonAddVisible: !!flag,
     });
+    if(!flag){
+      this.props.dispatch({
+        type: 'person/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error(res.meta.errmsg);  // 返回错误信息
+          }
+        },
+      })
+    }
   };
 
   handlePersonViewVisible = flag => {
@@ -198,6 +268,23 @@ export default class PersonManageList extends PureComponent {
     this.setState({
       PersonEditVisible: !!flag,
     });
+    if(!flag){
+      this.props.dispatch({
+        type: 'person/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error(res.meta.errmsg);  // 返回错误信息
+            // this.props.data = res.data;
+          } else {
+            message.success("公司更新成功!")
+          }
+        },
+      })
+    }
   };
 
   handleBatchDisRoleVisible = flag => {
@@ -205,14 +292,8 @@ export default class PersonManageList extends PureComponent {
       BatchDisRoleVisible: !!flag,
     });
   };
-
   handleDistributionAuthorityVisible = flag => {
     if(this.state.selectedRows.length>1){
-      message.config({
-        top: 100,
-        duration: 2,
-        maxCount: 1,
-      });
       message.warning('不支持多行选择');
       return false;
     }
@@ -240,7 +321,7 @@ export default class PersonManageList extends PureComponent {
     })
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage =(flag, record)=> {
     this.setState({
       PersonViewVisible: !!flag,
       rowInfo: record,
@@ -265,30 +346,70 @@ export default class PersonManageList extends PureComponent {
   };
 
   showDeleteMessage =(flag, record)=> {
-    this.props.dispatch({
-      type: 'rule/remove',
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'person/remove',
       payload: {
-        no: record.no,
+        id: record.id,
+        deleteFlag: 0,
       },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-        message.success('删除成功!');
+      callback: ( res ) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'person/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.success('人员删除成功!');
+        }
+
       },
     });
   };
 
-  confirm = () => {
-    message.success('Click on Yes');
-  };
+  handleCancelCancel = (record) => {
 
-  cancel = () => {
-    message.error('Click on No');
-  };
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'person/cancelCancel',
+      payload: {
+        id:record.id,
+        status: 1,
+      },
+      callback: (res) => {
+        if(res.meta.statusCode !== '000000'){
+          message.error("res.meta");  // 返回错误信息
+        }
+        this.setState({
+          selectedRows: [],
+        });
+        dispatch({
+          type: 'person/fetch',
+          payload: {
+            page: this.state.pageCurrent,
+            pageSize: this.state.pageSizeCurrent,
+            keyWord: this.state.formValues.keyWord,
+          },
+        });
+        message.config({
+          top: 100, // 提示框弹出位置
+          duration: 3, // 自动关闭延时，单位秒
+          maxCount: 1, // 最大显示数目
+        });
+        message.success('人员启用成功!');
+      },
+    });
 
+  }; // 公司状态启用方法
   rootSubmenuKeys = ['sub1'];
-
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -321,7 +442,7 @@ export default class PersonManageList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
+              {getFieldDecorator('keyWord')(<Input placeholder="请输入关键字" />)}
             </FormItem>
           </Col>
 
@@ -344,7 +465,7 @@ export default class PersonManageList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { person: { data }, loading } = this.props;
     const {
       selectedRows,
       PersonAddVisible,
@@ -360,7 +481,7 @@ export default class PersonManageList extends PureComponent {
     const columns = [
       {
         title: '工号',
-        dataIndex: 'no',
+        dataIndex: 'number',
       },
       {
         title: '姓名',
@@ -368,24 +489,37 @@ export default class PersonManageList extends PureComponent {
       },
       {
         title: '性别',
-        dataIndex: 'phone',
+        dataIndex: 'sex',
+        filters: [
+          {
+            text: sexValue[0],
+            value: 0,
+          },
+          {
+            text: sexValue[1],
+            value: 1,
+          },
+        ],
+        onFilter: (value, record) => record.sex.toString() === value,
+        render(val) {
+          return <Badge status={sexStatusMap[val]} text={sexValue[val]} />;
+        },
       },
-
       {
         title: '岗位',
-        dataIndex: 'fzperson',
+        dataIndex: 'post',
       },
       {
         title: '移动电话',
-        dataIndex: 'company',
+        dataIndex: 'mobilePhone',
       },
       {
         title: '办公电话',
-        dataIndex: 'address',
+        dataIndex: 'officePhone',
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'personStatus',
         filters: [
           {
             text: status[0],
@@ -394,14 +528,6 @@ export default class PersonManageList extends PureComponent {
           {
             text: status[1],
             value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
           },
         ],
         onFilter: (value, record) => record.status.toString() === value,
@@ -427,9 +553,6 @@ export default class PersonManageList extends PureComponent {
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="cancelcancel">启用</Menu.Item>
         <Menu.Item key="cancel">禁用</Menu.Item>
-        {/*<Menu.Item key="1">批量分配角色</Menu.Item>
-        <Menu.Item key="2">批量分配权限</Menu.Item>
-        <Menu.Item key="3">批量组织维护</Menu.Item>*/}
       </Menu>
     );
 
@@ -502,8 +625,8 @@ export default class PersonManageList extends PureComponent {
             </Content>
           </Layout>
           <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible}  />
-          <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} />
-          <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} />
+          <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} rowInfo={rowInfo} />
+          <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} rowInfo={rowInfo} />
           <DistributionRoleModal {...parentMethods} DistributionRoleVisible={DistributionRoleVisible} />
           <BatchDisRoleModal {...parentMethods} BatchDisRoleVisible={BatchDisRoleVisible} />
           <DistributionAuthorityModal {...parentMethods} DistributionAuthorityVisible={DistributionAuthorityVisible} />

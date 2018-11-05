@@ -106,57 +106,16 @@ class PersonEditModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'person/add',
             payload: values,
           });
           handlePersonEditVisible(false);
-          form.resetFields();
           message.success('成功申请用户');
         }
       });
     };
     const onCancel = () => {
-      form.resetFields();
       handlePersonEditVisible(false);
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
     };
     const uploadButton = (
       <div>
@@ -166,6 +125,8 @@ class PersonEditModal extends PureComponent {
     );
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="人员信息编辑"
         style={{ top: 20 }}
         visible={PersonEditVisible}

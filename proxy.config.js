@@ -20,4 +20,11 @@ module.exports = {
       '^dept': '/dept',
     },
   },
+  '/user': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^user': '/user',
+    },
+  },
 };

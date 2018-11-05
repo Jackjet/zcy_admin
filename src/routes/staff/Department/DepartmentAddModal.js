@@ -211,9 +211,9 @@ class DepartmentAddModal extends PureComponent {
                     rules: [{ required: true, message: '请选择上级组织' }],
                     initialValue:`至诚`,
                   })(
-                    <Select>
-                      <Option value="g">至诚</Option>
-                      <Option value="y">事务所有限公司</Option>
+                    <Select placeholder="请选择上级组织" >
+                      <Option value={1}>义务至诚</Option>
+                      <Option value={0}>杭州至诚</Option>
                     </Select>
                   )}
                 </Form.Item>
