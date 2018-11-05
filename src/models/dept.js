@@ -1,7 +1,7 @@
-import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition, statusCancelCancel } from '../services/company';
+import { queryDept, updateDept, addDept, removeDeptById, removeDeptByCondition, statusCancelCancel } from '../services/dept';
 
 export default {
-  namespace: 'company',
+  namespace: 'dept',
 
   state: {
     data: {
@@ -12,8 +12,8 @@ export default {
   },
 
   effects: {
-    *fetch({ payload ,callback}, { call, put }) {
-      const response = yield call(queryCompany, payload);
+    *fetch({ payload, callback }, { call, put }) {
+      const response = yield call(queryDept, payload);
       if (response.meta.status === '000000') {
         yield put({
           type: 'save',
@@ -24,29 +24,28 @@ export default {
         callback(response); // 返回结果
       }
     },
-
     *update({ payload ,callback}, { call }) {
-      const response = yield call(updateCompany, payload);
+      const response = yield call(updateDept, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
 
     *add({ payload, callback }, { call}) {
-      const response = yield call(addCompany, payload);
+      const response = yield call(addDept, payload);
       if (callback && typeof callback === 'function') {
-          callback(response); // 返回结果
+        callback(response); // 返回结果
       }
     },
 
     *remove({ payload, callback }, { call }) {
-      const response = yield call(removeCompanyById, payload);
+      const response = yield call(removeDeptById, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *removeMore({ payload, callback }, { call }) {
-      const response = yield call(removeCompanyByCondition, payload);
+      const response = yield call(removeDeptByCondition, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
@@ -70,11 +69,6 @@ export default {
       return {
         ...state,
         data: action.payload.data,
-        /*data: {
-          list: action.payload.data.items,
-          pagination: action.payload.data.pagination,
-          total:action.payload.data.num_items,
-        },*/
       };
     },
   },

@@ -29,7 +29,7 @@ const formItemLayout = {
   },
 };
 
-class DepartmentViewModal extends PureComponent {
+class DepartmentEditModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -47,69 +47,39 @@ class DepartmentViewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, DepartmentViewVisible, handleDepartmentViewVisible, rowInfo } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { form, dispatch, submitting, DepartmentEditVisible, handleDepartmentEditVisible, rowInfo } = this.props;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
+            type: 'dept/update',
+            payload: {
+              id: rowInfo.id,
+              key: rowInfo.key,
+              ...values,
+            },
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                handleDepartmentEditVisible(false);
+              }
+            },
           });
-          form.resetFields();
-          handleDepartmentViewVisible(false);
         }
       });
     };
     const cancelDate = () => {
       form.resetFields();
-      handleDepartmentViewVisible(false);
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
+      handleDepartmentEditVisible(false);
     };
     return (
       <Modal
-        title="组织机构基本信息查看"
+        destroyOnClose="true"
+        keyboard={false}
+        title="部门基本信息编辑"
         style={{ top: 20 }}
-        visible={DepartmentViewVisible}
+        visible={DepartmentEditVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
@@ -120,19 +90,20 @@ class DepartmentViewModal extends PureComponent {
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="组织名称">
+                <Form.Item {...formItemLayout} label="部门名称">
                   {getFieldDecorator('name', {
-                    rules: [{ required: true, message: '请输入组织名称' }],
+                    rules: [{ required: true, message: '请输入部门名称' }],
+                    initialValue:`${rowInfo.name}`,
                   })(
-                    <Input placeholder="请输入组织名称" />
+                    <Input placeholder="请输入部门名称" />
                   )}
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="上级组织">
-                  {getFieldDecorator('parentOrg', {
-                    rules: [{ required: true, message: '请选择上级组织' }],
+                <Form.Item {...formItemLayout} label="上级部门">
+                  {getFieldDecorator('parentId', {
+                    rules: [{ required: true, message: '请选择上级部门' }],
                     initialValue:`至诚`,
                   })(
                     <Select>
@@ -145,18 +116,18 @@ class DepartmentViewModal extends PureComponent {
             </Row>
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="组织编码">
+                <Form.Item {...formItemLayout} label="部门编码">
                   {getFieldDecorator('number', {
-                    rules: [{ required: true, message: '请输入组织编码' }],
-                    initialValue:`${rowInfo.organizeCode}`,
+                    rules: [{ required: true, message: '请输入部门编码' }],
+                    initialValue:`${rowInfo.number}`,
                   })(
-                    <Input disabled placeholder="请输入组织编码" />
+                    <Input placeholder="请输入部门编码" />
                   )}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('isCompany', {
+                  {getFieldDecorator('isBranch', {
                     rules: [{ required: true, message: '是否分公司' }],
                     initialValue:`否`,
                   })(
@@ -329,5 +300,5 @@ class DepartmentViewModal extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DepartmentViewModal));
+  submitting: loading.effects['dept/updateDept'],
+}))(Form.create()(DepartmentEditModal));

@@ -10,7 +10,6 @@ import {
   Button,
   Dropdown,
   Menu,
-  Modal,
   message,
   Divider,
   Popconfirm,
@@ -18,17 +17,15 @@ import {
   Badge,
 } from 'antd';
 import moment from "moment/moment";
-import StandardTable from '../../../../components/StandardTable/index';
-import styles from './OrgUnitList.less';
-import OrgUnitAddModal from '../add/OrgUnitAddModal';
-import OrgUnitViewModal from '../select/OrgUnitViewModal';
-import OrgUnitEditModal from '../edit/OrgUnitEditModal';
+import StandardTable from '../../../components/StandardTable/index';
+import styles from './DepartmentList.less';
+import DepartmentAddModal from './DepartmentAddModal';
+import DepartmentViewModal from './DepartmentViewModal';
+import DepartmentEditModal from './DepartmentEditModal';
 
 
-const { confirm } = Modal;
 const statusMap = ['error', 'success', 'processing'];
 const statusText = ['禁用' ,'启用' ,'提交'];
-const industry =['否','是'];
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 message.config({
@@ -36,22 +33,21 @@ message.config({
   duration: 3, // 自动关闭延时，单位秒
   maxCount: 1, // 最大显示数目
 });
-
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dept, loading }) => ({
+  dept,
+  loading: loading.models.dept,
 }))
 @Form.create()
-export default class OrgUnitList extends PureComponent {
+export default class DepartmentList extends PureComponent {
   state = {
-    OrgUnitAddVisible: false,
-    OrgUnitViewVisible: false,
-    OrgUnitEditVisible: false,
+    DepartmentAddVisible: false,
+    DepartmentViewVisible: false,
+    DepartmentEditVisible: false,
     rowInfo:``,
     expandForm: false,
     selectedRows: [],
@@ -59,25 +55,24 @@ export default class OrgUnitList extends PureComponent {
     openKeys: ['sub1'],
     pageCurrent:``,
     pageSizeCurrent:``,
-    currentTreekey:``,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: {
         page: 1,
         pageSize: 10,
       },
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
-
+          console.log(res.meta.status);
         }else{
           //
 
         }
-       },
+      },
     });
   }
 
@@ -90,14 +85,13 @@ export default class OrgUnitList extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
-  }; // 左边树收起其他展开的所有菜单
+  };
 
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub1']; // 左边菜单树叶子的key
+  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
-
+    const { formValues , pageCurrent, pageSizeCurrent  } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -119,19 +113,18 @@ export default class OrgUnitList extends PureComponent {
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: params,
     });
-  }; // 分页器的下一页 第几页 方法
+  };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
+    const { dispatch } = this.props;
     this.setState({
       formValues: {},
     });
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: {},
       callback: (res) => {
         if(res.meta.status !== "000000"){
@@ -143,12 +136,11 @@ export default class OrgUnitList extends PureComponent {
       },
     });
   }; // 搜索的重置方法
-
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
-  }; // 简单查询和高级搜索切换
+  };
 
   handleMenuClick = e => {
     const thisParam = this;
@@ -156,17 +148,17 @@ export default class OrgUnitList extends PureComponent {
     switch (e.key) {
       case 'remove':
         confirm({
-          title: '确定删除以下公司?',
+          title: '确定删除以下部门?',
           content:(
             <div>
-              <p>公司名称: {nameCompany}</p>
+              <p>部门名称: {nameCompany}</p>
               <p>操作人:当前登录用户</p>
               <p>时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
             </div>
           ),
           onOk() {
             thisParam.props.dispatch({
-              type: 'company/removeMore',
+              type: 'dept/removeMore',
               payload: {
                 ids : thisParam.state.selectedRows.map(row => row.id ).join(','),
               },
@@ -175,13 +167,13 @@ export default class OrgUnitList extends PureComponent {
                   selectedRows: [],
                 });
                 thisParam.props.dispatch({
-                  type: 'company/fetch',
+                  type: 'dept/fetch',
                   payload: {
-                    page: 1,
-                    pageSize: 10,
+                    page: thisParam.state.pageCurrent,
+                    pageSize: thisParam.state.pageSizeCurrent,
                   },
                 });
-                message.success('公司已删除');
+                message.success('部门已删除');
               },
             });
           },
@@ -193,19 +185,17 @@ export default class OrgUnitList extends PureComponent {
       default:
         break;
     }
-  }; // 批量操作中的删除操作方法
+  };
 
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  }; // 控制选中的行的方法
+  };
 
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
@@ -215,7 +205,7 @@ export default class OrgUnitList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'company/fetch',
+        type: 'dept/fetch',
         payload: values,
         callback: (res) => {
           if(res.meta.status !== '000000'){
@@ -231,22 +221,15 @@ export default class OrgUnitList extends PureComponent {
         },
       });
     });
-  }; // 查询方法
+  };
 
-  handleTreeMenuClick = e => {
-    console.log('click ', e);
+  handleDepartmentAddVisible = flag => {
     this.setState({
-      currentTreekey: e.key,
-    });
-  }; // 左边菜单树点击方法
-
-  handleOrgUnitAddVisible = flag => {
-    this.setState({
-      OrgUnitAddVisible: !!flag,
+      DepartmentAddVisible: !!flag,
     });
     if(!flag){
       this.props.dispatch({
-        type: 'company/fetch',
+        type: 'dept/fetch',
         payload: {
           page: this.state.pageCurrent,
           pageSize: this.state.pageSizeCurrent,
@@ -258,21 +241,21 @@ export default class OrgUnitList extends PureComponent {
         },
       })
     }
-  }; // 公司新增modal显隐方法
+  };
 
-  handleOrgUnitViewVisible = flag => {
+  handleDepartmentViewVisible = flag => {
     this.setState({
-      OrgUnitViewVisible: !!flag,
+      DepartmentViewVisible: !!flag,
     });
-  }; // 公司查看modal显隐方法
+  };
 
-  handleOrgUnitEditVisible = flag => {
+  handleDepartmentEditVisible = flag => {
     this.setState({
-      OrgUnitEditVisible: !!flag,
+      DepartmentEditVisible: !!flag,
     });
     if(!flag){
       this.props.dispatch({
-        type: 'company/fetch',
+        type: 'dept/fetch',
         payload: {
           page: 1,
           pageSize: 10,
@@ -287,27 +270,26 @@ export default class OrgUnitList extends PureComponent {
         },
       })
     }
-  }; // 公司编辑modal显隐方法
+  };
 
-  showViewMessage =(flag, record)=> {
-
+  showViewMessage =(flag, text, record)=> {
     this.setState({
-      OrgUnitViewVisible: !!flag,
+      DepartmentViewVisible: !!flag,
       rowInfo: record,
     });
-  }; // 公司查看modal显隐方法并且传当前行的数据
+  };
 
   showEditMessage =(flag, record)=> {
     this.setState({
-      OrgUnitEditVisible: !!flag,
+      DepartmentEditVisible: !!flag,
       rowInfo: record,
     });
-  }; // 公司编辑modal显隐方法并且传当前行的数据
+  };
 
   showDeleteMessage =(flag, record)=> {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/remove',
+      type: 'dept/remove',
       payload: {
         id: record.id,
         deleteFlag: 0,
@@ -320,7 +302,7 @@ export default class OrgUnitList extends PureComponent {
             selectedRows: [],
           });
           dispatch({
-            type: 'company/fetch',
+            type: 'dept/fetch',
             payload: {
               page: this.state.pageCurrent,
               pageSize: this.state.pageSizeCurrent,
@@ -332,13 +314,13 @@ export default class OrgUnitList extends PureComponent {
 
       },
     });
-  }; // 公司信息单个删除方法
+  };
 
   handleCancelCancel = (record) => {
 
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/cancelCancel',
+      type: 'dept/cancelCancel',
       payload: {
         id:record.id,
         status: 1,
@@ -351,29 +333,24 @@ export default class OrgUnitList extends PureComponent {
           selectedRows: [],
         });
         dispatch({
-          type: 'company/fetch',
+          type: 'dept/fetch',
           payload: {
             page: this.state.pageCurrent,
             pageSize: this.state.pageSizeCurrent,
             keyWord: this.state.formValues.keyWord,
           },
         });
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 3, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
-        });
-        message.success('公司启用成功!');
+        message.success('部门启用成功!');
       },
     });
 
-  }; // 公司状态启用方法
+  }; // 部门状态启用方法
 
   handleCancel = (record) => {
 
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/cancel',
+      type: 'dept/cancel',
       payload: {
         id:record.id,
         status: 0,
@@ -386,25 +363,24 @@ export default class OrgUnitList extends PureComponent {
           selectedRows: [],
         });
         dispatch({
-          type: 'company/fetch',
+          type: 'dept/fetch',
           payload: {
             page: this.state.pageCurrent,
             pageSize: this.state.pageSizeCurrent,
             keyWord: this.state.formValues.keyWord,
           },
         });
-        message.warning('公司已禁用!');
+        message.warning('部门已禁用!');
       },
     });
 
-  }; // 公司状态禁用方法
+  }; // 部门状态禁用方法
 
   treeMenu() {
     const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
-        onClick={this.handleTreeMenuClick}
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
         style={{ width: 130 }}
@@ -413,7 +389,7 @@ export default class OrgUnitList extends PureComponent {
           key="sub1"
           title={
             <span>
-              <span>至诚集团</span>
+              <span>至诚</span>
             </span>
           }
         >
@@ -423,7 +399,7 @@ export default class OrgUnitList extends PureComponent {
         </SubMenu>
       </Menu>
     );
-  } // 左边树显示方法
+  }
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -451,31 +427,31 @@ export default class OrgUnitList extends PureComponent {
         </Row>
       </Form>
     );
-  } // 简单查询样式显示
-
+  }
   renderForm() {
     return this.renderSimpleForm();
-  } // 切换回简单查询方法
+  }
 
   render() {
-    const { company: { data }, loading } = this.props;
-    const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
+    const { dept: { data }, loading } = this.props;
+    const { selectedRows, DepartmentAddVisible, DepartmentViewVisible, DepartmentEditVisible, rowInfo } = this.state;
+
     const columns = [
       {
-        title: '组织编号',
+        title: '部门编号',
         dataIndex: 'number',
       },
       {
-        title: '组织名称',
+        title: '部门名称',
         dataIndex: 'name',
       },
       {
-        title: '电话',
-        dataIndex: 'phone',
+        title: '上级部门',
+        dataIndex: 'parentId',
       },
       {
-        title: '负责人',
-        dataIndex: 'principal',
+        title: '备注',
+        dataIndex: 'remarks',
       },
       {
         title: '状态',
@@ -500,49 +476,25 @@ export default class OrgUnitList extends PureComponent {
         },
       },
       {
-        title: '分公司',
-        dataIndex: 'isBranch',
-        align: 'center',
-        width: 100,
-        filters: [
-          {
-            text: industry[0],
-            value: 0,
-          },
-          {
-            text: industry[1],
-            value: 1,
-          },
-        ],
-        onFilter: (value, record) => record.industry.toString() === value,
-        render(val) {
-          return <Badge status text={industry[val]} />;
-        },
-      },
-      {
-        title: '地址',
-        dataIndex: 'address',
-      },
-
-      {
         title: '操作',
-        render: (text, record) => (
+        render: (text, record, index) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
+
             {
-            (statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
-              <span>
-                <Divider type="vertical" />
-                <a onClick={() => this.showEditMessage(true, record)} >编辑</a>
-                <Divider type="vertical" />
-                <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
-                  <a>删除</a>
-                </Popconfirm>
-                <Divider type="vertical" />
-                <a onClick={() =>this.handleCancelCancel(record)} >启用</a>
-              </span>
-            )
-          }
+              (statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
+                <span>
+                  <Divider type="vertical" />
+                  <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+                  <Divider type="vertical" />
+                  <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+                    <a>删除</a>
+                  </Popconfirm>
+                  <Divider type="vertical" />
+                  <a onClick={() =>this.handleCancelCancel(record)} >启用</a>
+                </span>
+              )
+            }
             {
               (statusText[record.status] === `启用`) && (
                 <span>
@@ -555,16 +507,18 @@ export default class OrgUnitList extends PureComponent {
         ),
       },
     ];
+
     const batchMenu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
+
     const parentMethods = {
-      handleOrgUnitAddVisible: this.handleOrgUnitAddVisible,
-      handleOrgUnitViewVisible: this.handleOrgUnitViewVisible,
-      handleOrgUnitEditVisible: this.handleOrgUnitEditVisible,
+      handleDepartmentViewVisible: this.handleDepartmentViewVisible,
+      handleDepartmentEditVisible: this.handleDepartmentEditVisible,
+      handleDepartmentAddVisible: this.handleDepartmentAddVisible,
     };
     return (
       <div>
@@ -580,7 +534,7 @@ export default class OrgUnitList extends PureComponent {
                   <Button
                     icon="plus"
                     type="primary"
-                    onClick={() => this.handleOrgUnitAddVisible(true)}
+                    onClick={() => this.handleDepartmentAddVisible(true)}
                   >
                     新建
                   </Button>
@@ -605,9 +559,9 @@ export default class OrgUnitList extends PureComponent {
               </div>
             </Content>
           </Layout>
-          <OrgUnitAddModal {...parentMethods} OrgUnitAddVisible={OrgUnitAddVisible} />
-          <OrgUnitViewModal {...parentMethods} OrgUnitViewVisible={OrgUnitViewVisible} rowInfo={rowInfo} />
-          <OrgUnitEditModal {...parentMethods} OrgUnitEditVisible={OrgUnitEditVisible} rowInfo={rowInfo} />
+          <DepartmentAddModal {...parentMethods} DepartmentAddVisible={DepartmentAddVisible} />
+          <DepartmentViewModal {...parentMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
+          <DepartmentEditModal {...parentMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
         </Card>
       </div>
     );

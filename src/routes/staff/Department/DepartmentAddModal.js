@@ -10,11 +10,17 @@ import {
   Select,
   Popover,
   Modal,
+  Button,
+  Table,
+  Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
-
+import PartnerType from './PartnerType';
+import EditableCell from '../EditableTable/EditableCell';
 import styles from './Style.less';
+import {message} from "antd/lib/index";
 
+const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -29,9 +35,26 @@ const formItemLayout = {
   },
 };
 
-class DepartmentEditModal extends PureComponent {
+class DepartmentAddModal extends PureComponent {
   state = {
+    dataSource: [
+      {
+        key: '0',
+        name: '汪工',
+        phone: '123456',
+        remarks: 'aaa',
+      },
+      {
+        key: '1',
+        name: '申工',
+        phone: '456789',
+        remarks: 'bbb',
+      },
+    ],
+    partnerTypeVisible: false,
+    partnerTypeValue: "杭州至诚云",
     width: '100%',
+    count: 2,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -39,6 +62,47 @@ class DepartmentEditModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onCellChange = (key, dataIndex) => {
+    return value => {
+      const dataSource = [...this.state.dataSource];
+      const target = dataSource.find(item => item.key === key);
+      if (target) {
+        target[dataIndex] = value;
+        this.setState({ dataSource });
+      }
+    };
+  };
+  onDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  };
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
+    const newData = {
+      key: count,
+      name: `小杨 ${count}`,
+      phone: 18,
+      remarks: `London, Park Lane no. ${count}`,
+    };
+    this.setState({
+      dataSource: [...dataSource, newData],
+      count: count + 1,
+    });
+  };
+
+  handlePartnerTypeVisible = flag => {
+    this.setState({
+      partnerTypeVisible: !!flag,
+    });
+  };
+
+  handlePartnerTypeValue = (unit) => {
+    this.setState({
+      partnerTypeValue: unit,
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -47,69 +111,77 @@ class DepartmentEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, DepartmentEditVisible, handleDepartmentEditVisible, rowInfo } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { form, dispatch, DepartmentAddVisible, handleDepartmentAddVisible } = this.props;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
+    const { partnerTypeValue, partnerTypeVisible } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
+            type: 'dept/add',
             payload: values,
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                handleDepartmentAddVisible(false);
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
-          form.resetFields();
-          handleDepartmentEditVisible(false);
+
         }
       });
     };
     const cancelDate = () => {
-      form.resetFields();
-      handleDepartmentEditVisible(false);
+      handleDepartmentAddVisible(false);
     };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
+    const { dataSource } = this.state;
+    const columns = [
+      {
+        key:"1",
+        title: '合伙人',
+        dataIndex: 'name',
+        render: (text, record) => (
+          <EditableCell value={text} onChange={this.onCellChange(record.key, 'name')} />
+        ),
+      },
+      {
+        key:"2",
+        title: '合伙人类型',
+        dataIndex: 'type',
+        render: (text, record) => (
+
+          <Search
+            defaultValue='11111'
+            placeholder="合伙人类型"
+            onSearch={this.handlePartnerTypeVisible}
+          />
+
+        ),
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return this.state.dataSource.length > 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+              <a href=" ">Delete</a>
+            </Popconfirm>
+          ) : null;
+        },
+      },
+    ];
+    const parentMethods = {
+      handlePartnerTypeVisible: this.handlePartnerTypeVisible,
     };
     return (
       <Modal
-        title="组织机构基本信息编辑"
+        destroyOnClose="true"
+        keyboard={false}
+        title="部门信息新增"
         style={{ top: 20 }}
-        visible={DepartmentEditVisible}
+        visible={DepartmentAddVisible}
         width="55%"
         maskClosable={false}
         onOk={validate}
@@ -120,18 +192,22 @@ class DepartmentEditModal extends PureComponent {
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="组织名称">
+                <Form.Item {...formItemLayout} label="部门名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],
+                    initialValue:`${partnerTypeValue}`,
                   })(
-                    <Input placeholder="请输入组织名称" />
+                    <Search
+                      placeholder="合伙人类型"
+                      onSearch={this.handlePartnerTypeVisible}
+                    />
                   )}
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="上级组织">
-                  {getFieldDecorator('parentOrg', {
+                <Form.Item {...formItemLayout} label="上级部门">
+                  {getFieldDecorator('parentId', {
                     rules: [{ required: true, message: '请选择上级组织' }],
                     initialValue:`至诚`,
                   })(
@@ -145,10 +221,9 @@ class DepartmentEditModal extends PureComponent {
             </Row>
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="组织编码">
+                <Form.Item {...formItemLayout} label="部门编码">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '请输入组织编码' }],
-                    initialValue:`${rowInfo.organizeCode}`,
                   })(
                     <Input placeholder="请输入组织编码" />
                   )}
@@ -156,7 +231,7 @@ class DepartmentEditModal extends PureComponent {
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('isCompany', {
+                  {getFieldDecorator('iscompany', {
                     rules: [{ required: true, message: '是否分公司' }],
                     initialValue:`否`,
                   })(
@@ -188,12 +263,11 @@ class DepartmentEditModal extends PureComponent {
             </Row>
             <Row className={styles['fn-mb-15']}>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="负责人">
+                <Form.Item {...formItemLayout} label="部门负责人">
                   {getFieldDecorator('principal', {
-                    rules: [{ required: false, message: '请选择负责人' }],
-                    initialValue:`请选择`,
+                    rules: [{ required: false, message: '请选择部门负责人' }],
                   })(
-                    <Select>
+                    <Select placeholder="请选择部门负责人" >
                       <Option value="0">请选择</Option>
                       <Option value="1">员工A</Option>
                       <Option value="2">员工B</Option>
@@ -320,7 +394,27 @@ class DepartmentEditModal extends PureComponent {
                 </Form.Item>
               </Col>
             </Row>
+
+            <Row className={styles['fn-mb-15']}>
+              <Col span={24}>
+                <div>
+                  <Card>
+                    <div>
+                      <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                        选择合伙人
+                      </Button>
+                      {/*// 表格默认无数据，点击添加合伙人按钮 弹出 合伙人Modal，选择后添加到Table表格*/}
+                      <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </Col>
+            </Row>
           </Form>
+          <PartnerType {...parentMethods} partnerTypeVisible={partnerTypeVisible} />
         </Card>
       </Modal>
     );
@@ -330,4 +424,4 @@ class DepartmentEditModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DepartmentEditModal));
+}))(Form.create()(DepartmentAddModal));
