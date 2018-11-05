@@ -395,6 +395,11 @@ const menuData = [
         path: 'dictType',
       },
       {
+        key: 'CodeRule',
+        name: '编码规则',
+        path: 'CodeRule',
+      },
+      {
         key: 'authorization',
         name: '权限管理',
         path: 'authorization',

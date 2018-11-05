@@ -360,6 +360,10 @@ export const getRouterData = app => {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
 
+    '/system/CodeRule': {
+      component: dynamicWrapper(app, [], () => import('../routes/CodeRule/CodeRuleList')),
+      name:"编码规则",
+    },
     '/system/authorization/Obj': {
       component: dynamicWrapper(app, [], () => import('../routes/Authorization/Obj/ObjManageList')),
       name:"权限对象",

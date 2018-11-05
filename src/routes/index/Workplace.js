@@ -85,9 +85,9 @@ export default class Workplace extends PureComponent {
     dispatch({
       type: 'activities/fetchList',
     });
-    dispatch({
+   /* dispatch({
       type: 'chart/fetch',
-    });
+    });*/
   }
 
   componentWillUnmount() {
@@ -140,9 +140,9 @@ export default class Workplace extends PureComponent {
       rangePickerValue,
     });
 
-    this.props.dispatch({
+   /* this.props.dispatch({
       type: 'chart/fetchSalesData',
-    });
+    });*/
   };
 
   selectDate = type => {
@@ -150,9 +150,9 @@ export default class Workplace extends PureComponent {
       rangePickerValue: getTimeDistance(type),
     });
 
-    this.props.dispatch({
+   /* this.props.dispatch({
       type: 'chart/fetchSalesData',
-    });
+    });*/
   };
 
   isActive(type) {
