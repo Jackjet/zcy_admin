@@ -79,12 +79,12 @@ export default class Workplace extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
+   /* dispatch({
       type: 'project/fetchNotice',
     });
     dispatch({
       type: 'activities/fetchList',
-    });
+    });*/
    /* dispatch({
       type: 'chart/fetch',
     });*/
@@ -111,24 +111,21 @@ export default class Workplace extends PureComponent {
     window.scrollTo(0,0)
   };
 
-  //项目临时授权
+  // 项目临时授权
   handleProjectTemAuthAddVisible=(flag)=>{
     this.setState({
       projectTemAuthVisible: !!flag,
     });
   }
 
-  //项目指派
+  // 项目指派
   handleProjectAssignmentAddVisible=(flag)=>{
     this.setState({
       projectAssigVisible: !!flag,
     });
   }
 
-
-
-
-  //新增日程
+  // 新增日程
   handleScheduleAddVisible = (flag)=>{
     this.setState({
       ScheduleAddVisible:!!flag,
@@ -310,17 +307,17 @@ export default class Workplace extends PureComponent {
       total: 50,
     };
 
-    //新增日程
+    // 新增日程
     const ScheduleAddMethods = {
       handleScheduleAddVisible: this.handleScheduleAddVisible,
     };
 
-    //项目临时授权
+    // 项目临时授权
     const ProjectTemAuthAddMethods = {
       handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
     };
 
-    //项目指派
+    // 项目指派
     const ProjectAssignmentAddMethods = {
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
     };
@@ -574,9 +571,9 @@ export default class Workplace extends PureComponent {
         <Row gutter={24} className={styles["row-h"]} >
           <Col xl={24} lg={24} md={24} sm={24} xs={24} style={{ borderRadius: 6}}>
             <Card
-              bodyStyle={{ padding: 0 }} className={styles.cardstyle}
+              bodyStyle={{ padding: 0 }}
+              className={styles.cardstyle}
               bordered={false}
-
             >
               <div className="calendar-all" id="homeCalendarCon">
                 <div className={styles['ant-fullcalendar-header-buttonhz']}>
@@ -594,7 +591,7 @@ export default class Workplace extends PureComponent {
           </Col>
         </Row>
         <Row gutter={24} className={styles["row-h"]}>
-          <Col>
+         {/* <Col>
             <Card
               className={styles.projectList}
               style={{ marginBottom: 24 ,borderRadius:6}}
@@ -703,7 +700,7 @@ export default class Workplace extends PureComponent {
                         </Geom>
                       </Chart>
                     </Col>
-                    {/*    <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+                        <Col xl={12} lg={12} md={12} sm={24} xs={24}>
                       <Chart
                         width={500}
                         height={500}
@@ -742,7 +739,7 @@ export default class Workplace extends PureComponent {
                           />
                         </Geom>
                       </Chart>
-                    </Col>*/}
+                    </Col>
                   </Row>
                 </TabPane>
                 <TabPane
@@ -789,13 +786,32 @@ export default class Workplace extends PureComponent {
                     <Col xl={16} lg={12} md={12} sm={24} xs={24}>
                       <div className={styles.salesBar}>
                         <Bar height={500} title="合同额趋势" data={contractData} />
+                        <div className={styles.salesBar}>
+                          <Chart height={400} data={data} scale={cols} title="合同额趋势" forceFit>
+                            <Axis name="department" />
+                            <Axis name="sales" />
+                            <Tooltip showTitle={false} crosshairs={{type:"cross"}} />
+                            <Geom
+                              type="interval"
+                              position="department*sales"
+                              tooltip={['department*sales', (department, sales) => {
+                                return {
+                                  name: department,
+                                  value:
+                                  '<br><span style="padding-left: 16px">项目总数：'+sales+'</span><br/>'
+                                  + '<span style="padding-left: 16px">在建：1</span><br/>'
+                                  + '<span style="padding-left: 16px">启动中：2</span><br/>'
+                                  + '<span style="padding-left: 16px">已归档：3</span>'};}]}
+                            />
+                          </Chart>
+                        </div>
                       </div>
                     </Col>
                   </Row>
                 </TabPane>
               </Tabs>
             </Card>
-          </Col>
+          </Col>*/}
           <Col>
             <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}  style={{borderRadius:6}}>
               <div className={styles.salesCard}>
@@ -810,7 +826,26 @@ export default class Workplace extends PureComponent {
                               <Option value={1}>义务至诚</Option>
                             </Select>
                           </div>
-                          <Bar height={292} title="销售额趋势" data={salesData} />
+                          {/*<Bar height={292} title="销售额趋势" data={salesData} />*/}
+                          <div className={styles.salesBar}>
+                            <Chart height={400} data={data} scale={cols} title="销售额趋势" forceFit>
+                              <Axis name="department" />
+                              <Axis name="sales" />
+                              <Tooltip showTitle={false} crosshairs={{type:"cross"}} />
+                              <Geom
+                                type="interval"
+                                position="department*sales"
+                                tooltip={['department*sales', (department, sales) => {
+                                  return {
+                                    name: department,
+                                    value:
+                                    '<br><span style="padding-left: 16px">项目总数：'+sales+'</span><br/>'
+                                    + '<span style="padding-left: 16px">在建：1</span><br/>'
+                                    + '<span style="padding-left: 16px">启动中：2</span><br/>'
+                                    + '<span style="padding-left: 16px">已归档：3</span>'};}]}
+                              />
+                            </Chart>
+                          </div>
                         </div>
                       </Col>
                       <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -833,7 +868,26 @@ export default class Workplace extends PureComponent {
                     <Row>
                       <Col xl={16} lg={12} md={12} sm={24} xs={24}>
                         <div className={styles.salesBar}>
-                          <Bar height={292} title="访问量趋势" data={salesData} />
+                          {/*<Bar height={292} title="访问量趋势" data={salesData} />*/}
+                          <div className={styles.salesBar}>
+                            <Chart height={400} data={data} scale={cols} title="访问量趋势" forceFit>
+                              <Axis name="department" />
+                              <Axis name="sales" />
+                              <Tooltip showTitle={false} crosshairs={{type:"cross"}} />
+                              <Geom
+                                type="interval"
+                                position="department*sales"
+                                tooltip={['department*sales', (department, sales) => {
+                                  return {
+                                    name: department,
+                                    value:
+                                    '<br><span style="padding-left: 16px">项目总数：'+sales+'</span><br/>'
+                                    + '<span style="padding-left: 16px">在建：1</span><br/>'
+                                    + '<span style="padding-left: 16px">启动中：2</span><br/>'
+                                    + '<span style="padding-left: 16px">已归档：3</span>'};}]}
+                              />
+                            </Chart>
+                          </div>
                         </div>
                       </Col>
                       <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -848,6 +902,216 @@ export default class Workplace extends PureComponent {
                               </li>
                             ))}
                           </ul>
+                        </div>
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane
+                    tab={
+                      <span>
+                        <Icon type="pie-chart" />客户贡献度
+                      </span>
+                    }
+                    key="1"
+                  >
+                    <Row>
+                      <Col xl={8} lg={12} md={12} sm={12} xs={12}>
+                        <Chart
+                          width={400}
+                          height={400}
+                          data={dv}
+                          scale={colsPie}
+                          padding={[ 80, 100, 80, 80 ]}
+                          onPlotClick={()=>this.handleClick()}
+                          forceFit
+                        >
+                          <Coord type='theta' radius={0.75} innerRadius={0.6} />
+                          <Axis name="percent" />
+                          <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-140} />
+                          <Tooltip
+                            showTitle={false}
+                            itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+                          />
+                          <Guide >
+                            <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:0.84em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
+                          </Guide>
+                          <Geom
+                            type="intervalStack"
+                            position="percent"
+                            color='item'
+                            tooltip={['item*percent',(item, percent) => {
+                              percent = percent * 100 + '%';
+                              return {
+                                name: item,
+                                value: percent,
+                              };
+                            }]}
+                            style={{lineWidth: 1,stroke: '#fff'}}
+                          >
+                            <Label
+                              content='percent'
+                              offset={-20}
+                              textStyle={{
+                                rotate: 0,
+                                textAlign: 'center',
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(0, 0, 0, .45)',
+                              }}
+                            />
+                          </Geom>
+                        </Chart>
+                      </Col>
+                      <Col xl={8} lg={12} md={12} sm={12} xs={12}>
+                        <Chart
+                          width={400}
+                          height={400}
+                          data={dv}
+                          scale={colsPie}
+                          padding={[ 80, 100, 80, 80 ]}
+                          onPlotClick={()=>this.handleClick()}
+                          forceFit
+                        >
+                          <Coord type='theta' radius={0.75} innerRadius={0.6} />
+                          <Axis name="percent" />
+                          <Legend position='right' offsetY={-window.innerHeight / 3 + 200} offsetX={-85} />
+                          <Tooltip
+                            showTitle={false}
+                            itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+                          />
+                          <Guide >
+                            <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:0.84em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
+                          </Guide>
+                          <Geom
+                            type="intervalStack"
+                            position="percent"
+                            color='item'
+                            tooltip={['item*percent',(item, percent) => {
+                              percent = percent * 100 + '%';
+                              return {
+                                name: item,
+                                value: percent,
+                              };
+                            }]}
+                            style={{lineWidth: 1,stroke: '#fff'}}
+                          >
+                            <Label
+                              content='percent'
+                              offset={-20}
+                              textStyle={{
+                                rotate: 0,
+                                textAlign: 'center',
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(0, 0, 0, .45)',
+                              }}
+                            />
+                          </Geom>
+                        </Chart>
+                      </Col>
+                      {/*    <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+                      <Chart
+                        width={500}
+                        height={500}
+                        data={dv}
+                        scale={cols}
+                        padding={[ 80, 100, 80, 80 ]}
+                        forceFit
+                      >
+                        <Coord type='theta' radius={0.75} innerRadius={0.6} />
+                        <Axis name="percent" />
+                        <Legend position='bottom' />
+                        <Tooltip
+                          showTitle={false}
+                          itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+                        />
+                        <Guide >
+                          <Html position={[ '50%', '50%' ]} html='<div style="color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;">客户<br><span style="color:#262626;font-size:2.5em">100</span>万</div>' alignX='middle' alignY='middle' />
+                        </Guide>
+                        <Geom
+                          type="intervalStack"
+                          position="percent"
+                          color='item'
+                          tooltip={['item*percent',(item, percent) => {
+                            percent = percent * 100 + '%';
+                            return {
+                              name: item,
+                              value: percent,
+                            };
+                          }]}
+                          style={{lineWidth: 1,stroke: '#fff'}}
+                        >
+                          <Label
+                            content='percent'
+                            formatter={(val, item) => {
+                              return item.point.item + ': ' + val;}}
+                          />
+                        </Geom>
+                      </Chart>
+                    </Col>*/}
+                    </Row>
+                  </TabPane>
+                  <TabPane
+                    tab={
+                      <span>
+                        <Icon type="bar-chart" />项目量
+                      </span>
+                    }
+                    key="2"
+                  >
+                    <Row>
+                      <Col xl={16} lg={12} md={12} sm={24} xs={24}>
+                        <div className={styles.salesBar}>
+                          <Chart height={400} data={data} scale={cols} title="项目量趋势" forceFit>
+                            <Axis name="department" />
+                            <Axis name="sales" />
+                            <Tooltip showTitle={false} crosshairs={{type:"cross"}} />
+                            <Geom
+                              type="interval"
+                              position="department*sales"
+                              tooltip={['department*sales', (department, sales) => {
+                                return {
+                                  name: department,
+                                  value:
+                                  '<br><span style="padding-left: 16px">项目总数：'+sales+'</span><br/>'
+                                  + '<span style="padding-left: 16px">在建：1</span><br/>'
+                                  + '<span style="padding-left: 16px">启动中：2</span><br/>'
+                                  + '<span style="padding-left: 16px">已归档：3</span>'};}]}
+                            />
+                          </Chart>
+                        </div>
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane
+                    tab={
+                      <span>
+                        <Icon type="bar-chart" />合同量
+                      </span>
+                    }
+                    key="3"
+                  >
+                    <Row>
+                      <Col xl={16} lg={12} md={12} sm={24} xs={24}>
+                        <div className={styles.salesBar}>
+                          {/*<Bar height={500} title="合同额趋势" data={contractData} />*/}
+                          <div className={styles.salesBar}>
+                            <Chart height={400} data={data} scale={cols} title="合同额趋势" forceFit>
+                              <Axis name="department" />
+                              <Axis name="sales" />
+                              <Tooltip showTitle={false} crosshairs={{type:"cross"}} />
+                              <Geom
+                                type="interval"
+                                position="department*sales"
+                                tooltip={['department*sales', (department, sales) => {
+                                  return {
+                                    name: department,
+                                    value:
+                                    '<br><span style="padding-left: 16px">项目总数：'+sales+'</span><br/>'
+                                    + '<span style="padding-left: 16px">在建：1</span><br/>'
+                                    + '<span style="padding-left: 16px">启动中：2</span><br/>'
+                                    + '<span style="padding-left: 16px">已归档：3</span>'};}]}
+                              />
+                            </Chart>
+                          </div>
                         </div>
                       </Col>
                     </Row>
