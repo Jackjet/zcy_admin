@@ -269,13 +269,13 @@ export const getRouterData = app => {
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
-    '/project/start': {
-      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
-      name: '项目启动',
-    },
-    '/project/list': {
+    '/project/projectinfoBAK': {
       component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProjectList')),
-      name: '项目信息管理',
+      name: '项目信息列表管理',
+    },
+    '/project/projectInfo': {
+      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
+      name: '项目信息启动',
     },
     '/project/projectInfo/info': {
       name: '项目基本信息',

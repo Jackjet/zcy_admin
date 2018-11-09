@@ -156,6 +156,7 @@ class Step2 extends React.PureComponent {
               ...values,
             },
           });
+          dispatch(routerRedux.push('/project/projectInfo/result'));
         }
       });
     };
@@ -228,11 +229,11 @@ class Step2 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
-              提交
-            </Button>
-            <Button onClick={onPrev} style={{ marginLeft: 8 }}>
+            <Button onClick={onPrev} style={{ left: 400 }}>
               上一步
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
+              提交
             </Button>
           </Form.Item>
         </Form>

@@ -1,4 +1,5 @@
 import { updatePerson, queryPerson, removePersonById, addPerson, removePersonByCondition, statusCancelCancel, statusCancel } from '../services/person';
+import {queryProjectNotice} from '../services/api';
 
 export default {
   namespace: 'project',
@@ -12,6 +13,7 @@ export default {
       pagination: {},
       total:'',
     },
+   // notice:[],
   },
 
   effects: {
@@ -66,6 +68,15 @@ export default {
         callback(response); // 返回结果
       }
     },
+
+  /*  *fetchNotice(_, { call, put }) {
+      const response = yield call(queryProjectNotice);
+      yield put({
+        type: 'saveNotice',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },*/
+
   },
   reducers: {
     save(state, action) {
@@ -75,5 +86,11 @@ export default {
         step: action.payload.data.number,
       };
     },
+   /* saveNotice(state, action) {
+      return {
+        ...state,
+        notice: action.payload,
+      };
+    },*/
   },
 };

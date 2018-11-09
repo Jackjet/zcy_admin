@@ -253,10 +253,10 @@ class Step4 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} loading={submitting}>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
               提交
             </Button>
-            <Button onClick={onPrev} style={{ marginLeft: 8 }}>
+            <Button onClick={onPrev} style={{ marginLeft: 8, left: 400 }}>
               上一步
             </Button>
           </Form.Item>
@@ -270,6 +270,6 @@ class Step4 extends React.PureComponent {
 export default connect(({ project, loading }) => ({
   submitting: loading.effects['form/submitStepForm'],
   project,
-  loading: loading.models.company,
+  loading: loading.models.project,
 }))(Step4);
 
