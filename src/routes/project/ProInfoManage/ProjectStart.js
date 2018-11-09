@@ -26,7 +26,7 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class ProjectList extends PureComponent {
+export default class ProjectStart extends PureComponent {
 
 
 

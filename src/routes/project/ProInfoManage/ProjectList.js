@@ -50,7 +50,7 @@ const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审�
   loading: loading.models.company,
 }))
 @Form.create()
-export default class ProjectListBAK extends PureComponent {
+export default class ProjectList extends PureComponent {
   state = {
     projectVisible: false,
     projectApplyAddVisible: false,
