@@ -1,6 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import {Route, Redirect, Switch, routerRedux} from 'dva/router';
+import {
+  Route,
+  Redirect,
+  Switch,
+  routerRedux,
+} from 'dva/router';
 import {
   Card,
   Form,
@@ -27,9 +32,6 @@ const getValue = obj =>
 }))
 @Form.create()
 export default class ProjectStart extends PureComponent {
-
-
-
   state = {
     choiceTypeValue:'',
     formValues: {},
@@ -39,14 +41,11 @@ export default class ProjectStart extends PureComponent {
   };
 
   componentDidMount() {
-    console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
       type: 'rule/fetch',
     });
   };
-
-
 
   onOpenChange = (openKeys) => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
@@ -58,8 +57,6 @@ export default class ProjectStart extends PureComponent {
       });
     }
   } // 左边树的父节点展开方法
-
-
 
   getCurrentStep() {
     const { location } = this.props;
@@ -73,6 +70,22 @@ export default class ProjectStart extends PureComponent {
       case 'result':
         return 2;
       case 'process':
+        return 3;
+      case 'projectInfo':
+        return 0;
+      case 'createContract':
+        return 0;
+      case 'examineReport':
+        return 1;
+      case 'createReportCode':
+        return 2;
+      case 'signature':
+        return 0;
+      case 'projectFile':
+        return 1;
+      case 'createKnowledgeSystem':
+        return 2;
+      case 'approvalMessage':
         return 3;
       default:
         return 0;
@@ -93,6 +106,10 @@ export default class ProjectStart extends PureComponent {
         return 3;
       case 'projectInfo':
         return 4;
+      case 'createContract':
+        return 5;
+      case 'examineReport':
+        return 6;
       default:
         return 0;
     }
@@ -133,10 +150,10 @@ export default class ProjectStart extends PureComponent {
         this.props.dispatch(routerRedux.push('/project/projectInfo/info'));
         break;
       case '1':
-        this.props.dispatch(routerRedux.push('/project/projectInfo/confirm'));
+        this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
         break;
       case '2':
-        this.props.dispatch(routerRedux.push('/project/projectInfo/info'));
+        this.props.dispatch(routerRedux.push('/project/projectInfo/signature'));
         break;
       default:
         break;
@@ -191,6 +208,28 @@ export default class ProjectStart extends PureComponent {
     const onStep4 = () => {
       this.props.dispatch(routerRedux.push('/project/projectInfo/process'));
     };
+    const onStep6 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
+    };
+    const onStep7 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/examineReport'));
+    };
+    const onStep8 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/createReportCode'));
+    };
+    const onStep9 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/signature'));
+    };
+    const onStep10 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/projectFile'));
+    };
+    const onStep11 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/createKnowledgeSystem'));
+    };
+    const onStep12 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/approvalMessage'));
+    };
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -213,16 +252,17 @@ export default class ProjectStart extends PureComponent {
                   )}
                   {(stepVisible === `1`) && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
-                      <Step title="生成合同"  />
-                      <Step title="报告审核"  />
-                      <Step title="生成报告号"  />
+                      <Step title="生成合同" onClick={onStep6} />
+                      <Step title="报告审核" onClick={onStep7} />
+                      <Step title="生成报告号" onClick={onStep8} />
                     </Steps>
                   )}
                   {(stepVisible === `2`) && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
-                      <Step title="报告文印/盖章"  />
-                      <Step title="项目归档"  />
-                      <Step title="生成知识体系"  />
+                      <Step title="报告文印/盖章" onClick={onStep9}  />
+                      <Step title="项目归档" onClick={onStep10} />
+                      <Step title="生成知识体系" onClick={onStep11} />
+                      <Step title="审批信息" onClick={onStep12} />
                     </Steps>
                   )}
                   <Switch>

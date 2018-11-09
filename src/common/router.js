@@ -293,6 +293,36 @@ export const getRouterData = app => {
       name: "项目过程管理",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step4')),
     },
+    '/project/projectInfo/createContract': {
+      name: "生成合同",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step6')),
+    },
+    '/project/projectInfo/examineReport': {
+      name: "审核报告",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step7')),
+    },
+    '/project/projectInfo/createReportCode': {
+      name: "生成报告号",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step8')),
+    },
+    '/project/projectInfo/signature': {
+      name: "盖章(文印)/签字",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step9')),
+    },
+    '/project/projectInfo/projectFile': {
+      name: "项目归档",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step10')),
+    },
+    '/project/projectInfo/createKnowledgeSystem': {
+      name: "生成知识体系",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step11')),
+    },
+    '/project/projectInfo/approvalMessage': {
+      name: "审批信息",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step12')),
+    },
+
+
     '/form/step-form/info': {
       name: '分步表单（填写转账信息）',
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step1')),

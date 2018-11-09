@@ -161,7 +161,6 @@ class Step1 extends React.PureComponent {
   }; // 获取业务来源的Option的值
 
   handleProTypeSourceValue = (val) =>{
-    console.log("++++++++++++"+val);
     this.setState({
       ProTypeValue: val,
     });
@@ -393,7 +392,7 @@ class Step1 extends React.PureComponent {
                 })(
                   <Checkbox.Group style={{ width: '100%' }}>
                     <Row>
-                      { ( ProTypeValue === `0`|| ProTypeValue ===`1` ) && (
+                      { ( ProTypeValue === `工程造价业务项目`|| ProTypeValue === `可研报告` ) && (
                         <span>
                           <Col span={8}>
                             <Checkbox value="A">预算编制</Checkbox>
@@ -416,7 +415,7 @@ class Step1 extends React.PureComponent {
                         </span>
                       )}
 
-                      { ( ProTypeValue === `2`|| ProTypeValue===`1` ) && (
+                      { ( ProTypeValue === `招标代理业务项目`|| ProTypeValue===`可研报告` ) && (
                         <span>
                           <Col span={8}>
                             <Checkbox value="G">政府采购招标代理</Checkbox>
@@ -450,8 +449,8 @@ class Step1 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
-          <Divider orientation="left">{ProTypeOption[ProTypeValue]}</Divider>
-          { ( ProTypeValue === `0` )&& (
+          <Divider orientation="left">{ProTypeValue}</Divider>
+          { ( ProTypeValue === `工程造价业务项目` )&& (
             <div>
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
@@ -510,7 +509,7 @@ class Step1 extends React.PureComponent {
               </Row>
             </div>
           )}
-          { ( ProTypeValue === `1` ) && (
+          { ( ProTypeValue === `可研报告` ) && (
             <div>
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
@@ -569,7 +568,7 @@ class Step1 extends React.PureComponent {
               </Row>
             </div>
           )}
-          { ( ProTypeValue === `2`) && (
+          { ( ProTypeValue === `招标代理业务项目`) && (
             <div>
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
