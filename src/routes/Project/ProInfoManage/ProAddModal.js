@@ -96,9 +96,6 @@ const formItemLayout = {
   },
 };
 
-
-
-
 class ProjectAddModal extends PureComponent {
   state = {
     width: '100%',

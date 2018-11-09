@@ -71,14 +71,14 @@ const menuData = [
     path: 'project',
     children: [
       {
-        key: 'projectInfoList',
+        key: 'start',
         name: '项目启动',
-        path: 'projectInfo',
+        path: 'start',
       },
       {
-        key: 'projectinfoListBAK',
+        key: 'list',
         name: '项目信息查询',
-        path: 'projectinfoBAK',
+        path: 'list',
       },
       /*{
         key: 'signatureInfoManage',

@@ -105,10 +105,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
     },
-    '/project/projectinfoBAK': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProListBAK')),
-      name: '项目信息管理',
-    },
+
     '/project/signatureInfoManage': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Project/SignatureAndSealInfoManage/SignatureBill')),
       name: '签章信息管理',
@@ -272,8 +269,12 @@ export const getRouterData = app => {
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
-    '/project/projectInfo': {
-      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProList')),
+    '/project/start': {
+      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
+      name: '项目启动',
+    },
+    '/project/list': {
+      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProjectList')),
       name: '项目信息管理',
     },
     '/project/projectInfo/info': {

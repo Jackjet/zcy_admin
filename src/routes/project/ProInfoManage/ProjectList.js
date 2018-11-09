@@ -21,15 +21,16 @@ import {
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
-import ProjectAddModal from './ProAddModal.js';
-import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal.js';
-import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal.js';
-import ProjectApplyAddModal from './ProjectApprovalLinkModal.js';
-import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
-import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
-import ProjectEditModal from './ProEditModal.js';
+import ProjectAddModal from './ProAddModal';
+import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal';
+import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal';
+import ProjectApplyAddModal from './ProjectApprovalLinkModal';
+import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal';
+import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs';
+import ProjectEditModal from './ProEditModal';
 import AppraisalList from './Appraisal/AppraisalList';
 import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
+
 
 const { confirm } = Modal;
 const {Content, Sider} = Layout;

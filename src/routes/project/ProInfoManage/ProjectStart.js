@@ -234,7 +234,7 @@ export default class ProjectList extends PureComponent {
                         exact={item.exact}
                       />
                     ))}
-                   {/* <Redirect exact from="/project/projectInfo" to="/project/projectInfo/info" />*/}
+                    {/* <Redirect exact from="/project/projectInfo" to="/project/projectInfo/info" />*/}
                   </Switch>
                 </Fragment>
               </Card>
@@ -245,3 +245,6 @@ export default class ProjectList extends PureComponent {
     );
   }
 }
+
+
+
