@@ -607,8 +607,8 @@ export default class OrgUnitList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
              {/* {this.treeMenu()}*/}
               <PageLeftTreeMenu
-                /* menus={router.menus}*/
-                menus={this.state.orgTreeMenu}
+                 menus={router.menus}
+              /*  menus={this.state.orgTreeMenu}*/
                 onClick={this.menuClick}
                 mode="inline"
                 selectedKeys={[this.state.selectedKey]}
