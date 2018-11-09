@@ -79,12 +79,12 @@ export default class Workplace extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-   /* dispatch({
+    dispatch({
       type: 'project/fetchNotice',
     });
     dispatch({
       type: 'activities/fetchList',
-    });*/
+    });
    /* dispatch({
       type: 'chart/fetch',
     });*/
@@ -247,7 +247,7 @@ export default class Workplace extends PureComponent {
         </div>
         <div className={styles.content}>
           <div className={styles.contentTitle}>早安，申杰东，祝你开心每一天！</div>
-          <div>技术专家 | 至诚软件－研发中心－某某平台部－某某技术部－UED</div>
+          <div>技术专家 | 至诚软件－研发中心－CTO</div>
         </div>
       </div>
     );
@@ -323,7 +323,7 @@ export default class Workplace extends PureComponent {
     };
 
     return (
-      <PageHeaderLayout content={pageHeaderContent} extraContent={extraContent}>
+      <PageHeaderLayout className={styles.indexpageHeader} content={pageHeaderContent} extraContent={extraContent}>
         <div className={styles.header}>
           <div className={styles["fn-right"]}><Icon type="edit" theme="outlined" /></div>
           <h3 className={styles.headerh3}>近期事物</h3>

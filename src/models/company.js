@@ -1,4 +1,4 @@
-import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition, statusCancelCancel } from '../services/company';
+import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition, statusCancelCancel,getLeftTreeMenu } from '../services/company';
 
 export default {
   namespace: 'company',
@@ -20,6 +20,12 @@ export default {
           payload: response,
         });
       }
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *getLeftTreeMenu({ callback }, { call}) {
+      const response = yield call(getLeftTreeMenu);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

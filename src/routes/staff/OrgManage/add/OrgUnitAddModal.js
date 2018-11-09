@@ -10,7 +10,7 @@ import {
   Select,
   Popover,
   Modal,
-  message,
+  message,TreeSelect
 } from 'antd';
 import { connect } from 'dva';
 import styles from './Style.less';
@@ -24,6 +24,27 @@ message.config({
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+
+const treeData1 = [{
+  title: 'Node1',
+  value: '0-0',
+  key: '0-0',
+  children: [{
+    title: 'Child Node1',
+    value: '0-0-1',
+    key: '0-0-1',
+  }, {
+    title: 'Child Node2',
+    value: '0-0-2',
+    key: '0-0-2',
+  }],
+}, {
+  title: 'Node2',
+  value: '0-1',
+  key: '0-1',
+}];
+
+
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -38,9 +59,38 @@ const formItemLayout = {
 class OrgUnitAddModal extends PureComponent {
   state = {
     width: '100%',
+    treeData:[{
+      title: 'Node1',
+      value: '0-0',
+      key: '0-0',
+      children: [{
+        title: 'Child Node1',
+        value: '0-0-1',
+        key: '0-0-1',
+      }, {
+        title: 'Child Node2',
+        value: '0-0-2',
+        key: '0-0-2',
+      }],
+    }, {
+      title: 'Node2',
+      value: '0-1',
+      key: '0-1',
+    }],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+         this.setState({treeData : res.data.list});
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -49,9 +99,16 @@ class OrgUnitAddModal extends PureComponent {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
     if (this.state.width !== width) {
-      this.setState({ width });
+      this.setState({ width:width });
     }
   };
+
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  }
+
+
   render() {
     const { form, dispatch, submitting, OrgUnitAddVisible, handleOrgUnitAddVisible } = this.props;
     const { getFieldDecorator, validateFields } = form;
@@ -77,6 +134,8 @@ class OrgUnitAddModal extends PureComponent {
     const cancelDate = () => {
       handleOrgUnitAddVisible(false);
     };
+
+
     return (
       <Modal
         destroyOnClose="true"
@@ -108,7 +167,14 @@ class OrgUnitAddModal extends PureComponent {
                   {getFieldDecorator('parentId', {
                     rules: [{ required: false, message: '请选择上级组织' }],
                   })(
-                    <Input  />
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={this.state.treeData}
+                      placeholder="请选择上级组织"
+                      treeDefaultExpandAll
+                      onChange={this.onOrgTreeSelectChange}
+                    >
+                    </TreeSelect>
                   )}
                 </Form.Item>
               </Col>

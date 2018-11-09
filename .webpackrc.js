@@ -1,4 +1,3 @@
-
 import proxy from './proxy.config.js';
 const path = require('path');
 
