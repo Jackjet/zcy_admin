@@ -20,8 +20,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import ContractTemplateModal from './ContractTemplateModal';
-import styles from '../project/add/style.less';
-
+import styles from '../Project/add/style.less';
 
 const { Search }= Input;
 const RadioGroup = Radio.Group;
@@ -90,6 +89,7 @@ class ContractAddModal extends PureComponent {
     contractOptionData:[],
     contractTemplateVisible: false,
     contractTemplateValue: "杭州至诚云合同模版",
+    TemplateVisible: false,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -110,6 +110,20 @@ class ContractAddModal extends PureComponent {
     });
   };
 
+  onRadioGroupChange = (e) =>{
+    console.log(e.target.value);
+    if(e.target.value === 2){
+      this.setState({
+        TemplateVisible: true,
+      })
+    }
+    if(e.target.value === 1){
+      this.setState({
+        TemplateVisible: false,
+      })
+    }
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -119,8 +133,8 @@ class ContractAddModal extends PureComponent {
   };
   render() {
     const { form, dispatch, submitting, contractAddVisible, handleContractAddVisible, choiceTypeValue } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const {contractOptionData, contractTemplateVisible, contractTemplateValue} = this.state;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
+    const {contractOptionData, contractTemplateVisible, contractTemplateValue, TemplateVisible} = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -129,7 +143,6 @@ class ContractAddModal extends PureComponent {
             type: 'rule/add',
             payload: values,
           });
-          message.success('添加成功');
           handleContractAddVisible(false);
         }
       });
@@ -137,51 +150,14 @@ class ContractAddModal extends PureComponent {
     const cancel = () => {
       handleContractAddVisible(false);
     };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
-    };
     const parentMethods = {
       handleContractTemplateVisible: this.handleContractTemplateVisible,
       handleGetContractTemplateValue: this.handleGetContractTemplateValue,
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="合同基本信息新增"
         style={{ top: 20 }}
         visible={contractAddVisible}
@@ -189,7 +165,6 @@ class ContractAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancel}
-        destroyOnClose='true'
       >
         <div>
           <Card>
@@ -312,13 +287,15 @@ class ContractAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} >
+                  <Form.Item {...formItemLayout} label="合同类型" >
                     {getFieldDecorator('authorizedAgent', {
-                      rules: [{ required: false, message: '非标合同' }],
+                      rules: [{ required: false, message: '合同类型' }],
+                      initialValue:1,
                     })(
-                      <Checkbox value={1} >
-                        非标合同
-                      </Checkbox>
+                      <RadioGroup onChange={this.onRadioGroupChange}>
+                        <Radio value={1}>标准合同</Radio>
+                        <Radio value={2}>非标合同</Radio>
+                      </RadioGroup>
                     )}
                   </Form.Item>
                 </Col>
@@ -376,7 +353,6 @@ class ContractAddModal extends PureComponent {
                     })(<Input placeholder="请输入合同标题" />)}
                   </Form.Item>
                 </Col>
-
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.fzperson}>
                     {getFieldDecorator('fzperson', {
@@ -389,7 +365,6 @@ class ContractAddModal extends PureComponent {
                     )}
                   </Form.Item>
                 </Col>
-
                 <Col span={5} push={1} >
                   <Form.Item {...formItemLayout} label="项目模版">
                     {getFieldDecorator('contractTemplate', {
@@ -399,16 +374,15 @@ class ContractAddModal extends PureComponent {
                       <Search
                         placeholder="项目模版"
                         onSearch={this.handleContractTemplateVisible}
+                        disabled={TemplateVisible}
                       />
                     )}
                   </Form.Item>
-
                 </Col>
                 <Col span={2} style={{paddingLeft: 60}}>
                   <Divider type="vertical" />
                   <a>预览</a>
                 </Col>
-
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} offset={2}>

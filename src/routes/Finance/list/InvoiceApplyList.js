@@ -28,15 +28,15 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class InvoiceApplyList  extends PureComponent {
+export default class companyList  extends PureComponent {
   state = {
-    invoiceApplyVisible: false,
+    companyVisible: false,
     invoiceTabsVisible: false,
     invoiceEditVisible: false,
     invoiceViewVisible: false,
@@ -48,7 +48,11 @@ export default class InvoiceApplyList  extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   // 选中的条数已经选中的价格的和   参数（页码，过滤，把东西分类检出）
@@ -78,7 +82,7 @@ export default class InvoiceApplyList  extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -90,7 +94,7 @@ export default class InvoiceApplyList  extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: {},
     });
   };
@@ -102,7 +106,7 @@ export default class InvoiceApplyList  extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -144,16 +148,16 @@ export default class InvoiceApplyList  extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
   };
 
   // 点击新增显示弹窗handleInvoiceTabsVisible
-  handleInvoiceApplyVisible = flag => {
+  handlecompanyVisible = flag => {
     this.setState({
-      invoiceApplyVisible: !!flag,
+      companyVisible: !!flag,
     });
   };
   handleInvoiceTabsVisible = flag => {
@@ -179,7 +183,7 @@ export default class InvoiceApplyList  extends PureComponent {
   // 新增功能实现
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -187,7 +191,7 @@ export default class InvoiceApplyList  extends PureComponent {
 
     message.success('添加成功111');
     this.setState({
-      invoiceApplyVisible: false,
+      companyVisible: false,
     });
   };
 
@@ -225,7 +229,7 @@ export default class InvoiceApplyList  extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleInvoiceApplyVisible}>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handlecompanyVisible}>
                 新建
               </Button>
             </span>
@@ -236,8 +240,8 @@ export default class InvoiceApplyList  extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
-    const { selectedRows, invoiceApplyVisible, invoiceTabsVisible, invoiceEditVisible, invoiceViewVisible, invoicingVisible } = this.state;
+    const { company: { data }, loading } = this.props;
+    const { selectedRows, companyVisible, invoiceTabsVisible, invoiceEditVisible, invoiceViewVisible, invoicingVisible } = this.state;
     const columns = [
       {
         title: '申请单号',
@@ -297,8 +301,8 @@ export default class InvoiceApplyList  extends PureComponent {
       handleInvoiceTabsVisible: this.handleInvoiceTabsVisible,
     };
 
-    const InvoiceApplyMethods = {
-      handleInvoiceApplyVisible: this.handleInvoiceApplyVisible,
+    const companyMethods = {
+      handlecompanyVisible: this.handlecompanyVisible,
     };
 
     const InvoiceEditMethods = {
@@ -332,7 +336,7 @@ export default class InvoiceApplyList  extends PureComponent {
           </div>
         </Card>
         <InvoiceTabs {...InvoiceTabsMethods} invoiceTabsVisible={invoiceTabsVisible} />
-        <InvoiceListApplyModal {...InvoiceApplyMethods} invoiceApplyVisible={invoiceApplyVisible} />
+        <InvoiceListApplyModal {...companyMethods} companyVisible={companyVisible} />
         <InvoiceEditList {...InvoiceEditMethods} invoiceEditVisible={invoiceEditVisible} />
         <InvoiceViewList {...InvoiceViewMethods} invoiceViewVisible={invoiceViewVisible} />
         <Invoicing {...InvoicingMethods} invoicingVisible={invoicingVisible} />

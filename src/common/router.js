@@ -3,7 +3,7 @@ import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
 import ProjectsRepository from "../routes/KnowledgeBase/ProjectsRepository";
-import ProjectArchives from "../routes/project/ProjectArchives/ProjectArchives";
+import ProjectArchives from "../routes/Project/ProjectArchives/ProjectArchives";
 
 let routerDataCache;
 
@@ -102,15 +102,15 @@ export const getRouterData = app => {
       name: '数据字典管理',
     },
     '/projectAllow/projectAllocation': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/projectAllow/list/AllocationList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
     },
-    '/project/projectinfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectInfoManage/ProjectList')),
+    '/project/projectinfoBAK': {
+      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProListBAK')),
       name: '项目信息管理',
     },
     '/project/signatureInfoManage': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/SignatureAndSealInfoManage/SignatureBill')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/SignatureAndSealInfoManage/SignatureBill')),
       name: '签章信息管理',
     },
     '/contractManager/ContractInfo': {
@@ -126,7 +126,7 @@ export const getRouterData = app => {
       name: '项目计划',
     },
     '/project/workPlanManage/workDiary': {
-      component: dynamicWrapper(app, [], () => import('../routes/project/list/WorkDiary')),
+      component: dynamicWrapper(app, [], () => import('../routes/Project/list/WorkDiary')),
       name: '工作日记',
     },
     '/schedule/workStatement': {
@@ -134,11 +134,11 @@ export const getRouterData = app => {
       name: '工作报告',
     },
     '/project/workRecord': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectInfoManage/ProjectPlan/ProjectPlanList')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/ProInfoManage/ProjectPlan/ProjectPlanList')),
       name: '项目工作记录',
     },
     '/project/projectDestroy': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/project/ProjectArchives/ProjectArchives')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/ProjectArchives/ProjectArchives')),
       name: '项目销毁',
     },
 
@@ -272,6 +272,26 @@ export const getRouterData = app => {
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
+    '/project/projectInfo': {
+      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProList')),
+      name: '项目信息管理',
+    },
+    '/project/projectInfo/info': {
+      name: '项目基本信息',
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step1')),
+    },
+    '/project/projectInfo/confirm': {
+      name: '项目人员配置',
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step2')),
+    },
+    '/project/projectInfo/result': {
+      name: '项目资料上传',
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step3')),
+    },
+    '/project/projectInfo/process': {
+      name: "项目过程管理",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step4')),
+    },
     '/form/step-form/info': {
       name: '分步表单（填写转账信息）',
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step1')),
@@ -354,7 +374,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
     '/test': {
-      component: dynamicWrapper(app, [], () => import('../routes/Test/UploadDemo')),
+      component: dynamicWrapper(app, [], () => import('../routes/Test/Slider')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

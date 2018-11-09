@@ -16,7 +16,7 @@ import {
   Button,
 } from 'antd';
 import { connect } from 'dva';
-import styles from '../project/edit/style.less';
+import styles from '../Project/edit/style.less';
 
 const fileList = [
   {

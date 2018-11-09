@@ -71,15 +71,21 @@ const menuData = [
     path: 'project',
     children: [
       {
-        key: 'projectinfoList',
-        name: '项目信息管理',
-        path: 'projectinfo',
+        key: 'projectInfoList',
+        name: '项目启动',
+        path: 'projectInfo',
       },
       {
+        key: 'projectinfoListBAK',
+        name: '项目信息查询',
+        path: 'projectinfoBAK',
+      },
+      /*{
         key: 'signatureInfoManage',
         name: '签章信息管理',
         path: 'signatureInfoManage',
-      },
+      },*/
+
      /* {
         key: 'workplanList',
         name: '工时计划管理',

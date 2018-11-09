@@ -16,6 +16,8 @@ import {
   Divider,
   Popconfirm,
   Badge,
+  Slider,
+  InputNumber,
 } from 'antd';
 import moment from "moment/moment";
 import StandardTable from '../../components/StandardTable';
@@ -28,6 +30,20 @@ message.config({
   duration: 3, // 自动关闭延时，单位秒
   maxCount: 1, // 最大显示数目
 });
+const marks = {
+  0: '0°C',
+  15: '阶段1',
+  26: '阶段2',
+  37: '阶段3',
+  56:'阶段4',
+  87:'阶段5',
+  100: {
+    style: {
+      color: '#f50',
+    },
+    label: <strong>100°C</strong>,
+  },
+};
 const statusMap = ['error', 'success', 'processing'];
 const statusText = ['禁用' ,'启用' ,'提交'];
 const { Option } = Select;
@@ -52,6 +68,7 @@ export default class CodeRuleList  extends PureComponent {
     formValues: {},
     pageCurrent:``,
     pageSizeCurrent:``,
+    inputValue: 0,
   };
 
   componentDidMount() {
@@ -310,6 +327,14 @@ export default class CodeRuleList  extends PureComponent {
 
   }; // 公司状态禁用方法
 
+  onChange = (value) => {
+    if (isNaN(value)) {
+      return;
+    }
+    this.setState({
+      inputValue: value,
+    });
+  };
 
   showDeleteMessage =(flag, record)=> {
     const { dispatch } = this.props;
@@ -386,7 +411,7 @@ export default class CodeRuleList  extends PureComponent {
 
   render() {
     const { company: { data }, loading } = this.props;
-    const { selectedRows, CodeRuleAddVisible, rowInfo } = this.state;
+    const { selectedRows, CodeRuleAddVisible, rowInfo, inputValue } = this.state;
     const columns = [
       {
         title: '规则代码',
@@ -491,6 +516,33 @@ export default class CodeRuleList  extends PureComponent {
         <Card>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <div className={styles.tableListForm}>
+              <div>
+                <Row>
+                  <Col span={12}>
+                    <Slider
+                      min={0}
+                      max={1}
+                      onChange={this.onChange}
+                      value={typeof inputValue === 'number' ? inputValue : 0}
+                      step={0.01}
+                    />
+                  </Col>
+                  <Col span={4}>
+                    <InputNumber
+                      min={0}
+                      max={1}
+                      style={{ marginLeft: 16 }}
+                      step={0.01}
+                      value={inputValue}
+                      onChange={this.onChange}
+                    />
+                  </Col>
+                </Row>
+                <Slider marks={marks} defaultValue={37} />
+                <Slider marks={marks} step={null} defaultValue={37} />
+              </div>
+            </div>
             <div className={styles.tableListOperator}>
               <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleCodeRuleAddVisible}>
                 新建编码规则

@@ -590,9 +590,9 @@ class ProjectAddModal extends PureComponent {
                 {
                   (BillSourceValue === `合伙人`)&& (
                     <Col span={8}>
-                      <Form.Item {...formItemLayout} label='合伙人'>
+                      <Form.Item {...formItemLayout} label='执行合伙人'>
                         {getFieldDecorator('partner')(
-                          <Input style={{ width: '100%' }} placeholder="合伙人" />
+                          <Input style={{ width: '100%' }} placeholder="执行合伙人" />
                         )}
                       </Form.Item>
                     </Col>

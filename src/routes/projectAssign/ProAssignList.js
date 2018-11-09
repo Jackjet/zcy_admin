@@ -13,14 +13,12 @@ import {
   Dropdown,
   Menu,
   DatePicker,
-  Modal,
   message,
-  Divider,
 } from 'antd';
-import StandardTable from '../../../components/StandardTable';
-import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './Style.less';
-import AllocationAddModal from '../add/AllocationAddModal.js';
+import StandardTable from '../../components/StandardTable/index';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import styles from './style.less';
+import AllocationAddModal from './ProAssignAddModal.js';
 
 
 const FormItem = Form.Item;
@@ -32,9 +30,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class AllocationList extends PureComponent {
@@ -50,7 +48,11 @@ export default class AllocationList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   onOpenChange = openKeys => {
@@ -83,7 +85,7 @@ export default class AllocationList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -112,7 +114,7 @@ export default class AllocationList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -145,7 +147,7 @@ export default class AllocationList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -155,7 +157,7 @@ export default class AllocationList extends PureComponent {
     const { selectedRows } = this.state;
     if (!selectedRows) return;
     dispatch({
-      type: 'rule/remove',
+      type: 'company/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -183,7 +185,7 @@ export default class AllocationList extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -306,7 +308,7 @@ export default class AllocationList extends PureComponent {
           <Col md={16} sm={24}>
             <FormItem label="项目日期">
               {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择日期' }],
+                companys: [{ required: false, message: '请选择日期' }],
               })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
@@ -332,7 +334,7 @@ export default class AllocationList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
 
     const columns = [
