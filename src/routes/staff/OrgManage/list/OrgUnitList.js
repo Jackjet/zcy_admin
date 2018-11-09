@@ -18,11 +18,13 @@ import {
   Badge,
 } from 'antd';
 import moment from "moment/moment";
+import PageLeftTreeMenu from '../../../../components/PageLeftTreeMenu/PageLeftTreeMenu';
 import StandardTable from '../../../../components/StandardTable/index';
 import styles from './OrgUnitList.less';
 import OrgUnitAddModal from '../add/OrgUnitAddModal';
 import OrgUnitViewModal from '../select/OrgUnitViewModal';
 import OrgUnitEditModal from '../edit/OrgUnitEditModal';
+import router from "../../../Contract/configDataMenu";
 
 
 const { confirm } = Modal;
@@ -60,10 +62,26 @@ export default class OrgUnitList extends PureComponent {
     pageCurrent:``,
     pageSizeCurrent:``,
     currentTreekey:``,
+    orgTreeMenu:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({
+            orgTreeMenu : res.data.list,
+          });
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
     dispatch({
       type: 'company/fetch',
       payload: {
@@ -142,6 +160,7 @@ export default class OrgUnitList extends PureComponent {
 
       },
     });
+
   }; // 搜索的重置方法
 
   toggleForm = () => {
@@ -400,6 +419,20 @@ export default class OrgUnitList extends PureComponent {
 
   }; // 公司状态禁用方法
 
+  menuClick = e => {
+    console.log(e.key);
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
+
+
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -572,7 +605,16 @@ export default class OrgUnitList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+             {/* {this.treeMenu()}*/}
+              <PageLeftTreeMenu
+                /* menus={router.menus}*/
+                menus={this.state.orgTreeMenu}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
