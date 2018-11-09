@@ -140,12 +140,12 @@ export default class ProjectList extends PureComponent {
         break;
       default:
         break;
-    }
+    } // 获取左边树点击时，它的值和key
     /*this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });*/
-  }; // 获取左边树点击时，它的值和key
+  };
 
   rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 

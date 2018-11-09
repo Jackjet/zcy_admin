@@ -273,7 +273,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
     '/project/projectInfo': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProList')),
+      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProList')),
       name: '项目信息管理',
     },
     '/project/projectInfo/info': {
