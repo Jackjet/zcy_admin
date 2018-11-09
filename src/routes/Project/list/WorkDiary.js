@@ -17,7 +17,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './Style.less';
-import WorkDiaryAddModal from '../ProjectInfoManage/ProjectPlan/ProjectPlanAddModal';
+import WorkDiaryAddModal from '../ProInfoManage/ProjectPlan/ProjectPlanAddModal';
 
 const { Option } = Select;
 const FormItem = Form.Item;

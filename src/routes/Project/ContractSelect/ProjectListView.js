@@ -21,7 +21,7 @@ import {
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ProjectListView.less';
-import ProjectAddModal from '../ProjectInfoManage/ProjectAddModal.js';
+import ProjectAddModal from '../ProInfoManage/ProAddModal.js';
 import ProjectCheckTabs from '../projectTabsInfo/ProjectViewTabs.js';
 import ProjectInfo from '../select/ProjectInfo.js';
 

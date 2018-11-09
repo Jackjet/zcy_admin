@@ -17,7 +17,8 @@ import {
   Modal,
   message,
   Divider,
-  Table, Badge
+  Table,
+  Badge,
 } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './ProjectEvaluationBill.less';
@@ -31,9 +32,9 @@ const getValue = obj =>
     .map(key => obj[key])
 .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class ProjectEvaluationBill extends PureComponent {
@@ -51,7 +52,11 @@ export default class ProjectEvaluationBill extends PureComponent {
   };
   componentDidMount() {
     this.props.dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload : {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   onOpenChange = openKeys => {
@@ -85,7 +90,7 @@ export default class ProjectEvaluationBill extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -110,7 +115,7 @@ export default class ProjectEvaluationBill extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -148,7 +153,7 @@ export default class ProjectEvaluationBill extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -160,7 +165,7 @@ export default class ProjectEvaluationBill extends PureComponent {
     if (!selectedRows) return;
 
     dispatch({
-      type: 'rule/remove',
+      type: 'company/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -199,7 +204,7 @@ export default class ProjectEvaluationBill extends PureComponent {
   };
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -339,7 +344,7 @@ export default class ProjectEvaluationBill extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo, choiceTypeValue } = this.state;
 
     const menu = (

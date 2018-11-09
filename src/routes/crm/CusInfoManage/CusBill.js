@@ -63,9 +63,9 @@ const SalesManage = Form.create()(props => {
   );
 });
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class CustomerList extends PureComponent {
@@ -106,7 +106,11 @@ export default class CustomerList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
 
@@ -143,7 +147,7 @@ export default class CustomerList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -156,7 +160,7 @@ export default class CustomerList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: {},
     });
   };
@@ -180,7 +184,7 @@ export default class CustomerList extends PureComponent {
       okText:'确定',
       onOk() {
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -215,7 +219,7 @@ export default class CustomerList extends PureComponent {
       okText:'确定',
       onOk() {
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -257,7 +261,7 @@ export default class CustomerList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -320,7 +324,7 @@ export default class CustomerList extends PureComponent {
   // 添加表单数据
   handleCustomerAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -333,7 +337,7 @@ export default class CustomerList extends PureComponent {
   };
   handleAddContact = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -463,7 +467,7 @@ export default class CustomerList extends PureComponent {
           <Col md={16} sm={24}>
             <FormItem label="创建日期">
               {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择创建日期' }],
+                companys: [{ required: false, message: '请选择创建日期' }],
               })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
@@ -528,7 +532,7 @@ export default class CustomerList extends PureComponent {
 
   render() {
 
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const {
       selectedRows,
       customerAddVisible,

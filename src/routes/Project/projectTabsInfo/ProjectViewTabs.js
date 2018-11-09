@@ -25,6 +25,7 @@ import { connect } from 'dva';
 import moment from "moment/moment";
 import StandardTable from 'components/StandardTable';
 import ReportAddModal from '../add/ReportAddModal';
+import ProcedureList from '../../Contract/ProcedureProject';
 import ReportEditModal from '../edit/ReportEditModal';
 import EditableCell from '../EditableTable/EditableCell';
 import ReportViewModal from '../select/ReportViewModal';
@@ -32,7 +33,7 @@ import ReportViewModal from '../select/ReportViewModal';
 import styles from '../list/Style.less';
 
 const mockData = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 10; i+=1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
@@ -816,8 +817,22 @@ class ProjectCheckTabs extends PureComponent {
               <TabPane
                 tab={
                   <span>
-                <Icon type="team" />项目组员
+                <Icon type="copy" />流程图
               </span>
+                }
+                key="10"
+              >
+                <ProcedureList />
+              </TabPane>
+            )
+          }
+          {
+            (`${rowInfo.projectStatus}` !== '8') && (
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="team" />项目组员
+                  </span>
                 }
                 key="3"
               >

@@ -39,7 +39,7 @@ const getValue = obj =>
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class TypeList extends PureComponent {
+export default class company extends PureComponent {
   state = {
     contractVisible: false,
     contractEditVisible: false,
@@ -53,8 +53,13 @@ export default class TypeList extends PureComponent {
     choiceTypeValue:'',
   };
   componentDidMount() {
-    this.props.dispatch({
-      type: 'rule/fetch',
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   onOpenChange = openKeys => {

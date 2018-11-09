@@ -449,7 +449,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('customer', {
                         rules: [{ required: true, message: '请选择客户' }],
                       })(
-                        <Input
+                        <Search
                           readOnly
                           placeholder="请选择客户"
                           onSearch={this.handleChoiceCusVisible}
@@ -538,7 +538,7 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label='施工单位'>
                       {getFieldDecorator('shigongdanwei',{
                       })(
-                        <Input
+                        <Search
                           readOnly
                           placeholder="施工单位"
                           onSearch={this.handleConstructUnitVisible}

@@ -19,8 +19,8 @@ import { connect } from 'dva';
 import StandardTable from '../../../components/StandardTable';
 import VisitListViewModal from '../VisitManage/VisitListViewModal.js';
 import Salesman from './Salesman.js';
-import ProjectInfo from '../../project/select/ProjectInfo';
-import ContractViewInfo from '../../project/select/ContractInfo';
+import ProjectInfo from '../../Project/select/ProjectInfo';
+import ContractViewInfo from '../../Project/select/ContractInfo';
 import styles from './style.less';
 
 const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];

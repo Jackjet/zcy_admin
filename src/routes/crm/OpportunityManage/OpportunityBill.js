@@ -24,7 +24,7 @@ import BusinessFollowUp from './OpportunityFollowUp';
 import BusinessEditModal from './OpportunityEditModal.js';
 import BusinessOppView from './OpportunityViewModal.js';
 import BusinessStateModal from './OpportunityStateModal';
-import ProjectAddModal from '../../project/ProjectInfoManage/ProjectAddModal';
+import ProjectAddModal from '../../Project/ProInfoManage/ProAddModal';
 
 const statusMap = ['success', 'warning','default'];
 const status = ['已跟进', '未分配','已分配'];
@@ -35,9 +35,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class BusinessOpportunity extends PureComponent {
@@ -57,7 +57,11 @@ export default class BusinessOpportunity extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
 
@@ -93,7 +97,7 @@ export default class BusinessOpportunity extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -115,7 +119,7 @@ export default class BusinessOpportunity extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -141,7 +145,7 @@ export default class BusinessOpportunity extends PureComponent {
     if (!selectedRows) return;
 
     dispatch({
-      type: 'rule/remove',
+      type: 'company/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -176,7 +180,7 @@ export default class BusinessOpportunity extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -230,7 +234,7 @@ export default class BusinessOpportunity extends PureComponent {
   // 添加表单数据
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -340,7 +344,7 @@ export default class BusinessOpportunity extends PureComponent {
 
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const {
       selectedRows,
       businessOppVisible,

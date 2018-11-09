@@ -4,6 +4,9 @@ export default {
   namespace: 'person',
 
   state: {
+    step:{
+      number:``,
+    },
     data: {
       list: [],
       pagination: {},

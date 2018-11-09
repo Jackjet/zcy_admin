@@ -21,13 +21,13 @@ import {
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
-import ProjectAddModal from './ProjectAddModal.js';
+import ProjectAddModal from './ProAddModal.js';
 import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal.js';
 import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal.js';
 import ProjectApplyAddModal from './ProjectApprovalLinkModal.js';
 import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal.js';
 import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs.js';
-import ProjectEditModal from './ProjectEditModal.js';
+import ProjectEditModal from './ProEditModal.js';
 import AppraisalList from './Appraisal/AppraisalList';
 import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
 
@@ -44,12 +44,12 @@ const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'defa
 const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核','已销毁','完成'];
 
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
-export default class projectList extends PureComponent {
+export default class ProjectListBAK extends PureComponent {
   state = {
     projectVisible: false,
     projectApplyAddVisible: false,
@@ -72,7 +72,11 @@ export default class projectList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page:1,
+        pageSize:10,
+      },
     });
   }
 
@@ -108,7 +112,7 @@ export default class projectList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -505,7 +509,7 @@ export default class projectList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const {
       selectedRows,
       projectVisible,
@@ -520,11 +524,10 @@ export default class projectList extends PureComponent {
       appraisalVisible,
       signatureAddVisible,
     } = this.state;
-
     const columns = [
       {
         title: '项目编号',
-        dataIndex: 'no',
+        dataIndex: 'number',
         width: 150,
         fixed: 'left',
         render: (text, record) => (
@@ -535,7 +538,7 @@ export default class projectList extends PureComponent {
       },
       {
         title: '项目名称',
-        dataIndex: 'projectName',
+        dataIndex: 'name',
       },
       {
         title: '负责人',
@@ -653,8 +656,6 @@ export default class projectList extends PureComponent {
         ),
       },
     ];
-
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleProjectVisible: this.handleProjectVisible,
@@ -667,7 +668,6 @@ export default class projectList extends PureComponent {
       handleAppraisalVisible: this.handleAppraisalVisible,
       handleSignatureAddVisible: this.handleSignatureAddVisible,
     };
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>

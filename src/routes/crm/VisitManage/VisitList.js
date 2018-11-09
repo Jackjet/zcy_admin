@@ -30,9 +30,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 // PureComponent优化Component的性能
@@ -50,7 +50,11 @@ export default class VisitList  extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   // 选中的条数已经选中的价格的和   参数（页码，过滤，把东西分类检出）
@@ -80,7 +84,7 @@ export default class VisitList  extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -92,7 +96,7 @@ export default class VisitList  extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: {},
     });
   };
@@ -104,7 +108,7 @@ export default class VisitList  extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -146,7 +150,7 @@ export default class VisitList  extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -174,7 +178,7 @@ export default class VisitList  extends PureComponent {
   // 新增功能实现
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -251,7 +255,7 @@ export default class VisitList  extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, followUpVisible , rowInfo } = this.state;
     const columns = [
       {

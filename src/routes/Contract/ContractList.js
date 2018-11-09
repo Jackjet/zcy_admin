@@ -19,8 +19,10 @@ import {
   Divider,
   Radio,
 } from 'antd';
+import PageLeftTreeMenu from '../../components/PageLeftTreeMenu/PageLeftTreeMenu';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import router from './configDataMenu';
 import styles from './Style.less';
 import ContractAddModal from './ContractAddModal.js';
 import ContractViewTabs from './ContractViewTabs.js';
@@ -37,9 +39,9 @@ const getValue = obj =>
     .map(key => obj[key])
 .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class ContractList extends PureComponent {
@@ -55,10 +57,18 @@ export default class ContractList extends PureComponent {
     choiceTypeKey: 0,
     choiceTypeValue:'',
     contractTypeVisible: false,
+    openKey: '',
+    selectedKey: '',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
   componentDidMount() {
-    this.props.dispatch({
-      type: 'rule/fetch',
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
   onOpenChange = openKeys => {
@@ -92,7 +102,7 @@ export default class ContractList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -117,7 +127,7 @@ export default class ContractList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -155,7 +165,7 @@ export default class ContractList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -167,7 +177,7 @@ export default class ContractList extends PureComponent {
     if (!selectedRows) return;
 
     dispatch({
-      type: 'rule/remove',
+      type: 'company/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -218,7 +228,7 @@ export default class ContractList extends PureComponent {
   };
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'company/add',
       payload: {
         description: fields.desc,
       },
@@ -245,13 +255,27 @@ export default class ContractList extends PureComponent {
     });
   };
 
+  menuClick = e => {
+    console.log(e.key);
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
+
+
+
   handleGetMenuValue = (MenuValue) => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });
   };
-
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -299,7 +323,7 @@ export default class ContractList extends PureComponent {
           <Col span={6}>
             <FormItem label="项目">
               {getFieldDecorator('project', {
-                rules: [{ required: true, message: '请输入项目' }],
+                companys: [{ required: true, message: '请输入项目' }],
               })(
                 <Select placeholder="请输入" style={{ width: 200 }}>
                   <Option value="xiao">请选择</Option>
@@ -391,7 +415,7 @@ export default class ContractList extends PureComponent {
           <Col md={16} sm={24}>
             <FormItem label="项目日期">
               {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择日期' }],
+                companys: [{ required: false, message: '请选择日期' }],
               })(
                 <RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />
               )}
@@ -419,7 +443,7 @@ export default class ContractList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const {
       selectedRows,
       contractAddVisible,
@@ -533,7 +557,16 @@ export default class ContractList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+             {/* {this.treeMenu()}*/}
+              <PageLeftTreeMenu
+                // menus={routes.menus}
+                menus={router.menus}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>

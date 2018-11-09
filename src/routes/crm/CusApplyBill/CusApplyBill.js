@@ -58,9 +58,9 @@ const SalesManage = Form.create()(props => {
   );
 });
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 @Form.create()
 export default class CusApplyBill extends PureComponent {
@@ -99,7 +99,11 @@ export default class CusApplyBill extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
     });
   }
 
@@ -122,7 +126,7 @@ export default class CusApplyBill extends PureComponent {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: params,
     });
   };
@@ -135,7 +139,7 @@ export default class CusApplyBill extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'company/fetch',
       payload: {},
     });
   };
@@ -159,7 +163,7 @@ export default class CusApplyBill extends PureComponent {
       okText:'确定',
       onOk() {
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -195,7 +199,7 @@ export default class CusApplyBill extends PureComponent {
       okText:'确定',
       onOk() {
         dispatch({
-          type: 'rule/remove',
+          type: 'company/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -233,7 +237,7 @@ export default class CusApplyBill extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'rule/fetch',
+        type: 'company/fetch',
         payload: values,
       });
     });
@@ -406,7 +410,7 @@ export default class CusApplyBill extends PureComponent {
           <Col md={16} sm={24}>
             <FormItem label="创建日期">
               {getFieldDecorator('date', {
-                rules: [{ required: false, message: '请选择创建日期' }],
+                companys: [{ required: false, message: '请选择创建日期' }],
               })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
@@ -434,7 +438,7 @@ export default class CusApplyBill extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { company: { data }, loading } = this.props;
     const {
       selectedRows,
       cusApplyAddVisible,
