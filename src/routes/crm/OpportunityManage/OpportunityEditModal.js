@@ -17,18 +17,18 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
-const { TreeNode }= Tree;
+const { TreeNode } = Tree;
 const { SubMenu, MenuItemGroup } = Menu;
 const { TextArea } = Input;
 const { Option } = Select;
 
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
+for (let i = 0; i < 10; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
   });
-};
+}
 const fieldLabels = {
   number: '编码',
   businessName: '商机名称',
@@ -38,10 +38,10 @@ const fieldLabels = {
   businessState: '商机状态',
   customerDemand: '客户需求',
   remarks: '备注',
-  platform:'商机平台',
-  submissionPerson:'商机提供人',
-  executor:'执行人',
-  assignor:'分配人',
+  platform: '商机平台',
+  submissionPerson: '商机提供人',
+  executor: '执行人',
+  assignor: '分配人',
 };
 const formItemLayout = {
   labelCol: {
@@ -54,9 +54,8 @@ const formItemLayout = {
   },
 };
 
-
 const formItemLayoutTextArea = {
-  style:{
+  style: {
     paddingRight: 150,
     width: '110%',
   },
@@ -73,7 +72,7 @@ const formItemLayoutTextArea = {
 class BusinessEditModal extends PureComponent {
   state = {
     width: '100%',
-    targetKeys:[],
+    targetKeys: [],
     selectedKeys: [],
   };
   componentDidMount() {
@@ -83,7 +82,7 @@ class BusinessEditModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleChange = (nextTargetKeys) => {
+  handleChange = nextTargetKeys => {
     this.setState({ targetKeys: nextTargetKeys });
   };
 
@@ -99,9 +98,15 @@ class BusinessEditModal extends PureComponent {
     }
   };
 
-
   render() {
-    const { form, dispatch, submitting, handleBusinessEditVisible, businessEditVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      handleBusinessEditVisible,
+      businessEditVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedKeys } = this.state;
     const okHandle = () => handleBusinessEditVisible();
@@ -165,7 +170,7 @@ class BusinessEditModal extends PureComponent {
         maskClosable={false}
         onOk={okHandle}
         onCancel={() => handleBusinessEditVisible()}
-        okText='分配'
+        okText="分配"
       >
         <div>
           <Card>
@@ -175,7 +180,7 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
-                      initialValue:`${rowInfo.businessCode}`,
+                      initialValue: `${rowInfo.businessCode}`,
                     })(<Input readOnly placeholder="不重复的数字" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -183,7 +188,7 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                      initialValue:`${rowInfo.businessName}`,
+                      initialValue: `${rowInfo.businessName}`,
                     })(<Input readOnly placeholder="商机描述" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -207,7 +212,7 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
                     {getFieldDecorator('customerName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
-                      initialValue:`${rowInfo.customerForBusinessName}`,
+                      initialValue: `${rowInfo.customerForBusinessName}`,
                     })(<Input readOnly placeholder="请输入客户名称" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -215,7 +220,7 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入联系电话' }],
-                      initialValue:`${rowInfo.mobilePhone}`,
+                      initialValue: `${rowInfo.mobilePhone}`,
                     })(<Input readOnly placeholder="请输入联系电话" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -237,8 +242,7 @@ class BusinessEditModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.submissionPerson}>
-                    {getFieldDecorator('submissionPerson', {
-                    })(
+                    {getFieldDecorator('submissionPerson', {})(
                       <Input placeholder="商机提供人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
@@ -247,13 +251,12 @@ class BusinessEditModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
-                    {getFieldDecorator('assignor', {
-                    })(
+                    {getFieldDecorator('assignor', {})(
                       <div className={styles.divBorder}>
                         <Tree>
                           <TreeNode title="杭州至诚" key="0-0">
-                            <TreeNode title="管理层1" key="0-0-0" >
-                              <TreeNode title="员工1" key="0-0-0-0"  />
+                            <TreeNode title="管理层1" key="0-0-0">
+                              <TreeNode title="员工1" key="0-0-0-0" />
                               <TreeNode title="员工2" key="0-0-0-1" />
                             </TreeNode>
                             <TreeNode title="管理层2" key="0-0-1">
@@ -262,8 +265,8 @@ class BusinessEditModal extends PureComponent {
                             </TreeNode>
                           </TreeNode>
                           <TreeNode title="义务至诚" key="0-1">
-                            <TreeNode title="董事会" key="0-1-0" >
-                              <TreeNode title="主管1" key="0-1-0-0"  />
+                            <TreeNode title="董事会" key="0-1-0">
+                              <TreeNode title="主管1" key="0-1-0-0" />
                               <TreeNode title="主管2" key="0-1-0-1" />
                             </TreeNode>
                             <TreeNode title="财务部" key="0-1-1">
@@ -276,9 +279,8 @@ class BusinessEditModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={15} offset={1}>
-                  <Form.Item {...formItemLayout} >
-                    {getFieldDecorator('personal', {
-                    })(
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('personal', {})(
                       <div>
                         <Transfer
                           dataSource={mockData}
@@ -290,7 +292,6 @@ class BusinessEditModal extends PureComponent {
                           render={item => item.title}
                         />
                       </div>
-
                     )}
                   </Form.Item>
                 </Col>
@@ -300,9 +301,7 @@ class BusinessEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(
-                      <TextArea placeholder="请输入备注" />
-                    )}
+                    })(<TextArea placeholder="请输入备注" />)}
                   </Form.Item>
                 </Col>
               </Row>

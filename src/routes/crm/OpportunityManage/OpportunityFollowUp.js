@@ -1,17 +1,31 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover, Tree } from 'antd';
-import moment from "moment/moment";
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+  Transfer,
+  Modal,
+  Icon,
+  message,
+  Popover,
+  Tree,
+} from 'antd';
+import moment from 'moment/moment';
 import { connect } from 'dva';
 import styles from './style.less';
 
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
+for (let i = 0; i < 10; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
   });
-};
-const { TreeNode }= Tree;
+}
+const { TreeNode } = Tree;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -36,7 +50,7 @@ const formItemLayout = {
 };
 
 const formItemLayoutTextArea = {
-  style:{
+  style: {
     width: '200%',
   },
   labelCol: {
@@ -48,7 +62,6 @@ const formItemLayoutTextArea = {
     sm: { span: 16 },
   },
 };
-
 
 class BusinessFollowUp extends PureComponent {
   state = {
@@ -83,7 +96,14 @@ class BusinessFollowUp extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, followUpVisible, handleFollowUpVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      followUpVisible,
+      handleFollowUpVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedKeys } = this.state;
     const validate = () => {
@@ -158,10 +178,8 @@ class BusinessFollowUp extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: false, message: '商机名称' }],
-                      initialValue:`${rowInfo.businessName}`,
-                    })(
-                      <Input placeholder="商机名称" style={{ width: 200 }} />
-                    )}
+                      initialValue: `${rowInfo.businessName}`,
+                    })(<Input placeholder="商机名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -183,29 +201,24 @@ class BusinessFollowUp extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(
-                      <DatePicker placeholder="请选择拜访日期" style={{ width: 200 }} />
-                    )}
+                    })(<DatePicker placeholder="请选择拜访日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.communication}>
-                    {getFieldDecorator('communication')(
-                      <TextArea placeholder="请输入交流内容" />
-                    )}
+                    {getFieldDecorator('communication')(<TextArea placeholder="请输入交流内容" />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={3}>
-                  <Form.Item label='参与人员'>
-                    {getFieldDecorator('assignor', {
-                    })(
-                      <div className={styles["architecture1"]}>
+                  <Form.Item label="参与人员">
+                    {getFieldDecorator('assignor', {})(
+                      <div className={styles['architecture1']}>
                         <Tree>
                           <TreeNode title="杭州至诚" key="0-0">
-                            <TreeNode title="管理层1" key="0-0-0" >
-                              <TreeNode title="员工1" key="0-0-0-0"  />
+                            <TreeNode title="管理层1" key="0-0-0">
+                              <TreeNode title="员工1" key="0-0-0-0" />
                               <TreeNode title="员工2" key="0-0-0-1" />
                             </TreeNode>
                             <TreeNode title="管理层2" key="0-0-1">
@@ -214,8 +227,8 @@ class BusinessFollowUp extends PureComponent {
                             </TreeNode>
                           </TreeNode>
                           <TreeNode title="义务至诚" key="0-1">
-                            <TreeNode title="董事会" key="0-1-0" >
-                              <TreeNode title="主管1" key="0-1-0-0"  />
+                            <TreeNode title="董事会" key="0-1-0">
+                              <TreeNode title="主管1" key="0-1-0-0" />
                               <TreeNode title="主管2" key="0-1-0-1" />
                             </TreeNode>
                             <TreeNode title="财务部" key="0-1-1">
@@ -228,10 +241,9 @@ class BusinessFollowUp extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={21}>
-                  <Form.Item {...formItemLayout} >
-                    {getFieldDecorator('personal', {
-                    })(
-                      <div className={styles["fn-left"]} >
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('personal', {})(
+                      <div className={styles['fn-left']}>
                         <Transfer
                           listStyle={{
                             width: 200,
@@ -246,7 +258,6 @@ class BusinessFollowUp extends PureComponent {
                           render={item => item.title}
                         />
                       </div>
-
                     )}
                   </Form.Item>
                 </Col>
@@ -254,9 +265,7 @@ class BusinessFollowUp extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={5}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
-                    {getFieldDecorator('remarks')(
-                      <TextArea placeholder="请输入备注" />
-                    )}
+                    {getFieldDecorator('remarks')(<TextArea placeholder="请输入备注" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -264,7 +273,6 @@ class BusinessFollowUp extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

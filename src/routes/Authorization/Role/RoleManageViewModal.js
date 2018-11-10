@@ -1,17 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  DatePicker,
-  Input,
-  Select,
-  Popover,
-  Modal,
-  Tabs,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Modal, Tabs } from 'antd';
 import { connect } from 'dva';
 
 import styles from './Style.less';
@@ -49,7 +37,14 @@ class RoleManageViewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, RoleManageViewVisible, handleRoleManageViewVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      RoleManageViewVisible,
+      handleRoleManageViewVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -116,20 +111,26 @@ class RoleManageViewModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
               <Col span={23} push={2}>
-                <Form.Item {...formItemLayout} >
+                <Form.Item {...formItemLayout}>
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],
                   })(
                     <Tabs type="card">
-                      <TabPane tab="可转授" key="1">1</TabPane>
-                      <TabPane tab="已分配" key="2">2</TabPane>
-                      <TabPane tab="已禁止" key="3">3</TabPane>
+                      <TabPane tab="可转授" key="1">
+                        1
+                      </TabPane>
+                      <TabPane tab="已分配" key="2">
+                        2
+                      </TabPane>
+                      <TabPane tab="已禁止" key="3">
+                        3
+                      </TabPane>
                     </Tabs>
                   )}
                 </Form.Item>

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Modal } from 'antd';
 import { connect } from 'dva';
 import styles from './PartnerTypeAdd.less';
-import {message} from "antd/lib/index";
+import { message } from 'antd/lib/index';
 
 const { TextArea } = Input;
 const fieldLabels = {

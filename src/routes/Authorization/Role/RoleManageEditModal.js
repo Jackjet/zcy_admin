@@ -1,16 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  DatePicker,
-  Input,
-  Select,
-  Popover,
-  Modal,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Modal } from 'antd';
 import { connect } from 'dva';
 
 import styles from './Style.less';
@@ -47,7 +36,14 @@ class RoleManageEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, RoleManageEditVisible, handleRoleManageEditVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      RoleManageEditVisible,
+      handleRoleManageEditVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -114,7 +110,7 @@ class RoleManageEditModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
@@ -123,9 +119,7 @@ class RoleManageEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="编码">
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '自动生成' }],
-                  })(
-                    <Input placeholder="自动生成" />
-                  )}
+                  })(<Input placeholder="自动生成" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -134,9 +128,7 @@ class RoleManageEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入名称' }],
-                  })(
-                    <Input placeholder="请输入名称" />
-                  )}
+                  })(<Input placeholder="请输入名称" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -145,9 +137,7 @@ class RoleManageEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="描述">
                   {getFieldDecorator('describe', {
                     rules: [{ required: true, message: '请输入描述' }],
-                  })(
-                    <TextArea placeholder="请输入描述" />
-                  )}
+                  })(<TextArea placeholder="请输入描述" />)}
                 </Form.Item>
               </Col>
             </Row>

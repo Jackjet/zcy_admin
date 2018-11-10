@@ -23,7 +23,7 @@ import VisitListViewModal from './VisitListViewModal';
 import VisitListEditModal from './VisitListEditModal';
 
 const { Option } = Select;
-const  { confirm } = Modal;
+const { confirm } = Modal;
 const FormItem = Form.Item;
 const getValue = obj =>
   Object.keys(obj)
@@ -36,13 +36,13 @@ const getValue = obj =>
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class VisitList  extends PureComponent {
+export default class VisitList extends PureComponent {
   state = {
     visitAddVisible: false,
     visitViewVisible: false,
     visitEditVisible: false,
     followUpVisible: false,
-    rowInfo:{},
+    rowInfo: {},
     selectedRows: [],
     formValues: {},
   };
@@ -202,20 +202,19 @@ export default class VisitList  extends PureComponent {
       },
     });
   };
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       visitViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       visitEditVisible: !!flag,
       rowInfo: record,
     });
   };
-
 
   // 查询表单
   renderSimpleForm() {
@@ -256,7 +255,14 @@ export default class VisitList  extends PureComponent {
 
   render() {
     const { company: { data }, loading } = this.props;
-    const { selectedRows, visitAddVisible, visitViewVisible, visitEditVisible, followUpVisible , rowInfo } = this.state;
+    const {
+      selectedRows,
+      visitAddVisible,
+      visitViewVisible,
+      visitEditVisible,
+      followUpVisible,
+      rowInfo,
+    } = this.state;
     const columns = [
       {
         title: '拜访对象',
@@ -286,9 +292,9 @@ export default class VisitList  extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
           </Fragment>
         ),
       },
@@ -342,8 +348,16 @@ export default class VisitList  extends PureComponent {
           </div>
         </Card>
         <VisitListAddModal {...visitAddMethods} visitAddVisible={visitAddVisible} />
-        <VisitListViewModal {...visitViewMethods} visitViewVisible={visitViewVisible} rowInfo={rowInfo} />
-        <VisitListEditModal {...visitEditMethods} visitEditVisible={visitEditVisible} rowInfo={rowInfo} />
+        <VisitListViewModal
+          {...visitViewMethods}
+          visitViewVisible={visitViewVisible}
+          rowInfo={rowInfo}
+        />
+        <VisitListEditModal
+          {...visitEditMethods}
+          visitEditVisible={visitEditVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

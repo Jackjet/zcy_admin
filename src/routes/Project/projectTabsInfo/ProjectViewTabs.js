@@ -22,7 +22,7 @@ import {
   Popconfirm,
 } from 'antd';
 import { connect } from 'dva';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import StandardTable from 'components/StandardTable';
 import ReportAddModal from '../add/ReportAddModal';
 import ProcedureList from '../../Contract/ProcedureProject';
@@ -33,12 +33,12 @@ import ReportViewModal from '../select/ReportViewModal';
 import styles from '../list/Style.less';
 
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
+for (let i = 0; i < 10; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
   });
-};
+}
 const { TreeNode } = Tree;
 const fileList = [
   {
@@ -78,7 +78,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-const CheckBoxOption = ['底稿','报告','工程','项目','合同'];
+const CheckBoxOption = ['底稿', '报告', '工程', '项目', '合同'];
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -93,10 +93,10 @@ class ProjectCheckTabs extends PureComponent {
     reportViewVisible: false,
     rowInfoCurrent: {},
     checkBoxOptionData: [],
-    choiceOption:[],
-    targetKeys:[],
+    choiceOption: [],
+    targetKeys: [],
     selectedKeys: [],
-    selectedRows:{},
+    selectedRows: {},
     dataSource: [
       {
         key: '0',
@@ -135,10 +135,9 @@ class ProjectCheckTabs extends PureComponent {
     this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
   };
 
-  handleChange = (nextTargetKeys) => {
+  handleChange = nextTargetKeys => {
     this.setState({ targetKeys: nextTargetKeys });
   };
-
 
   handleAdd = () => {
     const { count, dataSource } = this.state;
@@ -153,7 +152,6 @@ class ProjectCheckTabs extends PureComponent {
       count: count + 1,
     });
   };
-
 
   handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
@@ -196,27 +194,31 @@ class ProjectCheckTabs extends PureComponent {
 
   handleCheckBoxChange = () => {
     this.setState({
-      checkBoxOptionData: CheckBoxOption.map((data) => {
+      checkBoxOptionData: CheckBoxOption.map(data => {
         const val = `${data}`;
-        return <Col span={6}><Checkbox value={val}>{val}</Checkbox></Col>;
+        return (
+          <Col span={6}>
+            <Checkbox value={val}>{val}</Checkbox>
+          </Col>
+        );
       }),
     });
   };
 
-  handleGetOptionValue=(value)=>{
+  handleGetOptionValue = value => {
     this.setState({
-      choiceOption:`${value}`,
+      choiceOption: `${value}`,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       reportEditVisible: !!flag,
       rowInfoCurrent: record,
     });
   };
 
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       reportViewVisible: !!flag,
       rowInfoCurrent: record,
@@ -253,7 +255,6 @@ class ProjectCheckTabs extends PureComponent {
       selectedRows: rows,
     });
   };
-
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -515,9 +516,7 @@ class ProjectCheckTabs extends PureComponent {
       {
         title: '报告编号',
         dataIndex: 'no',
-        render: (text,record) => (
-          <a onClick={() =>this.showViewMessage(true, record)} >{text}</a>
-        ),
+        render: (text, record) => <a onClick={() => this.showViewMessage(true, record)}>{text}</a>,
       },
       {
         title: '报告性质',
@@ -547,11 +546,11 @@ class ProjectCheckTabs extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
+            <a onClick={this.handleDeleteClick}>删除</a>
             <Divider type="vertical" />
           </Fragment>
         ),
@@ -565,7 +564,7 @@ class ProjectCheckTabs extends PureComponent {
     };
     const reportViewMethods = {
       handleReportViewVisible: this.handleReportViewVisible,
-  };
+    };
 
     return (
       <Modal
@@ -594,9 +593,13 @@ class ProjectCheckTabs extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.name}>
                         {getFieldDecorator('name', {
                           rules: [{ required: true, message: '请输入项目名称' }],
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="请输入项目名称" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入项目名称"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -741,14 +744,22 @@ class ProjectCheckTabs extends PureComponent {
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.startdate}>
                         {getFieldDecorator('startdate')(
-                          <DatePicker disabled style={{ width: 200 }} placeholder="请输入开始日期" />
+                          <DatePicker
+                            disabled
+                            style={{ width: 200 }}
+                            placeholder="请输入开始日期"
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.enddate}>
                         {getFieldDecorator('enddate')(
-                          <DatePicker disabled style={{ width: 200 }} placeholder="请输入结束日期" />
+                          <DatePicker
+                            disabled
+                            style={{ width: 200 }}
+                            placeholder="请输入结束日期"
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -812,107 +823,98 @@ class ProjectCheckTabs extends PureComponent {
               </Card>
             </div>
           </TabPane>
-          {
-            (`${rowInfo.projectStatus}` !== '8') && (
-              <TabPane
-                tab={
-                  <span>
-                <Icon type="copy" />流程图
-              </span>
-                }
-                key="10"
-              >
-                <ProcedureList />
-              </TabPane>
-            )
-          }
-          {
-            (`${rowInfo.projectStatus}` !== '8') && (
-              <TabPane
-                tab={
-                  <span>
-                    <Icon type="team" />项目组员
-                  </span>
-                }
-                key="3"
-              >
-                <div>
-                  <Card>
-                    <Row className={styles['fn-mb-15']}>
-                      <Col span={5} offset={6}>
-                        <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
-                          {getFieldDecorator('assignor', {
-
-                          })(
-                            <div className={styles.divBorder}>
-                              <Tree>
-                                <TreeNode title="杭州至诚" key="0-0">
-                                  <TreeNode title="管理层1" key="0-0-0" >
-                                    <TreeNode title="员工1" key="0-0-0-0"  />
-                                    <TreeNode title="员工2" key="0-0-0-1" />
-                                  </TreeNode>
-                                  <TreeNode title="管理层2" key="0-0-1">
-                                    <TreeNode title="小卒1" key="0-0-1-0" />
-                                    <TreeNode title="小卒2" key="0-0-1-1" />
-                                  </TreeNode>
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="copy" />流程图
+                </span>
+              }
+              key="10"
+            >
+              <ProcedureList />
+            </TabPane>
+          )}
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="team" />项目组员
+                </span>
+              }
+              key="3"
+            >
+              <div>
+                <Card>
+                  <Row className={styles['fn-mb-15']}>
+                    <Col span={5} offset={6}>
+                      <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
+                        {getFieldDecorator('assignor', {})(
+                          <div className={styles.divBorder}>
+                            <Tree>
+                              <TreeNode title="杭州至诚" key="0-0">
+                                <TreeNode title="管理层1" key="0-0-0">
+                                  <TreeNode title="员工1" key="0-0-0-0" />
+                                  <TreeNode title="员工2" key="0-0-0-1" />
                                 </TreeNode>
-                                <TreeNode title="义务至诚" key="0-1">
-                                  <TreeNode title="董事会" key="0-1-0" >
-                                    <TreeNode title="主管1" key="0-1-0-0"  />
-                                    <TreeNode title="主管2" key="0-1-0-1" />
-                                  </TreeNode>
-                                  <TreeNode title="财务部" key="0-1-1">
-                                    <TreeNode title="会计1" key="0-1-1-0" />
-                                  </TreeNode>
+                                <TreeNode title="管理层2" key="0-0-1">
+                                  <TreeNode title="小卒1" key="0-0-1-0" />
+                                  <TreeNode title="小卒2" key="0-0-1-1" />
                                 </TreeNode>
-                              </Tree>
-                            </div>
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={13} >
-                        <Form.Item >
-                          {getFieldDecorator('personal', {
-                          })(
-                            <div>
-                              <Transfer
-                                dataSource={mockData}
-                                titles={['可选人员', '已选人员']}
-                                targetKeys={this.state.targetKeys}
-                                listStyle={{
-                                  width: 200,
-                                  height: 200,
-                                }}
-                                selectedKeys={selectedKeys}
-                                onChange={this.handleChange}
-                                onSelectChange={this.handleSelectChange}
-                                render={item => item.title}
-                              />
-                            </div>
-
-                          )}
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
-          {
-            (`${rowInfo.projectStatus}` !=="8") && (
-              <TabPane
-                tab={
-                  <span>
-                    <Icon type="exception" />资料清单
-                  </span>
-                }
-                key="8"
-              >
-                <div>
-                  <Card>
-                    <Form layout="horizontal">
-                      {/*<Row className={styles['fn-mb-15']}>
+                              </TreeNode>
+                              <TreeNode title="义务至诚" key="0-1">
+                                <TreeNode title="董事会" key="0-1-0">
+                                  <TreeNode title="主管1" key="0-1-0-0" />
+                                  <TreeNode title="主管2" key="0-1-0-1" />
+                                </TreeNode>
+                                <TreeNode title="财务部" key="0-1-1">
+                                  <TreeNode title="会计1" key="0-1-1-0" />
+                                </TreeNode>
+                              </TreeNode>
+                            </Tree>
+                          </div>
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={13}>
+                      <Form.Item>
+                        {getFieldDecorator('personal', {})(
+                          <div>
+                            <Transfer
+                              dataSource={mockData}
+                              titles={['可选人员', '已选人员']}
+                              targetKeys={this.state.targetKeys}
+                              listStyle={{
+                                width: 200,
+                                height: 200,
+                              }}
+                              selectedKeys={selectedKeys}
+                              onChange={this.handleChange}
+                              onSelectChange={this.handleSelectChange}
+                              render={item => item.title}
+                            />
+                          </div>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Card>
+              </div>
+            </TabPane>
+          )}
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="exception" />资料清单
+                </span>
+              }
+              key="8"
+            >
+              <div>
+                <Card>
+                  <Form layout="horizontal">
+                    {/*<Row className={styles['fn-mb-15']}>
                     <Col span={24} pull={4}>
                       <Form.Item {...formItemLayout} label="请选择上传附件类型">
                         {getFieldDecorator('checkBoxOption ', {
@@ -930,216 +932,215 @@ class ProjectCheckTabs extends PureComponent {
                       </Form.Item>
                     </Col>
                   </Row>*/}
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24}>
-                          <Checkbox.Group
-                            style={{ width: '100%' }} >
-                            <Row>
-                              <Col span={6}><Checkbox value="A">A</Checkbox></Col>
-                              <Col span={6}><Checkbox value="B">B</Checkbox></Col>
-                              <Col span={6}><Checkbox value="C">C</Checkbox></Col>
-                              <Col span={6}><Checkbox value="D">D</Checkbox></Col>
-                              <Col span={6}><Checkbox value="E">E</Checkbox></Col>
-                            </Row>
-                          </Checkbox.Group>
-                        </Col>
-                      </Row>
-                      { ( `${choiceOption.indexOf("资料")}` > `-1` ) && (
-                        <span>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                            {getFieldDecorator('attachment ', {
-                              initialValue: '1',
-                            })(
-                              <Upload {...props2}>
-                                <Button type="primary">
-                                  <Icon type="upload" /> 上传资料附件
-                                </Button>
-                                <span>
-                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                                </span>
-                              </Upload>
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </span>
-                      )}
-                      { ( `${choiceOption.indexOf("底稿")}` > `-1` ) && (
-                        <span>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                            {getFieldDecorator('attachment ', {
-                              initialValue: '1',
-                            })(
-                              <Upload {...props2}>
-                                <Button type="primary">
-                                  <Icon type="upload" /> 上传底稿附件
-                                </Button>
-                                <span>
-                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                                </span>
-                              </Upload>
-                            )}
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={24}>
+                        <Checkbox.Group style={{ width: '100%' }}>
+                          <Row>
+                            <Col span={6}>
+                              <Checkbox value="A">A</Checkbox>
+                            </Col>
+                            <Col span={6}>
+                              <Checkbox value="B">B</Checkbox>
+                            </Col>
+                            <Col span={6}>
+                              <Checkbox value="C">C</Checkbox>
+                            </Col>
+                            <Col span={6}>
+                              <Checkbox value="D">D</Checkbox>
+                            </Col>
+                            <Col span={6}>
+                              <Checkbox value="E">E</Checkbox>
+                            </Col>
+                          </Row>
+                        </Checkbox.Group>
+                      </Col>
+                    </Row>
+                    {`${choiceOption.indexOf('资料')}` > `-1` && (
+                      <span>
+                        <Row className={styles['fn-mb-15']}>
+                          <Col span={24} pull={4}>
+                            <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                              {getFieldDecorator('attachment ', {
+                                initialValue: '1',
+                              })(
+                                <Upload {...props2}>
+                                  <Button type="primary">
+                                    <Icon type="upload" /> 上传资料附件
+                                  </Button>
+                                  <span>
+                                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                  </span>
+                                </Upload>
+                              )}
                             </Form.Item>
-                        </Col>
-                      </Row>
-                    </span>
-                      )}
-                      { ( `${choiceOption.indexOf("报告")}` > `-1` ) && (
-                        <span>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                            {getFieldDecorator('report', {
-                              initialValue: '1',
-                            })(
-                              <Upload {...props2}>
-                                <Button type="primary">
-                                  <Icon type="upload" /> 上传报告附件
-                                </Button>
-                                <span>
-                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                                </span>
-                              </Upload>
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </span>
-                      )}
-                      { ( `${choiceOption.indexOf("工程")}` > `-1` ) && (
-                        <span>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                            {getFieldDecorator('project', {
-                              initialValue: '1',
-                            })(
-                              <Upload {...props2}>
-                                <Button type="primary">
-                                  <Icon type="upload" /> 上传工程附件
-                                </Button>
-                                <span>
-                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                                </span>
-                              </Upload>
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </span>
-                      )}
-                      { ( `${choiceOption.indexOf("合同")}` > `-1` ) && (
-                        <span>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                            {getFieldDecorator('contract ', {
-                              initialValue: '1',
-                            })(
-                              <Upload {...props2}>
-                                <Button type="primary">
-                                  <Icon type="upload" /> 上传合同附件
-                                </Button>
-                                <span>
-                                  *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                                </span>
-                              </Upload>
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </span>
-                      )}
-                    </Form>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
-          {
-            (`${rowInfo.projectStatus}` !=="8") && (
-              <TabPane
-                tab={
-                  <span>
-                <Icon type="switcher" />所属合同
-              </span>
-                }
-                key="4"
-              >
-                <div>
-                  <Card bordered={false}>
-                    <div className={styles.tableList}>
-                      <StandardTable
-                        selectedRows={selectedRows}
-                        loading={loading}
-                        data={data}
-                        columns={columnsProject}
-                        onSelectRow={this.handleSelectRows}
-                        onChange={this.handleStandardTableChange}
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
-          {
-            (`${rowInfo.projectStatus}` !=="8") && (
-              <TabPane
-                tab={
-                  <span>
-                <Icon type="line-chart" />项目计划
-              </span>
-                }
-                key="5"
-              >
-                <div>
-                  <Card bordered={false}>
-                    <div className={styles.tableList}>
-                      <StandardTable
-                        selectedRows={selectedRows}
-                        loading={loading}
-                        data={data}
-                        columns={columnsPlan}
-                        onSelectRow={this.handleSelectRows}
-                        onChange={this.handleStandardTableChange}
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
-          {
-            (`${rowInfo.projectStatus}` !=="8") && (
-              <TabPane
-                tab={
-                  <span>
-                <Icon type="calendar" />过程管理
-              </span>
-                }
-                key="6"
-              >
-                <div>
-                  <Card>
-                    <div>
-                      <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                        新增联系人
-                      </Button>
-                      <Table
-                        dataSource={dataSource}
-                        columns={columnsLinkMan}
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
+                          </Col>
+                        </Row>
+                      </span>
+                    )}
+                    {`${choiceOption.indexOf('底稿')}` > `-1` && (
+                      <span>
+                        <Row className={styles['fn-mb-15']}>
+                          <Col span={24} pull={4}>
+                            <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                              {getFieldDecorator('attachment ', {
+                                initialValue: '1',
+                              })(
+                                <Upload {...props2}>
+                                  <Button type="primary">
+                                    <Icon type="upload" /> 上传底稿附件
+                                  </Button>
+                                  <span>
+                                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                  </span>
+                                </Upload>
+                              )}
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </span>
+                    )}
+                    {`${choiceOption.indexOf('报告')}` > `-1` && (
+                      <span>
+                        <Row className={styles['fn-mb-15']}>
+                          <Col span={24} pull={4}>
+                            <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                              {getFieldDecorator('report', {
+                                initialValue: '1',
+                              })(
+                                <Upload {...props2}>
+                                  <Button type="primary">
+                                    <Icon type="upload" /> 上传报告附件
+                                  </Button>
+                                  <span>
+                                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                  </span>
+                                </Upload>
+                              )}
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </span>
+                    )}
+                    {`${choiceOption.indexOf('工程')}` > `-1` && (
+                      <span>
+                        <Row className={styles['fn-mb-15']}>
+                          <Col span={24} pull={4}>
+                            <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                              {getFieldDecorator('project', {
+                                initialValue: '1',
+                              })(
+                                <Upload {...props2}>
+                                  <Button type="primary">
+                                    <Icon type="upload" /> 上传工程附件
+                                  </Button>
+                                  <span>
+                                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                  </span>
+                                </Upload>
+                              )}
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </span>
+                    )}
+                    {`${choiceOption.indexOf('合同')}` > `-1` && (
+                      <span>
+                        <Row className={styles['fn-mb-15']}>
+                          <Col span={24} pull={4}>
+                            <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
+                              {getFieldDecorator('contract ', {
+                                initialValue: '1',
+                              })(
+                                <Upload {...props2}>
+                                  <Button type="primary">
+                                    <Icon type="upload" /> 上传合同附件
+                                  </Button>
+                                  <span>
+                                    *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
+                                  </span>
+                                </Upload>
+                              )}
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </span>
+                    )}
+                  </Form>
+                </Card>
+              </div>
+            </TabPane>
+          )}
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="switcher" />所属合同
+                </span>
+              }
+              key="4"
+            >
+              <div>
+                <Card bordered={false}>
+                  <div className={styles.tableList}>
+                    <StandardTable
+                      selectedRows={selectedRows}
+                      loading={loading}
+                      data={data}
+                      columns={columnsProject}
+                      onSelectRow={this.handleSelectRows}
+                      onChange={this.handleStandardTableChange}
+                    />
+                  </div>
+                </Card>
+              </div>
+            </TabPane>
+          )}
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="line-chart" />项目计划
+                </span>
+              }
+              key="5"
+            >
+              <div>
+                <Card bordered={false}>
+                  <div className={styles.tableList}>
+                    <StandardTable
+                      selectedRows={selectedRows}
+                      loading={loading}
+                      data={data}
+                      columns={columnsPlan}
+                      onSelectRow={this.handleSelectRows}
+                      onChange={this.handleStandardTableChange}
+                    />
+                  </div>
+                </Card>
+              </div>
+            </TabPane>
+          )}
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="calendar" />过程管理
+                </span>
+              }
+              key="6"
+            >
+              <div>
+                <Card>
+                  <div>
+                    <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                      新增联系人
+                    </Button>
+                    <Table dataSource={dataSource} columns={columnsLinkMan} />
+                  </div>
+                </Card>
+              </div>
+            </TabPane>
+          )}
           <TabPane
             tab={
               <span>
@@ -1152,7 +1153,11 @@ class ProjectCheckTabs extends PureComponent {
               <Card bordered={false}>
                 <div className={styles.tableList}>
                   <div className={styles.tableListOperator}>
-                    <Button icon="plus" type="primary" onClick={() => this.handleReportAddVisible(true)}>
+                    <Button
+                      icon="plus"
+                      type="primary"
+                      onClick={() => this.handleReportAddVisible(true)}
+                    >
                       新建
                     </Button>
                   </div>
@@ -1167,60 +1172,62 @@ class ProjectCheckTabs extends PureComponent {
                 </div>
               </Card>
               <ReportAddModal {...reportAddMethods} reportAddVisible={reportAddVisible} />
-              <ReportEditModal {...reportEditMethods} reportEditVisible={reportEditVisible} rowInfoCurrent={rowInfoCurrent} />
-              <ReportViewModal {...reportViewMethods} reportViewVisible={reportViewVisible} rowInfoCurrent={rowInfoCurrent} />
+              <ReportEditModal
+                {...reportEditMethods}
+                reportEditVisible={reportEditVisible}
+                rowInfoCurrent={rowInfoCurrent}
+              />
+              <ReportViewModal
+                {...reportViewMethods}
+                reportViewVisible={reportViewVisible}
+                rowInfoCurrent={rowInfoCurrent}
+              />
             </div>
           </TabPane>
-          {
-            (`${rowInfo.projectStatus}` !=="8") && (
-              <TabPane
-                tab={
-                  <span>
-                <Icon type="exception" />项目交流
-              </span>
-                }
-                key="9"
-              >
-                <div>
-                  <Card>
-                    <Form layout="horizontal">
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label="交流内容">
-                            {getFieldDecorator('communicationContent ', {
-                            })(
-                              <TextArea placeholder="交流内容" style={{ width: 200 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label="交流时间">
-                            {getFieldDecorator('communicationTime ', {
-                              initialValue:`${moment().format('YYYY-MM-DD HH:mm:ss')}`,
-                            })(
-                              <Input placeholder="交流时间" style={{ width: 200 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className={styles['fn-mb-15']}>
-                        <Col span={24} pull={4}>
-                          <Form.Item {...formItemLayout} label="@人员">
-                            {getFieldDecorator('personnel', {
-                            })(
-                              <Input placeholder="@人员" style={{ width: 200 }} />
-                            )}
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Card>
-                </div>
-              </TabPane>
-            )
-          }
+          {`${rowInfo.projectStatus}` !== '8' && (
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="exception" />项目交流
+                </span>
+              }
+              key="9"
+            >
+              <div>
+                <Card>
+                  <Form layout="horizontal">
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={24} pull={4}>
+                        <Form.Item {...formItemLayout} label="交流内容">
+                          {getFieldDecorator('communicationContent ', {})(
+                            <TextArea placeholder="交流内容" style={{ width: 200 }} />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={24} pull={4}>
+                        <Form.Item {...formItemLayout} label="交流时间">
+                          {getFieldDecorator('communicationTime ', {
+                            initialValue: `${moment().format('YYYY-MM-DD HH:mm:ss')}`,
+                          })(<Input placeholder="交流时间" style={{ width: 200 }} />)}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className={styles['fn-mb-15']}>
+                      <Col span={24} pull={4}>
+                        <Form.Item {...formItemLayout} label="@人员">
+                          {getFieldDecorator('personnel', {})(
+                            <Input placeholder="@人员" style={{ width: 200 }} />
+                          )}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card>
+              </div>
+            </TabPane>
+          )}
         </Tabs>
       </Modal>
     );

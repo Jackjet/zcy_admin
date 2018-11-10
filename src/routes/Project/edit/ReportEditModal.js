@@ -83,7 +83,14 @@ class ReportEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, reportEditVisible, handleReportEditVisible, rowInfoCurrent } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      reportEditVisible,
+      handleReportEditVisible,
+      rowInfoCurrent,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -154,7 +161,7 @@ class ReportEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入报告编号' }],
-                      initialValue:`${rowInfoCurrent.no}`,
+                      initialValue: `${rowInfoCurrent.no}`,
                     })(<Input disabled placeholder="请输入报告编号" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
@@ -178,7 +185,7 @@ class ReportEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.years}>
                     {getFieldDecorator('years', {
                       rules: [{ required: true, message: '请输入名称' }],
-                      initialValue:`${rowInfoCurrent.name}`,
+                      initialValue: `${rowInfoCurrent.name}`,
                     })(<Input placeholder="请输入名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
@@ -188,7 +195,7 @@ class ReportEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择报告性质' }],
-                      initialValue:`${rowInfoCurrent.linkman}`,
+                      initialValue: `${rowInfoCurrent.linkman}`,
                     })(
                       <Select placeholder="请选择客户" style={{ width: 200 }}>
                         <Option value="xiao">请选择</Option>
@@ -208,7 +215,7 @@ class ReportEditModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24} offset={4} >
+                <Col span={24} offset={4}>
                   <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
                     {getFieldDecorator('attachment ', {
                       initialValue: '1',
@@ -238,7 +245,6 @@ class ReportEditModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

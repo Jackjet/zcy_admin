@@ -60,10 +60,19 @@ const optionshz = [
   },
 ];
 const PanelDataOption = ['项目', '借款', '个人'];
-const IndustryOption = ['制造业','服务业','房地产建筑','三农业务','政府购买','商业','金融','非营利组织','其他'];
-const IncomeTaxOption = ['查账征收','核定征收'];
-const statusOption = ['保存','启用','禁用'];
-
+const IndustryOption = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '金融',
+  '非营利组织',
+  '其他',
+];
+const IncomeTaxOption = ['查账征收', '核定征收'];
+const statusOption = ['保存', '启用', '禁用'];
 
 const fieldLabels = {
   customerCode: '客户编码',
@@ -85,11 +94,11 @@ const fieldLabels = {
   address: '详细地址',
   remark: '备注',
   status: '状态',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
+  companyName: '单位名称',
+  companyAddress: '单位地址',
+  taxNumber: '税号',
+  openAccountBank: '开户银行',
+  bankAccount: '银行账户',
 };
 const formItemLayout = {
   labelCol: {
@@ -103,17 +112,16 @@ const formItemLayout = {
 };
 function onChange(value) {
   console.log(value);
-};
-
+}
 
 class ExpenseApplyAddModal extends PureComponent {
   state = {
     width: '100%',
     panelOptionData: [],
-    industryOptionData:[],
-    incomeTaxOptionData:[],
-    choiceCheckBox: "",
-    statusOptionData:[],
+    industryOptionData: [],
+    incomeTaxOptionData: [],
+    choiceCheckBox: '',
+    statusOptionData: [],
     dataSource: [
       {
         key: '0',
@@ -167,7 +175,7 @@ class ExpenseApplyAddModal extends PureComponent {
 
   handleLevelChange = () => {
     this.setState({
-      panelOptionData: PanelDataOption.map((data) => {
+      panelOptionData: PanelDataOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -176,7 +184,7 @@ class ExpenseApplyAddModal extends PureComponent {
 
   handleIndustryChange = () => {
     this.setState({
-      industryOptionData: IndustryOption.map((data) => {
+      industryOptionData: IndustryOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -185,22 +193,22 @@ class ExpenseApplyAddModal extends PureComponent {
 
   handleIncomeTaxChange = () => {
     this.setState({
-      incomeTaxOptionData: IncomeTaxOption.map((data) => {
+      incomeTaxOptionData: IncomeTaxOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
     });
   };
 
-  handleGetOptionValue=(value)=>{
+  handleGetOptionValue = value => {
     this.setState({
-      choiceCheckBox:`${value}`,
+      choiceCheckBox: `${value}`,
     });
   };
 
   handleStatusChange = () => {
     this.setState({
-      statusOptionData: statusOption.map((data) => {
+      statusOptionData: statusOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -215,7 +223,13 @@ class ExpenseApplyAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , expenseApplyAddVisible, handleExpenseApplyAddVisible} = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      expenseApplyAddVisible,
+      handleExpenseApplyAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { panelOptionData, choiceCheckBox, dataSource } = this.state;
     const validate = () => {
@@ -324,7 +338,7 @@ class ExpenseApplyAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -341,9 +355,7 @@ class ExpenseApplyAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="状态">
                     {getFieldDecorator('Status', {
                       rules: [{ required: true, message: '状态' }],
-                    })(
-                      <Input placeholder="状态" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="状态" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -353,7 +365,12 @@ class ExpenseApplyAddModal extends PureComponent {
                     {getFieldDecorator('ExpensesType', {
                       rules: [{ required: false, message: '费用类型' }],
                     })(
-                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleLevelChange} placeholder="费用类型" style={{ width: 200 }}>
+                      <Select
+                        onChange={this.handleGetOptionValue}
+                        onMouseEnter={this.handleLevelChange}
+                        placeholder="费用类型"
+                        style={{ width: 200 }}
+                      >
                         {panelOptionData}
                       </Select>
                     )}
@@ -363,59 +380,60 @@ class ExpenseApplyAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="申请时间">
                     {getFieldDecorator('ApplyData', {
                       rules: [{ required: false, message: '申请时间' }],
-                    })(
-                      <Input placeholder="申请时间" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="申请时间" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Collapse defaultActiveKey={['1','2','3']} >
-                { ( `${choiceCheckBox}` === `项目` )&& (
+              <Collapse defaultActiveKey={['1', '2', '3']}>
+                {`${choiceCheckBox}` === `项目` && (
                   <Panel header="项目" key="1">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={24} offset={1}>
                         <div>
-                          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                          <Button
+                            onClick={this.handleAdd}
+                            type="primary"
+                            style={{ marginBottom: 16 }}
+                          >
                             项目新建
                           </Button>
-                          <Table
-                            dataSource={dataSource}
-                            columns={columns}
-                          />
+                          <Table dataSource={dataSource} columns={columns} />
                         </div>
                       </Col>
                     </Row>
                   </Panel>
                 )}
-                { ( `${choiceCheckBox}` === `个人` ) && (
+                {`${choiceCheckBox}` === `个人` && (
                   <Panel header="个人" key="2">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={24} offset={1}>
                         <div>
-                          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                          <Button
+                            onClick={this.handleAdd}
+                            type="primary"
+                            style={{ marginBottom: 16 }}
+                          >
                             个人新建
                           </Button>
-                          <Table
-                            dataSource={dataSource}
-                            columns={columns}
-                          />
+                          <Table dataSource={dataSource} columns={columns} />
                         </div>
                       </Col>
                     </Row>
                   </Panel>
                 )}
-                { ( `${choiceCheckBox}` === `借款`) && (
+                {`${choiceCheckBox}` === `借款` && (
                   <Panel header="借款" key="3">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={24} offset={1}>
                         <div>
-                          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                          <Button
+                            onClick={this.handleAdd}
+                            type="primary"
+                            style={{ marginBottom: 16 }}
+                          >
                             借款新建
                           </Button>
-                          <Table
-                            dataSource={dataSource}
-                            columns={columns}
-                          />
+                          <Table dataSource={dataSource} columns={columns} />
                         </div>
                       </Col>
                     </Row>

@@ -24,16 +24,12 @@ const fieldLabels = {
   remarks: '备注',
 };
 
-
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
 class PartnerType extends PureComponent {
-
-
   state = {
     width: '100%',
   };
@@ -45,10 +41,10 @@ class PartnerType extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleGiveValue = (text) => {
+  handleGiveValue = text => {
     this.props.handlePartnerTypeValue(text);
     this.props.handlePartnerTypeVisible(false);
-  }
+  };
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -58,7 +54,7 @@ class PartnerType extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting , partnerTypeVisible, handlePartnerTypeVisible } = this.props;
+    const { form, dispatch, submitting, partnerTypeVisible, handlePartnerTypeVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -116,27 +112,34 @@ class PartnerType extends PureComponent {
         </span>
       );
     };
-    const data = [{
-      key: '1',
-      name: '执行合伙人',
-      Type: 32,
-    }, {
-      key: '2',
-      name: '技术合伙人',
-      Type: 42,
-    }, {
-      key: '3',
-      name: '管理合伙人',
-      Type: 32,
-    }];
-    const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-      render: (text) => <a onDoubleClick={() =>this.handleGiveValue(text)}>{text}</a>,
-    }, {
-      title: 'Type',
-      dataIndex: 'Type',
-    }];
+    const data = [
+      {
+        key: '1',
+        name: '执行合伙人',
+        Type: 32,
+      },
+      {
+        key: '2',
+        name: '技术合伙人',
+        Type: 42,
+      },
+      {
+        key: '3',
+        name: '管理合伙人',
+        Type: 32,
+      },
+    ];
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        render: text => <a onDoubleClick={() => this.handleGiveValue(text)}>{text}</a>,
+      },
+      {
+        title: 'Type',
+        dataIndex: 'Type',
+      },
+    ];
 
     return (
       <Modal
@@ -154,9 +157,11 @@ class PartnerType extends PureComponent {
             <Table
               columns={columns}
               dataSource={data}
-              onRow={(record) => {
+              onRow={record => {
                 return {
-                  onClick: () => {this.handleGiveValue(record.name)},
+                  onClick: () => {
+                    this.handleGiveValue(record.name);
+                  },
                 };
               }}
             />

@@ -26,19 +26,29 @@ import ContactsAddModal from '../CusApplyBill/ContactsAddModal';
 import CustomerDistributionModal from './CustomerDistributionModal';
 import CustomerEditModal from './CusEditModal';
 
-const {confirm} = Modal;
-const { Content,  Sider } = Layout;
+const { confirm } = Modal;
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const getValue = obj =>
-  Object.keys(obj).map(key => obj[key]).join(',');
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
-
+const industry = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '非营利组织',
+  '其他',
+];
 
 // 设置业务员
 const SalesManage = Form.create()(props => {
@@ -96,7 +106,7 @@ export default class CustomerList extends PureComponent {
     formValues: {},
 
     // 当前操作行的数据
-    rowInfo:{},
+    rowInfo: {},
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
@@ -179,9 +189,9 @@ export default class CustomerList extends PureComponent {
     if (!selectedRows) return;
     confirm({
       title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'company/remove',
@@ -189,7 +199,7 @@ export default class CustomerList extends PureComponent {
             no: selectedRows.map(row => row.no).join(','),
           },
         });
-        message.success('删除成功')
+        message.success('删除成功');
       },
       onCancel() {
         message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
@@ -203,7 +213,7 @@ export default class CustomerList extends PureComponent {
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-    if(this.state.selectedRows.length === 0){
+    if (this.state.selectedRows.length === 0) {
       message.config({
         top: 100,
         duration: 2,
@@ -214,9 +224,9 @@ export default class CustomerList extends PureComponent {
     }
     confirm({
       title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'company/remove',
@@ -224,7 +234,7 @@ export default class CustomerList extends PureComponent {
             no: selectedRows.map(row => row.no).join(','),
           },
         });
-        message.success('删除成功')
+        message.success('删除成功');
       },
       onCancel() {
         message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
@@ -276,7 +286,7 @@ export default class CustomerList extends PureComponent {
   };
 
   // 隐藏和显示客户编辑界面
-  handleCustomerEditVisible = (flag) => {
+  handleCustomerEditVisible = flag => {
     this.setState({
       customerEditVisible: !!flag,
     });
@@ -284,7 +294,7 @@ export default class CustomerList extends PureComponent {
 
   // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -292,7 +302,6 @@ export default class CustomerList extends PureComponent {
       contactsVisible: !!flag,
     });
   };
-
 
   handleTabsViewVisible = flag => {
     this.setState({
@@ -306,7 +315,7 @@ export default class CustomerList extends PureComponent {
   };
 
   handleSalesVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.config({
         top: 100,
         duration: 2,
@@ -348,11 +357,10 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
-    const { SubMenu }= Menu;
+    const { SubMenu } = Menu;
     return (
       <Menu
         mode="inline"
@@ -380,20 +388,19 @@ export default class CustomerList extends PureComponent {
   }
 
   // 弹窗展示当前行的数据
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       customerEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       tabsViewVisible: !!flag,
       rowInfo: record,
     });
   };
-
 
   // 高级搜索
   renderAdvancedForm() {
@@ -403,32 +410,24 @@ export default class CustomerList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码名称">
-              {getFieldDecorator('no',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('no', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="移动电话">
-              {getFieldDecorator('phone',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('phone', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人">
-              {getFieldDecorator('contract',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('contract', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer',{
-
-              })(
+              {getFieldDecorator('customer', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                 </Select>
@@ -437,9 +436,7 @@ export default class CustomerList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="行业">
-              {getFieldDecorator('status',{
-
-              })(
+              {getFieldDecorator('status', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                   <Option value="z">制造业</Option>
@@ -457,9 +454,7 @@ export default class CustomerList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('address', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -502,13 +497,10 @@ export default class CustomerList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode',{
-
-              })(
+              {getFieldDecorator('customerCode', {})(
                 <div>
                   <Input placeholder="请输入客户编码和名称" />
                 </div>
-
               )}
             </FormItem>
           </Col>
@@ -531,7 +523,6 @@ export default class CustomerList extends PureComponent {
   }
 
   render() {
-
     const { company: { data }, loading } = this.props;
     const {
       selectedRows,
@@ -548,7 +539,7 @@ export default class CustomerList extends PureComponent {
       {
         title: '编码',
         dataIndex: 'cusCode',
-       /* fixed: 'left',*/
+        /* fixed: 'left',*/
       },
       {
         title: '名称',
@@ -632,27 +623,23 @@ export default class CustomerList extends PureComponent {
         fixed: 'right',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            {
-              record.customerStatus === 1 && (
-                <span>
-                  <Divider type="vertical" />
-                  <a>启用</a>
-                </span>
-              )
-            }
-            {
-              record.customerStatus === 0 && (
-                <span>
-                  <Divider type="vertical" />
-                  <a>停用</a>
-                </span>
-              )
-            }
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+            {record.customerStatus === 1 && (
+              <span>
+                <Divider type="vertical" />
+                <a>启用</a>
+              </span>
+            )}
+            {record.customerStatus === 0 && (
+              <span>
+                <Divider type="vertical" />
+                <a>停用</a>
+              </span>
+            )}
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
+            <a onClick={this.handleDeleteClick}>删除</a>
           </Fragment>
         ),
       },
@@ -674,7 +661,7 @@ export default class CustomerList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div>
                 <div className={styles.tableList}>
                   <div className={styles.tableListForm}>{this.renderForm()}</div>
@@ -701,7 +688,7 @@ export default class CustomerList extends PureComponent {
                     )}
                   </div>
                   <StandardTable
-                   /* scroll={{ x: 1500}}*/
+                    /* scroll={{ x: 1500}}*/
                     selectedRows={selectedRows}
                     loading={loading}
                     data={data}
@@ -715,11 +702,18 @@ export default class CustomerList extends PureComponent {
           </Layout>
         </Card>
         <CustomerAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
+        <CustomerEditModal
+          {...ParentMethods}
+          customerEditVisible={customerEditVisible}
+          rowInfo={rowInfo}
+        />
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
         <CustomerViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
         <SalesManage {...ParentMethods} salesVisible={salesVisible} />
-        <CustomerDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
+        <CustomerDistributionModal
+          {...ParentMethods}
+          customerDistributionVisible={customerDistributionVisible}
+        />
       </PageHeaderLayout>
     );
   }

@@ -20,7 +20,6 @@ import { connect } from 'dva';
 import EditableCell from '../../EditableTable/EditableCell';
 import styles from './style.less';
 
-
 const { Option } = Select;
 const optionshz = [
   {
@@ -117,8 +116,7 @@ class ContactsAddModal extends PureComponent {
         target[dataIndex] = value;
         this.setState({
           dataSource,
-        })
-        ;
+        });
       }
     };
   };
@@ -362,10 +360,7 @@ class ContactsAddModal extends PureComponent {
               <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                 新增联系人
               </Button>
-              <Table
-                dataSource={dataSource}
-                columns={columns}
-              />
+              <Table dataSource={dataSource} columns={columns} />
             </div>
           </Card>
         </div>

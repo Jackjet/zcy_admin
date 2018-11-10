@@ -19,8 +19,17 @@ import StandardTable from '../../../components/StandardTable/index';
 import picture from './test.png';
 import styles from './style.less';
 
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
-const statusMap = ['success', 'processing'] ;
+const industry = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '非营利组织',
+  '其他',
+];
+const statusMap = ['success', 'processing'];
 const status = ['已审核', '审核中'];
 const fieldLabels = {
   customerCode: '客户编码',
@@ -42,11 +51,11 @@ const fieldLabels = {
   address: '详细地址',
   remark: '备注',
   status: '状态',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
+  companyName: '单位名称',
+  companyAddress: '单位地址',
+  taxNumber: '税号',
+  openAccountBank: '开户银行',
+  bankAccount: '银行账户',
 };
 const optionshz = [
   {
@@ -122,7 +131,6 @@ class CusApplyViewTabs extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -177,14 +185,27 @@ class CusApplyViewTabs extends PureComponent {
     if (this.state.width !== width) {
       this.setState({ width });
     }
-
-
   };
   render() {
     const { TabPane } = Tabs;
-    const { form, dispatch, submitting, cusApplyTabsViewVisible, handleCusApplyTabsViewVisible, rowInfo, rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      cusApplyTabsViewVisible,
+      handleCusApplyTabsViewVisible,
+      rowInfo,
+      rule: { data },
+      loading,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows, projectViewVisible, rowInfoCurrent, contractViewVisible, visitViewVisible } = this.state;
+    const {
+      selectedRows,
+      projectViewVisible,
+      rowInfoCurrent,
+      contractViewVisible,
+      visitViewVisible,
+    } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -199,7 +220,7 @@ class CusApplyViewTabs extends PureComponent {
         handleCusApplyTabsViewVisible(false);
       });
     };
-    const cancelDate = () =>{
+    const cancelDate = () => {
       handleCusApplyTabsViewVisible(false);
     };
     const errors = getFieldsError();
@@ -336,7 +357,7 @@ class CusApplyViewTabs extends PureComponent {
               }
               key="1"
             >
-              <Collapse defaultActiveKey={['1','2','3']}>
+              <Collapse defaultActiveKey={['1', '2', '3']}>
                 <Panel header="客户申请单基本信息" key="1">
                   <div>
                     <Card>
@@ -346,7 +367,7 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
                               {getFieldDecorator('customerName', {
                                 rules: [{ required: true, message: '请输入客户名称' }],
-                                initialValue :`${rowInfo.customerName}`,
+                                initialValue: `${rowInfo.customerName}`,
                               })(<Input readOnly placeholder="请输入客户名称" />)}
                             </Form.Item>
                           </Col>
@@ -354,20 +375,16 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.industry}>
                               {getFieldDecorator('industry', {
                                 rules: [{ required: true, message: '请选择行业' }],
-                                initialValue :`${industry[rowInfo.industry]}`,
-                              })(
-                                <Input readOnly placeholder="请选择行业" />
-                              )}
+                                initialValue: `${industry[rowInfo.industry]}`,
+                              })(<Input readOnly placeholder="请选择行业" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.company}>
                               {getFieldDecorator('company', {
                                 rules: [{ required: true, message: '所属公司' }],
-                                initialValue :`${rowInfo.company}`,
-                              })(
-                                <Input readOnly placeholder="所属公司" />
-                              )}
+                                initialValue: `${rowInfo.company}`,
+                              })(<Input readOnly placeholder="所属公司" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -376,28 +393,22 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.incomeTax}>
                               {getFieldDecorator('incomeTax', {
                                 rules: [{ required: false, message: '请选择所得税征收方式' }],
-                              })(
-                                <Input readOnly placeholder="请选择所得税征收方式" />
-                              )}
+                              })(<Input readOnly placeholder="请选择所得税征收方式" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.taxCode}>
                               {getFieldDecorator('taxCode', {
                                 rules: [{ required: false, message: '请输入税务登记号' }],
-                              })(
-                                <Input readOnly placeholder="请输入税务登记号" />
-                              )}
+                              })(<Input readOnly placeholder="请输入税务登记号" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.status}>
                               {getFieldDecorator('customerStatus', {
                                 rules: [{ required: true, message: '状态' }],
-                                initialValue :`${status[rowInfo.customerStatus]}`,
-                              })(
-                                <Input readOnly placeholder="请选择状态" />
-                              )}
+                                initialValue: `${status[rowInfo.customerStatus]}`,
+                              })(<Input readOnly placeholder="请选择状态" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -406,27 +417,22 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.customerCode}>
                               {getFieldDecorator('customerCode', {
                                 rules: [{ required: false, message: '请输入客户编码' }],
-                                initialValue:`${rowInfo.customerCode}`,
-                              })(
-                                <Input readOnly placeholder="请输入客户编码" />
-                              )}
+                                initialValue: `${rowInfo.customerCode}`,
+                              })(<Input readOnly placeholder="请输入客户编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.pinyin}>
                               {getFieldDecorator('pinyin', {
                                 rules: [{ required: false, message: '请输入拼音码' }],
-                              })(
-                                <Input readOnly placeholder="请输入拼音码" />
-                              )}
+                              })(<Input readOnly placeholder="请输入拼音码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.simpleName}>
                               {getFieldDecorator('simpleName', {
                                 rules: [{ required: false, message: '请输入简称' }],
-                              })(<Input readOnly placeholder="请输入简称" />
-                              )}
+                              })(<Input readOnly placeholder="请输入简称" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -436,28 +442,22 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                               {getFieldDecorator('mobilePhone', {
                                 rules: [{ required: true, message: '请输入手机号码' }],
-                                initialValue :`${rowInfo.mobilePhone}`,
-                              })(
-                                <Input readOnly placeholder="请输入手机号码" />
-                              )}
+                                initialValue: `${rowInfo.mobilePhone}`,
+                              })(<Input readOnly placeholder="请输入手机号码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.email}>
                               {getFieldDecorator('email', {
                                 rules: [{ required: false, message: '请输入电子邮箱' }],
-                              })(
-                                <Input readOnly placeholder="请输入电子邮箱" />
-                              )}
+                              })(<Input readOnly placeholder="请输入电子邮箱" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.companyPhone}>
                               {getFieldDecorator('companyPhone', {
                                 rules: [{ required: false, message: '请输入公司电话' }],
-                              })(
-                                <Input readOnly placeholder="请输入公司电话" />
-                              )}
+                              })(<Input readOnly placeholder="请输入公司电话" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -467,9 +467,7 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.postalCode}>
                               {getFieldDecorator('postalCode', {
                                 rules: [{ required: false, message: '请输入邮政编码' }],
-                              })(
-                                <Input readOnly placeholder="请输入邮政编码" />
-                              )}
+                              })(<Input readOnly placeholder="请输入邮政编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
@@ -491,18 +489,14 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.url}>
                               {getFieldDecorator('url', {
                                 rules: [{ required: false, message: '请输入网站主页' }],
-                              })(
-                                <Input readOnly placeholder="请输入网站主页" />
-                              )}
+                              })(<Input readOnly placeholder="请输入网站主页" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
                             <Form.Item {...formItemLayout} label={fieldLabels.address}>
                               {getFieldDecorator('address', {
                                 rules: [{ required: false, message: '请输入详细地址' }],
-                              })(
-                                <Input readOnly placeholder="请输入详细地址" />
-                              )}
+                              })(<Input readOnly placeholder="请输入详细地址" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -511,9 +505,7 @@ class CusApplyViewTabs extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                               {getFieldDecorator('remark', {
                                 rules: [{ required: false, message: '请输入备注' }],
-                              })(
-                                <TextArea readOnly placeholder="请输入备注" />
-                              )}
+                              })(<TextArea readOnly placeholder="请输入备注" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -528,21 +520,39 @@ class CusApplyViewTabs extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
                           {getFieldDecorator('companyName', {
                             rules: [{ required: false, message: '请输入单位名称' }],
-                          })(<Input readOnly placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                          })(
+                            <Input
+                              readOnly
+                              placeholder="请输入单位名称"
+                              className={styles['fn-mb-15']}
+                            />
+                          )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
                           {getFieldDecorator('companyAddress', {
                             rules: [{ required: false, message: '请输入单位地址' }],
-                          })(<Input readOnly placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                          })(
+                            <Input
+                              readOnly
+                              placeholder="请输入单位地址"
+                              className={styles['fn-mb-15']}
+                            />
+                          )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                           {getFieldDecorator('taxNumber', {
                             rules: [{ required: false, message: '请输入税号' }],
-                          })(<Input readOnly placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                          })(
+                            <Input
+                              readOnly
+                              placeholder="请输入税号"
+                              className={styles['fn-mb-15']}
+                            />
+                          )}
                         </Form.Item>
                       </Col>
                     </Row>
@@ -551,14 +561,26 @@ class CusApplyViewTabs extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
                           {getFieldDecorator('openAccountBank', {
                             rules: [{ required: false, message: '请输入开户银行' }],
-                          })(<Input readOnly placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                          })(
+                            <Input
+                              readOnly
+                              placeholder="请输入开户银行"
+                              className={styles['fn-mb-15']}
+                            />
+                          )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
                           {getFieldDecorator('bankAccount', {
                             rules: [{ required: false, message: '请输入银行账户' }],
-                          })(<Input readOnly placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                          })(
+                            <Input
+                              readOnly
+                              placeholder="请输入银行账户"
+                              className={styles['fn-mb-15']}
+                            />
+                          )}
                         </Form.Item>
                       </Col>
                     </Row>
@@ -611,7 +633,6 @@ class CusApplyViewTabs extends PureComponent {
           </Tabs>
         </Card>
       </Modal>
-
     );
   }
 }

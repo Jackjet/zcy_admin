@@ -17,7 +17,6 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
-
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -163,18 +162,14 @@ class ArchivesAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="档案号">
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '档案号' }],
-                    })(
-                      <Input placeholder="档案号" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="档案号" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label="归档日期">
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '归档日期' }],
-                    })(
-                      <Input placeholder="归档日期" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="归档日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -183,18 +178,14 @@ class ArchivesAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="档案名称">
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '档案名称' }],
-                    })(
-                      <Input placeholder="档案名称" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="档案名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label="档案管理员">
                     {getFieldDecorator('archivesAdmin', {
                       rules: [{ required: false, message: '档案管理员' }],
-                    })(
-                      <Input placeholder="档案管理员" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="档案管理员" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -203,9 +194,7 @@ class ArchivesAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="存放位置">
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '存放位置' }],
-                    })(
-                      <Input placeholder="存放位置" style={{ width: 650 }} />
-                    )}
+                    })(<Input placeholder="存放位置" style={{ width: 650 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -214,9 +203,7 @@ class ArchivesAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="备注">
                     {getFieldDecorator('connectBusiness', {
                       rules: [{ required: false, message: '备注' }],
-                    })(
-                      <Input placeholder="备注" style={{ width: 650 }} />
-                    )}
+                    })(<Input placeholder="备注" style={{ width: 650 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -224,7 +211,6 @@ class ArchivesAddModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

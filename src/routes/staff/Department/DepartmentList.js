@@ -16,16 +16,15 @@ import {
   Layout,
   Badge,
 } from 'antd';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import StandardTable from '../../../components/StandardTable/index';
 import styles from './DepartmentList.less';
 import DepartmentAddModal from './DepartmentAddModal';
 import DepartmentViewModal from './DepartmentViewModal';
 import DepartmentEditModal from './DepartmentEditModal';
 
-
 const statusMap = ['error', 'success', 'processing'];
-const statusText = ['禁用' ,'启用' ,'提交'];
+const statusText = ['禁用', '启用', '提交'];
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 message.config({
@@ -48,13 +47,13 @@ export default class DepartmentList extends PureComponent {
     DepartmentAddVisible: false,
     DepartmentViewVisible: false,
     DepartmentEditVisible: false,
-    rowInfo:``,
+    rowInfo: ``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
-    pageCurrent:``,
-    pageSizeCurrent:``,
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
   };
 
   componentDidMount() {
@@ -65,12 +64,11 @@ export default class DepartmentList extends PureComponent {
         page: 1,
         pageSize: 10,
       },
-      callback: (res) => {
-        if(res.meta.status !== '000000' ) {
+      callback: res => {
+        if (res.meta.status !== '000000') {
           console.log(res.meta.status);
-        }else{
+        } else {
           //
-
         }
       },
     });
@@ -91,7 +89,7 @@ export default class DepartmentList extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues , pageCurrent, pageSizeCurrent  } = this.state;
+    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -126,13 +124,12 @@ export default class DepartmentList extends PureComponent {
     dispatch({
       type: 'dept/fetch',
       payload: {},
-      callback: (res) => {
-        if(res.meta.status !== "000000"){
+      callback: res => {
+        if (res.meta.status !== '000000') {
           message.error(res.meta.errmsg);
         } else {
           message.success('重置完成!');
         }
-
       },
     });
   }; // 搜索的重置方法
@@ -144,12 +141,12 @@ export default class DepartmentList extends PureComponent {
 
   handleMenuClick = e => {
     const thisParam = this;
-    const nameCompany = thisParam.state.selectedRows.map(row => row.name ).join(`,\n`);
+    const nameCompany = thisParam.state.selectedRows.map(row => row.name).join(`,\n`);
     switch (e.key) {
       case 'remove':
         confirm({
           title: '确定删除以下部门?',
-          content:(
+          content: (
             <div>
               <p>部门名称: {nameCompany}</p>
               <p>操作人:当前登录用户</p>
@@ -160,7 +157,7 @@ export default class DepartmentList extends PureComponent {
             thisParam.props.dispatch({
               type: 'dept/removeMore',
               payload: {
-                ids : thisParam.state.selectedRows.map(row => row.id ).join(','),
+                ids: thisParam.state.selectedRows.map(row => row.id).join(','),
               },
               callback: () => {
                 thisParam.setState({
@@ -207,9 +204,9 @@ export default class DepartmentList extends PureComponent {
       dispatch({
         type: 'dept/fetch',
         payload: values,
-        callback: (res) => {
-          if(res.meta.status !== '000000'){
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
           } else {
             this.setState({
               selectedRows: [],
@@ -227,19 +224,19 @@ export default class DepartmentList extends PureComponent {
     this.setState({
       DepartmentAddVisible: !!flag,
     });
-    if(!flag){
+    if (!flag) {
       this.props.dispatch({
         type: 'dept/fetch',
         payload: {
           page: this.state.pageCurrent,
           pageSize: this.state.pageSizeCurrent,
         },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
           }
         },
-      })
+      });
     }
   };
 
@@ -253,40 +250,40 @@ export default class DepartmentList extends PureComponent {
     this.setState({
       DepartmentEditVisible: !!flag,
     });
-    if(!flag){
+    if (!flag) {
       this.props.dispatch({
         type: 'dept/fetch',
         payload: {
           page: 1,
           pageSize: 10,
         },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
             // this.props.data = res.data;
           } else {
-            message.success("公司更新成功!")
+            message.success('公司更新成功!');
           }
         },
-      })
+      });
     }
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       DepartmentViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       DepartmentEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showDeleteMessage =(flag, record)=> {
+  showDeleteMessage = (flag, record) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'dept/remove',
@@ -294,8 +291,8 @@ export default class DepartmentList extends PureComponent {
         id: record.id,
         deleteFlag: 0,
       },
-      callback: ( res ) => {
-        if (res.meta.status !== "000000") {
+      callback: res => {
+        if (res.meta.status !== '000000') {
           message.error(res.meta.errmsg);
         } else {
           this.setState({
@@ -311,23 +308,21 @@ export default class DepartmentList extends PureComponent {
           });
           message.success('公司删除成功!');
         }
-
       },
     });
   };
 
-  handleCancelCancel = (record) => {
-
+  handleCancelCancel = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'dept/cancelCancel',
       payload: {
-        id:record.id,
+        id: record.id,
         status: 1,
       },
-      callback: (res) => {
-        if(res.meta.statusCode !== '000000'){
-          message.error("res.meta");  // 返回错误信息
+      callback: res => {
+        if (res.meta.statusCode !== '000000') {
+          message.error('res.meta'); // 返回错误信息
         }
         this.setState({
           selectedRows: [],
@@ -343,21 +338,19 @@ export default class DepartmentList extends PureComponent {
         message.success('部门启用成功!');
       },
     });
-
   }; // 部门状态启用方法
 
-  handleCancel = (record) => {
-
+  handleCancel = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'dept/cancel',
       payload: {
-        id:record.id,
+        id: record.id,
         status: 0,
       },
-      callback: (res) => {
-        if(res.meta.status !== '000000'){
-          message.error("res.meta");  // 返回错误信息
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error('res.meta'); // 返回错误信息
         }
         this.setState({
           selectedRows: [],
@@ -373,7 +366,6 @@ export default class DepartmentList extends PureComponent {
         message.warning('部门已禁用!');
       },
     });
-
   }; // 部门状态禁用方法
 
   treeMenu() {
@@ -408,9 +400,7 @@ export default class DepartmentList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('keyWord')(
-                <Input placeholder="请输入关键字" />
-              )}
+              {getFieldDecorator('keyWord')(<Input placeholder="请输入关键字" />)}
             </FormItem>
           </Col>
 
@@ -434,7 +424,13 @@ export default class DepartmentList extends PureComponent {
 
   render() {
     const { dept: { data }, loading } = this.props;
-    const { selectedRows, DepartmentAddVisible, DepartmentViewVisible, DepartmentEditVisible, rowInfo } = this.state;
+    const {
+      selectedRows,
+      DepartmentAddVisible,
+      DepartmentViewVisible,
+      DepartmentEditVisible,
+      rowInfo,
+    } = this.state;
 
     const columns = [
       {
@@ -481,28 +477,29 @@ export default class DepartmentList extends PureComponent {
           <Fragment>
             <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
 
-            {
-              (statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
-                <span>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-                  <Divider type="vertical" />
-                  <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
-                    <a>删除</a>
-                  </Popconfirm>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.handleCancelCancel(record)} >启用</a>
-                </span>
-              )
-            }
-            {
-              (statusText[record.status] === `启用`) && (
-                <span>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.handleCancel(record)} >禁用</a>
-                </span>
-              )
-            }
+            {(statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+                <Divider type="vertical" />
+                <Popconfirm
+                  title="确认删除?"
+                  onConfirm={() => this.showDeleteMessage(true, record)}
+                  okText="是"
+                  cancelText="否"
+                >
+                  <a>删除</a>
+                </Popconfirm>
+                <Divider type="vertical" />
+                <a onClick={() => this.handleCancelCancel(record)}>启用</a>
+              </span>
+            )}
+            {statusText[record.status] === `启用` && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() => this.handleCancel(record)}>禁用</a>
+              </span>
+            )}
           </Fragment>
         ),
       },
@@ -527,7 +524,7 @@ export default class DepartmentList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
@@ -560,8 +557,16 @@ export default class DepartmentList extends PureComponent {
             </Content>
           </Layout>
           <DepartmentAddModal {...parentMethods} DepartmentAddVisible={DepartmentAddVisible} />
-          <DepartmentViewModal {...parentMethods} DepartmentViewVisible={DepartmentViewVisible} rowInfo={rowInfo} />
-          <DepartmentEditModal {...parentMethods} DepartmentEditVisible={DepartmentEditVisible} rowInfo={rowInfo} />
+          <DepartmentViewModal
+            {...parentMethods}
+            DepartmentViewVisible={DepartmentViewVisible}
+            rowInfo={rowInfo}
+          />
+          <DepartmentEditModal
+            {...parentMethods}
+            DepartmentEditVisible={DepartmentEditVisible}
+            rowInfo={rowInfo}
+          />
         </Card>
       </div>
     );

@@ -30,7 +30,7 @@ const fieldLabels = {
   businessState: '商机状态',
   customerDemand: '客户需求',
   remarks: '备注',
-  platform:'商机平台',
+  platform: '商机平台',
 };
 
 const formItemLayout = {
@@ -45,7 +45,7 @@ const formItemLayout = {
 };
 
 const formItemLayoutTextArea = {
-  style:{
+  style: {
     paddingRight: 150,
     width: '110%',
   },
@@ -138,7 +138,7 @@ class BusinessAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleBusinessOppVisible()}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -162,7 +162,7 @@ class BusinessAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessState}>
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
-                      initialValue:`新建`,
+                      initialValue: `新建`,
                     })(
                       <Select disabled placeholder="请选择商机状态" style={{ width: 150 }}>
                         <Option value="1">新建</Option>
@@ -209,9 +209,7 @@ class BusinessAddModal extends PureComponent {
                   <Form.Item {...formItemLayoutTextArea} label={fieldLabels.customerDemand}>
                     {getFieldDecorator('customerDemand', {
                       rules: [{ required: true, message: '请输入客户需求' }],
-                    })(
-                      <TextArea placeholder="请输入客户需求" />
-                    )}
+                    })(<TextArea placeholder="请输入客户需求" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -220,9 +218,7 @@ class BusinessAddModal extends PureComponent {
                   <Form.Item {...formItemLayoutTextArea} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(
-                      <TextArea placeholder="请输入备注" />
-                    )}
+                    })(<TextArea placeholder="请输入备注" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -230,7 +226,6 @@ class BusinessAddModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

@@ -382,11 +382,15 @@ export default class TableList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button style={{ marginLeft: 8 }} type="primary" onClick={() => this.handleModalVisible(true)}>
+                  <Button
+                    style={{ marginLeft: 8 }}
+                    type="primary"
+                    onClick={() => this.handleModalVisible(true)}
+                  >
                     新建
                   </Button>
                   {selectedRows.length > 0 && (

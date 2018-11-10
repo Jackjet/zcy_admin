@@ -1,18 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Input,
-  Button,
-  Menu,
-  Modal,
-  message,
-  Select,
-  Divider,
-} from 'antd';
+import { Row, Col, Card, Form, Input, Button, Menu, Modal, message, Select, Divider } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
@@ -34,7 +22,7 @@ const getValue = obj =>
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class companyList  extends PureComponent {
+export default class companyList extends PureComponent {
   state = {
     companyVisible: false,
     invoiceTabsVisible: false,
@@ -241,7 +229,14 @@ export default class companyList  extends PureComponent {
 
   render() {
     const { company: { data }, loading } = this.props;
-    const { selectedRows, companyVisible, invoiceTabsVisible, invoiceEditVisible, invoiceViewVisible, invoicingVisible } = this.state;
+    const {
+      selectedRows,
+      companyVisible,
+      invoiceTabsVisible,
+      invoiceEditVisible,
+      invoiceViewVisible,
+      invoicingVisible,
+    } = this.state;
     const columns = [
       {
         title: '申请单号',
@@ -267,25 +262,15 @@ export default class companyList  extends PureComponent {
         title: '操作',
         render: () => (
           <Fragment>
-            <a onClick={() => this.handleInvoiceViewVisible(true)}>
-              查看
-            </a>
+            <a onClick={() => this.handleInvoiceViewVisible(true)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.handleInvoiceEditVisible(true)}>
-              编辑
-            </a>
+            <a onClick={() => this.handleInvoiceEditVisible(true)}>编辑</a>
             <Divider type="vertical" />
-            <a>
-              开票
-            </a>
+            <a>开票</a>
             <Divider type="vertical" />
-            <a>
-              作废
-            </a>
+            <a>作废</a>
             <Divider type="vertical" />
-            <a onClick={() => this.handleInvoicingVisible(true)}>
-              删除
-            </a>
+            <a onClick={() => this.handleInvoicingVisible(true)}>删除</a>
           </Fragment>
         ),
       },
@@ -314,7 +299,6 @@ export default class companyList  extends PureComponent {
     const InvoicingMethods = {
       handleInvoicingVisible: this.handleInvoicingVisible,
     };
-
 
     return (
       <PageHeaderLayout>

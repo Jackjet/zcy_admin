@@ -19,7 +19,7 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -91,7 +91,13 @@ class KnowledgeViewModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, KnowledgeViewVisible, handleKnowledgeViewVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      KnowledgeViewVisible,
+      handleKnowledgeViewVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -161,12 +167,11 @@ class KnowledgeViewModal extends PureComponent {
           <Form layout="horizontal">
             <Row>
               <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item {...formItemLayout} >
-                  {getFieldDecorator('visitors', {
-                  })(
+                <Form.Item {...formItemLayout}>
+                  {getFieldDecorator('visitors', {})(
                     <div>
                       <Card>
-                        <div style={{fontSize: 30}}>XXX项目案例</div>
+                        <div style={{ fontSize: 30 }}>XXX项目案例</div>
                         <Card>
                           <Input placeholder="文档标题" />
                         </Card>
@@ -182,10 +187,14 @@ class KnowledgeViewModal extends PureComponent {
                         </Card>
                         <Card>
                           <Row>
-                            <Col >
+                            <Col>
                               <Tabs defaultActiveKey="1">
-                                <TabPane tab="文档介绍" key="1">Content of Tab Pane 1</TabPane>
-                                <TabPane tab="文档评论" key="2">Content of Tab Pane 2</TabPane>
+                                <TabPane tab="文档介绍" key="1">
+                                  Content of Tab Pane 1
+                                </TabPane>
+                                <TabPane tab="文档评论" key="2">
+                                  Content of Tab Pane 2
+                                </TabPane>
                               </Tabs>
                             </Col>
                           </Row>
@@ -196,9 +205,8 @@ class KnowledgeViewModal extends PureComponent {
                 </Form.Item>
               </Col>
               <Col xl={8} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item {...formItemLayout} >
-                  {getFieldDecorator('visitors', {
-                  })(
+                <Form.Item {...formItemLayout}>
+                  {getFieldDecorator('visitors', {})(
                     <div>
                       <Card>
                         <Button type="ghost">下载文档</Button>
@@ -213,7 +221,6 @@ class KnowledgeViewModal extends PureComponent {
           </Form>
         </div>
       </Modal>
-
     );
   }
 }

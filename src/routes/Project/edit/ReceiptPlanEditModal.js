@@ -1,5 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Checkbox, Modal } from 'antd';
+import {
+  Card,
+  Form,
+  Icon,
+  Col,
+  Row,
+  DatePicker,
+  Input,
+  Select,
+  Popover,
+  Checkbox,
+  Modal,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
@@ -53,7 +65,14 @@ class ReceiptPlanEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, receiptPlanEditVisible, handleReceiptPlanEditVisible, rowInfoCurrent } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      receiptPlanEditVisible,
+      handleReceiptPlanEditVisible,
+      rowInfoCurrent,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -107,7 +126,6 @@ class ReceiptPlanEditModal extends PureComponent {
       );
     };
     return (
-
       <Modal
         title="收款计划基本信息编辑"
         visible={receiptPlanEditVisible}
@@ -125,7 +143,9 @@ class ReceiptPlanEditModal extends PureComponent {
                     {getFieldDecorator('receivablesName', {
                       rules: [{ required: true, message: '请输入收款阶段名称' }],
                       initialValue: `${rowInfoCurrent.no}`,
-                    })(<Input placeholder="请输入收款阶段名称" className={styles['ant-input-lg']} />)}
+                    })(
+                      <Input placeholder="请输入收款阶段名称" className={styles['ant-input-lg']} />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -179,7 +199,6 @@ class ReceiptPlanEditModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

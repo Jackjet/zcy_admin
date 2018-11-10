@@ -78,7 +78,13 @@ class ReceivablesEditModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, receivablesEditVisible, handleReceivablesEditVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      receivablesEditVisible,
+      handleReceivablesEditVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -153,9 +159,7 @@ class ReceivablesEditModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.contractTitle}>
                     {getFieldDecorator('contractTitle', {
                       rules: [{ required: true, message: '请输入合同标题' }],
-                    })(
-                      <Input  placeholder="请输入合同标题" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入合同标题" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -164,30 +168,23 @@ class ReceivablesEditModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
                     {getFieldDecorator('invoiceMoney', {
                       rules: [{ required: true, message: '请输入开票金额' }],
-                    })(
-                      <Input placeholder="请输入开票金额" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入开票金额" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
-
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.contractor}>
                     {getFieldDecorator('contractor', {
                       rules: [{ required: true, message: '请输入承办人' }],
-                    })(
-                      <Input placeholder="请输入承办人" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入承办人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.receivablesDate}>
                     {getFieldDecorator('receivablesDate', {
                       rules: [{ required: true, message: '请输入收款日期' }],
-                    })(
-                      <Input placeholder="请输入收款日期" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入收款日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -226,7 +223,6 @@ class ReceivablesEditModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

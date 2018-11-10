@@ -19,19 +19,27 @@ import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 
-
-
 const { confirm } = Modal;
 const { Content } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const getValue = obj =>
-  Object.keys(obj).map(key => obj[key]).join(',');
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 const statusMap = ['success', 'processing'];
 const status = ['已审核', '审核中'];
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
-
+const industry = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '非营利组织',
+  '其他',
+];
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -64,7 +72,7 @@ export default class SignatureBill extends PureComponent {
     formValues: {},
 
     // 当前操作行的数据
-    rowInfo:{},
+    rowInfo: {},
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
@@ -129,9 +137,9 @@ export default class SignatureBill extends PureComponent {
     if (!selectedRows) return;
     confirm({
       title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'rule/remove',
@@ -139,7 +147,7 @@ export default class SignatureBill extends PureComponent {
             no: selectedRows.map(row => row.no).join(','),
           },
         });
-        message.success('删除成功')
+        message.success('删除成功');
       },
       onCancel() {
         message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
@@ -148,13 +156,13 @@ export default class SignatureBill extends PureComponent {
     this.setState({
       selectedRows: [],
     });
-  }
+  };
 
   // 当前行删除按钮操作
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-    if(this.state.selectedRows.length === 0){
+    if (this.state.selectedRows.length === 0) {
       message.config({
         top: 100,
         duration: 2,
@@ -165,9 +173,9 @@ export default class SignatureBill extends PureComponent {
     }
     confirm({
       title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'rule/remove',
@@ -175,7 +183,7 @@ export default class SignatureBill extends PureComponent {
             no: selectedRows.map(row => row.no).join(','),
           },
         });
-        message.success('删除成功')
+        message.success('删除成功');
       },
       onCancel() {
         message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
@@ -223,7 +231,7 @@ export default class SignatureBill extends PureComponent {
   };
 
   // 隐藏和显示客户编辑界面
-  handleCusApplyEditVisible = (flag) => {
+  handleCusApplyEditVisible = flag => {
     this.setState({
       cusApplyEditVisible: !!flag,
     });
@@ -231,7 +239,7 @@ export default class SignatureBill extends PureComponent {
 
   // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -249,7 +257,7 @@ export default class SignatureBill extends PureComponent {
 
   // 隐藏和显示业务员申请查看Tabs
   handleSalesVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -259,7 +267,7 @@ export default class SignatureBill extends PureComponent {
   };
 
   // 弹窗编辑当前行的数据
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       cusApplyEditVisible: !!flag,
       rowInfo: record,
@@ -267,7 +275,7 @@ export default class SignatureBill extends PureComponent {
   };
 
   // 弹窗查看当前行的数据
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       cusApplyTabsViewVisible: !!flag,
       rowInfo: record,
@@ -282,9 +290,7 @@ export default class SignatureBill extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode',{
-
-              })(
+              {getFieldDecorator('customerCode', {})(
                 <div>
                   <Input placeholder="请输入客户编码和名称" />
                 </div>
@@ -317,32 +323,24 @@ export default class SignatureBill extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码名称">
-              {getFieldDecorator('no',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('no', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="移动电话">
-              {getFieldDecorator('phone',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('phone', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人">
-              {getFieldDecorator('contract',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('contract', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer',{
-
-              })(
+              {getFieldDecorator('customer', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                 </Select>
@@ -351,9 +349,7 @@ export default class SignatureBill extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="行业">
-              {getFieldDecorator('status',{
-
-              })(
+              {getFieldDecorator('status', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                   <Option value="z">制造业</Option>
@@ -371,9 +367,7 @@ export default class SignatureBill extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('address', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -425,7 +419,7 @@ export default class SignatureBill extends PureComponent {
         title: '签章项目',
         dataIndex: 'cusApplyCode',
         width: 150,
-        fixed:'left',
+        fixed: 'left',
       },
       {
         title: '签章时间',
@@ -471,7 +465,7 @@ export default class SignatureBill extends PureComponent {
       <PageHeaderLayout>
         <Card>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div>
                 <div className={styles.tableList}>
                   <StandardTable

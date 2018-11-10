@@ -20,7 +20,6 @@ import { connect } from 'dva';
 import ArchivesBorrowRecordModal from '../add/ArchivesBorrowRecordModal';
 import styles from './style.less';
 
-
 const { Panel } = Collapse;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -46,7 +45,6 @@ const formItemLayout = {
   },
 };
 
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
@@ -70,8 +68,6 @@ class ArchivesBorrowingModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-
-
 
   getMock = () => {
     const targetKeys = [];
@@ -127,7 +123,7 @@ class ArchivesBorrowingModal extends PureComponent {
     });
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       BorrowRecordVisible: !!flag,
       rowInfo: record,
@@ -185,54 +181,38 @@ class ArchivesBorrowingModal extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <Form.Item label="项目编号">
-              {getFieldDecorator('no',{
-
-              })(<Input placeholder="项目编号" />)}
+              {getFieldDecorator('no', {})(<Input placeholder="项目编号" />)}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
             <Form.Item label="项目">
-              {getFieldDecorator('phone',{
-
-              })(<Input placeholder="项目" />)}
+              {getFieldDecorator('phone', {})(<Input placeholder="项目" />)}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
             <Form.Item label="客户">
-              {getFieldDecorator('contract',{
-
-              })(
-                <Input placeholder="客户" />
-              )}
+              {getFieldDecorator('contract', {})(<Input placeholder="客户" />)}
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <Form.Item label="项目负责人">
-              {getFieldDecorator('customer',{
-
-              })(
+              {getFieldDecorator('customer', {})(
                 <Input placeholder="项目负责人" style={{ width: '100%' }} />
               )}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
             <Form.Item label="档案名称">
-              {getFieldDecorator('status',{
-
-              })(
+              {getFieldDecorator('status', {})(
                 <Input placeholder="档案名称" style={{ width: '100%' }} />
               )}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
             <Form.Item label="归档日期">
-              {getFieldDecorator('address',{
-
-              })(
-                <Input placeholder="归档日期" />
-              )}
+              {getFieldDecorator('address', {})(<Input placeholder="归档日期" />)}
             </Form.Item>
           </Col>
         </Row>
@@ -241,9 +221,7 @@ class ArchivesBorrowingModal extends PureComponent {
             <Form.Item label="存放位置">
               {getFieldDecorator('date', {
                 rules: [{ required: false, message: '请选择创建日期' }],
-              })(
-                <Input placeholder="请选择创建日期" style={{ width: '100%' }} />
-              )}
+              })(<Input placeholder="请选择创建日期" style={{ width: '100%' }} />)}
             </Form.Item>
           </Col>
         </Row>
@@ -277,20 +255,12 @@ class ArchivesBorrowingModal extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <Form.Item label="项目">
-              {getFieldDecorator('customerCode',{
-
-              })(
-                <Input placeholder="项目" />
-              )}
+              {getFieldDecorator('customerCode', {})(<Input placeholder="项目" />)}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
             <Form.Item label="存放位置">
-              {getFieldDecorator('place',{
-
-              })(
-                <Input placeholder="存放位置" />
-              )}
+              {getFieldDecorator('place', {})(<Input placeholder="存放位置" />)}
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
@@ -311,10 +281,16 @@ class ArchivesBorrowingModal extends PureComponent {
     );
   }
 
-
-
   render() {
-    const { form, dispatch, submitting, archivesBorrowingVisible, handleArchivesBorrowingVisible, rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      archivesBorrowingVisible,
+      handleArchivesBorrowingVisible,
+      rule: { data },
+      loading,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedRows, BorrowRecordVisible, rowInfo } = this.state;
     const validate = () => {
@@ -394,7 +370,7 @@ class ArchivesBorrowingModal extends PureComponent {
         title: '操作',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record, index)} >借阅</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>借阅</a>
           </Fragment>
         ),
       },
@@ -418,7 +394,7 @@ class ArchivesBorrowingModal extends PureComponent {
           <Card>
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <Collapse defaultActiveKey={['1']} >
+              <Collapse defaultActiveKey={['1']}>
                 <Panel header="档案" key="1">
                   <StandardTable
                     selectedRows={selectedRows}
@@ -430,12 +406,16 @@ class ArchivesBorrowingModal extends PureComponent {
                   />
                 </Panel>
               </Collapse>
-              <ArchivesBorrowRecordModal {...ArchivesBorrowRecordMethods} BorrowRecordVisible={BorrowRecordVisible} handleArchivesBorrowingVisible={handleArchivesBorrowingVisible} rowInfo={rowInfo} />
+              <ArchivesBorrowRecordModal
+                {...ArchivesBorrowRecordMethods}
+                BorrowRecordVisible={BorrowRecordVisible}
+                handleArchivesBorrowingVisible={handleArchivesBorrowingVisible}
+                rowInfo={rowInfo}
+              />
             </div>
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

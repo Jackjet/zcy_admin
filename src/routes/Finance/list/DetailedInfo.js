@@ -21,7 +21,6 @@ import ReceivablesEditModal from '../edit/ReceivablesEditModal';
 import ReceivablesViewModal from '../select/ReceivablesViewModal';
 import styles from './style.less';
 
-
 const { Option } = Select;
 const FormItem = Form.Item;
 const formhz11 = {
@@ -75,7 +74,7 @@ const fieldLabels = {
 @Form.create()
 class DetailedInfo extends PureComponent {
   state = {
-    selectedRows:[],
+    selectedRows: [],
     receivablesAddVisible: false,
     receivablesEditVisible: false,
     receivablesViewVisible: false,
@@ -137,9 +136,7 @@ class DetailedInfo extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="合同标题">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" style={{ width: 200 }} />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入" style={{ width: 200 }} />)}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -157,12 +154,23 @@ class DetailedInfo extends PureComponent {
     );
   }
 
-
-
   render() {
-    const { form, dispatch, submitting, detailedVisible, handleDetailedVisible,  rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      detailedVisible,
+      handleDetailedVisible,
+      rule: { data },
+      loading,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows, receivablesAddVisible, receivablesEditVisible, receivablesViewVisible } =this.state;
+    const {
+      selectedRows,
+      receivablesAddVisible,
+      receivablesEditVisible,
+      receivablesViewVisible,
+    } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -259,17 +267,16 @@ class DetailedInfo extends PureComponent {
         ),
       },
     ];
-    const ReceivablesAddMethods ={
-      handleReceivablesAddVisible:this.handleReceivablesAddVisible,
+    const ReceivablesAddMethods = {
+      handleReceivablesAddVisible: this.handleReceivablesAddVisible,
     };
-    const ReceivablesEditMethods ={
-      handleReceivablesEditVisible:this.handleReceivablesEditVisible,
+    const ReceivablesEditMethods = {
+      handleReceivablesEditVisible: this.handleReceivablesEditVisible,
     };
-    const ReceivablesViewMethods ={
-      handleReceivablesViewVisible:this.handleReceivablesViewVisible,
+    const ReceivablesViewMethods = {
+      handleReceivablesViewVisible: this.handleReceivablesViewVisible,
     };
     return (
-
       <div>
         <Card bordered={false}>
           <div className={styles.tableList}>
@@ -287,9 +294,18 @@ class DetailedInfo extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-            <ReceivablesAddModal {...ReceivablesAddMethods} receivablesAddVisible={receivablesAddVisible} />
-            <ReceivablesEditModal {...ReceivablesEditMethods} receivablesEditVisible={receivablesEditVisible} />
-            <ReceivablesViewModal {...ReceivablesViewMethods} receivablesViewVisible={receivablesViewVisible} />
+            <ReceivablesAddModal
+              {...ReceivablesAddMethods}
+              receivablesAddVisible={receivablesAddVisible}
+            />
+            <ReceivablesEditModal
+              {...ReceivablesEditMethods}
+              receivablesEditVisible={receivablesEditVisible}
+            />
+            <ReceivablesViewModal
+              {...ReceivablesViewMethods}
+              receivablesViewVisible={receivablesViewVisible}
+            />
           </div>
         </Card>
       </div>

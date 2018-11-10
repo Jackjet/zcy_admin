@@ -20,7 +20,6 @@ import moment from 'moment';
 import { connect } from 'dva';
 import styles from './Style.less';
 
-
 const { confirm } = Modal;
 const props = {
   name: 'file',
@@ -65,7 +64,7 @@ class StatementAddModal2 extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleRadioGroup = (e)=>{
+  handleRadioGroup = e => {
     alert(e.target.name);
     this.setState({
       radioValue: e.target.value,
@@ -80,7 +79,13 @@ class StatementAddModal2 extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      StatementAddVisible,
+      handleStatementAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { radioValue } = this.state;
     const validate = () => {
@@ -138,9 +143,9 @@ class StatementAddModal2 extends PureComponent {
     const handleShowCancelConfirm = () => {
       confirm({
         title: '是否暂存信息?',
-        keyboard:false,
-        cancelText:'取消',
-        okText:'暂存',
+        keyboard: false,
+        cancelText: '取消',
+        okText: '暂存',
         onOk() {
           message.success('暂存成功');
           handleStatementAddVisible(false);
@@ -161,7 +166,7 @@ class StatementAddModal2 extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={handleShowCancelConfirm}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <div>
@@ -171,7 +176,7 @@ class StatementAddModal2 extends PureComponent {
                   <Form.Item {...formItemLayout} label="报告类型">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入组织名称' }],
-                      initialValue:radioValue,
+                      initialValue: radioValue,
                     })(
                       <Group onChange={this.handleRadioGroup}>
                         <Radio value={1}>日报</Radio>
@@ -189,27 +194,27 @@ class StatementAddModal2 extends PureComponent {
                       rules: [{ required: true, message: '报告日期' }],
                     })(
                       <div>
-                        {(radioValue === 1) && (
+                        {radioValue === 1 && (
                           <span>
                             <DatePicker />
-                          </span>)
-                        }
+                          </span>
+                        )}
 
-                        {(radioValue === 2) && (
+                        {radioValue === 2 && (
                           <span>
                             <RangePicker
                               showTime
                               format="YYYY-MM-DD"
                               placeholder={['Start Time', 'End Time']}
                             />
-                          </span>)
-                        }
+                          </span>
+                        )}
 
-                        {(radioValue === 3) && (
+                        {radioValue === 3 && (
                           <span>
                             <DatePicker />
-                          </span>)
-                        }
+                          </span>
+                        )}
                       </div>
                     )}
                   </Form.Item>
@@ -220,9 +225,7 @@ class StatementAddModal2 extends PureComponent {
                   <Form.Item {...formItemLayout} label="已完结工作">
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '已完结工作' }],
-                    })(
-                      <TextArea placeholder="已完结工作" />
-                    )}
+                    })(<TextArea placeholder="已完结工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -231,9 +234,7 @@ class StatementAddModal2 extends PureComponent {
                   <Form.Item {...formItemLayout} label="未完成工作">
                     {getFieldDecorator('isCompany', {
                       rules: [{ required: true, message: '未完成工作' }],
-                    })(
-                      <TextArea placeholder="未完成工作" />
-                    )}
+                    })(<TextArea placeholder="未完成工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -242,9 +243,7 @@ class StatementAddModal2 extends PureComponent {
                   <Form.Item {...formItemLayout} label="协助工作">
                     {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '协助工作' }],
-                    })(
-                      <TextArea placeholder="协助工作" />
-                    )}
+                    })(<TextArea placeholder="协助工作" />)}
                   </Form.Item>
                 </Col>
               </Row>

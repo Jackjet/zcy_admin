@@ -1,25 +1,23 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  Input,
-  Popover,
-  Modal,
-  Cascader,
-  Collapse,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, Input, Popover, Modal, Cascader, Collapse } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
+const industry = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '非营利组织',
+  '其他',
+];
 const statusMap = ['default', 'processing', 'success', 'error'];
 const cusStatus = ['启用', '禁用'];
 
 const { TextArea } = Input;
-const { Panel} = Collapse;
+const { Panel } = Collapse;
 const optionshz = [
   {
     value: 'zhejiang',
@@ -74,11 +72,11 @@ const fieldLabels = {
   address: '详细地址',
   remark: '备注',
   cusStatus: '状态',
-  cusCompanyName:'单位名称',
-  cusCompanyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
+  cusCompanyName: '单位名称',
+  cusCompanyAddress: '单位地址',
+  taxNumber: '税号',
+  openAccountBank: '开户银行',
+  bankAccount: '银行账户',
 };
 const formItemLayout = {
   labelCol: {
@@ -109,14 +107,19 @@ class CustomerEditModal extends PureComponent {
     }
   };
 
-
   render() {
-    const { form, dispatch, submitting , customerEditVisible, handleCustomerEditVisible,rowInfo} = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      customerEditVisible,
+      handleCustomerEditVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-
           // submit the values
           dispatch({
             type: 'form/submitAdvancedForm',
@@ -183,7 +186,7 @@ class CustomerEditModal extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
-              <Collapse defaultActiveKey={['1','2']} >
+              <Collapse defaultActiveKey={['1', '2']}>
                 <Panel header="客户基本信息" key="1">
                   <div>
                     <Card>
@@ -193,28 +196,24 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.cusName}>
                               {getFieldDecorator('cusName', {
                                 rules: [{ required: true, message: '请输入客户名称' }],
-                                initialValue :`${rowInfo.cusName}`,
-                              })(<Input  placeholder="请输入客户名称" />)}
+                                initialValue: `${rowInfo.cusName}`,
+                              })(<Input placeholder="请输入客户名称" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.industry}>
                               {getFieldDecorator('industry', {
                                 rules: [{ required: true, message: '请选择行业' }],
-                                initialValue :`${industry[rowInfo.industry]}`,
-                              })(
-                                <Input  placeholder="请选择行业" />
-                              )}
+                                initialValue: `${industry[rowInfo.industry]}`,
+                              })(<Input placeholder="请选择行业" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusCompany}>
                               {getFieldDecorator('cusCompany', {
                                 rules: [{ required: true, message: '所属公司' }],
-                                initialValue :`${rowInfo.cusCompany}`,
-                              })(
-                                <Input  placeholder="所属公司" />
-                              )}
+                                initialValue: `${rowInfo.cusCompany}`,
+                              })(<Input placeholder="所属公司" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -223,28 +222,22 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.incomeTax}>
                               {getFieldDecorator('incomeTax', {
                                 rules: [{ required: false, message: '请选择所得税征收方式' }],
-                              })(
-                                <Input  placeholder="请选择所得税征收方式" />
-                              )}
+                              })(<Input placeholder="请选择所得税征收方式" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.taxCode}>
                               {getFieldDecorator('taxCode', {
                                 rules: [{ required: false, message: '请输入税务登记号' }],
-                              })(
-                                <Input  placeholder="请输入税务登记号" />
-                              )}
+                              })(<Input placeholder="请输入税务登记号" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusStatus}>
                               {getFieldDecorator('cusStatus', {
                                 rules: [{ required: true, message: '状态' }],
-                                initialValue :`${cusStatus[rowInfo.cusStatus]}`,
-                              })(
-                                <Input  placeholder="请选择状态" />
-                              )}
+                                initialValue: `${cusStatus[rowInfo.cusStatus]}`,
+                              })(<Input placeholder="请选择状态" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -253,27 +246,22 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.cusCode}>
                               {getFieldDecorator('cusCode', {
                                 rules: [{ required: false, message: '请输入客户编码' }],
-                                initialValue:`${rowInfo.cusCode}`,
-                              })(
-                                <Input  placeholder="请输入客户编码" />
-                              )}
+                                initialValue: `${rowInfo.cusCode}`,
+                              })(<Input placeholder="请输入客户编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.pinyin}>
                               {getFieldDecorator('pinyin', {
                                 rules: [{ required: false, message: '请输入拼音码' }],
-                              })(
-                                <Input  placeholder="请输入拼音码" />
-                              )}
+                              })(<Input placeholder="请输入拼音码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.simpleName}>
                               {getFieldDecorator('simpleName', {
                                 rules: [{ required: false, message: '请输入简称' }],
-                              })(<Input  placeholder="请输入简称" />
-                              )}
+                              })(<Input placeholder="请输入简称" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -283,28 +271,22 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.cusMobilePhone}>
                               {getFieldDecorator('cusMobilePhone', {
                                 rules: [{ required: true, message: '请输入手机号码' }],
-                                initialValue :`${rowInfo.cusMobilePhone}`,
-                              })(
-                                <Input  placeholder="请输入手机号码" />
-                              )}
+                                initialValue: `${rowInfo.cusMobilePhone}`,
+                              })(<Input placeholder="请输入手机号码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.email}>
                               {getFieldDecorator('email', {
                                 rules: [{ required: false, message: '请输入电子邮箱' }],
-                              })(
-                                <Input  placeholder="请输入电子邮箱" />
-                              )}
+                              })(<Input placeholder="请输入电子邮箱" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyPhone}>
                               {getFieldDecorator('cusCompanyPhone', {
                                 rules: [{ required: false, message: '请输入公司电话' }],
-                              })(
-                                <Input  placeholder="请输入公司电话" />
-                              )}
+                              })(<Input placeholder="请输入公司电话" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -314,22 +296,14 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.postalCode}>
                               {getFieldDecorator('postalCode', {
                                 rules: [{ required: false, message: '请输入邮政编码' }],
-                              })(
-                                <Input  placeholder="请输入邮政编码" />
-                              )}
+                              })(<Input placeholder="请输入邮政编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
                             <Form.Item {...formItemLayout} label={fieldLabels.region}>
                               {getFieldDecorator('region', {
                                 rules: [{ required: true, message: '请选择所在区域' }],
-                              })(
-                                <Cascader
-
-                                  options={optionshz}
-                                  placeholder="请选择所在区域"
-                                />
-                              )}
+                              })(<Cascader options={optionshz} placeholder="请选择所在区域" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -338,18 +312,14 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.url}>
                               {getFieldDecorator('url', {
                                 rules: [{ required: false, message: '请输入网站主页' }],
-                              })(
-                                <Input  placeholder="请输入网站主页" />
-                              )}
+                              })(<Input placeholder="请输入网站主页" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
                             <Form.Item {...formItemLayout} label={fieldLabels.address}>
                               {getFieldDecorator('address', {
                                 rules: [{ required: false, message: '请输入详细地址' }],
-                              })(
-                                <Input  placeholder="请输入详细地址" />
-                              )}
+                              })(<Input placeholder="请输入详细地址" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -358,9 +328,7 @@ class CustomerEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                               {getFieldDecorator('remark', {
                                 rules: [{ required: false, message: '请输入备注' }],
-                              })(
-                                <TextArea  placeholder="请输入备注" />
-                              )}
+                              })(<TextArea placeholder="请输入备注" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -375,21 +343,21 @@ class CustomerEditModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyName}>
                           {getFieldDecorator('cusCompanyName', {
                             rules: [{ required: false, message: '请输入单位名称' }],
-                          })(<Input  placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
+                          })(<Input placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.cusCompanyAddress}>
                           {getFieldDecorator('cusCompanyAddress', {
                             rules: [{ required: false, message: '请输入单位地址' }],
-                          })(<Input  placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
+                          })(<Input placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                           {getFieldDecorator('taxNumber', {
                             rules: [{ required: false, message: '请输入税号' }],
-                          })(<Input  placeholder="请输入税号" className={styles['fn-mb-15']} />)}
+                          })(<Input placeholder="请输入税号" className={styles['fn-mb-15']} />)}
                         </Form.Item>
                       </Col>
                     </Row>
@@ -398,14 +366,14 @@ class CustomerEditModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
                           {getFieldDecorator('openAccountBank', {
                             rules: [{ required: false, message: '请输入开户银行' }],
-                          })(<Input  placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
+                          })(<Input placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
                           {getFieldDecorator('bankAccount', {
                             rules: [{ required: false, message: '请输入银行账户' }],
-                          })(<Input  placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+                          })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
                         </Form.Item>
                       </Col>
                     </Row>

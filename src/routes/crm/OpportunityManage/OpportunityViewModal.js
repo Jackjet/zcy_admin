@@ -29,11 +29,10 @@ const fieldLabels = {
   businessState: '商机状态',
   customerDemand: '客户需求',
   remarks: '备注',
-  platform:'商机平台',
-  executor:'执行人',
-  submissionPerson:'商机提供人',
+  platform: '商机平台',
+  executor: '执行人',
+  submissionPerson: '商机提供人',
 };
-
 
 const formItemLayout = {
   labelCol: {
@@ -47,7 +46,7 @@ const formItemLayout = {
 };
 
 const formItemLayoutTextArea = {
-  style:{
+  style: {
     paddingRight: 150,
     width: '110%',
   },
@@ -79,7 +78,14 @@ class BusinessOppView extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, handleBusinessViewVisible, businessViewVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      handleBusinessViewVisible,
+      businessViewVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const okHandle = () => handleBusinessViewVisible();
     const validate = () => {
@@ -143,11 +149,11 @@ class BusinessOppView extends PureComponent {
         onCancel={() => handleBusinessViewVisible()}
         footer={
           (null,
-            (
-              <Button onClick={okHandle} type="primary">
-                关闭
-              </Button>
-            ))
+          (
+            <Button onClick={okHandle} type="primary">
+              关闭
+            </Button>
+          ))
         }
       >
         <div>
@@ -158,7 +164,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessCode}>
                     {getFieldDecorator('businessCode', {
                       rules: [{ required: true, message: '请输入编码' }],
-                      initialValue:`${rowInfo.businessCode}`,
+                      initialValue: `${rowInfo.businessCode}`,
                     })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -166,7 +172,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessName}>
                     {getFieldDecorator('businessName', {
                       rules: [{ required: true, message: '请输入商机名称' }],
-                      initialValue:`${rowInfo.businessName}`,
+                      initialValue: `${rowInfo.businessName}`,
                     })(<Input readOnly placeholder="自动生成带出" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -174,7 +180,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.businessState}>
                     {getFieldDecorator('businessState', {
                       rules: [{ required: true, message: '请选择商机状态' }],
-                      initialValue:`新建`,
+                      initialValue: `新建`,
                     })(
                       <Select disabled placeholder="请选择商机状态" style={{ width: 150 }}>
                         <Option value="1">新建</Option>
@@ -191,7 +197,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.customerForBusinessName}>
                     {getFieldDecorator('customerForBusinessNameName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
-                      initialValue:`${rowInfo.customerForBusinessName}`,
+                      initialValue: `${rowInfo.customerForBusinessName}`,
                     })(<Input readOnly placeholder="请输入客户名称" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -199,7 +205,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                     {getFieldDecorator('mobilePhone', {
                       rules: [{ required: false, message: '请输入联系电话' }],
-                      initialValue:`${rowInfo.mobilePhone}`,
+                      initialValue: `${rowInfo.mobilePhone}`,
                     })(<Input readOnly placeholder="请输入联系电话" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
@@ -221,16 +227,14 @@ class BusinessOppView extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.executor}>
-                    {getFieldDecorator('executor', {
-                    })(
+                    {getFieldDecorator('executor', {})(
                       <Input readOnly placeholder="执行人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.submissionPerson}>
-                    {getFieldDecorator('submissionPerson', {
-                    })(
+                    {getFieldDecorator('submissionPerson', {})(
                       <Input readOnly placeholder="商机提供人" style={{ width: 150 }} />
                     )}
                   </Form.Item>
@@ -241,9 +245,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.customerDemand}>
                     {getFieldDecorator('customerDemand', {
                       rules: [{ required: true, message: '请输入客户需求' }],
-                    })(
-                      <TextArea readOnly placeholder="请输入客户需求" />
-                    )}
+                    })(<TextArea readOnly placeholder="请输入客户需求" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -252,9 +254,7 @@ class BusinessOppView extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(
-                      <TextArea readOnly placeholder="请输入备注" />
-                    )}
+                    })(<TextArea readOnly placeholder="请输入备注" />)}
                   </Form.Item>
                 </Col>
               </Row>

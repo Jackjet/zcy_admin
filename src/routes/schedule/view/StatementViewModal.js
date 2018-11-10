@@ -24,7 +24,7 @@ import { connect } from 'dva';
 import styles from './Style.less';
 
 const dataTest = [];
-for (let i = 0; i < 46; i+=1) {
+for (let i = 0; i < 46; i += 1) {
   dataTest.push({
     key: i,
     name: `Edward King ${i}`,
@@ -57,10 +57,10 @@ class StatementViewModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-  handleUploadFile = (info)=>{
-    console.log(`${info.file.name}+1111`)
+  handleUploadFile = info => {
+    console.log(`${info.file.name}+1111`);
   };
-  handleChange = (info)=>{
+  handleChange = info => {
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
@@ -68,12 +68,12 @@ class StatementViewModal extends PureComponent {
       message.success(`${info.file.name} file uploaded successfully`);
       console.log(`${info.file.name}`);
       this.setState({
-        dataDemo:dataTest,
+        dataDemo: dataTest,
       });
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
       this.handleUploadFile(info);
-      console.log(`${info.file.name}`)
+      console.log(`${info.file.name}`);
     }
   };
   resizeFooterToolbar = () => {
@@ -84,7 +84,13 @@ class StatementViewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementViewVisible, handleStatementViewVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      StatementViewVisible,
+      handleStatementViewVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { dataDemo } = this.state;
     const validate = () => {
@@ -149,33 +155,38 @@ class StatementViewModal extends PureComponent {
       headers: {
         authorization: 'authorization-text',
       },
-      showUploadList:false,
-      onChange:this.handleChange,
+      showUploadList: false,
+      onChange: this.handleChange,
     };
-    const columns = [{
-      title: '文件名称',
-      dataIndex: 'fileName',
-      key: 'name',
-      render: text => <a href="">{text}</a>,
-    }, {
-      title: '文档类型',
-      dataIndex: 'fileType',
-      key: 'type',
-    }, {
-      title: '上传(更新)时间',
-      dataIndex: 'uploadTime',
-      key: 'address',
-    }, {
-      title: '操作',
-      key: 'action',
-      render: (text, record) => (
-        <span>
-          <a href="">下载</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
-        </span>
-      ),
-    }];
+    const columns = [
+      {
+        title: '文件名称',
+        dataIndex: 'fileName',
+        key: 'name',
+        render: text => <a href="">{text}</a>,
+      },
+      {
+        title: '文档类型',
+        dataIndex: 'fileType',
+        key: 'type',
+      },
+      {
+        title: '上传(更新)时间',
+        dataIndex: 'uploadTime',
+        key: 'address',
+      },
+      {
+        title: '操作',
+        key: 'action',
+        render: (text, record) => (
+          <span>
+            <a href="">下载</a>
+            <Divider type="vertical" />
+            <a href="">删除</a>
+          </span>
+        ),
+      },
+    ];
     return (
       <Modal
         title="查看"
@@ -185,29 +196,25 @@ class StatementViewModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancel}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <div>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
-                <Col span={12} >
+                <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告类型">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入组织名称' }],
-                      initialValue:`日报`,
-                    })(
-                      <Input style={{width:'80%'}} />
-                    )}
+                      initialValue: `日报`,
+                    })(<Input style={{ width: '80%' }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告日期">
                     {getFieldDecorator('reportData', {
                       rules: [{ required: true, message: '报告日期' }],
-                    })(
-                      <DatePicker />
-                    )}
+                    })(<DatePicker />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -216,9 +223,7 @@ class StatementViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="已完结工作">
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '已完结工作' }],
-                    })(
-                      <TextArea placeholder="已完结工作" />
-                    )}
+                    })(<TextArea placeholder="已完结工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -227,9 +232,7 @@ class StatementViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="未完成工作">
                     {getFieldDecorator('isCompany', {
                       rules: [{ required: true, message: '未完成工作' }],
-                    })(
-                      <TextArea placeholder="未完成工作" />
-                    )}
+                    })(<TextArea placeholder="未完成工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -238,9 +241,7 @@ class StatementViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="协助工作">
                     {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '协助工作' }],
-                    })(
-                      <TextArea placeholder="协助工作" />
-                    )}
+                    })(<TextArea placeholder="协助工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -251,9 +252,7 @@ class StatementViewModal extends PureComponent {
                       rules: [{ required: false, message: '请输入英文名称' }],
                     })(
                       <div>
-                        <Upload
-                          {...uploadProps}
-                        >
+                        <Upload {...uploadProps}>
                           <Button type="primary">
                             <Icon type="upload" /> 上传附件
                           </Button>
@@ -299,9 +298,7 @@ class StatementViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="审阅点评">
                     {getFieldDecorator('principal', {
                       rules: [{ required: false, message: '审阅点评' }],
-                    })(
-                      <TextArea placeholder="审阅点评" />
-                    )}
+                    })(<TextArea placeholder="审阅点评" />)}
                   </Form.Item>
                 </Col>
               </Row>

@@ -1,15 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  Input,
-  Popover,
-  Modal,
-  Collapse,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, Input, Popover, Modal, Collapse } from 'antd';
 import { connect } from 'dva';
 import StandardTable from '../../../components/StandardTable/index';
 import styles from '../add/style.less';
@@ -105,7 +95,16 @@ class CommissionQueryModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , commissionViewVisible, handleCommissionViewVisible, rule: { data }, loading, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      commissionViewVisible,
+      handleCommissionViewVisible,
+      rule: { data },
+      loading,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedRows } = this.state;
     const validate = () => {
@@ -209,7 +208,6 @@ class CommissionQueryModal extends PureComponent {
     ];
 
     return (
-
       <Modal
         title="提成比例设置"
         style={{ top: 20 }}
@@ -222,24 +220,32 @@ class CommissionQueryModal extends PureComponent {
         <div>
           <Card>
             <Form layout="inline">
-              <Collapse defaultActiveKey={['1','2','3']} >
+              <Collapse defaultActiveKey={['1', '2', '3']}>
                 <Panel header="项目提成分配" key="1">
                   <Row className={styles['fn-mb-15']}>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.projectName}>
                         {getFieldDecorator('projectName', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="项目名称" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="项目名称"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.projectCode}>
                         {getFieldDecorator('projectCode', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="项目编号" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="项目编号"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -248,18 +254,26 @@ class CommissionQueryModal extends PureComponent {
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.operationType}>
                         {getFieldDecorator('operationType', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="业务类型" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="业务类型"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.branchCompanyA}>
                         {getFieldDecorator('branchCompanyA', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder=" 分公司" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder=" 分公司"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -270,25 +284,33 @@ class CommissionQueryModal extends PureComponent {
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.invoiceNumber}>
                         {getFieldDecorator('invoiceNumber', {
-                          initialValue:`${rowInfo.invoiceNumber}`,
+                          initialValue: `${rowInfo.invoiceNumber}`,
                         })(
-                          <Input disabled placeholder="发票号码" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="发票号码"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.invoicePerson}>
                         {getFieldDecorator('invoicePerson', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="开票人员" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="开票人员"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.branchCompanyB}>
                         {getFieldDecorator('branchCompanyB', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
                           <Input disabled placeholder="分公司" className={styles['ant-input-lg']} />
                         )}
@@ -297,9 +319,13 @@ class CommissionQueryModal extends PureComponent {
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.commissionExplain}>
                         {getFieldDecorator('commissionExplain', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="提成说明" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="提成说明"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -308,36 +334,52 @@ class CommissionQueryModal extends PureComponent {
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
                         {getFieldDecorator('invoiceMoney', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="发票金额" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="发票金额"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.projectMoney}>
                         {getFieldDecorator('projectMoney', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="本项目金额" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="本项目金额"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.distributable}>
                         {getFieldDecorator('distributable', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="实际可分配" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="实际可分配"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.commissionSum}>
                         {getFieldDecorator('commissionSum', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="实际可提成总额" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="实际可提成总额"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -346,9 +388,13 @@ class CommissionQueryModal extends PureComponent {
                     <Col span={6}>
                       <Form.Item {...formhz11} label={fieldLabels.expenditure}>
                         {getFieldDecorator('expenditure', {
-                          initialValue:`${rowInfo.projectName}`,
+                          initialValue: `${rowInfo.projectName}`,
                         })(
-                          <Input disabled placeholder="支出费用" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="支出费用"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>

@@ -44,7 +44,7 @@ export default class RoleManageList extends PureComponent {
     RoleManageEditVisible: false,
     AssignPermissionsVisible: false,
     AssignRoleVisible: false,
-    rowInfo:``,
+    rowInfo: ``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -182,8 +182,6 @@ export default class RoleManageList extends PureComponent {
     });
   };
 
-
-
   handleRoleManageAddVisible = flag => {
     this.setState({
       RoleManageAddVisible: !!flag,
@@ -202,21 +200,21 @@ export default class RoleManageList extends PureComponent {
     });
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       RoleManageViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       RoleManageEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showDeleteMessage =(flag, record)=> {
+  showDeleteMessage = (flag, record) => {
     this.props.dispatch({
       type: 'rule/remove',
       payload: {
@@ -273,9 +271,7 @@ export default class RoleManageList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入编码名称" />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
             </FormItem>
           </Col>
 
@@ -299,7 +295,15 @@ export default class RoleManageList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, RoleManageAddVisible, RoleManageViewVisible, AssignPermissionsVisible, RoleManageEditVisible, rowInfo, AssignRoleVisible } = this.state;
+    const {
+      selectedRows,
+      RoleManageAddVisible,
+      RoleManageViewVisible,
+      AssignPermissionsVisible,
+      RoleManageEditVisible,
+      rowInfo,
+      AssignRoleVisible,
+    } = this.state;
 
     const columns = [
       {
@@ -320,15 +324,20 @@ export default class RoleManageList extends PureComponent {
           <Fragment>
             <a onClick={() => this.showViewMessage(true, text, record, index)}>查看权限</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
-            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+            <Popconfirm
+              title="确认删除?"
+              onConfirm={() => this.showDeleteMessage(true, record)}
+              okText="是"
+              cancelText="否"
+            >
               <a>删除</a>
             </Popconfirm>
             <Divider type="vertical" />
-            <a onClick={() =>this.handleAssignPermissionsVisible(true)} >分配权限</a>
+            <a onClick={() => this.handleAssignPermissionsVisible(true)}>分配权限</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.handleAssignRoleVisible(true)} >分配用户</a>
+            <a onClick={() => this.handleAssignRoleVisible(true)}>分配用户</a>
           </Fragment>
         ),
       },
@@ -360,8 +369,6 @@ export default class RoleManageList extends PureComponent {
     const RoleManageEditMethods = {
       handleRoleManageEditVisible: this.handleRoleManageEditVisible,
     };
-
-
 
     return (
       <div>
@@ -396,11 +403,25 @@ export default class RoleManageList extends PureComponent {
                 onChange={this.handleStandardTableChange}
               />
             </div>
-            <AssignPermissionsModal {...AssignPermissionsMethods} AssignPermissionsVisible={AssignPermissionsVisible} />
+            <AssignPermissionsModal
+              {...AssignPermissionsMethods}
+              AssignPermissionsVisible={AssignPermissionsVisible}
+            />
             <AssignRoleModal {...AssignRoleMethods} AssignRoleVisible={AssignRoleVisible} />
-            <RoleManageAddModal {...RoleManageAddMethods} RoleManageAddVisible={RoleManageAddVisible} />
-            <RoleManageViewModal {...RoleManageViewMethods} RoleManageViewVisible={RoleManageViewVisible} rowInfo={rowInfo} />
-            <RoleManageEditModal {...RoleManageEditMethods} RoleManageEditVisible={RoleManageEditVisible} rowInfo={rowInfo} />
+            <RoleManageAddModal
+              {...RoleManageAddMethods}
+              RoleManageAddVisible={RoleManageAddVisible}
+            />
+            <RoleManageViewModal
+              {...RoleManageViewMethods}
+              RoleManageViewVisible={RoleManageViewVisible}
+              rowInfo={rowInfo}
+            />
+            <RoleManageEditModal
+              {...RoleManageEditMethods}
+              RoleManageEditVisible={RoleManageEditVisible}
+              rowInfo={rowInfo}
+            />
           </div>
         </Card>
       </div>

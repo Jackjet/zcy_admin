@@ -18,8 +18,7 @@ import {
 } from 'antd';
 import styles from '../list/style.less';
 
-
-const {  RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 const fieldLabels = {
   invoiceName: '开票名称',
@@ -79,7 +78,7 @@ export default class SearchForm extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting , searchFormVisible, handleSearchFormVisible} = this.props;
+    const { form, dispatch, submitting, searchFormVisible, handleSearchFormVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -92,7 +91,6 @@ export default class SearchForm extends PureComponent {
           handleSearchFormVisible(false);
         }
       });
-
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -158,9 +156,7 @@ export default class SearchForm extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.invoiceDate}>
                     {getFieldDecorator('invoiceDate', {
                       rules: [{ required: false, message: '请输入开票时间' }],
-                    })(
-                      <RangePicker  style={{ width: 200 }} />
-                    )}
+                    })(<RangePicker style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -197,18 +193,14 @@ export default class SearchForm extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.invoiceCompany}>
                     {getFieldDecorator('invoiceCompany', {
                       rules: [{ required: false, message: '请输入开票公司' }],
-                    })(
-                      <Input placeholder="请输入开票公司" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入开票公司" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.invoicePersonnel}>
                     {getFieldDecorator('invoicePersonnel', {
                       rules: [{ required: false, message: '请输入开票人员' }],
-                    })(
-                      <Input placeholder="请输入开票人员" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入开票人员" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -229,9 +221,7 @@ export default class SearchForm extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.invoiceNumber}>
                     {getFieldDecorator('invoiceNumber', {
                       rules: [{ required: false, message: '请输入发票号码' }],
-                    })(
-                      <Input placeholder="请输入发票号码" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入发票号码" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>

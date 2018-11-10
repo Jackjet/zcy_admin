@@ -1,4 +1,4 @@
-  import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import {
   Row,
@@ -19,10 +19,6 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import CommissionQueryModal from '../select/CommissionQueryModal';
-
-
-
-
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -52,7 +48,7 @@ export default class CommissionQuery extends PureComponent {
     formValues: {},
 
     // 当前操作行的数据
-    rowInfo:{},
+    rowInfo: {},
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
@@ -164,14 +160,12 @@ export default class CommissionQuery extends PureComponent {
   };
 
   // 弹窗展示当前行的数据
-  showViewMessage =(flag, text ,record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       commissionViewVisible: !!flag,
       rowInfo: record,
     });
   };
-
-
 
   // 高级搜索
   renderAdvancedForm() {
@@ -269,16 +263,12 @@ export default class CommissionQuery extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode')(
-                <Input placeholder="请输入客户编码和名称" />
-              )}
+              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="key">
-              {getFieldDecorator('key')(
-                <Input placeholder="请输入key" />
-              )}
+              {getFieldDecorator('key')(<Input placeholder="请输入key" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -301,11 +291,7 @@ export default class CommissionQuery extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const {
-      selectedRows,
-      commissionViewVisible,
-      rowInfo,
-    } = this.state;
+    const { selectedRows, commissionViewVisible, rowInfo } = this.state;
 
     const columns = [
       {
@@ -313,7 +299,7 @@ export default class CommissionQuery extends PureComponent {
         dataIndex: 'invoiceNumber',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record)}>{text}</a>
+            <a onClick={() => this.showViewMessage(true, text, record)}>{text}</a>
           </Fragment>
         ),
       },
@@ -373,16 +359,11 @@ export default class CommissionQuery extends PureComponent {
           <div>
             <div className={styles.tableList}>
               <div className={styles.tableListOperator}>
-                {
-                  (selectedRows.length === 1)&&(
-                    <Button
-                      type="primary"
-                      onClick={() => this.handleCommissionViewVisible(true)}
-                    >
-                      提成比例设置
-                    </Button>
-                  )
-                }
+                {selectedRows.length === 1 && (
+                  <Button type="primary" onClick={() => this.handleCommissionViewVisible(true)}>
+                    提成比例设置
+                  </Button>
+                )}
               </div>
               <StandardTable
                 selectedRows={selectedRows}
@@ -395,7 +376,11 @@ export default class CommissionQuery extends PureComponent {
             </div>
           </div>
         </Card>
-        <CommissionQueryModal {...commissionViewMethods} commissionViewVisible={commissionViewVisible} rowInfo={rowInfo} />
+        <CommissionQueryModal
+          {...commissionViewMethods}
+          commissionViewVisible={commissionViewVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

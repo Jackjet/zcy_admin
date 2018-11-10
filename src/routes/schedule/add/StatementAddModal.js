@@ -17,8 +17,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './Style.less';
-import moment from "moment/moment";
-
+import moment from 'moment/moment';
 
 const props = {
   name: 'file',
@@ -68,7 +67,13 @@ class StatementAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementAddVisible, handleStatementAddVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      StatementAddVisible,
+      handleStatementAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -135,7 +140,7 @@ class StatementAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
@@ -159,10 +164,8 @@ class StatementAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="报告日期">
                   {getFieldDecorator('parentOrg', {
                     rules: [{ required: true, message: '报告日期' }],
-                    initialValue:`{moment(val).format('YYYY-MM-DD HH:mm:ss')}`,
-                  })(
-                    <DatePicker />
-                  )}
+                    initialValue: `{moment(val).format('YYYY-MM-DD HH:mm:ss')}`,
+                  })(<DatePicker />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -171,9 +174,7 @@ class StatementAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="已完结工作">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '已完结工作' }],
-                  })(
-                    <TextArea placeholder="已完结工作" />
-                  )}
+                  })(<TextArea placeholder="已完结工作" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -181,11 +182,9 @@ class StatementAddModal extends PureComponent {
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="未完成工作">
                   {getFieldDecorator('isCompany', {
-                  rules: [{ required: true, message: '未完成工作' }],
-                  initialValue:`否`,
-                  })(
-                    <TextArea placeholder="未完成工作" />
-                  )}
+                    rules: [{ required: true, message: '未完成工作' }],
+                    initialValue: `否`,
+                  })(<TextArea placeholder="未完成工作" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -194,9 +193,7 @@ class StatementAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="协助工作">
                   {getFieldDecorator('simpleName', {
                     rules: [{ required: false, message: '协助工作' }],
-                  })(
-                    <TextArea placeholder="协助工作" />
-                  )}
+                  })(<TextArea placeholder="协助工作" />)}
                 </Form.Item>
               </Col>
             </Row>

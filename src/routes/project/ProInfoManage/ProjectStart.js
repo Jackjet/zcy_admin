@@ -1,26 +1,14 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-  Route,
-  Redirect,
-  Switch,
-  routerRedux,
-} from 'dva/router';
-import {
-  Card,
-  Form,
-  Icon,
-  Menu,
-  Layout,
-  Steps,
-} from 'antd';
+import { Route, Redirect, Switch, routerRedux } from 'dva/router';
+import { Card, Form, Icon, Menu, Layout, Steps } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
-import NotFound from "../../Exception/404";
-import { getRoutes } from "../../../utils/utils";
+import NotFound from '../../Exception/404';
+import { getRoutes } from '../../../utils/utils';
 
 const { Step } = Steps;
-const {Content, Sider} = Layout;
+const { Content, Sider } = Layout;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -33,10 +21,10 @@ const getValue = obj =>
 @Form.create()
 export default class ProjectStart extends PureComponent {
   state = {
-    choiceTypeValue:'',
+    choiceTypeValue: '',
     formValues: {},
     openKeys: ['sub1'],
-    choiceTypeKey:``,
+    choiceTypeKey: ``,
     stepVisible: false,
   };
 
@@ -45,9 +33,9 @@ export default class ProjectStart extends PureComponent {
     dispatch({
       type: 'rule/fetch',
     });
-  };
+  }
 
-  onOpenChange = (openKeys) => {
+  onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       this.setState({ openKeys });
@@ -56,7 +44,7 @@ export default class ProjectStart extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
-  } // 左边树的父节点展开方法
+  }; // 左边树的父节点展开方法
 
   getCurrentStep() {
     const { location } = this.props;
@@ -141,7 +129,7 @@ export default class ProjectStart extends PureComponent {
     });
   }; // 分页器方法
 
-  handleGetMenuValue = (MenuValue) => {
+  handleGetMenuValue = MenuValue => {
     this.setState({
       stepVisible: MenuValue.key,
     });
@@ -184,9 +172,9 @@ export default class ProjectStart extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key='0'>信息管理</Menu.Item>
-          <Menu.Item key='1'>实施管理</Menu.Item>
-          <Menu.Item key='2'>成果管理</Menu.Item>
+          <Menu.Item key="0">信息管理</Menu.Item>
+          <Menu.Item key="1">实施管理</Menu.Item>
+          <Menu.Item key="2">成果管理</Menu.Item>
         </SubMenu>
       </Menu>
     );
@@ -194,7 +182,7 @@ export default class ProjectStart extends PureComponent {
 
   render() {
     const { match, routerData } = this.props;
-    const {  rule: { data }, loading } = this.props;
+    const { rule: { data }, loading } = this.props;
     const { stepVisible } = this.state;
     const onStep1 = () => {
       this.props.dispatch(routerRedux.push('/project/projectInfo/info'));
@@ -237,12 +225,10 @@ export default class ProjectStart extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
-              <Card
-                hoverable='true'
-              >
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
+              <Card hoverable="true">
                 <Fragment>
-                  {(stepVisible === `0`) && (
+                  {stepVisible === `0` && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
                       <Step title="项目信息" onClick={onStep1} />
                       <Step title="人员分配" onClick={onStep2} />
@@ -250,16 +236,16 @@ export default class ProjectStart extends PureComponent {
                       <Step title="过程管理" onClick={onStep4} />
                     </Steps>
                   )}
-                  {(stepVisible === `1`) && (
+                  {stepVisible === `1` && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
                       <Step title="生成合同" onClick={onStep6} />
                       <Step title="报告审核" onClick={onStep7} />
                       <Step title="生成报告号" onClick={onStep8} />
                     </Steps>
                   )}
-                  {(stepVisible === `2`) && (
+                  {stepVisible === `2` && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
-                      <Step title="报告文印/盖章" onClick={onStep9}  />
+                      <Step title="报告文印/盖章" onClick={onStep9} />
                       <Step title="项目归档" onClick={onStep10} />
                       <Step title="生成知识体系" onClick={onStep11} />
                       <Step title="审批信息" onClick={onStep12} />
@@ -285,6 +271,3 @@ export default class ProjectStart extends PureComponent {
     );
   }
 }
-
-
-

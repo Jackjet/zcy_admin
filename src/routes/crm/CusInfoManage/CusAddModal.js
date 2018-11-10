@@ -57,10 +57,19 @@ const optionshz = [
   },
 ];
 const CustomerOption = ['贵宾', '重要客户', '一般客户', '潜在客户'];
-const IndustryOption = ['制造业','服务业','房地产建筑','三农业务','政府购买','商业','金融','非营利组织','其他'];
-const IncomeTaxOption = ['查账征收','核定征收'];
-const statusOption = ['保存','启用','禁用'];
-
+const IndustryOption = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '金融',
+  '非营利组织',
+  '其他',
+];
+const IncomeTaxOption = ['查账征收', '核定征收'];
+const statusOption = ['保存', '启用', '禁用'];
 
 const fieldLabels = {
   customerCode: '客户编码',
@@ -82,11 +91,11 @@ const fieldLabels = {
   address: '详细地址',
   remark: '备注',
   status: '状态',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
+  companyName: '单位名称',
+  companyAddress: '单位地址',
+  taxNumber: '税号',
+  openAccountBank: '开户银行',
+  bankAccount: '银行账户',
 };
 const formItemLayout = {
   labelCol: {
@@ -102,14 +111,13 @@ function onChange(value) {
   console.log(value);
 }
 
-
 class CustomerAddmodal extends PureComponent {
   state = {
     width: '100%',
     levelOptionData: [],
-    industryOptionData:[],
-    incomeTaxOptionData:[],
-    statusOptionData:[],
+    industryOptionData: [],
+    incomeTaxOptionData: [],
+    statusOptionData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -120,7 +128,7 @@ class CustomerAddmodal extends PureComponent {
 
   handleLevelChange = () => {
     this.setState({
-      levelOptionData: CustomerOption.map((data) => {
+      levelOptionData: CustomerOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -129,7 +137,7 @@ class CustomerAddmodal extends PureComponent {
 
   handleIndustryChange = () => {
     this.setState({
-      industryOptionData: IndustryOption.map((data) => {
+      industryOptionData: IndustryOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -138,7 +146,7 @@ class CustomerAddmodal extends PureComponent {
 
   handleIncomeTaxChange = () => {
     this.setState({
-      incomeTaxOptionData: IncomeTaxOption.map((data) => {
+      incomeTaxOptionData: IncomeTaxOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -147,7 +155,7 @@ class CustomerAddmodal extends PureComponent {
 
   handleStatusChange = () => {
     this.setState({
-      statusOptionData: statusOption.map((data) => {
+      statusOptionData: statusOption.map(data => {
         const value = `${data}`;
         return <Option key={value}>{value}</Option>;
       }),
@@ -162,9 +170,14 @@ class CustomerAddmodal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , customerAddVisible, handleCustomerAddVisible} = this.props;
+    const { form, dispatch, submitting, customerAddVisible, handleCustomerAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { levelOptionData, industryOptionData, incomeTaxOptionData, statusOptionData } = this.state;
+    const {
+      levelOptionData,
+      industryOptionData,
+      incomeTaxOptionData,
+      statusOptionData,
+    } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -230,11 +243,11 @@ class CustomerAddmodal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Form layout="horizontal">
-            <Collapse defaultActiveKey={['1','2']} >
+            <Collapse defaultActiveKey={['1', '2']}>
               <Panel header="客户信息" key="1">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
@@ -248,9 +261,7 @@ class CustomerAddmodal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.customerName}>
                       {getFieldDecorator('customerName', {
                         rules: [{ required: true, message: '请输入客户名称' }],
-                      })(
-                        <Input placeholder="请输入客户名称" style={{ width: 520 }} />
-                      )}
+                      })(<Input placeholder="请输入客户名称" style={{ width: 520 }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -260,7 +271,11 @@ class CustomerAddmodal extends PureComponent {
                       {getFieldDecorator('customerLevel', {
                         rules: [{ required: false, message: '请选择客户等级' }],
                       })(
-                        <Select onMouseEnter={this.handleLevelChange} placeholder="请选择客户等级" style={{ width: 200 }}>
+                        <Select
+                          onMouseEnter={this.handleLevelChange}
+                          placeholder="请选择客户等级"
+                          style={{ width: 200 }}
+                        >
                           {levelOptionData}
                         </Select>
                       )}
@@ -271,7 +286,11 @@ class CustomerAddmodal extends PureComponent {
                       {getFieldDecorator('industry', {
                         rules: [{ required: false, message: '请选择行业' }],
                       })(
-                        <Select onMouseEnter={this.handleIndustryChange} placeholder="请选择行业" style={{ width: 200 }}>
+                        <Select
+                          onMouseEnter={this.handleIndustryChange}
+                          placeholder="请选择行业"
+                          style={{ width: 200 }}
+                        >
                           {industryOptionData}
                         </Select>
                       )}
@@ -282,7 +301,11 @@ class CustomerAddmodal extends PureComponent {
                       {getFieldDecorator('incomeTax', {
                         rules: [{ required: false, message: '请选择所得税征收方式' }],
                       })(
-                        <Select onMouseEnter={this.handleIncomeTaxChange} placeholder="请选择所得税征收方式" style={{ width: 200 }}>
+                        <Select
+                          onMouseEnter={this.handleIncomeTaxChange}
+                          placeholder="请选择所得税征收方式"
+                          style={{ width: 200 }}
+                        >
                           {incomeTaxOptionData}
                         </Select>
                       )}
@@ -340,9 +363,15 @@ class CustomerAddmodal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.status}>
                       {getFieldDecorator('status', {
                         rules: [{ required: false, message: '请选择状态' }],
-                        initialValue:`保存`,
+                        initialValue: `保存`,
                       })(
-                        <Select disabled onMouseEnter={this.handleStatusChange} placeholder="请选择状态" disable style={{ width: 200 }}>
+                        <Select
+                          disabled
+                          onMouseEnter={this.handleStatusChange}
+                          placeholder="请选择状态"
+                          disable
+                          style={{ width: 200 }}
+                        >
                           {statusOptionData}
                         </Select>
                       )}
@@ -361,9 +390,7 @@ class CustomerAddmodal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.company}>
                       {getFieldDecorator('company', {
                         rules: [{ required: false, message: '请输出所属公司' }],
-                      })(
-                        <Input disabled placeholder="请输出所属公司" style={{ width: 520 }} />
-                      )}
+                      })(<Input disabled placeholder="请输出所属公司" style={{ width: 520 }} />)}
                     </Form.Item>
                   </Col>
                 </Row>

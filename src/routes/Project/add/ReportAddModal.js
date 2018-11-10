@@ -222,7 +222,7 @@ class ReportAddModal extends PureComponent {
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
-                <Col span={24} offset={4} >
+                <Col span={24} offset={4}>
                   <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
                     {getFieldDecorator('attachment ', {
                       initialValue: '1',
@@ -252,7 +252,6 @@ class ReportAddModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

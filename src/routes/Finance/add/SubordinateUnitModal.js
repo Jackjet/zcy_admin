@@ -24,16 +24,12 @@ const fieldLabels = {
   remarks: '备注',
 };
 
-
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
 class SubordinateUnitModal extends PureComponent {
-
-
   state = {
     width: '100%',
   };
@@ -45,10 +41,10 @@ class SubordinateUnitModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleGiveValue = (text) => {
+  handleGiveValue = text => {
     this.props.handleChangeUnitValue(text);
     this.props.handleSubordinateUnitVisible(false);
-  }
+  };
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -58,7 +54,13 @@ class SubordinateUnitModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting , subordinateUnitVisible, handleSubordinateUnitVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      subordinateUnitVisible,
+      handleSubordinateUnitVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -116,33 +118,41 @@ class SubordinateUnitModal extends PureComponent {
         </span>
       );
     };
-    const data = [{
-      key: '1',
-      name: '义务至诚',
-      age: 32,
-      address: '111',
-    }, {
-      key: '2',
-      name: '大义务',
-      age: 42,
-      address: '222',
-    }, {
-      key: '3',
-      name: '大杭州',
-      age: 32,
-      address: '333',
-    }];
-    const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-      render: (text) => <a onDoubleClick={() =>this.handleGiveValue(text)}>{text}</a>,
-    }, {
-      title: 'Age',
-      dataIndex: 'age',
-    }, {
-      title: 'Address',
-      dataIndex: 'address',
-    }];
+    const data = [
+      {
+        key: '1',
+        name: '义务至诚',
+        age: 32,
+        address: '111',
+      },
+      {
+        key: '2',
+        name: '大义务',
+        age: 42,
+        address: '222',
+      },
+      {
+        key: '3',
+        name: '大杭州',
+        age: 32,
+        address: '333',
+      },
+    ];
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        render: text => <a onDoubleClick={() => this.handleGiveValue(text)}>{text}</a>,
+      },
+      {
+        title: 'Age',
+        dataIndex: 'age',
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+      },
+    ];
 
     return (
       <Modal
@@ -161,9 +171,11 @@ class SubordinateUnitModal extends PureComponent {
               columns={columns}
               dataSource={data}
               onRowDoubleClick={this.handleGiveValue}
-              onRow={(record) => {
+              onRow={record => {
                 return {
-                  onClick: () => {this.handleGiveValue(record.name)},
+                  onClick: () => {
+                    this.handleGiveValue(record.name);
+                  },
                 };
               }}
             />

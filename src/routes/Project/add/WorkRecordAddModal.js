@@ -324,7 +324,6 @@ class WorkRecordAddModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

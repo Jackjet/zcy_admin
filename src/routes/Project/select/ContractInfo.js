@@ -95,7 +95,14 @@ class ContractInfo extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, handleContractViewVisible, contractViewVisible, rowInfoCurrent } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      handleContractViewVisible,
+      contractViewVisible,
+      rowInfoCurrent,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -166,7 +173,7 @@ class ContractInfo extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.contractCode}>
                     {getFieldDecorator('contractCode', {
                       rules: [{ required: true, message: '不重复的数字' }],
-                      initialValue:`${rowInfoCurrent.contractCode}`,
+                      initialValue: `${rowInfoCurrent.contractCode}`,
                     })(<Input placeholder="请输入合同编码" />)}
                   </Form.Item>
                 </Col>
@@ -438,7 +445,10 @@ class ContractInfo extends PureComponent {
                     {getFieldDecorator('date', {
                       rules: [{ required: false, message: '请选择日期' }],
                     })(
-                      <RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />
+                      <RangePicker
+                        placeholder={['开始日期', '结束日期']}
+                        style={{ width: '100%' }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -470,7 +480,9 @@ class ContractInfo extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...remarkcol} label={fieldLabels.remark}>
-                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} />)}
+                    {getFieldDecorator('remark')(
+                      <TextArea placeholder="请输入备注信息" rows={4} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>

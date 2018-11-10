@@ -22,10 +22,6 @@ import CommissionSettingAddModal from '../add/CommissionSettingAddModal';
 import CommissionSettingViewModal from '../select/CommissionSettingViewModal';
 import CommissionSettingEditModal from '../edit/CommissionSettingEditModal';
 
-
-
-
-
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -55,7 +51,7 @@ export default class CommissionSetting extends PureComponent {
     // 高级搜索是否隐藏状态
     expandForm: false,
 
-    rowInfo:{},
+    rowInfo: {},
 
     // 选中的行
     selectedRows: [],
@@ -201,21 +197,19 @@ export default class CommissionSetting extends PureComponent {
   };
 
   // 弹窗展示当前行的数据
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       commissionSetEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       commissionSetViewVisible: !!flag,
       rowInfo: record,
     });
   };
-
-
 
   // 高级搜索
   renderAdvancedForm() {
@@ -313,16 +307,12 @@ export default class CommissionSetting extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode')(
-                <Input placeholder="请输入客户编码和名称" />
-              )}
+              {getFieldDecorator('customerCode')(<Input placeholder="请输入客户编码和名称" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="key">
-              {getFieldDecorator('key')(
-                <Input placeholder="请输入key" />
-              )}
+              {getFieldDecorator('key')(<Input placeholder="请输入key" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -392,44 +382,33 @@ export default class CommissionSetting extends PureComponent {
         title: '操作',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
 
-            {record.status ===1 && (
+            {record.status === 1 && (
               <span>
                 <Divider type="vertical" />
-                <a onClick={() =>this.showEditMessage(true, record)} >
-                  编辑
-                </a>
+                <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
               </span>
             )}
 
-
-            {record.status ===1 && (
+            {record.status === 1 && (
               <span>
                 <Divider type="vertical" />
-                <a onClick={this.handleDeleteClick}>
-                  启用
-                </a>
-              </span>
-
-            )}
-
-            {record.status ===1 && (
-              <span>
-                <Divider type="vertical" />
-                <a onClick={this.handleDeleteClick} >
-                  删除
-                </a>
+                <a onClick={this.handleDeleteClick}>启用</a>
               </span>
             )}
 
-
-            {record.status ===0 && (
+            {record.status === 1 && (
               <span>
                 <Divider type="vertical" />
-                <a onClick={this.handleDeleteClick}>
-                  禁用
-                </a>
+                <a onClick={this.handleDeleteClick}>删除</a>
+              </span>
+            )}
+
+            {record.status === 0 && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={this.handleDeleteClick}>禁用</a>
               </span>
             )}
           </Fragment>
@@ -453,10 +432,7 @@ export default class CommissionSetting extends PureComponent {
           <div>
             <div className={styles.tableList}>
               <div className={styles.tableListOperator}>
-                <Button
-                  type="primary"
-                  onClick={() => this.handleCommissionSetAddVisible(true)}
-                >
+                <Button type="primary" onClick={() => this.handleCommissionSetAddVisible(true)}>
                   新增类型比例
                 </Button>
               </div>
@@ -471,9 +447,20 @@ export default class CommissionSetting extends PureComponent {
             </div>
           </div>
         </Card>
-        <CommissionSettingAddModal {...commissionSetAddMethods} commissionSetAddVisible={commissionSetAddVisible} />
-        <CommissionSettingEditModal {...commissionSetEditMethods} commissionSetEditVisible={commissionSetEditVisible} rowInfo={rowInfo} />
-        <CommissionSettingViewModal {...commissionSetViewMethods} commissionSetViewVisible={commissionSetViewVisible} rowInfo={rowInfo} />
+        <CommissionSettingAddModal
+          {...commissionSetAddMethods}
+          commissionSetAddVisible={commissionSetAddVisible}
+        />
+        <CommissionSettingEditModal
+          {...commissionSetEditMethods}
+          commissionSetEditVisible={commissionSetEditVisible}
+          rowInfo={rowInfo}
+        />
+        <CommissionSettingViewModal
+          {...commissionSetViewMethods}
+          commissionSetViewVisible={commissionSetViewVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

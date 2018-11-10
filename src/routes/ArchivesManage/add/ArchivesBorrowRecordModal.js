@@ -17,7 +17,6 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
-
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -89,7 +88,15 @@ class ArchivesBorrowRecordModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, BorrowRecordVisible, handleBorrowRecordVisible, rowInfo, handleArchivesBorrowingVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      BorrowRecordVisible,
+      handleBorrowRecordVisible,
+      rowInfo,
+      handleArchivesBorrowingVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -164,10 +171,8 @@ class ArchivesBorrowRecordModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="档案">
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '档案' }],
-                      initialValue:`${rowInfo.dictID}`,
-                    })(
-                      <Input placeholder="档案" style={{ width: 650 }} />
-                    )}
+                      initialValue: `${rowInfo.dictID}`,
+                    })(<Input placeholder="档案" style={{ width: 650 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -177,10 +182,10 @@ class ArchivesBorrowRecordModal extends PureComponent {
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '使用类别' }],
                     })(
-                      <Select placeholder="使用类别" style={{ width: 200 }} >
-                        <Option key="1" >现场借阅</Option>
-                        <Option key="2" >复印</Option>
-                        <Option key="3" >借走</Option>
+                      <Select placeholder="使用类别" style={{ width: 200 }}>
+                        <Option key="1">现场借阅</Option>
+                        <Option key="2">复印</Option>
+                        <Option key="3">借走</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -189,9 +194,7 @@ class ArchivesBorrowRecordModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="使用日期">
                     {getFieldDecorator('archivesAdmin', {
                       rules: [{ required: false, message: '使用日期' }],
-                    })(
-                      <Input placeholder="使用日期" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="使用日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -201,9 +204,9 @@ class ArchivesBorrowRecordModal extends PureComponent {
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '选择类别' }],
                     })(
-                      <Select placeholder="选择类别" style={{ width: 200 }} >
-                        <Option key="1" >员工</Option>
-                        <Option key="2" >客户</Option>
+                      <Select placeholder="选择类别" style={{ width: 200 }}>
+                        <Option key="1">员工</Option>
+                        <Option key="2">客户</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -212,9 +215,7 @@ class ArchivesBorrowRecordModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="使用人">
                     {getFieldDecorator('connectBusiness', {
                       rules: [{ required: false, message: '使用人' }],
-                    })(
-                      <Input placeholder="放大镜" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="放大镜" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -223,9 +224,7 @@ class ArchivesBorrowRecordModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="使用原因">
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '使用原因' }],
-                    })(
-                      <Input placeholder="使用原因" style={{ width: 650 }} />
-                    )}
+                    })(<Input placeholder="使用原因" style={{ width: 650 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -234,9 +233,7 @@ class ArchivesBorrowRecordModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="备注">
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '备注' }],
-                    })(
-                      <Input placeholder="备注" style={{ width: 650 }} />
-                    )}
+                    })(<Input placeholder="备注" style={{ width: 650 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -244,7 +241,6 @@ class ArchivesBorrowRecordModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

@@ -31,9 +31,8 @@ import ProjectEditModal from './ProEditModal';
 import AppraisalList from './Appraisal/AppraisalList';
 import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
 
-
 const { confirm } = Modal;
-const {Content, Sider} = Layout;
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -41,9 +40,30 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['success', 'error', 'default', 'processing', 'warning', 'default', 'processing', 'warning', 'error','success'];
-const status = ['收款完成', '备忘', '经理审批', '盖章', '稽核审批', '生成报告号', '转职复核', '主签复核','已销毁','完成'];
-
+const statusMap = [
+  'success',
+  'error',
+  'default',
+  'processing',
+  'warning',
+  'default',
+  'processing',
+  'warning',
+  'error',
+  'success',
+];
+const status = [
+  '收款完成',
+  '备忘',
+  '经理审批',
+  '盖章',
+  '稽核审批',
+  '生成报告号',
+  '转职复核',
+  '主签复核',
+  '已销毁',
+  '完成',
+];
 
 @connect(({ company, loading }) => ({
   company,
@@ -60,8 +80,8 @@ export default class ProjectList extends PureComponent {
     expandForm: false,
     selectedRows: [],
     choiceTypeKey: '0',
-    choiceTypeValue:'',
-    rowInfo:{},
+    choiceTypeValue: '',
+    rowInfo: {},
     formValues: {},
     openKeys: ['sub1'],
     projectPlanAddVisible: false,
@@ -75,8 +95,8 @@ export default class ProjectList extends PureComponent {
     dispatch({
       type: 'company/fetch',
       payload: {
-        page:1,
-        pageSize:10,
+        page: 1,
+        pageSize: 10,
       },
     });
   }
@@ -195,7 +215,7 @@ export default class ProjectList extends PureComponent {
   };
 
   handleProjectVisible = flag => {
-    if(this.state.choiceTypeKey === "0" ){
+    if (this.state.choiceTypeKey === '0') {
       message.config({
         top: 100,
         duration: 2,
@@ -245,8 +265,6 @@ export default class ProjectList extends PureComponent {
     });
   };
 
-
-
   handleProjectEditVisible = flag => {
     this.setState({
       projectEditVisible: !!flag,
@@ -281,7 +299,7 @@ export default class ProjectList extends PureComponent {
 
   rootSubmenuKeys = ['sub1'];
 
-  handleGetMenuValue = (MenuValue) => {
+  handleGetMenuValue = MenuValue => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
@@ -306,11 +324,11 @@ export default class ProjectList extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key='0'>全部</Menu.Item>
-          <Menu.Item key='1'>工程造价业务项目</Menu.Item>
-          <Menu.Item key='2'>可研报告</Menu.Item>
-          <Menu.Item key='3'>招标代理业务项目</Menu.Item>
-          <Menu.Item key='4'>司法鉴定</Menu.Item>
+          <Menu.Item key="0">全部</Menu.Item>
+          <Menu.Item key="1">工程造价业务项目</Menu.Item>
+          <Menu.Item key="2">可研报告</Menu.Item>
+          <Menu.Item key="3">招标代理业务项目</Menu.Item>
+          <Menu.Item key="4">司法鉴定</Menu.Item>
         </SubMenu>
       </Menu>
     );
@@ -335,34 +353,34 @@ export default class ProjectList extends PureComponent {
     });
   };
 
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       projectTabsVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       projectEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  handleDestroyApply = (record) => {
+  handleDestroyApply = record => {
     const { dispatch } = this.props;
     confirm({
       title: `申请删除项目编码为：${record.projectCode}`,
-      content:(
+      content: (
         <div>
           <p>项目名称:{record.projectName}</p>
           <p>销毁人:{record.projectName}</p>
           <p>销毁时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
         </div>
       ),
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'rule/remove',
@@ -370,11 +388,9 @@ export default class ProjectList extends PureComponent {
             no: record.no,
           },
         });
-        message.success('申请成功')
+        message.success('申请成功');
       },
-      onCancel() {
-
-      },
+      onCancel() {},
     });
     this.setState({
       selectedRows: [],
@@ -533,7 +549,7 @@ export default class ProjectList extends PureComponent {
         fixed: 'left',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >{text}</a>
+            <a onClick={() => this.showViewMessage(true, record)}>{text}</a>
           </Fragment>
         ),
       },
@@ -624,35 +640,29 @@ export default class ProjectList extends PureComponent {
         fixed: 'right',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showProjectApplyAddVisible(true, record)} >审批环节</a>
+            <a onClick={() => this.showProjectApplyAddVisible(true, record)}>审批环节</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
-            {
-              (`${record.projectStatus}` !== '8') && (
-                <span>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.handleDestroyApply(record)}>销毁申请</a>
-                </span>
-              )
-            }
-            {
-              (`${record.projectStatus}` === "4") && (
-                <span>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.handleSignatureAddVisible(true,record)}>签章申请</a>
-                </span>
-              )
-            }
-            {
-              (`${record.projectStatus}` === '9') && (
-                <span>
-                  <Divider type="vertical" />
-                  <a onClick={() =>this.handleAppraisalVisible(true)}>启动考评</a>
-                </span>
-              )
-            }
+            <a onClick={this.handleDeleteClick}>删除</a>
+            {`${record.projectStatus}` !== '8' && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() => this.handleDestroyApply(record)}>销毁申请</a>
+              </span>
+            )}
+            {`${record.projectStatus}` === '4' && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() => this.handleSignatureAddVisible(true, record)}>签章申请</a>
+              </span>
+            )}
+            {`${record.projectStatus}` === '9' && (
+              <span>
+                <Divider type="vertical" />
+                <a onClick={() => this.handleAppraisalVisible(true)}>启动考评</a>
+              </span>
+            )}
           </Fragment>
         ),
       },
@@ -676,32 +686,40 @@ export default class ProjectList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleProjectVisible(true)}>
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() => this.handleProjectVisible(true)}
+                  >
                     新建
                   </Button>
                   {selectedRows.length > 0 && (
                     <span>
-                      <Button type="primary" onClick={() => this.handleProjectChildrenAddVisible(true)}>
+                      <Button
+                        type="primary"
+                        onClick={() => this.handleProjectChildrenAddVisible(true)}
+                      >
                         新增子项目
                       </Button>
                       <Button type="primary" onClick={() => this.handleProjectPlanAddVisible(true)}>
                         新增项目计划
                       </Button>
-                      <Button type="primary">
-                        新增工时
-                      </Button>
-                      <Button type="primary" onClick={() => this.handleProjectProcessAddVisible(true)}>
+                      <Button type="primary">新增工时</Button>
+                      <Button
+                        type="primary"
+                        onClick={() => this.handleProjectProcessAddVisible(true)}
+                      >
                         新增过程汇报
                       </Button>
                     </span>
                   )}
                 </div>
                 <StandardTable
-                  scroll={{ x: 1500}}
+                  scroll={{ x: 1500 }}
                   selectedRows={selectedRows}
                   loading={loading}
                   data={data}
@@ -713,15 +731,38 @@ export default class ProjectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
-        <ProjectChildrenAddModal {...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
-        <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
-        <ProjectEditModal {...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
+        <ProjectAddModal
+          {...parentMethods}
+          projectVisible={projectVisible}
+          choiceTypeValue={choiceTypeValue}
+          rowInfo={rowInfo}
+        />
+        <ProjectChildrenAddModal
+          {...parentMethods}
+          projectChildrenAddVisible={projectChildrenAddVisible}
+        />
+        <ProjectViewTabs
+          {...parentMethods}
+          projectTabsVisible={projectTabsVisible}
+          rowInfo={rowInfo}
+        />
+        <ProjectEditModal
+          {...parentMethods}
+          projectEditVisible={projectEditVisible}
+          rowInfo={rowInfo}
+        />
         <ProjectPlanAddModal {...parentMethods} projectPlanAddVisible={projectPlanAddVisible} />
-        <ProjectApplyAddModal {...parentMethods} projectApplyAddVisible={projectApplyAddVisible} rowInfo={rowInfo} />
-        <ProjectProcessAddModal {...parentMethods} projectProcessAddVisible={projectProcessAddVisible}  />
+        <ProjectApplyAddModal
+          {...parentMethods}
+          projectApplyAddVisible={projectApplyAddVisible}
+          rowInfo={rowInfo}
+        />
+        <ProjectProcessAddModal
+          {...parentMethods}
+          projectProcessAddVisible={projectProcessAddVisible}
+        />
         <AppraisalList {...parentMethods} appraisalVisible={appraisalVisible} />
-        <SignatureAddModal {...parentMethods}  signatureAddVisible={signatureAddVisible} />
+        <SignatureAddModal {...parentMethods} signatureAddVisible={signatureAddVisible} />
       </PageHeaderLayout>
     );
   }

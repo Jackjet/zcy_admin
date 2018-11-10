@@ -1,8 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Modal, Popover, message, Icon } from 'antd';
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+  Modal,
+  Popover,
+  message,
+  Icon,
+} from 'antd';
 import { connect } from 'dva';
 import styles from '../add/style.less';
-
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -46,7 +57,13 @@ class ProjectPlanAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, signatureAddVisible, handleSignatureAddVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      signatureAddVisible,
+      handleSignatureAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -120,9 +137,7 @@ class ProjectPlanAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="签章项目">
                     {getFieldDecorator('signatureProject', {
                       rules: [{ required: true, message: '签章项目' }],
-                    })(
-                      <Input placeholder="签章项目" />
-                    )}
+                    })(<Input placeholder="签章项目" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -131,9 +146,7 @@ class ProjectPlanAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="签章时间">
                     {getFieldDecorator('signatureDate', {
                       rules: [{ required: true, message: '签章时间' }],
-                    })(
-                      <Input placeholder="签章时间"  />
-                    )}
+                    })(<Input placeholder="签章时间" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -142,9 +155,7 @@ class ProjectPlanAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="项目环节">
                     {getFieldDecorator('link', {
                       rules: [{ required: true, message: '项目环节' }],
-                    })(
-                      <Input placeholder="项目环节" />
-                    )}
+                    })(<Input placeholder="项目环节" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -153,9 +164,7 @@ class ProjectPlanAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="签章人">
                     {getFieldDecorator('signaturer', {
                       rules: [{ required: true, message: '签章人' }],
-                    })(
-                      <Input placeholder="签章人" />
-                    )}
+                    })(<Input placeholder="签章人" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -163,9 +172,7 @@ class ProjectPlanAddModal extends PureComponent {
               <Row>
                 <Col lg={24} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label="签章事由">
-                    {getFieldDecorator('signatureEvent')(
-                      <TextArea placeholder="签章事由" />
-                    )}
+                    {getFieldDecorator('signatureEvent')(<TextArea placeholder="签章事由" />)}
                   </Form.Item>
                 </Col>
               </Row>

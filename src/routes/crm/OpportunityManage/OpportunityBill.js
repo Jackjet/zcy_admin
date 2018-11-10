@@ -26,8 +26,8 @@ import BusinessOppView from './OpportunityViewModal.js';
 import BusinessStateModal from './OpportunityStateModal';
 //import ProjectAddModal from '../Project/ProInfoManage/ProAddModal.js';
 
-const statusMap = ['success', 'warning','default'];
-const status = ['已跟进', '未分配','已分配'];
+const statusMap = ['success', 'warning', 'default'];
+const status = ['已跟进', '未分配', '已分配'];
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj =>
@@ -50,7 +50,7 @@ export default class BusinessOpportunity extends PureComponent {
     projectVisible: false,
     selectedRows: [],
     formValues: {},
-    rowInfo:[],
+    rowInfo: [],
     openKeys: ['sub1'],
   };
 
@@ -212,11 +212,11 @@ export default class BusinessOpportunity extends PureComponent {
 
   handleProjectVisible = flag => {
     const { selectedRows, rowInfo } = this.state;
-    if(this.state.selectedRows.length > 1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
-    if(this.state.selectedRows.length === 0){
+    if (this.state.selectedRows.length === 0) {
       message.warning('请选择商机');
       return false;
     }
@@ -277,21 +277,21 @@ export default class BusinessOpportunity extends PureComponent {
     );
   }
 
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       businessViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       businessEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showFollowUpMessage =(flag, record)=> {
+  showFollowUpMessage = (flag, record) => {
     this.setState({
       followUpVisible: !!flag,
       rowInfo: record,
@@ -340,8 +340,6 @@ export default class BusinessOpportunity extends PureComponent {
       </Form>
     );
   }
-
-
 
   render() {
     const { company: { data }, loading } = this.props;
@@ -416,21 +414,21 @@ export default class BusinessOpportunity extends PureComponent {
           <Fragment>
             {record.businessStatus === 0 && (
               <div>
-                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+                <a onClick={() => this.showViewMessage(true, record)}>查看</a>
               </div>
             )}
             {record.businessStatus === 1 && (
               <div>
-                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+                <a onClick={() => this.showViewMessage(true, record)}>查看</a>
                 <Divider type="vertical" />
-                <a onClick={() =>this.showEditMessage(true, record)} >商机分配</a>
+                <a onClick={() => this.showEditMessage(true, record)}>商机分配</a>
               </div>
             )}
             {record.businessStatus === 2 && (
               <div>
-                <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+                <a onClick={() => this.showViewMessage(true, record)}>查看</a>
                 <Divider type="vertical" />
-                <a onClick={() =>this.showFollowUpMessage(true, record)}>跟进</a>
+                <a onClick={() => this.showFollowUpMessage(true, record)}>跟进</a>
               </div>
             )}
           </Fragment>
@@ -506,9 +504,21 @@ export default class BusinessOpportunity extends PureComponent {
           </div>
         </Card>
         <BusinessAddModal {...businessAddMethods} businessOppVisible={businessOppVisible} />
-        <BusinessFollowUp {...followUpMethods} followUpVisible={followUpVisible} rowInfo={rowInfo} />
-        <BusinessOppView {...businessViewMethods} businessViewVisible={businessViewVisible} rowInfo={rowInfo} />
-        <BusinessEditModal {...businessEditMethods} businessEditVisible={businessEditVisible} rowInfo={rowInfo} />
+        <BusinessFollowUp
+          {...followUpMethods}
+          followUpVisible={followUpVisible}
+          rowInfo={rowInfo}
+        />
+        <BusinessOppView
+          {...businessViewMethods}
+          businessViewVisible={businessViewVisible}
+          rowInfo={rowInfo}
+        />
+        <BusinessEditModal
+          {...businessEditMethods}
+          businessEditVisible={businessEditVisible}
+          rowInfo={rowInfo}
+        />
         <BusinessStateModal {...businessStateMethods} businessStateVisible={businessStateVisible} />
         <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>

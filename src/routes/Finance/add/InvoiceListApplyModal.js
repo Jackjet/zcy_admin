@@ -100,7 +100,13 @@ class InvoiceListApplyModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, invoiceApplyVisible, handleInvoiceApplyVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      invoiceApplyVisible,
+      handleInvoiceApplyVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -178,7 +184,7 @@ class InvoiceListApplyModal extends PureComponent {
                     {getFieldDecorator('clientName', {
                       rules: [{ required: true, message: '请委托方名称' }],
                     })(
-                      <Select  placeholder="请委托方名称" style={{ width: 200 }}>
+                      <Select placeholder="请委托方名称" style={{ width: 200 }}>
                         <Option value="0">杭州客户</Option>
                         <Option value="g">新昌客户</Option>
                         <Option value="y">诸暨客户</Option>
@@ -382,7 +388,9 @@ class InvoiceListApplyModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.planChangeReason}>
                     {getFieldDecorator('planChangeReason', {
                       rules: [{ required: true, message: '请输入计划调整理由' }],
-                    })(<Input placeholder="请输入计划调整理由" className={styles['ant-input-lg']} />)}
+                    })(
+                      <Input placeholder="请输入计划调整理由" className={styles['ant-input-lg']} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -450,7 +458,10 @@ class InvoiceListApplyModal extends PureComponent {
                     {getFieldDecorator('CPA_Signature', {
                       rules: [{ required: true, message: '请输入签字注册会计师' }],
                     })(
-                      <Input placeholder="请输入签字注册会计师" className={styles['ant-input-lg']} />
+                      <Input
+                        placeholder="请输入签字注册会计师"
+                        className={styles['ant-input-lg']}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -459,7 +470,6 @@ class InvoiceListApplyModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

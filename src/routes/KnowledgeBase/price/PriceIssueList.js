@@ -16,13 +16,13 @@ import {
   message,
   Divider,
   Popconfirm,
-  Layout
+  Layout,
 } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import StandardTable from '../../../components/StandardTable/index';
 import styles from './Style.less';
 
-const { Content,  Sider } = Layout;
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -191,47 +191,43 @@ export default class PriceIssueList extends PureComponent {
             </span>
           }
         >
+          <SubMenu
+            key="sub2"
+            title={
+              <span>
+                <span>有材料价格</span>
+              </span>
+            }
+          >
             <SubMenu
-              key="sub2"
+              key="sub21"
               title={
                 <span>
-              <span>有材料价格</span>
-            </span>
+                  <span>建筑材料</span>
+                </span>
               }
             >
-              <SubMenu
-                key="sub21"
-                title={
-                  <span>
-              <span>建筑材料</span>
-            </span>
-                }
-              >
-                <Menu.Item key="211">水泥
-                </Menu.Item>
-                <Menu.Item key="212" title={'水泥制品'}>水泥制品</Menu.Item>
-                <Menu.Item key="213" title={'砖、瓦、砂、石、灰'}>砖、瓦、砂、石、灰</Menu.Item>
-
-              </SubMenu>
-
+              <Menu.Item key="211">水泥</Menu.Item>
+              <Menu.Item key="212" title={'水泥制品'}>
+                水泥制品
+              </Menu.Item>
+              <Menu.Item key="213" title={'砖、瓦、砂、石、灰'}>
+                砖、瓦、砂、石、灰
+              </Menu.Item>
             </SubMenu>
+          </SubMenu>
 
           <SubMenu
             key="sub3"
             title={
               <span>
-              <span>无材料价格</span>
-            </span>
+                <span>无材料价格</span>
+              </span>
             }
           >
-            <Menu.Item key="1">有材料价格
-
-
-            </Menu.Item>
+            <Menu.Item key="1">有材料价格</Menu.Item>
             <Menu.Item key="2">无材料价格</Menu.Item>
-
           </SubMenu>
-
         </SubMenu>
       </Menu>
     );
@@ -244,9 +240,7 @@ export default class PriceIssueList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入编码名称" />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
             </FormItem>
           </Col>
 
@@ -330,29 +324,25 @@ export default class PriceIssueList extends PureComponent {
             <Sider width={210} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button
-                    icon="plus"
-                    type="primary"
-                    onClick=''
-                  >
+                  <Button icon="plus" type="primary" onClick="">
                     导入
                   </Button>
                   {selectedRows.length > 0 && (
                     <span>
-                    <Dropdown overlay={batchMenu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
+                      <Dropdown overlay={batchMenu}>
+                        <Button>
+                          批量操作 <Icon type="down" />
+                        </Button>
+                      </Dropdown>
+                    </span>
                   )}
                 </div>
                 <StandardTable
-                  scroll={{ x: 1500}}
+                  scroll={{ x: 1500 }}
                   selectedRows={selectedRows}
                   loading={loading}
                   data={data}
@@ -365,8 +355,6 @@ export default class PriceIssueList extends PureComponent {
           </Layout>
         </Card>
       </PageHeaderLayout>
-
-
     );
   }
 }

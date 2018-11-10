@@ -19,7 +19,7 @@ import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import InvoiceListApplyModal from '../add/InvoiceListApplyModal';
-import SearchForm from "../select/SearchForm";
+import SearchForm from '../select/SearchForm';
 import IncomeConfirmModal from '../add/IncomeConfirmModal';
 
 const { Option } = Select;
@@ -29,18 +29,17 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class ReceivablesInfoList  extends PureComponent {
+export default class ReceivablesInfoList extends PureComponent {
   state = {
     invoiceApplyVisible: false,
     searchFormVisible: false,
-    incomeConfirmVisible:false,
+    incomeConfirmVisible: false,
     selectedRows: [],
     formValues: {},
   };
@@ -227,7 +226,11 @@ export default class ReceivablesInfoList  extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleInvoiceApplyVisible}>
+              <Button
+                style={{ marginLeft: 8 }}
+                type="primary"
+                onClick={this.handleInvoiceApplyVisible}
+              >
                 新建
               </Button>
             </span>
@@ -239,10 +242,15 @@ export default class ReceivablesInfoList  extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, invoiceApplyVisible, searchFormVisible, incomeConfirmVisible } = this.state;
+    const {
+      selectedRows,
+      invoiceApplyVisible,
+      searchFormVisible,
+      incomeConfirmVisible,
+    } = this.state;
 
-    const IncomeConfirmMethods ={
-      handleIncomeConfirmVisible:this.handleIncomeConfirmVisible,
+    const IncomeConfirmMethods = {
+      handleIncomeConfirmVisible: this.handleIncomeConfirmVisible,
     };
 
     const columns = [

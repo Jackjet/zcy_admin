@@ -15,7 +15,7 @@ import {
   Layout,
   Badge,
 } from 'antd';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './PersonAddModal';
@@ -33,7 +33,7 @@ message.config({
   duration: 2,
   maxCount: 1,
 });
-const { Content,  Sider } = Layout;
+const { Content, Sider } = Layout;
 const statusMap = ['default', 'success'];
 const status = ['离职', '在职'];
 const sexStatusMap = ['warning', 'processing'];
@@ -55,7 +55,7 @@ export default class PersonManageList extends PureComponent {
     PersonAddVisible: false,
     PersonViewVisible: false,
     PersonEditVisible: false,
-    rowInfo:``,
+    rowInfo: ``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -77,11 +77,10 @@ export default class PersonManageList extends PureComponent {
         page: 1,
         pageSize: 10,
       },
-      callback: (res) => {
-        if(res.meta.status !== '000000' ) {
-
-        }else{
-       //
+      callback: res => {
+        if (res.meta.status !== '000000') {
+        } else {
+          //
         }
       },
     });
@@ -135,8 +134,8 @@ export default class PersonManageList extends PureComponent {
     dispatch({
       type: 'person/fetch',
       payload: {},
-      callback: (res) => {
-        if(res.meta.status !== "000000"){
+      callback: res => {
+        if (res.meta.status !== '000000') {
           message.error(res.meta.errmsg);
         } else {
           message.success('重置完成!');
@@ -153,12 +152,12 @@ export default class PersonManageList extends PureComponent {
 
   handleMenuClick = e => {
     const thisParam = this;
-    const nameUser = thisParam.state.selectedRows.map(row => row.name ).join(`,\n`);
+    const nameUser = thisParam.state.selectedRows.map(row => row.name).join(`,\n`);
     switch (e.key) {
       case 'remove':
         confirm({
           title: '确定删除以下公司?',
-          content:(
+          content: (
             <div>
               <p>公司名称: {nameUser}</p>
               <p>操作人:当前登录用户</p>
@@ -169,7 +168,7 @@ export default class PersonManageList extends PureComponent {
             thisParam.props.dispatch({
               type: 'person/removeMore',
               payload: {
-                ids : thisParam.state.selectedRows.map(row => row.id ).join(','),
+                ids: thisParam.state.selectedRows.map(row => row.id).join(','),
               },
               callback: () => {
                 thisParam.setState({
@@ -222,9 +221,9 @@ export default class PersonManageList extends PureComponent {
       dispatch({
         type: 'person/fetch',
         payload: values,
-        callback: (res) => {
-          if(res.meta.status !== '000000'){
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
           } else {
             this.setState({
               selectedRows: [],
@@ -242,19 +241,19 @@ export default class PersonManageList extends PureComponent {
     this.setState({
       PersonAddVisible: !!flag,
     });
-    if(!flag){
+    if (!flag) {
       this.props.dispatch({
         type: 'person/fetch',
         payload: {
           page: 1,
           pageSize: 10,
         },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
           }
         },
-      })
+      });
     }
   };
 
@@ -268,22 +267,22 @@ export default class PersonManageList extends PureComponent {
     this.setState({
       PersonEditVisible: !!flag,
     });
-    if(!flag){
+    if (!flag) {
       this.props.dispatch({
         type: 'person/fetch',
         payload: {
           page: 1,
           pageSize: 10,
         },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
             // this.props.data = res.data;
           } else {
-            message.success("公司更新成功!")
+            message.success('公司更新成功!');
           }
         },
-      })
+      });
     }
   };
 
@@ -293,7 +292,7 @@ export default class PersonManageList extends PureComponent {
     });
   };
   handleDistributionAuthorityVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -301,13 +300,13 @@ export default class PersonManageList extends PureComponent {
       DistributionAuthorityVisible: !!flag,
     });
   };
-  handleBatchDisAuthorityVisible = flag =>{
+  handleBatchDisAuthorityVisible = flag => {
     this.setState({
       BatchDisAuthorityVisible: !!flag,
-    })
+    });
   };
-  handleOrgRangeBillVisible = flag =>{
-    if(this.state.selectedRows.length>1){
+  handleOrgRangeBillVisible = flag => {
+    if (this.state.selectedRows.length > 1) {
       message.config({
         top: 100,
         duration: 2,
@@ -318,25 +317,25 @@ export default class PersonManageList extends PureComponent {
     }
     this.setState({
       OrgRangeBillVisible: !!flag,
-    })
+    });
   };
 
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       PersonViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       PersonEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  handleDistributionRoleVisible =(flag)=> {
-    if(this.state.selectedRows.length>1){
+  handleDistributionRoleVisible = flag => {
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -345,7 +344,7 @@ export default class PersonManageList extends PureComponent {
     });
   };
 
-  showDeleteMessage =(flag, record)=> {
+  showDeleteMessage = (flag, record) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'person/remove',
@@ -353,8 +352,8 @@ export default class PersonManageList extends PureComponent {
         id: record.id,
         deleteFlag: 0,
       },
-      callback: ( res ) => {
-        if (res.meta.status !== "000000") {
+      callback: res => {
+        if (res.meta.status !== '000000') {
           message.error(res.meta.errmsg);
         } else {
           this.setState({
@@ -370,23 +369,21 @@ export default class PersonManageList extends PureComponent {
           });
           message.success('人员删除成功!');
         }
-
       },
     });
   };
 
-  handleCancelCancel = (record) => {
-
+  handleCancelCancel = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'person/cancelCancel',
       payload: {
-        id:record.id,
+        id: record.id,
         status: 1,
       },
-      callback: (res) => {
-        if(res.meta.statusCode !== '000000'){
-          message.error("res.meta");  // 返回错误信息
+      callback: res => {
+        if (res.meta.statusCode !== '000000') {
+          message.error('res.meta'); // 返回错误信息
         }
         this.setState({
           selectedRows: [],
@@ -407,7 +404,6 @@ export default class PersonManageList extends PureComponent {
         message.success('人员启用成功!');
       },
     });
-
   }; // 公司状态启用方法
   rootSubmenuKeys = ['sub1'];
   treeMenu() {
@@ -537,13 +533,13 @@ export default class PersonManageList extends PureComponent {
       },
       {
         title: '操作',
-        render: (record) => (
+        render: record => (
           <Fragment>
-            <a onClick={()=>this.showViewMessage(true,record)}>查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={()=>this.showEditMessage(true,record)}>编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
-            <a onClick={()=>this.showDeleteMessage(true,record)}>删除</a>
+            <a onClick={() => this.showDeleteMessage(true, record)}>删除</a>
           </Fragment>
         ),
       },
@@ -560,7 +556,7 @@ export default class PersonManageList extends PureComponent {
       handlePersonAddVisible: this.handlePersonAddVisible,
       handlePersonViewVisible: this.handlePersonViewVisible,
       handlePersonEditVisible: this.handlePersonEditVisible,
-      handleDistributionRoleVisible :this.handleDistributionRoleVisible,
+      handleDistributionRoleVisible: this.handleDistributionRoleVisible,
       handleBatchDisRoleVisible: this.handleBatchDisRoleVisible,
       handleDistributionAuthorityVisible: this.handleDistributionAuthorityVisible,
       handleBatchDisAuthorityVisible: this.handleBatchDisAuthorityVisible,
@@ -574,7 +570,7 @@ export default class PersonManageList extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>
@@ -599,10 +595,7 @@ export default class PersonManageList extends PureComponent {
                       >
                         分配角色
                       </Button>
-                      <Button
-                        type="primary"
-                        onClick={() => this.handleOrgRangeBillVisible(true)}
-                      >
+                      <Button type="primary" onClick={() => this.handleOrgRangeBillVisible(true)}>
                         组织范围维护
                       </Button>
                       <Dropdown overlay={batchMenu}>
@@ -624,13 +617,30 @@ export default class PersonManageList extends PureComponent {
               </div>
             </Content>
           </Layout>
-          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible}  />
-          <PersonViewModal {...parentMethods} PersonViewVisible={PersonViewVisible} rowInfo={rowInfo} />
-          <PersonEditModal {...parentMethods} PersonEditVisible={PersonEditVisible} rowInfo={rowInfo} />
-          <DistributionRoleModal {...parentMethods} DistributionRoleVisible={DistributionRoleVisible} />
+          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible} />
+          <PersonViewModal
+            {...parentMethods}
+            PersonViewVisible={PersonViewVisible}
+            rowInfo={rowInfo}
+          />
+          <PersonEditModal
+            {...parentMethods}
+            PersonEditVisible={PersonEditVisible}
+            rowInfo={rowInfo}
+          />
+          <DistributionRoleModal
+            {...parentMethods}
+            DistributionRoleVisible={DistributionRoleVisible}
+          />
           <BatchDisRoleModal {...parentMethods} BatchDisRoleVisible={BatchDisRoleVisible} />
-          <DistributionAuthorityModal {...parentMethods} DistributionAuthorityVisible={DistributionAuthorityVisible} />
-          <BatchDisAuthorityModal {...parentMethods} BatchDisAuthorityVisible={BatchDisAuthorityVisible} />
+          <DistributionAuthorityModal
+            {...parentMethods}
+            DistributionAuthorityVisible={DistributionAuthorityVisible}
+          />
+          <BatchDisAuthorityModal
+            {...parentMethods}
+            BatchDisAuthorityVisible={BatchDisAuthorityVisible}
+          />
           <OrgRangeBill {...parentMethods} OrgRangeBillVisible={OrgRangeBillVisible} />
         </Card>
       </PageHeaderLayout>

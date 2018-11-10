@@ -1,15 +1,29 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover, Tree } from 'antd';
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+  Transfer,
+  Modal,
+  Icon,
+  message,
+  Popover,
+  Tree,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
+for (let i = 0; i < 10; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
   });
-};
+}
 const { TreeNode } = Tree;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -64,7 +78,14 @@ class VisitListViewModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, visitViewVisible, handleVisitViewVisible, rowInfo } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      visitViewVisible,
+      handleVisitViewVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedKeys } = this.state;
     const validate = () => {
@@ -139,20 +160,16 @@ class VisitListViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitors}>
                     {getFieldDecorator('visitors', {
                       rules: [{ required: false, message: '请选择拜访对象' }],
-                      initialValue:`${rowInfo.visitCus}`,
-                    })(
-                      <Input readOnly placeholder="请选择拜访对象" />
-                    )}
+                      initialValue: `${rowInfo.visitCus}`,
+                    })(<Input readOnly placeholder="请选择拜访对象" />)}
                   </Form.Item>
                 </Col>
                 <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.visitType}>
                     {getFieldDecorator('visitType', {
                       rules: [{ required: false, message: '请选择拜访方式' }],
-                      initialValue:`${rowInfo.visitMethod}`,
-                    })(
-                      <Input readOnly placeholder="请选择拜访方式" />
-                    )}
+                      initialValue: `${rowInfo.visitMethod}`,
+                    })(<Input readOnly placeholder="请选择拜访方式" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -161,41 +178,41 @@ class VisitListViewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.visitDate}>
                     {getFieldDecorator('visitDate', {
                       rules: [{ required: false, message: '请选择拜访日期' }],
-                    })(
-                      <DatePicker placeholder="请选择拜访日期" />
-                    )}
+                    })(<DatePicker placeholder="请选择拜访日期" />)}
                   </Form.Item>
                 </Col>
                 <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.connectBusiness}>
                     {getFieldDecorator('connectBusiness', {
                       rules: [{ required: false, message: '请选择关联商机' }],
-                      initialValue:`${rowInfo.withBusiness}`,
-                    })(
-                      <Input readOnly placeholder="请选择关联商机" />
-                    )}
+                      initialValue: `${rowInfo.withBusiness}`,
+                    })(<Input readOnly placeholder="请选择关联商机" />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
-                <Col span={21} pull={3} >
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label={fieldLabels.communication}>
                     {getFieldDecorator('communication')(
-                      <TextArea readOnly placeholder="请输入交流内容" style={{ minHeight: '200%' }} rows={4} />
+                      <TextArea
+                        readOnly
+                        placeholder="请输入交流内容"
+                        style={{ minHeight: '200%' }}
+                        rows={4}
+                      />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={10} push={1}>
-                  <Form.Item {...formItemLayout} label='参与人员'>
-                    {getFieldDecorator('assignor', {
-                    })(
+                  <Form.Item {...formItemLayout} label="参与人员">
+                    {getFieldDecorator('assignor', {})(
                       <div className={styles.divBorder}>
                         <Tree>
                           <TreeNode title="杭州至诚" key="0-0">
-                            <TreeNode title="管理层1" key="0-0-0" >
-                              <TreeNode title="员工1" key="0-0-0-0"  />
+                            <TreeNode title="管理层1" key="0-0-0">
+                              <TreeNode title="员工1" key="0-0-0-0" />
                               <TreeNode title="员工2" key="0-0-0-1" />
                             </TreeNode>
                             <TreeNode title="管理层2" key="0-0-1">
@@ -204,8 +221,8 @@ class VisitListViewModal extends PureComponent {
                             </TreeNode>
                           </TreeNode>
                           <TreeNode title="义务至诚" key="0-1">
-                            <TreeNode title="董事会" key="0-1-0" >
-                              <TreeNode title="主管1" key="0-1-0-0"  />
+                            <TreeNode title="董事会" key="0-1-0">
+                              <TreeNode title="主管1" key="0-1-0-0" />
                               <TreeNode title="主管2" key="0-1-0-1" />
                             </TreeNode>
                             <TreeNode title="财务部" key="0-1-1">
@@ -218,9 +235,8 @@ class VisitListViewModal extends PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={11} push={1}>
-                  <Form.Item >
-                    {getFieldDecorator('personal', {
-                    })(
+                  <Form.Item>
+                    {getFieldDecorator('personal', {})(
                       <div>
                         <Transfer
                           listStyle={{
@@ -236,13 +252,12 @@ class VisitListViewModal extends PureComponent {
                           render={item => item.title}
                         />
                       </div>
-
                     )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
-                <Col span={21} pull={3} >
+                <Col span={21} pull={3}>
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks')(
                       <TextArea readOnly placeholder="请输入备注" rows={4} />
@@ -254,7 +269,6 @@ class VisitListViewModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

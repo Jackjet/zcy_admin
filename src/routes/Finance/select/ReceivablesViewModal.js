@@ -78,7 +78,13 @@ class InvoiceListApplyModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, receivablesViewVisible, handleReceivablesViewVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      receivablesViewVisible,
+      handleReceivablesViewVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -153,9 +159,7 @@ class InvoiceListApplyModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.contractTitle}>
                     {getFieldDecorator('contractTitle', {
                       rules: [{ required: false, message: '请输入合同标题' }],
-                    })(
-                      <Input disabled  placeholder="请输入合同标题" style={{ width: 200 }} />
-                    )}
+                    })(<Input disabled placeholder="请输入合同标题" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -164,30 +168,23 @@ class InvoiceListApplyModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
                     {getFieldDecorator('invoiceMoney', {
                       rules: [{ required: false, message: '请输入开票金额' }],
-                    })(
-                      <Input disabled placeholder="请输入开票金额" style={{ width: 200 }} />
-                    )}
+                    })(<Input disabled placeholder="请输入开票金额" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
-
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.contractor}>
                     {getFieldDecorator('contractor', {
                       rules: [{ required: false, message: '请输入承办人' }],
-                    })(
-                      <Input disabled placeholder="请输入承办人" style={{ width: 200 }} />
-                    )}
+                    })(<Input disabled placeholder="请输入承办人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formhz11} label={fieldLabels.receivablesDate}>
                     {getFieldDecorator('receivablesDate', {
                       rules: [{ required: false, message: '请输入收款日期' }],
-                    })(
-                      <Input disabled placeholder="请输入收款日期" style={{ width: 200 }} />
-                    )}
+                    })(<Input disabled placeholder="请输入收款日期" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -196,7 +193,13 @@ class InvoiceListApplyModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.incomeMoney}>
                     {getFieldDecorator('incomeMoney', {
                       rules: [{ required: false, message: '请输入收入金额' }],
-                    })(<Input disabled placeholder="请输入收入金额" className={styles['ant-input-lg']} />)}
+                    })(
+                      <Input
+                        disabled
+                        placeholder="请输入收入金额"
+                        className={styles['ant-input-lg']}
+                      />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -218,7 +221,14 @@ class InvoiceListApplyModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(<TextArea disabled placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />)}
+                    })(
+                      <TextArea
+                        disabled
+                        placeholder="请输入备注"
+                        style={{ minHeight: 32 }}
+                        rows={4}
+                      />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -226,7 +236,6 @@ class InvoiceListApplyModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

@@ -20,7 +20,6 @@ import { connect } from 'dva';
 import EditableCell from '../../EditableTable/EditableCell';
 import styles from './style.less';
 
-
 const { Option } = Select;
 const optionshz = [
   {
@@ -144,7 +143,13 @@ class CustomerDistributionModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, customerDistributionVisible, handleCustomerDistributionVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      customerDistributionVisible,
+      handleCustomerDistributionVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -354,10 +359,7 @@ class CustomerDistributionModal extends PureComponent {
               <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                 客户分配
               </Button>
-              <Table
-                dataSource={dataSource}
-                columns={columns}
-              />
+              <Table dataSource={dataSource} columns={columns} />
             </div>
           </Card>
         </div>

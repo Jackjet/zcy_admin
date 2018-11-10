@@ -25,12 +25,12 @@ import styles from './ProjectEvaluationBill.less';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-const { Content,  Sider } = Layout;
+const { Content, Sider } = Layout;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
-.join(',');
+    .join(',');
 
 @connect(({ company, loading }) => ({
   company,
@@ -44,16 +44,16 @@ export default class ProjectEvaluationBill extends PureComponent {
     contractTabsVisible: false,
     expandForm: false,
     selectedRows: [],
-    rowInfo:{},
+    rowInfo: {},
     formValues: {},
     openKeys: ['sub1'],
     choiceTypeKey: 0,
-    choiceTypeValue:'',
+    choiceTypeValue: '',
   };
   componentDidMount() {
     this.props.dispatch({
       type: 'company/fetch',
-      payload : {
+      payload: {
         page: 1,
         pageSize: 10,
       },
@@ -177,7 +177,7 @@ export default class ProjectEvaluationBill extends PureComponent {
     });
   };
   handleContractVisible = flag => {
-    if(this.state.choiceTypeKey === 0) {
+    if (this.state.choiceTypeKey === 0) {
       message.config({
         top: 100,
         duration: 2,
@@ -217,21 +217,21 @@ export default class ProjectEvaluationBill extends PureComponent {
   };
   rootSubmenuKeys = ['sub1'];
 
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       contractTabsVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       contractEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  handleGetMenuValue = (MenuValue) => {
+  handleGetMenuValue = MenuValue => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
@@ -256,16 +256,15 @@ export default class ProjectEvaluationBill extends PureComponent {
             </span>
           }
         >
-          <Menu.Item key='0'>全部</Menu.Item>
-          <Menu.Item key='1'>工程造价业务项目</Menu.Item>
-          <Menu.Item key='2'>可研报告</Menu.Item>
-          <Menu.Item key='3'>招标代理业务项目</Menu.Item>
-          <Menu.Item key='4'>司法鉴定</Menu.Item>
+          <Menu.Item key="0">全部</Menu.Item>
+          <Menu.Item key="1">工程造价业务项目</Menu.Item>
+          <Menu.Item key="2">可研报告</Menu.Item>
+          <Menu.Item key="3">招标代理业务项目</Menu.Item>
+          <Menu.Item key="4">司法鉴定</Menu.Item>
         </SubMenu>
       </Menu>
     );
   }
-
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -274,13 +273,11 @@ export default class ProjectEvaluationBill extends PureComponent {
         <Row gutter={24}>
           <Col span={6}>
             <FormItem label="编码">
-              {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入编码" />
-              )}
+              {getFieldDecorator('contractCode')(<Input placeholder="请输入编码" />)}
             </FormItem>
           </Col>
 
-          <Col span={6} >
+          <Col span={6}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 搜索
@@ -305,23 +302,15 @@ export default class ProjectEvaluationBill extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码">
-              {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入" />
-              )}
+              {getFieldDecorator('contractCode')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="名称">
-              {getFieldDecorator('contractName')(
-                <Input placeholder="请输入" />
-              )}
+              {getFieldDecorator('contractName')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-
-
         </Row>
-
-
 
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }}>
@@ -345,16 +334,19 @@ export default class ProjectEvaluationBill extends PureComponent {
 
   render() {
     const { company: { data }, loading } = this.props;
-    const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo, choiceTypeValue } = this.state;
+    const {
+      selectedRows,
+      contractVisible,
+      contractEditVisible,
+      contractTabsVisible,
+      rowInfo,
+      choiceTypeValue,
+    } = this.state;
 
     const menu = (
       <Menu>
-        <Menu.Item>
-          Action 1
-        </Menu.Item>
-        <Menu.Item>
-          Action 2
-        </Menu.Item>
+        <Menu.Item>Action 1</Menu.Item>
+        <Menu.Item>Action 2</Menu.Item>
       </Menu>
     );
 
@@ -363,7 +355,15 @@ export default class ProjectEvaluationBill extends PureComponent {
         const columns = [
           { title: '考评日期', dataIndex: 'date', key: 'date' },
           { title: '考评项目', dataIndex: 'name', key: 'name' },
-          { title: '考评性质', key: 'state', render: () => <span><Badge status="success" />增分、减分</span> },
+          {
+            title: '考评性质',
+            key: 'state',
+            render: () => (
+              <span>
+                <Badge status="success" />增分、减分
+              </span>
+            ),
+          },
           { title: '考评分', dataIndex: 'upgradeNum', key: 'upgradeNum' },
           {
             title: '操作',
@@ -371,14 +371,14 @@ export default class ProjectEvaluationBill extends PureComponent {
             key: 'operation',
             render: () => (
               <span className="table-operation">
-            <a href="javascript:;">Pause</a>
-            <a href="javascript:;">Stop</a>
-            <Dropdown overlay={menu}>
-              <a href="javascript:;">
-                More <Icon type="down" />
-              </a>
-            </Dropdown>
-          </span>
+                <a href="javascript:;">Pause</a>
+                <a href="javascript:;">Stop</a>
+                <Dropdown overlay={menu}>
+                  <a href="javascript:;">
+                    More <Icon type="down" />
+                  </a>
+                </Dropdown>
+              </span>
             ),
           },
         ];
@@ -389,17 +389,10 @@ export default class ProjectEvaluationBill extends PureComponent {
             key: i,
             date: '2018-12-24 23:12:00',
             name: '商机、知识、启动快慢，拖延周期',
-            upgradeNum:  56,
+            upgradeNum: 56,
           });
         }
-        return (
-          <Table
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-            bordered={true}
-          />
-        );
+        return <Table columns={columns} dataSource={data} pagination={false} bordered={true} />;
       };
 
       //主表格
@@ -417,10 +410,10 @@ export default class ProjectEvaluationBill extends PureComponent {
       for (let i = 0; i < 3; ++i) {
         data.push({
           key: i,
-          name: 'xxx项目'+i,
-          platform: '项目名称'+i,
-          version: 10+i,
-          upgradeNum: '张'+i,
+          name: 'xxx项目' + i,
+          platform: '项目名称' + i,
+          version: 10 + i,
+          upgradeNum: '张' + i,
           creator: 'Jack',
           createdAt: '2018-12-24 23:12:00',
         });
@@ -444,7 +437,7 @@ export default class ProjectEvaluationBill extends PureComponent {
             <Sider width={140} style={{ background: '#fff' }}>
               {this.treeMenu()}
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280}}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
 

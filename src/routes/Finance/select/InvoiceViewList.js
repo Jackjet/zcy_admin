@@ -52,7 +52,7 @@ const formItemLayout = {
 };
 
 const fieldLabels = {
-  applicationNumber:'申请单号',
+  applicationNumber: '申请单号',
   clientName: '委托方名称',
   projectUnitName: '项目单位名称',
   businessType: '业务类型',
@@ -98,7 +98,7 @@ const fieldLabels = {
 @Form.create()
 class InvoiceViewList extends PureComponent {
   state = {
-    selectedRows:[],
+    selectedRows: [],
   };
 
   componentDidMount() {
@@ -155,9 +155,7 @@ class InvoiceViewList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="合同标题">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" style={{ width: 200 }} />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入" style={{ width: 200 }} />)}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -175,11 +173,18 @@ class InvoiceViewList extends PureComponent {
     );
   }
 
-
   render() {
-    const { form, dispatch, submitting, invoiceViewVisible, handleInvoiceViewVisible,  rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      invoiceViewVisible,
+      handleInvoiceViewVisible,
+      rule: { data },
+      loading,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows } =this.state;
+    const { selectedRows } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -285,7 +290,6 @@ class InvoiceViewList extends PureComponent {
       },
     ];
     return (
-
       <Modal
         title="查看"
         style={{ top: 150 }}
@@ -308,9 +312,7 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.applicationNumber}>
                         {getFieldDecorator('applicationNumber', {
                           rules: [{ required: true, message: '请委托方名称' }],
-                        })(
-                          <Input disabled placeholder="申请单号" style={{ width: 150 }} />
-                        )}
+                        })(<Input disabled placeholder="申请单号" style={{ width: 150 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -430,7 +432,13 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.acceptanceDate}>
                         {getFieldDecorator('acceptanceDate', {
                           rules: [{ required: false, message: '请选择承接日期' }],
-                        })(<DatePicker disabled placeholder="请选择承接日期" style={{ width: 150 }} />)}
+                        })(
+                          <DatePicker
+                            disabled
+                            placeholder="请选择承接日期"
+                            style={{ width: 150 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
@@ -443,17 +451,32 @@ class InvoiceViewList extends PureComponent {
                   </Row>
                   <Row className={styles['row-h']}>
                     <Col span={12}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.planedProjectImplementationDate}>
+                      <Form.Item
+                        {...formItemLayout}
+                        label={fieldLabels.planedProjectImplementationDate}
+                      >
                         {getFieldDecorator('planedProjectImplementationDate', {
                           rules: [{ required: false, message: '请选择计划项目实施时间' }],
-                        })(<DatePicker disabled placeholder="请选择计划项目实施时间" style={{ width: 200 }} />)}
+                        })(
+                          <DatePicker
+                            disabled
+                            placeholder="请选择计划项目实施时间"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formItemLayout} label={fieldLabels.planedIssueReportingDate}>
                         {getFieldDecorator('planedIssueReportingDate', {
                           rules: [{ required: false, message: '请选择计划出具报告时间' }],
-                        })(<DatePicker disabled placeholder="请选择计划出具报告时间" style={{ width: 200 }} />)}
+                        })(
+                          <DatePicker
+                            disabled
+                            placeholder="请选择计划出具报告时间"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -462,7 +485,13 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.competentPartnerApproval}>
                         {getFieldDecorator('competentPartnerApproval', {
                           rules: [{ required: false, message: '请输入主管合伙人审批' }],
-                        })(<Input disabled placeholder="请输入主管合伙人审批" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入主管合伙人审批"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -471,14 +500,26 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.ImplementSignature}>
                         {getFieldDecorator('ImplementSignature', {
                           rules: [{ required: false, message: '请输入项目实施部门负责人签名' }],
-                        })(<Input disabled placeholder="请输入项目实施部门负责人签名" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入项目实施部门负责人签名"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formItemLayout} label={fieldLabels.pursuitSignature}>
                         {getFieldDecorator('pursuitSignature', {
                           rules: [{ required: false, message: '请输入落实项目负责人签名' }],
-                        })(<Input disabled placeholder="请输入落实项目负责人签名" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入落实项目负责人签名"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -487,18 +528,32 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.projectMembers}>
                         {getFieldDecorator('projectMembers', {
                           rules: [{ required: false, message: '请输入计划项目组成员' }],
-                        })(<Input disabled placeholder="请输入计划项目组成员" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入计划项目组成员"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.technicalSupervisionSignature}>
+                      <Form.Item
+                        {...formItemLayout}
+                        label={fieldLabels.technicalSupervisionSignature}
+                      >
                         {getFieldDecorator('technicalSupervisionSignature', {
                           rules: [{ required: false, message: '请输入负责项目技术督导人签名' }],
-                        })(<Input disabled placeholder="请输入负责项目技术督导人签名" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入负责项目技术督导人签名"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
-
 
                   <Divider orientation="left">项目实施阶段</Divider>
                   <Row className={styles['row-h']}>
@@ -506,21 +561,31 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.projectPersonChange}>
                         {getFieldDecorator('projectPersonChange', {
                           rules: [{ required: false, message: '请输入项目组人员调整' }],
-                        })(<Input disabled placeholder="请输入项目组人员调整" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入项目组人员调整"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.planedDateChange}>
                         {getFieldDecorator('planedDateChange', {
                           rules: [{ required: false, message: '请输入计划时间调整' }],
-                        })(<Input disabled placeholder="请输入计划时间调整" style={{ width: 200 }} />)}
+                        })(
+                          <Input disabled placeholder="请输入计划时间调整" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.planChangeReason}>
                         {getFieldDecorator('planChangeReason', {
                           rules: [{ required: false, message: '请输入计划调整理由' }],
-                        })(<Input disabled placeholder="请输入计划调整理由" style={{ width: 200 }} />)}
+                        })(
+                          <Input disabled placeholder="请输入计划调整理由" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -529,16 +594,31 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.ImplementOpinion}>
                         {getFieldDecorator('ImplementOpinion', {
                           rules: [{ required: false, message: '请输入项目实施部门负责人意见' }],
-                        })(<Input disabled placeholder="请输入项目实施部门负责人意见" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入项目实施部门负责人意见"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
                   <Row className={styles['row-h']}>
                     <Col span={12}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.technicalSupervisionOpinion}>
+                      <Form.Item
+                        {...formItemLayout}
+                        label={fieldLabels.technicalSupervisionOpinion}
+                      >
                         {getFieldDecorator('technicalSupervisionOpinion', {
                           rules: [{ required: false, message: '请输入负责项目技术督导人意见' }],
-                        })(<Input disabled placeholder="请输入负责项目技术督导人意见" style={{ width: 200 }} />)}
+                        })(
+                          <Input
+                            disabled
+                            placeholder="请输入负责项目技术督导人意见"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -548,14 +628,22 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.projectResponsiblePerson}>
                         {getFieldDecorator('projectResponsiblePerson', {
                           rules: [{ required: false, message: '请输入项目负责人' }],
-                        })(<Input disabled placeholder="请输入项目负责人" style={{ width: 200 }} />)}
+                        })(
+                          <Input disabled placeholder="请输入项目负责人" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formItemLayout} label={fieldLabels.actualSubmissionDate}>
                         {getFieldDecorator('actualSubmissionDate', {
                           rules: [{ required: false, message: '请选择实际提交报告日期' }],
-                        })(<DatePicker disabled placeholder="请选择实际提交报告日期" style={{ width: 200 }} />)}
+                        })(
+                          <DatePicker
+                            disabled
+                            placeholder="请选择实际提交报告日期"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -564,14 +652,22 @@ class InvoiceViewList extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.comprehensiveUnitSignature}>
                         {getFieldDecorator('comprehensiveUnitSignature', {
                           rules: [{ required: false, message: '请选择综合部签收人' }],
-                        })(<Input disabled placeholder="请选择综合部签收人" style={{ width: 200 }} />)}
+                        })(
+                          <Input disabled placeholder="请选择综合部签收人" style={{ width: 200 }} />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formItemLayout} label={fieldLabels.signDate}>
                         {getFieldDecorator('signDate', {
                           rules: [{ required: false, message: '请选择签收日期' }],
-                        })(<DatePicker disabled placeholder="请选择签收日期" style={{ width: 200 }} />)}
+                        })(
+                          <DatePicker
+                            disabled
+                            placeholder="请选择签收日期"
+                            style={{ width: 200 }}
+                          />
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -588,7 +684,11 @@ class InvoiceViewList extends PureComponent {
                         {getFieldDecorator('CPA_Signature', {
                           rules: [{ required: false, message: '请输入签字注册会计师' }],
                         })(
-                          <Input disabled placeholder="请输入签字注册会计师" style={{ width: 200 }} />
+                          <Input
+                            disabled
+                            placeholder="请输入签字注册会计师"
+                            style={{ width: 200 }}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -597,8 +697,8 @@ class InvoiceViewList extends PureComponent {
               </div>
             </TabPane>
             <TabPane tab="合同开票信息" key="2">
-              <Collapse defaultActiveKey={['1','2']}>
-                <Panel header="开票信息" key="1" >
+              <Collapse defaultActiveKey={['1', '2']}>
+                <Panel header="开票信息" key="1">
                   <Card>
                     <Form layout="inline">
                       <Row className={styles['fn-mb-15']}>
@@ -674,7 +774,11 @@ class InvoiceViewList extends PureComponent {
                             {getFieldDecorator('taxNumber', {
                               rules: [{ required: true, message: '请输入税号' }],
                             })(
-                              <Input disabled placeholder="请输入税号" className={styles['ant-input-lg']} />
+                              <Input
+                                disabled
+                                placeholder="请输入税号"
+                                className={styles['ant-input-lg']}
+                              />
                             )}
                           </Form.Item>
                         </Col>

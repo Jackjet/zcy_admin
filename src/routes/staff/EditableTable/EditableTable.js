@@ -3,23 +3,23 @@ import { Table, Button, Popconfirm } from 'antd';
 import EditableCell from './EditableCell';
 
 class EditableTable extends PureComponent {
-    state = {
-      dataSource: [
-        {
-          key: '0',
-          name: '汪工',
-          phone: '123456',
-          remarks: 'aaa',
-        },
-        {
-          key: '1',
-          name: '申工',
-          phone: '456789',
-          remarks: 'bbb',
-        },
-      ],
-      count: 2,
-    };
+  state = {
+    dataSource: [
+      {
+        key: '0',
+        name: '汪工',
+        phone: '123456',
+        remarks: 'aaa',
+      },
+      {
+        key: '1',
+        name: '申工',
+        phone: '456789',
+        remarks: 'bbb',
+      },
+    ],
+    count: 2,
+  };
   onCellChange = (key, dataIndex) => {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -89,10 +89,7 @@ class EditableTable extends PureComponent {
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           设置业务员
         </Button>
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-        />
+        <Table dataSource={dataSource} columns={columns} />
       </div>
     );
   }

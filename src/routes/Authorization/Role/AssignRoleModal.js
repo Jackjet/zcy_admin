@@ -1,17 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  DatePicker,
-  Input,
-  Select,
-  Popover,
-  Modal,
-  Table,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Modal, Table } from 'antd';
 import { connect } from 'dva';
 
 import styles from './Style.less';
@@ -107,49 +95,59 @@ class AssignRoleModal extends PureComponent {
         </span>
       );
     };
-    const dataSourceTest = [{
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    }, {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    }];
+    const dataSourceTest = [
+      {
+        key: '1',
+        name: '胡彦斌',
+        age: 32,
+        address: '西湖区湖底公园1号',
+      },
+      {
+        key: '2',
+        name: '胡彦祖',
+        age: 42,
+        address: '西湖区湖底公园1号',
+      },
+    ];
 
-    const columnsTest = [{
-      title: '分配组织编码',
-      dataIndex: 'name',
-      key: 'name',
-      width: 120,
-    }, {
-      title: '分配组织名称',
-      dataIndex: 'age',
-      key: 'age',
-      width: 120,
-    }, {
-      title: '用户名',
-      dataIndex: 'address',
-      key: 'address',
-      width: 120,
-    }, {
-      title: '类型',
-      dataIndex: 'address',
-      key: 'address',
-      width: 120,
-    }, {
-      title: '用户实名',
-      dataIndex: 'address',
-      key: 'address',
-      width: 120,
-    }, {
-      title: '所属单位',
-      dataIndex: 'address',
-      key: 'address',
-      width: 120,
-    }];
+    const columnsTest = [
+      {
+        title: '分配组织编码',
+        dataIndex: 'name',
+        key: 'name',
+        width: 120,
+      },
+      {
+        title: '分配组织名称',
+        dataIndex: 'age',
+        key: 'age',
+        width: 120,
+      },
+      {
+        title: '用户名',
+        dataIndex: 'address',
+        key: 'address',
+        width: 120,
+      },
+      {
+        title: '类型',
+        dataIndex: 'address',
+        key: 'address',
+        width: 120,
+      },
+      {
+        title: '用户实名',
+        dataIndex: 'address',
+        key: 'address',
+        width: 120,
+      },
+      {
+        title: '所属单位',
+        dataIndex: 'address',
+        key: 'address',
+        width: 120,
+      },
+    ];
     return (
       <Modal
         title="分配用户"
@@ -159,46 +157,32 @@ class AssignRoleModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
-              <Col span={12} >
+              <Col span={12}>
                 <Form.Item {...formItemLayout} label="角色">
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '自动生成' }],
-                  })(
-                    <Search
-                      placeholder="角色"
-                      onSearch=""
-                    />
-                  )}
+                  })(<Search placeholder="角色" onSearch="" />)}
                 </Form.Item>
               </Col>
-              <Col span={12} >
+              <Col span={12}>
                 <Form.Item {...formItemLayout} label="组织">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入名称' }],
-                  })(
-                    <Search
-                      placeholder="组织"
-                    />
-                  )}
+                  })(<Search placeholder="组织" />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['fn-mb-15']}>
-              <Col span={23} push={4} >
-                <Form.Item {...formItemLayout} >
+              <Col span={23} push={4}>
+                <Form.Item {...formItemLayout}>
                   {getFieldDecorator('describe', {
                     rules: [{ required: true, message: '请输入描述' }],
-                  })(
-                    <Table
-                      dataSource={dataSourceTest}
-                      columns={columnsTest}
-                    />
-                  )}
+                  })(<Table dataSource={dataSourceTest} columns={columnsTest} />)}
                 </Form.Item>
               </Col>
             </Row>

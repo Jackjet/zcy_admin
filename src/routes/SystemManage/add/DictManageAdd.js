@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Modal } from 'antd';
 import { connect } from 'dva';
 import styles from './DictTypeAdd.less';
-import {message} from "antd/lib/index";
+import { message } from 'antd/lib/index';
 
 const { TextArea } = Input;
 const fieldLabels = {
@@ -111,7 +111,7 @@ class DictTypeAdd extends PureComponent {
           title="数据字典基本信息新增"
           style={{ top: 20 }}
           visible={modalVisible}
-          width='35%'
+          width="35%"
           maskClosable={false}
           onOk={validate}
           onCancel={cancelDate}

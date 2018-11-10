@@ -64,12 +64,14 @@ class PersonEditModal extends PureComponent {
     width: '90%',
     previewVisible: false,
     previewImage: '',
-    fileList: [{
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }],
+    fileList: [
+      {
+        uid: '-1',
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+    ],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -78,10 +80,9 @@ class PersonEditModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-
   handleCancel = () => this.setState({ previewVisible: false });
 
-  handlePreview = (file) => {
+  handlePreview = file => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
@@ -99,7 +100,14 @@ class PersonEditModal extends PureComponent {
   };
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
-    const { form, dispatch, submitting , PersonEditVisible, handlePersonEditVisible, rowInfo} = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      PersonEditVisible,
+      handlePersonEditVisible,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -134,7 +142,7 @@ class PersonEditModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -170,7 +178,7 @@ class PersonEditModal extends PureComponent {
                         {getFieldDecorator('sex', {
                           rules: [{ required: true, message: '请选择性别' }],
                         })(
-                          <Select placeholder="请选择性别" >
+                          <Select placeholder="请选择性别">
                             <Option value="1">男</Option>
                             <Option value="2">女</Option>
                           </Select>
@@ -180,7 +188,7 @@ class PersonEditModal extends PureComponent {
                   </Row>
                 </div>
                 <div className={styles.pictureRight}>
-                  <Form.Item {...formItemLayout} >
+                  <Form.Item {...formItemLayout}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择姓名' }],
                     })(
@@ -249,7 +257,7 @@ class PersonEditModal extends PureComponent {
                     {getFieldDecorator('rank', {
                       rules: [{ required: true, message: '请选择职级' }],
                     })(
-                      <Select placeholder="请选择职级" >
+                      <Select placeholder="请选择职级">
                         <Option value="1">合伙人1</Option>
                         <Option value="2">合伙人2</Option>
                         <Option value="3">合伙人3</Option>
@@ -262,7 +270,7 @@ class PersonEditModal extends PureComponent {
                     {getFieldDecorator('workingCondition', {
                       rules: [{ required: true, message: '请选择工作状态' }],
                     })(
-                      <Select placeholder="请选择工作状态" >
+                      <Select placeholder="请选择工作状态">
                         <Option value="1">在职</Option>
                         <Option value="2">外派</Option>
                         <Option value="3">请假</Option>
@@ -284,7 +292,7 @@ class PersonEditModal extends PureComponent {
                     {getFieldDecorator('station', {
                       rules: [{ required: true, message: '请选择所属岗位' }],
                     })(
-                      <Select placeholder="请选择所属岗位" >
+                      <Select placeholder="请选择所属岗位">
                         <Option value="g">总经理</Option>
                         <Option value="y">开发部</Option>
                         <Option value="s">审计部</Option>
@@ -299,7 +307,6 @@ class PersonEditModal extends PureComponent {
                     })(<DatePicker placeholder="请输入入职时间" />)}
                   </Form.Item>
                 </Col>
-
               </Row>
               <Row>
                 <Col span={8}>
@@ -367,7 +374,7 @@ class PersonEditModal extends PureComponent {
                     {getFieldDecorator('partner', {
                       rules: [{ required: true, message: '合伙人' }],
                     })(
-                      <Select placeholder="合伙人"  >
+                      <Select placeholder="合伙人">
                         <Option value={1}>是</Option>
                         <Option value={2}>否</Option>
                       </Select>
@@ -395,7 +402,7 @@ class PersonEditModal extends PureComponent {
                     {getFieldDecorator('partnerType', {
                       rules: [{ required: true, message: '合伙人类别' }],
                     })(
-                      <Select placeholder="合伙人类别"  >
+                      <Select placeholder="合伙人类别">
                         <Option value={1}>执行合伙人</Option>
                         <Option value={2}>管理合伙人</Option>
                         <Option value={3}>技术合伙人</Option>
@@ -415,15 +422,13 @@ class PersonEditModal extends PureComponent {
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.address}>
-                    {getFieldDecorator('address')(
-                      <Input placeholder="请输入地址" />
-                    )}
+                    {getFieldDecorator('address')(<Input placeholder="请输入地址" />)}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label="缺醒组织">
                     {getFieldDecorator('address1')(
-                      <Select placeholder="缺醒组织" >
+                      <Select placeholder="缺醒组织">
                         <Option value="1">组织1</Option>
                         <Option value="2">组织2</Option>
                       </Select>

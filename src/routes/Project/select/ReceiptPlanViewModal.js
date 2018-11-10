@@ -1,5 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Checkbox, Modal } from 'antd';
+import {
+  Card,
+  Form,
+  Icon,
+  Col,
+  Row,
+  DatePicker,
+  Input,
+  Select,
+  Popover,
+  Checkbox,
+  Modal,
+} from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
@@ -53,7 +65,14 @@ class ReceiptPlanViewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, receiptPlanViewVisible, handleReceiptPlanViewVisible, rowInfoCurrent } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      receiptPlanViewVisible,
+      handleReceiptPlanViewVisible,
+      rowInfoCurrent,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -123,8 +142,10 @@ class ReceiptPlanViewModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.receivablesName}>
                     {getFieldDecorator('receivablesName', {
                       rules: [{ required: true, message: '请输入收款阶段名称' }],
-                      initialValue:`${rowInfoCurrent.no}`,
-                    })(<Input placeholder="请输入收款阶段名称" className={styles['ant-input-lg']} />)}
+                      initialValue: `${rowInfoCurrent.no}`,
+                    })(
+                      <Input placeholder="请输入收款阶段名称" className={styles['ant-input-lg']} />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>

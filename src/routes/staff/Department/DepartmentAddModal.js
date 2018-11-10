@@ -18,7 +18,7 @@ import { connect } from 'dva';
 import PartnerType from './PartnerType';
 import EditableCell from '../EditableTable/EditableCell';
 import styles from './Style.less';
-import {message} from "antd/lib/index";
+import { message } from 'antd/lib/index';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -52,7 +52,7 @@ class DepartmentAddModal extends PureComponent {
       },
     ],
     partnerTypeVisible: false,
-    partnerTypeValue: "杭州至诚云",
+    partnerTypeValue: '杭州至诚云',
     width: '100%',
     count: 2,
   };
@@ -97,7 +97,7 @@ class DepartmentAddModal extends PureComponent {
     });
   };
 
-  handlePartnerTypeValue = (unit) => {
+  handlePartnerTypeValue = unit => {
     this.setState({
       partnerTypeValue: unit,
     });
@@ -121,15 +121,14 @@ class DepartmentAddModal extends PureComponent {
           dispatch({
             type: 'dept/add',
             payload: values,
-            callback: (res) => {
-              if(res.meta.status === '000000' ) {
+            callback: res => {
+              if (res.meta.status === '000000') {
                 handleDepartmentAddVisible(false);
               } else {
                 message.error(res.meta.errmsg);
               }
             },
           });
-
         }
       });
     };
@@ -139,7 +138,7 @@ class DepartmentAddModal extends PureComponent {
     const { dataSource } = this.state;
     const columns = [
       {
-        key:"1",
+        key: '1',
         title: '合伙人',
         dataIndex: 'name',
         render: (text, record) => (
@@ -147,17 +146,15 @@ class DepartmentAddModal extends PureComponent {
         ),
       },
       {
-        key:"2",
+        key: '2',
         title: '合伙人类型',
         dataIndex: 'type',
         render: (text, record) => (
-
           <Search
-            defaultValue='11111'
+            defaultValue="11111"
             placeholder="合伙人类型"
             onSearch={this.handlePartnerTypeVisible}
           />
-
         ),
       },
       {
@@ -186,7 +183,7 @@ class DepartmentAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
@@ -195,13 +192,8 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="部门名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],
-                    initialValue:`${partnerTypeValue}`,
-                  })(
-                    <Search
-                      placeholder="合伙人类型"
-                      onSearch={this.handlePartnerTypeVisible}
-                    />
-                  )}
+                    initialValue: `${partnerTypeValue}`,
+                  })(<Search placeholder="合伙人类型" onSearch={this.handlePartnerTypeVisible} />)}
                 </Form.Item>
               </Col>
 
@@ -209,9 +201,9 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="上级部门">
                   {getFieldDecorator('parentId', {
                     rules: [{ required: true, message: '请选择上级组织' }],
-                    initialValue:`至诚`,
+                    initialValue: `至诚`,
                   })(
-                    <Select placeholder="请选择上级组织" >
+                    <Select placeholder="请选择上级组织">
                       <Option value={1}>义务至诚</Option>
                       <Option value={0}>杭州至诚</Option>
                     </Select>
@@ -224,16 +216,14 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="部门编码">
                   {getFieldDecorator('number', {
                     rules: [{ required: true, message: '请输入组织编码' }],
-                  })(
-                    <Input placeholder="请输入组织编码" />
-                  )}
+                  })(<Input placeholder="请输入组织编码" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="是否分公司">
                   {getFieldDecorator('iscompany', {
                     rules: [{ required: true, message: '是否分公司' }],
-                    initialValue:`否`,
+                    initialValue: `否`,
                   })(
                     <Select>
                       <Option value="0">否</Option>
@@ -248,9 +238,7 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="简称">
                   {getFieldDecorator('simpleName', {
                     rules: [{ required: false, message: '请输入简称' }],
-                  })(
-                    <Input placeholder="请输入简称" />
-                  )}
+                  })(<Input placeholder="请输入简称" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -267,7 +255,7 @@ class DepartmentAddModal extends PureComponent {
                   {getFieldDecorator('principal', {
                     rules: [{ required: false, message: '请选择部门负责人' }],
                   })(
-                    <Select placeholder="请选择部门负责人" >
+                    <Select placeholder="请选择部门负责人">
                       <Option value="0">请选择</Option>
                       <Option value="1">员工A</Option>
                       <Option value="2">员工B</Option>
@@ -279,9 +267,7 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="联系人">
                   {getFieldDecorator('linkMan', {
                     rules: [{ required: false, message: '请输入联系人' }],
-                  })(
-                    <Input placeholder="请输入联系人" />
-                  )}
+                  })(<Input placeholder="请输入联系人" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -290,18 +276,14 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="移动电话">
                   {getFieldDecorator('mobilePhone', {
                     rules: [{ required: false, message: '请输入移动电话' }],
-                  })(
-                    <Input placeholder="请输入移动电话" />
-                  )}
+                  })(<Input placeholder="请输入移动电话" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="电话">
                   {getFieldDecorator('phone', {
                     rules: [{ required: false, message: '请输入电话' }],
-                  })(
-                    <Input placeholder="请输入电话" />
-                  )}
+                  })(<Input placeholder="请输入电话" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -310,18 +292,14 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="电子邮箱">
                   {getFieldDecorator('email', {
                     rules: [{ required: false, message: '请输入电子邮箱' }],
-                  })(
-                    <Input placeholder="请输入电子邮箱" />
-                  )}
+                  })(<Input placeholder="请输入电子邮箱" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="邮政编码">
                   {getFieldDecorator('postalCode', {
                     rules: [{ required: false, message: '请输入邮政编码' }],
-                  })(
-                    <Input placeholder="请输入邮政编码" />
-                  )}
+                  })(<Input placeholder="请输入邮政编码" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -330,18 +308,14 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="传真">
                   {getFieldDecorator('fax', {
                     rules: [{ required: false, message: '请输入传真' }],
-                  })(
-                    <Input placeholder="请输入传真" />
-                  )}
+                  })(<Input placeholder="请输入传真" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="海关编码">
                   {getFieldDecorator('customsCode', {
                     rules: [{ required: false, message: '请输入海关编码' }],
-                  })(
-                    <Input placeholder="请输入海关编码" />
-                  )}
+                  })(<Input placeholder="请输入海关编码" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -350,18 +324,14 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="EDI编码">
                   {getFieldDecorator('ediCode', {
                     rules: [{ required: false, message: '请输入EDI编码' }],
-                  })(
-                    <Input placeholder="请输入EDI编码" />
-                  )}
+                  })(<Input placeholder="请输入EDI编码" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="税务编码">
                   {getFieldDecorator('taxCode', {
                     rules: [{ required: false, message: '请输入税务编码' }],
-                  })(
-                    <Input placeholder="请输入税务编码" />
-                  )}
+                  })(<Input placeholder="请输入税务编码" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -370,27 +340,21 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="详细地址">
                   {getFieldDecorator('address', {
                     rules: [{ required: false, message: '请输入详细地址' }],
-                  })(
-                    <TextArea placeholder="请输入详细地址" />
-                  )}
+                  })(<TextArea placeholder="请输入详细地址" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="网站首页">
                   {getFieldDecorator('url', {
                     rules: [{ required: false, message: '请输入网站首页' }],
-                  })(
-                    <Input placeholder="请输入网站首页" />
-                  )}
+                  })(<Input placeholder="请输入网站首页" />)}
                 </Form.Item>
               </Col>
             </Row>
             <Row className={styles['fn-mb-15']}>
               <Col span={21} pull={3}>
                 <Form.Item {...formItemLayout} label="备注">
-                  {getFieldDecorator('remark')(
-                    <TextArea placeholder="请输入备注信息" rows={2} />
-                  )}
+                  {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={2} />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -404,10 +368,7 @@ class DepartmentAddModal extends PureComponent {
                         选择合伙人
                       </Button>
                       {/*// 表格默认无数据，点击添加合伙人按钮 弹出 合伙人Modal，选择后添加到Table表格*/}
-                      <Table
-                        dataSource={dataSource}
-                        columns={columns}
-                      />
+                      <Table dataSource={dataSource} columns={columns} />
                     </div>
                   </Card>
                 </div>

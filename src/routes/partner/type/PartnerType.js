@@ -231,9 +231,7 @@ export default class PartnerTypeTableList extends PureComponent {
             <Divider type="vertical" />
             <a>编辑</a>
             <Divider type="vertical" />
-            <a onClick={this.showDeleteConfirm} >
-              删除
-            </a>
+            <a onClick={this.showDeleteConfirm}>删除</a>
           </Fragment>
         ),
       },

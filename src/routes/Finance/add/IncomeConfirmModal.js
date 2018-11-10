@@ -19,7 +19,6 @@ import StandardTable from 'components/StandardTable';
 import DetailedModal from './DetailedModal';
 import styles from './style.less';
 
-
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -36,8 +35,8 @@ const formhz11 = {
 
 const fieldLabels = {
   invoiceName: '开票名称',
-  invoiceDate:'开票时间',
-  invoiceNumber:'发票号码',
+  invoiceDate: '开票时间',
+  invoiceNumber: '发票号码',
   invoiceMoney: '发票金额（元）',
   invoiceType: '开票类型',
   invoiceCompany: '开票公司',
@@ -57,7 +56,6 @@ class IncomeConfirmModal extends PureComponent {
     selectedRows: [],
     detailedVisible: false,
   };
-
 
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -117,7 +115,15 @@ class IncomeConfirmModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, incomeConfirmVisible, handleIncomeConfirmVisible,  rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      incomeConfirmVisible,
+      handleIncomeConfirmVisible,
+      rule: { data },
+      loading,
+    } = this.props;
     const { selectedRows, detailedVisible } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
@@ -205,7 +211,7 @@ class IncomeConfirmModal extends PureComponent {
         title: '收入信息',
         render: () => (
           <Fragment>
-            <a onClick={this.handleDetailedVisible} >收款明细</a>
+            <a onClick={this.handleDetailedVisible}>收款明细</a>
           </Fragment>
         ),
       },
@@ -223,8 +229,8 @@ class IncomeConfirmModal extends PureComponent {
         onCancel={() => handleIncomeConfirmVisible()}
       >
         <div>
-          <Collapse defaultActiveKey={['1','2']}>
-            <Panel header="开票信息" key="1" >
+          <Collapse defaultActiveKey={['1', '2']}>
+            <Panel header="开票信息" key="1">
               <Card>
                 <Form layout="inline">
                   <Row className={styles['fn-mb-15']}>
@@ -232,9 +238,7 @@ class IncomeConfirmModal extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceName}>
                         {getFieldDecorator('invoiceName', {
                           rules: [{ required: false, message: '请选择开票名称' }],
-                        })(
-                          <Input disabled placeholder="请选择开票名称" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请选择开票名称" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -244,7 +248,11 @@ class IncomeConfirmModal extends PureComponent {
                         {getFieldDecorator('invoiceDate', {
                           rules: [{ required: false, message: '请输入开票时间' }],
                         })(
-                          <DatePicker disabled  placeholder="请输入开票时间" style={{ width: 200 }} />
+                          <DatePicker
+                            disabled
+                            placeholder="请输入开票时间"
+                            style={{ width: 200 }}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -252,9 +260,7 @@ class IncomeConfirmModal extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceNumber}>
                         {getFieldDecorator('invoiceNumber', {
                           rules: [{ required: false, message: '请输入发票号码' }],
-                        })(
-                          <Input disabled placeholder="请输入发票号码" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请输入发票号码" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -263,18 +269,14 @@ class IncomeConfirmModal extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
                         {getFieldDecorator('invoiceMoney', {
                           rules: [{ required: false, message: '请输入发票金额' }],
-                        })(
-                          <Input disabled placeholder="请输入发票金额" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请输入发票金额" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.invoiceType}>
                         {getFieldDecorator('invoiceType', {
                           rules: [{ required: false, message: '请输入开票类型' }],
-                        })(
-                          <Input disabled placeholder="请输入开票类型" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请输入开票类型" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -284,7 +286,12 @@ class IncomeConfirmModal extends PureComponent {
                         {getFieldDecorator('invoiceCompany', {
                           rules: [{ required: true, message: '请输入开票公司' }],
                         })(
-                          <Input disabled placeholder="请输入开票公司" style={{ width: 200 }} className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入开票公司"
+                            style={{ width: 200 }}
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -293,7 +300,12 @@ class IncomeConfirmModal extends PureComponent {
                         {getFieldDecorator('invoicePersonnel', {
                           rules: [{ required: true, message: '请输入开票人员' }],
                         })(
-                          <Input disabled placeholder="请输入开票人员" style={{ width: 200 }} className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入开票人员"
+                            style={{ width: 200 }}
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -304,7 +316,12 @@ class IncomeConfirmModal extends PureComponent {
                         {getFieldDecorator('incomeMoneyAlready', {
                           rules: [{ required: true, message: '请输入已收入金额' }],
                         })(
-                          <Input disabled placeholder="请输入已收入金额" style={{ width: 200 }} className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入已收入金额"
+                            style={{ width: 200 }}
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -313,7 +330,12 @@ class IncomeConfirmModal extends PureComponent {
                         {getFieldDecorator('status', {
                           rules: [{ required: true, message: '请输入收款状态' }],
                         })(
-                          <Input disabled placeholder="请输入收款状态" style={{ width: 200 }} className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入收款状态"
+                            style={{ width: 200 }}
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -321,7 +343,7 @@ class IncomeConfirmModal extends PureComponent {
                 </Form>
               </Card>
             </Panel>
-            <Panel header="合同信息" key="2" >
+            <Panel header="合同信息" key="2">
               <div className={styles.tableList}>
                 <StandardTable
                   selectedRows={selectedRows}

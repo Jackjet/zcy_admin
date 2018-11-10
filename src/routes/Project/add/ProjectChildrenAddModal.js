@@ -58,12 +58,10 @@ const optionshz = [
   },
 ];
 
-
 const ProjectTypeOption = ['工程造价业务项目', '咨询报告', '招标'];
 
-
 const fieldLabels = {
-  fatherProject:'上级项目',
+  fatherProject: '上级项目',
   number: '项目编码',
   type: '项目类别',
   years: '年度',
@@ -85,11 +83,8 @@ const fieldLabels = {
   status: '状态',
   jfw: '交付物',
   demand: '客户需求',
-  attachment:'附件',
+  attachment: '附件',
 };
-
-
-
 
 const fileList = [
   {
@@ -115,7 +110,6 @@ const props2 = {
   className: styles['upload-list-inline'],
 };
 
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -130,8 +124,8 @@ const formItemLayout = {
 class ProjectChildrenAddModal extends PureComponent {
   state = {
     width: '100%',
-    projectOptionData:[],
-    choiceCheckBox:``,
+    projectOptionData: [],
+    choiceCheckBox: ``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -141,17 +135,17 @@ class ProjectChildrenAddModal extends PureComponent {
   }
   handleProjectChange = () => {
     const optionData = ProjectTypeOption.map((data, index) => {
-        const value = `${data}`;
-        return <Option value={value}>{value}</Option>;
-      });
+      const value = `${data}`;
+      return <Option value={value}>{value}</Option>;
+    });
     this.setState({
       projectOptionData: optionData,
     });
   };
 
-  handleGetOptionValue=(value)=>{
+  handleGetOptionValue = value => {
     this.setState({
-      choiceCheckBox:`${value}`,
+      choiceCheckBox: `${value}`,
     });
   };
 
@@ -163,7 +157,13 @@ class ProjectChildrenAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectChildrenAddVisible, handleProjectChildrenAddVisible  } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      projectChildrenAddVisible,
+      handleProjectChildrenAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { projectOptionData, choiceCheckBox } = this.state;
     const validate = () => {
@@ -228,14 +228,14 @@ class ProjectChildrenAddModal extends PureComponent {
     });
     return (
       <Modal
-        style={{top:20}}
+        style={{ top: 20 }}
         title="项目基本信息新增"
         visible={projectChildrenAddVisible}
-        width='85%'
+        width="85%"
         maskClosable={false}
         onOk={validate}
         onCancel={onCan}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -245,7 +245,7 @@ class ProjectChildrenAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.fatherProject}>
                     {getFieldDecorator('fatherProject', {
                       rules: [{ required: true, message: '请输入项目名称' }],
-                    })(<Input placeholder="自动带出" style={{width:'140%'}} />)}
+                    })(<Input placeholder="自动带出" style={{ width: '140%' }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -254,7 +254,7 @@ class ProjectChildrenAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
-                    })(<Input placeholder="请输入项目名称" style={{width:'140%'}} />)}
+                    })(<Input placeholder="请输入项目名称" style={{ width: '140%' }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -264,7 +264,12 @@ class ProjectChildrenAddModal extends PureComponent {
                     {getFieldDecorator('type', {
                       rules: [{ required: true, message: '请选择项目类别' }],
                     })(
-                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleProjectChange} placeholder="请选择项目类别" style={{ width: 200 }}>
+                      <Select
+                        onChange={this.handleGetOptionValue}
+                        onMouseEnter={this.handleProjectChange}
+                        placeholder="请选择项目类别"
+                        style={{ width: 200 }}
+                      >
                         {projectOptionData}
                       </Select>
                     )}
@@ -415,7 +420,8 @@ class ProjectChildrenAddModal extends PureComponent {
                     {getFieldDecorator('biztype')(
                       <Checkbox.Group style={{ width: '100%' }}>
                         <Row>
-                          { ( choiceCheckBox === `工程造价业务项目`|| choiceCheckBox===`咨询报告` ) && (
+                          {(choiceCheckBox === `工程造价业务项目` ||
+                            choiceCheckBox === `咨询报告`) && (
                             <span>
                               <Col span={8}>
                                 <Checkbox value="A">预算编制</Checkbox>
@@ -438,7 +444,7 @@ class ProjectChildrenAddModal extends PureComponent {
                             </span>
                           )}
 
-                          { ( choiceCheckBox === `招标`|| choiceCheckBox===`咨询报告` ) && (
+                          {(choiceCheckBox === `招标` || choiceCheckBox === `咨询报告`) && (
                             <span>
                               <Col span={8}>
                                 <Checkbox value="G">政府采购招标代理</Checkbox>
@@ -476,7 +482,6 @@ class ProjectChildrenAddModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

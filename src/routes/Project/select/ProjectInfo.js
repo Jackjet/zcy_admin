@@ -180,7 +180,14 @@ class ProjectCheck extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectViewVisible, handleProjectViewVisible, rowInfoCurrent  } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      projectViewVisible,
+      handleProjectViewVisible,
+      rowInfoCurrent,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -234,7 +241,6 @@ class ProjectCheck extends PureComponent {
       );
     };
     return (
-
       <Modal
         title="项目基本信息"
         style={{ top: 20 }}
@@ -252,7 +258,7 @@ class ProjectCheck extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
-                      initialValue:`${rowInfoCurrent.name}`,
+                      initialValue: `${rowInfoCurrent.name}`,
                     })(<Input placeholder="请输入项目名称" className={styles['ant-input-lg']} />)}
                   </Form.Item>
                 </Col>
@@ -452,7 +458,9 @@ class ProjectCheck extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formhz12} label={fieldLabels.content}>
-                    {getFieldDecorator('content')(<TextArea placeholder="请输入项目内容" rows={4} />)}
+                    {getFieldDecorator('content')(
+                      <TextArea placeholder="请输入项目内容" rows={4} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -467,7 +475,9 @@ class ProjectCheck extends PureComponent {
                 </Col>
                 <Col span={12}>
                   <Form.Item {...demandcol} label={fieldLabels.demand}>
-                    {getFieldDecorator('demand')(<TextArea placeholder="请输入客户需求" rows={4} />)}
+                    {getFieldDecorator('demand')(
+                      <TextArea placeholder="请输入客户需求" rows={4} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -475,7 +485,9 @@ class ProjectCheck extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...remarkcol} label={fieldLabels.remark}>
-                    {getFieldDecorator('remark')(<TextArea placeholder="请输入备注信息" rows={4} />)}
+                    {getFieldDecorator('remark')(
+                      <TextArea placeholder="请输入备注信息" rows={4} />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -483,7 +495,6 @@ class ProjectCheck extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

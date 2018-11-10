@@ -1,16 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Card,
-  Form,
-  Icon,
-  Col,
-  Row,
-  Input,
-  Popover,
-  Modal,
-  Select,
-  InputNumber,
-} from 'antd';
+import { Card, Form, Icon, Col, Row, Input, Popover, Modal, Select, InputNumber } from 'antd';
 import { connect } from 'dva';
 import SubordinateUnitModal from './SubordinateUnitModal';
 import styles from '../add/style.less';
@@ -18,7 +7,7 @@ import styles from '../add/style.less';
 const { Search } = Input;
 const { Option } = Select;
 const { TextArea } = Input;
-const CommissionSettingOption = ['类别A','类别B','类别C'];
+const CommissionSettingOption = ['类别A', '类别B', '类别C'];
 
 const fieldLabels = {
   commissionType: '提成比例类别',
@@ -49,13 +38,11 @@ const getValue = obj =>
 }))
 @Form.create()
 class CommissionSettingAddModal extends PureComponent {
-
-
   state = {
     width: '100%',
     subordinateUnitVisible: false,
-    getUnitValue: ["杭州至诚云"],
-    commissionSettingOptionData:[],
+    getUnitValue: ['杭州至诚云'],
+    commissionSettingOptionData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -67,7 +54,7 @@ class CommissionSettingAddModal extends PureComponent {
 
   handleCommissionSettingChange = () => {
     this.setState({
-      commissionSettingOptionData: CommissionSettingOption.map((data) => {
+      commissionSettingOptionData: CommissionSettingOption.map(data => {
         const value = `${data}`;
         return <Option value={value}>{value}</Option>;
       }),
@@ -107,7 +94,7 @@ class CommissionSettingAddModal extends PureComponent {
     });
   };
 
-  handleChangeUnitValue = (unit) => {
+  handleChangeUnitValue = unit => {
     this.setState({
       getUnitValue: unit,
     });
@@ -122,7 +109,13 @@ class CommissionSettingAddModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting , commissionSetAddVisible, handleCommissionSetAddVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      commissionSetAddVisible,
+      handleCommissionSetAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { commissionSettingOptionData, subordinateUnitVisible, getUnitValue } = this.state;
     const validate = () => {
@@ -182,13 +175,12 @@ class CommissionSettingAddModal extends PureComponent {
       );
     };
 
-    const subordinateUnitMethods={
+    const subordinateUnitMethods = {
       handleSubordinateUnitVisible: this.handleSubordinateUnitVisible,
       handleChangeUnitValue: this.handleChangeUnitValue,
     };
 
     return (
-
       <Modal
         title="提成比例系数新增"
         style={{ top: 20 }}
@@ -207,7 +199,10 @@ class CommissionSettingAddModal extends PureComponent {
                     {getFieldDecorator('commissionType', {
                       rules: [{ required: false, message: '请输入提成比例类别' }],
                     })(
-                      <Select onMouseEnter={this.handleCommissionSettingChange} placeholder="请输入提成比例类别" >
+                      <Select
+                        onMouseEnter={this.handleCommissionSettingChange}
+                        placeholder="请输入提成比例类别"
+                      >
                         {commissionSettingOptionData}
                       </Select>
                     )}
@@ -250,10 +245,8 @@ class CommissionSettingAddModal extends PureComponent {
                 <Col>
                   <Form.Item {...formhz11} label={fieldLabels.status}>
                     {getFieldDecorator('status', {
-                      initialValue:`保存`,
-                    })(
-                      <Input disabled />
-                    )}
+                      initialValue: `保存`,
+                    })(<Input disabled />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -262,7 +255,7 @@ class CommissionSettingAddModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.subordinateUnit}>
                     {getFieldDecorator('subordinateUnit', {
                       rules: [{ required: false, message: '请输入所属单位' }],
-                      initialValue:`${getUnitValue}`,
+                      initialValue: `${getUnitValue}`,
                     })(
                       <Search
                         placeholder="请输入所属单位"
@@ -278,16 +271,17 @@ class CommissionSettingAddModal extends PureComponent {
                   <Form.Item {...formhz11} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(
-                      <TextArea  placeholder="请输入备注" rows={4} />
-                    )}
+                    })(<TextArea placeholder="请输入备注" rows={4} />)}
                   </Form.Item>
                 </Col>
               </Row>
             </Form>
           </Card>
         </div>
-        <SubordinateUnitModal {...subordinateUnitMethods} subordinateUnitVisible={subordinateUnitVisible} />
+        <SubordinateUnitModal
+          {...subordinateUnitMethods}
+          subordinateUnitVisible={subordinateUnitVisible}
+        />
       </Modal>
     );
   }

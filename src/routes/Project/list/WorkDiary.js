@@ -193,7 +193,11 @@ export default class WorkDiary extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.handleWorkDiaryVisible}>
+              <Button
+                style={{ marginLeft: 8 }}
+                type="primary"
+                onClick={this.handleWorkDiaryVisible}
+              >
                 新建
               </Button>
             </span>

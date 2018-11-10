@@ -18,7 +18,7 @@ import {
 import { connect } from 'dva';
 import styles from './UserListAdd.less';
 
-const  { TabPane } = Tabs;
+const { TabPane } = Tabs;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -53,12 +53,12 @@ const fieldLabels = {
 
 // 照片上传方法明细
 const left = {
-  style:{
+  style: {
     float: left,
   },
 };
 const right = {
-  style:{
+  style: {
     Float: right,
     marginTop: -148,
   },
@@ -79,12 +79,14 @@ class PersonAddModal extends PureComponent {
     width: '90%',
     previewVisible: false,
     previewImage: '',
-    fileList: [{
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }],
+    fileList: [
+      {
+        uid: '-1',
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+    ],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -95,7 +97,7 @@ class PersonAddModal extends PureComponent {
 
   handleCancel = () => this.setState({ previewVisible: false });
 
-  handlePreview = (file) => {
+  handlePreview = file => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
@@ -113,7 +115,7 @@ class PersonAddModal extends PureComponent {
   };
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
-    const { form , PersonViewVisible, handlePersonViewVisible, rowInfo} = this.props;
+    const { form, PersonViewVisible, handlePersonViewVisible, rowInfo } = this.props;
     const { getFieldDecorator } = form;
     const validate = () => {
       handlePersonViewVisible(false);
@@ -138,8 +140,10 @@ class PersonAddModal extends PureComponent {
         maskClosable={false}
         onCancel={onCancel}
         footer={
-          <Button type="primary" onClick={validate}>知道了</Button>
-        }  // 在button外面加上数据，会报迭代没有设置key属性值
+          <Button type="primary" onClick={validate}>
+            知道了
+          </Button>
+        } // 在button外面加上数据，会报迭代没有设置key属性值
       >
         <div>
           <Card>
@@ -149,18 +153,14 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="姓名">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择姓名' }],
-                    })(
-                      <Input readOnly placeholder="请选择姓名" />
-                    )}
+                    })(<Input readOnly placeholder="请选择姓名" />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.rank}>
                     {getFieldDecorator('rank', {
                       rules: [{ required: true, message: '请选择职级' }],
-                    })(
-                      <Input readOnly placeholder="请选择职级" />
-                    )}
+                    })(<Input readOnly placeholder="请选择职级" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -170,19 +170,15 @@ class PersonAddModal extends PureComponent {
                     {getFieldDecorator('branchOffice', {
                       rules: [{ required: true, message: '请选择所属分公司' }],
                       initialValue: `${rowInfo.id}`,
-                    })(
-                      <Input placeholder="请选择所属分公司" />
-                    )}
+                    })(<Input placeholder="请选择所属分公司" />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.department}>
                     {getFieldDecorator('departmentId', {
                       rules: [{ required: true, message: '请选择部门' }],
-                      initialValue:`${rowInfo.departmentId}`,
-                    })(
-                      <Input placeholder="请选择部门" />
-                    )}
+                      initialValue: `${rowInfo.departmentId}`,
+                    })(<Input placeholder="请选择部门" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -191,18 +187,14 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="人员状态">
                     {getFieldDecorator('personStatus', {
                       rules: [{ required: true, message: '请选择人员状态' }],
-                    })(
-                      <Input placeholder="请选择工作状态" />
-                    )}
+                    })(<Input placeholder="请选择工作状态" />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label={fieldLabels.hiredate}>
                     {getFieldDecorator('entryTime', {
                       rules: [{ required: true, message: '请输入入职时间' }],
-                    })(
-                      <DatePicker placeholder="请输入入职时间" />
-                    )}
+                    })(<DatePicker placeholder="请输入入职时间" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -227,7 +219,7 @@ class PersonAddModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.employeeNumber}>
                               {getFieldDecorator('number', {
                                 rules: [{ required: true, message: '请输入工号' }],
-                                initialValue:`${rowInfo.number}`,
+                                initialValue: `${rowInfo.number}`,
                               })(<Input placeholder="请输入工号" />)}
                             </Form.Item>
                           </Col>
@@ -237,7 +229,7 @@ class PersonAddModal extends PureComponent {
                             <Form.Item {...formItemLayout} label="姓名">
                               {getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请选择姓名' }],
-                                initialValue:`${rowInfo.name}`,
+                                initialValue: `${rowInfo.name}`,
                               })(<Input placeholder="请选择姓名" />)}
                             </Form.Item>
                           </Col>
@@ -245,9 +237,9 @@ class PersonAddModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.sex}>
                               {getFieldDecorator('sex', {
                                 rules: [{ required: true, message: '请选择性别' }],
-                                initialValue:`${rowInfo.sex}`,
+                                initialValue: `${rowInfo.sex}`,
                               })(
-                                <Select placeholder="请选择性别" >
+                                <Select placeholder="请选择性别">
                                   <Option value="1">男</Option>
                                   <Option value="2">女</Option>
                                 </Select>
@@ -257,7 +249,7 @@ class PersonAddModal extends PureComponent {
                         </Row>
                       </div>
                       <div className={styles.pictureRight}>
-                        <Form.Item {...formItemLayout} >
+                        <Form.Item {...formItemLayout}>
                           {getFieldDecorator('avatar', {
                             rules: [{ required: true, message: '头像' }],
                           })(
@@ -271,7 +263,11 @@ class PersonAddModal extends PureComponent {
                               >
                                 {fileList.length >= 1 ? null : uploadButton}
                               </Upload>
-                              <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                              <Modal
+                                visible={previewVisible}
+                                footer={null}
+                                onCancel={this.handleCancel}
+                              >
                                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
                               </Modal>
                             </div>
@@ -284,7 +280,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.nation}>
                           {getFieldDecorator('nation', {
                             rules: [{ required: true, message: '请选择民族' }],
-                            initialValue:`${rowInfo.nation}`,
+                            initialValue: `${rowInfo.nation}`,
                           })(<Input placeholder="请选择民族" />)}
                         </Form.Item>
                       </Col>
@@ -326,9 +322,9 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.rank}>
                           {getFieldDecorator('rank', {
                             rules: [{ required: true, message: '请选择职级' }],
-                            initialValue:`${rowInfo.rank}`,
+                            initialValue: `${rowInfo.rank}`,
                           })(
-                            <Select placeholder="请选择职级" >
+                            <Select placeholder="请选择职级">
                               <Option value="1">合伙人1</Option>
                               <Option value="2">合伙人2</Option>
                               <Option value="3">合伙人3</Option>
@@ -341,7 +337,7 @@ class PersonAddModal extends PureComponent {
                           {getFieldDecorator('workingCondition', {
                             rules: [{ required: true, message: '请选择工作状态' }],
                           })(
-                            <Select placeholder="请选择工作状态" >
+                            <Select placeholder="请选择工作状态">
                               <Option value="1">在职</Option>
                               <Option value="2">外派</Option>
                               <Option value="3">请假</Option>
@@ -362,9 +358,9 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.station}>
                           {getFieldDecorator('post', {
                             rules: [{ required: true, message: '请选择所属岗位' }],
-                            initialValue:`${rowInfo.post}`,
+                            initialValue: `${rowInfo.post}`,
                           })(
-                            <Select placeholder="请选择所属岗位" >
+                            <Select placeholder="请选择所属岗位">
                               <Option value="g">总经理</Option>
                               <Option value="y">开发部</Option>
                               <Option value="s">审计部</Option>
@@ -376,19 +372,16 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.hiredate}>
                           {getFieldDecorator('entryTime', {
                             rules: [{ required: true, message: '请输入入职时间' }],
-                          })(
-                            <DatePicker placeholder="请输入入职时间" />
-                          )}
+                          })(<DatePicker placeholder="请输入入职时间" />)}
                         </Form.Item>
                       </Col>
-
                     </Row>
                     <Row>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.maritalStatus}>
                           {getFieldDecorator('maritalStatus', {
                             rules: [{ required: true, message: '请输入婚姻状况' }],
-                            initialValue:`${rowInfo.maritalStatus}`,
+                            initialValue: `${rowInfo.maritalStatus}`,
                           })(
                             <Select placeholder="请输入婚姻状况">
                               <Option value="1">已婚</Option>
@@ -401,7 +394,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.education}>
                           {getFieldDecorator('highEducation', {
                             rules: [{ required: true, message: '请输入健最高学历' }],
-                            initialValue:`${rowInfo.highEducation}`,
+                            initialValue: `${rowInfo.highEducation}`,
                           })(
                             <Select placeholder="请输入健最高学历">
                               <Option value="1">博士后</Option>
@@ -421,7 +414,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.politicalStatus}>
                           {getFieldDecorator('politicalStatus', {
                             rules: [{ required: true, message: '请输入政治面貌' }],
-                            initialValue:`${rowInfo.politicalStatus}`,
+                            initialValue: `${rowInfo.politicalStatus}`,
                           })(
                             <Select placeholder="请输入政治面貌">
                               <Option value="1">党员</Option>
@@ -437,7 +430,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.identityCard}>
                           {getFieldDecorator('idCard', {
                             rules: [{ required: true, message: '请输入身份证' }],
-                            initialValue:`${rowInfo.idCard}`,
+                            initialValue: `${rowInfo.idCard}`,
                           })(<Input placeholder="请输入身份证" />)}
                         </Form.Item>
                       </Col>
@@ -445,19 +438,15 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.birthday}>
                           {getFieldDecorator('birthday', {
                             rules: [{ required: true, message: '请输入生日' }],
-                          })(
-                            <DatePicker placeholder="请输入生日" />
-                          )}
+                          })(<DatePicker placeholder="请输入生日" />)}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label="是否合伙人">
                           {getFieldDecorator('isPartner', {
                             rules: [{ required: true, message: '合伙人' }],
-                            initialValue:`${rowInfo.isPartner}`,
-                          })(
-                            <Input placeholder="合伙人" />
-                          )}
+                            initialValue: `${rowInfo.isPartner}`,
+                          })(<Input placeholder="合伙人" />)}
                         </Form.Item>
                       </Col>
                     </Row>
@@ -466,7 +455,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.fax}>
                           {getFieldDecorator('fax', {
                             rules: [{ required: true, message: '请输入传真' }],
-                            initialValue:`${rowInfo.fax}`,
+                            initialValue: `${rowInfo.fax}`,
                           })(<Input placeholder="请输入传真" />)}
                         </Form.Item>
                       </Col>
@@ -474,7 +463,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.mailBox}>
                           {getFieldDecorator('email', {
                             rules: [{ required: true, message: '请输入电子邮箱' }],
-                            initialValue:`${rowInfo.email}`,
+                            initialValue: `${rowInfo.email}`,
                           })(<Input placeholder="请输入电子邮箱" />)}
                         </Form.Item>
                       </Col>
@@ -483,7 +472,7 @@ class PersonAddModal extends PureComponent {
                           {getFieldDecorator('partnerType', {
                             rules: [{ required: true, message: '合伙人类别' }],
                           })(
-                            <Select placeholder="合伙人类别"  >
+                            <Select placeholder="合伙人类别">
                               <Option value={1}>执行合伙人</Option>
                               <Option value={2}>管理合伙人</Option>
                               <Option value={3}>技术合伙人</Option>
@@ -503,17 +492,15 @@ class PersonAddModal extends PureComponent {
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label={fieldLabels.address}>
-                          {getFieldDecorator('address',{
-                            initialValue:`${rowInfo.address}`,
-                          })(
-                            <Input placeholder="请输入地址" />
-                          )}
+                          {getFieldDecorator('address', {
+                            initialValue: `${rowInfo.address}`,
+                          })(<Input placeholder="请输入地址" />)}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label="缺醒组织">
                           {getFieldDecorator('address1')(
-                            <Select placeholder="缺醒组织" >
+                            <Select placeholder="缺醒组织">
                               <Option value="1">组织1</Option>
                               <Option value="2">组织2</Option>
                             </Select>
@@ -526,7 +513,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.officePhone}>
                           {getFieldDecorator('officePhone', {
                             rules: [{ required: true, message: '请输入办公电话' }],
-                            initialValue:`${rowInfo.officePhone}`,
+                            initialValue: `${rowInfo.officePhone}`,
                           })(<Input placeholder="请输入办公电话" />)}
                         </Form.Item>
                       </Col>
@@ -534,7 +521,7 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.mobilePhone}>
                           {getFieldDecorator('mobilePhone', {
                             rules: [{ required: true, message: '请输入移动电话' }],
-                            initialValue:`${rowInfo.mobilePhone}`,
+                            initialValue: `${rowInfo.mobilePhone}`,
                           })(<Input placeholder="请输入移动电话" />)}
                         </Form.Item>
                       </Col>
@@ -542,36 +529,52 @@ class PersonAddModal extends PureComponent {
                         <Form.Item {...formItemLayout} label={fieldLabels.virtualTelephone}>
                           {getFieldDecorator('virtualTelephone', {
                             rules: [{ required: true, message: '请输入虚拟短号' }],
-                          })(
-                            <Input placeholder="请输入虚拟短号" />
-                          )}
+                          })(<Input placeholder="请输入虚拟短号" />)}
                         </Form.Item>
                       </Col>
                     </Row>
                     <Row>
                       <Col span={23} pull={5}>
                         <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
-                          {getFieldDecorator('remarks',{
-                            initialValue:`${rowInfo.remarks}`,
-                          })(
-                            <TextArea placeholder="请输入备注" style={{ width: 1000 }} />
-                          )}
+                          {getFieldDecorator('remarks', {
+                            initialValue: `${rowInfo.remarks}`,
+                          })(<TextArea placeholder="请输入备注" style={{ width: 1000 }} />)}
                         </Form.Item>
                       </Col>
                     </Row>
                   </Form>
                 </Card>
               </TabPane>
-              <TabPane tab="劳动合同" key="2">Content of Tab Pane 2</TabPane>
-              <TabPane tab="教育背景" key="3">Content of Tab Pane 3</TabPane>
-              <TabPane tab="工作简历" key="4">Content of Tab Pane 3</TabPane>
-              <TabPane tab="社会关系" key="5">Content of Tab Pane 3</TabPane>
-              <TabPane tab="奖罚记录" key="6">Content of Tab Pane 3</TabPane>
-              <TabPane tab="体检记录" key="7">Content of Tab Pane 3</TabPane>
-              <TabPane tab="职业技能" key="8">Content of Tab Pane 3</TabPane>
-              <TabPane tab="从业资质" key="9">Content of Tab Pane 3</TabPane>
-              <TabPane tab="员工培训" key="10">Content of Tab Pane 3</TabPane>
-              <TabPane tab="参与项目" key="11">Content of Tab Pane 3</TabPane>
+              <TabPane tab="劳动合同" key="2">
+                Content of Tab Pane 2
+              </TabPane>
+              <TabPane tab="教育背景" key="3">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="工作简历" key="4">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="社会关系" key="5">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="奖罚记录" key="6">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="体检记录" key="7">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="职业技能" key="8">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="从业资质" key="9">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="员工培训" key="10">
+                Content of Tab Pane 3
+              </TabPane>
+              <TabPane tab="参与项目" key="11">
+                Content of Tab Pane 3
+              </TabPane>
             </Tabs>
           </Card>
         </div>

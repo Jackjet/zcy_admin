@@ -45,7 +45,7 @@ export default class ArchivesTabsBase extends PureComponent {
     followUpVisible: false,
     archivesAddVisible: false,
     archivesViewVisible: false,
-    rowInfo:{},
+    rowInfo: {},
     selectedRows: [],
     formValues: {},
   };
@@ -206,20 +206,19 @@ export default class ArchivesTabsBase extends PureComponent {
       },
     });
   };
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       archivesViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       archivesViewVisible: !!flag,
       rowInfo: record,
     });
   };
-
 
   // 查询表单
   renderSimpleForm() {
@@ -229,9 +228,7 @@ export default class ArchivesTabsBase extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="项目编号">
-              {getFieldDecorator('no')(
-                <Input placeholder="项目编号" style={{ width: 200 }} />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="项目编号" style={{ width: 200 }} />)}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -289,9 +286,9 @@ export default class ArchivesTabsBase extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
           </Fragment>
         ),
       },
@@ -316,10 +313,7 @@ export default class ArchivesTabsBase extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button
-                type="primary"
-                onClick={() => this.handleArchivesAddVisible(true)}
-              >
+              <Button type="primary" onClick={() => this.handleArchivesAddVisible(true)}>
                 新建档案
               </Button>
               {selectedRows.length > 0 && (
@@ -343,7 +337,11 @@ export default class ArchivesTabsBase extends PureComponent {
           </div>
         </Card>
         <ArchivesAddModal {...ArchivesAddMethods} archivesAddVisible={archivesAddVisible} />
-        <ArchivesViewModal {...ArchivesViewMethods} archivesViewVisible={archivesViewVisible} rowInfo={rowInfo} />
+        <ArchivesViewModal
+          {...ArchivesViewMethods}
+          archivesViewVisible={archivesViewVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

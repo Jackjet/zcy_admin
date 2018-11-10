@@ -17,7 +17,7 @@ import { connect } from 'dva';
 import styles from './Style.less';
 
 const mockData = [];
-for (let i = 0; i < 20; i+=1) {
+for (let i = 0; i < 20; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `${i + 1}`,
@@ -25,9 +25,7 @@ for (let i = 0; i < 20; i+=1) {
   });
 }
 
-const targetKeys = mockData
-  .filter(item => +item.key % 3 > 1)
-  .map(item => item.key);
+const targetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -52,14 +50,12 @@ class AssignPermissionsModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-
   handleChange = (nextTargetKeys, direction, moveKeys) => {
     this.setState({ targetKeys: nextTargetKeys });
   };
   handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
-
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -69,7 +65,13 @@ class AssignPermissionsModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, AssignPermissionsVisible, handleAssignPermissionsVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      AssignPermissionsVisible,
+      handleAssignPermissionsVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -136,19 +138,19 @@ class AssignPermissionsModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        okText='提交'
+        okText="提交"
       >
         <Card>
           <Form layout="horizontal">
             <Row className={styles['fn-mb-15']}>
               <Col span={23} push={5}>
-                <Form.Item {...formItemLayout} >
+                <Form.Item {...formItemLayout}>
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '自动生成' }],
                   })(
                     <Transfer
                       dataSource={mockData}
-                      titles={['可授权','已分配']}
+                      titles={['可授权', '已分配']}
                       listStyle={{
                         width: 120,
                         height: 150,

@@ -1,19 +1,7 @@
 import React, { PureComponent } from 'react';
-import {
-  Form,
-  Icon,
-  Col,
-  Row,
-  Input,
-  Select,
-  Popover,
-  Modal,
-  Card,
-  message,
-} from 'antd';
+import { Form, Icon, Col, Row, Input, Select, Popover, Modal, Card, message } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
-
 
 const { Option } = Select;
 const fieldLabels = {
@@ -39,9 +27,9 @@ class CusApplyAddModal extends PureComponent {
   state = {
     width: '100%',
     levelOptionData: [],
-    industryOptionData:[],
-    incomeTaxOptionData:[],
-    statusOptionData:[],
+    industryOptionData: [],
+    incomeTaxOptionData: [],
+    statusOptionData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -57,7 +45,7 @@ class CusApplyAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , cusApplyAddVisible, handleCusApplyAddVisible} = this.props;
+    const { form, dispatch, submitting, cusApplyAddVisible, handleCusApplyAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -125,7 +113,7 @@ class CusApplyAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -145,7 +133,11 @@ class CusApplyAddModal extends PureComponent {
                     {getFieldDecorator('cusApplyName', {
                       rules: [{ required: false, message: '请输入客户名称' }],
                     })(
-                      <Input onMouseEnter={this.handleLevelChange} placeholder="请输入客户名称" style={{ width: 200 }} />
+                      <Input
+                        onMouseEnter={this.handleLevelChange}
+                        placeholder="请输入客户名称"
+                        style={{ width: 200 }}
+                      />
                     )}
                   </Form.Item>
                 </Col>
@@ -156,10 +148,10 @@ class CusApplyAddModal extends PureComponent {
                     {getFieldDecorator('cusApplyNature', {
                       rules: [{ required: false, message: '请选择联系人业务性质' }],
                     })(
-                      <Select placeholder="请选择联系人业务性质" style={{ width: 200 }} >
-                        <Option key="1" >工程</Option>
-                        <Option key="2" >招标</Option>
-                        <Option key="3" >采购</Option>
+                      <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
+                        <Option key="1">工程</Option>
+                        <Option key="2">招标</Option>
+                        <Option key="3">采购</Option>
                       </Select>
                     )}
                   </Form.Item>
@@ -170,10 +162,8 @@ class CusApplyAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.cusApplyStatus}>
                     {getFieldDecorator('cusApplyStatus', {
                       rules: [{ required: false, message: '请选择状态' }],
-                      initialValue:`待审核`,
-                    })(
-                      <Input readOnly placeholder="请选择状态" style={{ width: 200 }} />
-                    )}
+                      initialValue: `待审核`,
+                    })(<Input readOnly placeholder="请选择状态" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -182,9 +172,7 @@ class CusApplyAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.cusApplyContacts}>
                     {getFieldDecorator('cusApplyContacts', {
                       rules: [{ required: false, message: '请输入联系人' }],
-                    })(
-                      <Input placeholder="请输入联系人" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -193,9 +181,7 @@ class CusApplyAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.cusApplyMobilePhone}>
                     {getFieldDecorator('cusApplyMobilePhone', {
                       rules: [{ required: false, message: '请输出联系电话' }],
-                    })(
-                      <Input placeholder="请输出联系电话" style={{ width: 200 }} />
-                    )}
+                    })(<Input placeholder="请输出联系电话" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>

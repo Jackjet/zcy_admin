@@ -44,7 +44,7 @@ export default class ObjManageList extends PureComponent {
     RoleManageEditVisible: false,
     AssignPermissionsVisible: false,
     AssignRoleVisible: false,
-    rowInfo:``,
+    rowInfo: ``,
     expandForm: false,
     selectedRows: [],
     formValues: {},
@@ -182,8 +182,6 @@ export default class ObjManageList extends PureComponent {
     });
   };
 
-
-
   handleRoleManageAddVisible = flag => {
     this.setState({
       RoleManageAddVisible: !!flag,
@@ -202,21 +200,21 @@ export default class ObjManageList extends PureComponent {
     });
   };
 
-  showViewMessage =(flag, text, record)=> {
+  showViewMessage = (flag, text, record) => {
     this.setState({
       RoleManageViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       RoleManageEditVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showDeleteMessage =(flag, record)=> {
+  showDeleteMessage = (flag, record) => {
     this.props.dispatch({
       type: 'rule/remove',
       payload: {
@@ -273,16 +271,12 @@ export default class ObjManageList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码">
-              {getFieldDecorator('code')(
-                <Input placeholder="请输入编码" />
-              )}
+              {getFieldDecorator('code')(<Input placeholder="请输入编码" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="名称">
-              {getFieldDecorator('name')(
-                <Input placeholder="请输入名称" />
-              )}
+              {getFieldDecorator('name')(<Input placeholder="请输入名称" />)}
             </FormItem>
           </Col>
 
@@ -306,7 +300,15 @@ export default class ObjManageList extends PureComponent {
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, RoleManageAddVisible, RoleManageViewVisible, AssignPermissionsVisible, RoleManageEditVisible, rowInfo, AssignRoleVisible } = this.state;
+    const {
+      selectedRows,
+      RoleManageAddVisible,
+      RoleManageViewVisible,
+      AssignPermissionsVisible,
+      RoleManageEditVisible,
+      rowInfo,
+      AssignRoleVisible,
+    } = this.state;
 
     const columns = [
       {
@@ -376,8 +378,6 @@ export default class ObjManageList extends PureComponent {
       handleRoleManageEditVisible: this.handleRoleManageEditVisible,
     };
 
-
-
     return (
       <div>
         <Card bordered={false}>
@@ -411,11 +411,25 @@ export default class ObjManageList extends PureComponent {
                 onChange={this.handleStandardTableChange}
               />
             </div>
-            <AssignPermissionsModal {...AssignPermissionsMethods} AssignPermissionsVisible={AssignPermissionsVisible} />
+            <AssignPermissionsModal
+              {...AssignPermissionsMethods}
+              AssignPermissionsVisible={AssignPermissionsVisible}
+            />
             <AssignRoleModal {...AssignRoleMethods} AssignRoleVisible={AssignRoleVisible} />
-            <RoleManageAddModal {...RoleManageAddMethods} RoleManageAddVisible={RoleManageAddVisible} />
-            <RoleManageViewModal {...RoleManageViewMethods} RoleManageViewVisible={RoleManageViewVisible} rowInfo={rowInfo} />
-            <RoleManageEditModal {...RoleManageEditMethods} RoleManageEditVisible={RoleManageEditVisible} rowInfo={rowInfo} />
+            <RoleManageAddModal
+              {...RoleManageAddMethods}
+              RoleManageAddVisible={RoleManageAddVisible}
+            />
+            <RoleManageViewModal
+              {...RoleManageViewMethods}
+              RoleManageViewVisible={RoleManageViewVisible}
+              rowInfo={rowInfo}
+            />
+            <RoleManageEditModal
+              {...RoleManageEditMethods}
+              RoleManageEditVisible={RoleManageEditVisible}
+              rowInfo={rowInfo}
+            />
           </div>
         </Card>
       </div>

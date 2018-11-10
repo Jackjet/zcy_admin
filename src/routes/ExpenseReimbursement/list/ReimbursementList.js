@@ -22,18 +22,27 @@ import ReimbursementListAddModal from '../add/ReimbursementListAddModal';
 import ReimbursementListEditModal from '../edit/ReimbursementListEditModal';
 import styles from './style.less';
 
-
-
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const getValue = obj =>
-  Object.keys(obj).map(key => obj[key]).join(',');
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 
 const statusMap = ['success', 'error'];
 const status = ['启用', '停用'];
-const industry =['制造业','服务业','房地产建筑','三农业务','政府购买','商业','非营利组织','其他'];
+const industry = [
+  '制造业',
+  '服务业',
+  '房地产建筑',
+  '三农业务',
+  '政府购买',
+  '商业',
+  '非营利组织',
+  '其他',
+];
 
 @connect(({ rule, loading }) => ({
   rule,
@@ -45,7 +54,6 @@ export default class ReimbursementList extends PureComponent {
     // 客户增加状态
     customerAddVisible: false,
 
-
     // 客户编辑状态
     customerEditVisible: false,
 
@@ -56,8 +64,8 @@ export default class ReimbursementList extends PureComponent {
     tabsViewVisible: false,
     reimbursementListAddModalVisible: false,
 
-    reimbursementListViewModalVisible:false,
-    reimbursementListEditModalVisible:false,
+    reimbursementListViewModalVisible: false,
+    reimbursementListEditModalVisible: false,
 
     customerDistributionVisible: false,
 
@@ -70,7 +78,7 @@ export default class ReimbursementList extends PureComponent {
     formValues: {},
 
     // 当前操作行的数据
-    rowInfo:{},
+    rowInfo: {},
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
@@ -203,7 +211,7 @@ export default class ReimbursementList extends PureComponent {
   };
 
   // 隐藏和显示客户编辑界面
-  handleCustomerEditVisible = (flag) => {
+  handleCustomerEditVisible = flag => {
     this.setState({
       customerEditVisible: !!flag,
     });
@@ -211,7 +219,7 @@ export default class ReimbursementList extends PureComponent {
 
   // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
-    if(this.state.selectedRows.length>1){
+    if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
@@ -219,7 +227,6 @@ export default class ReimbursementList extends PureComponent {
       contactsVisible: !!flag,
     });
   };
-
 
   handleTabsViewVisible = flag => {
     this.setState({
@@ -231,7 +238,6 @@ export default class ReimbursementList extends PureComponent {
       customerDistributionVisible: !!flag,
     });
   };
-
 
   handleReimbursementListAddModalVisible = flag => {
     this.setState({
@@ -250,7 +256,6 @@ export default class ReimbursementList extends PureComponent {
       reimbursementListEditModalVisible: !!flag,
     });
   };
-
 
   // 添加表单数据
   handleCustomerAdd = fields => {
@@ -278,7 +283,6 @@ export default class ReimbursementList extends PureComponent {
       contactsVisible: false,
     });
   };
-
 
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
@@ -309,20 +313,19 @@ export default class ReimbursementList extends PureComponent {
   }
 
   // 弹窗展示当前行的数据
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       reimbursementListEditModalVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showViewMessage =(flag, text, record, index)=> {
+  showViewMessage = (flag, text, record, index) => {
     this.setState({
       reimbursementListViewModalVisible: !!flag,
       rowInfo: record,
     });
   };
-
 
   // 高级搜索
   renderAdvancedForm() {
@@ -332,32 +335,24 @@ export default class ReimbursementList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="编码名称">
-              {getFieldDecorator('no',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('no', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="移动电话">
-              {getFieldDecorator('phone',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('phone', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人">
-              {getFieldDecorator('contract',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('contract', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer',{
-
-              })(
+              {getFieldDecorator('customer', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                 </Select>
@@ -366,9 +361,7 @@ export default class ReimbursementList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 13 }} label="行业">
-              {getFieldDecorator('status',{
-
-              })(
+              {getFieldDecorator('status', {})(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="xiao">请选择</Option>
                   <Option value="z">制造业</Option>
@@ -386,9 +379,7 @@ export default class ReimbursementList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address',{
-
-              })(<Input placeholder="请输入" />)}
+              {getFieldDecorator('address', {})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
@@ -431,11 +422,7 @@ export default class ReimbursementList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode',{
-
-              })(
-                <Input placeholder="请输入客户编码和名称" />
-              )}
+              {getFieldDecorator('customerCode', {})(<Input placeholder="请输入客户编码和名称" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -556,16 +543,15 @@ export default class ReimbursementList extends PureComponent {
         title: '操作',
         render: (text, record, index) => (
           <Fragment>
-            <a onClick={() =>this.showViewMessage(true, text, record, index)} >查看</a>
+            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
+            <a onClick={this.handleDeleteClick}>删除</a>
           </Fragment>
         ),
       },
     ];
-
 
     const ReimbursementListAddMethods = {
       handleReimbursementListAddModalVisible: this.handleReimbursementListAddModalVisible,
@@ -617,13 +603,23 @@ export default class ReimbursementList extends PureComponent {
                 onSelectRow={this.handleSelectRows}
                 onChange={this.handleStandardTableChange}
               />
-
             </div>
           </div>
         </Card>
-        <ReimbursementListAddModal {...ReimbursementListAddMethods} reimbursementListAddModalVisible={reimbursementListAddModalVisible} />
-        <ReimbursementListViewModal {...ReimbursementListViewMethods} reimbursementListViewModalVisible={reimbursementListViewModalVisible} rowInfo={rowInfo} />
-        <ReimbursementListEditModal {...ReimbursementListEditMethods} reimbursementListEditModalVisible={reimbursementListEditModalVisible} rowInfo={rowInfo} />
+        <ReimbursementListAddModal
+          {...ReimbursementListAddMethods}
+          reimbursementListAddModalVisible={reimbursementListAddModalVisible}
+        />
+        <ReimbursementListViewModal
+          {...ReimbursementListViewMethods}
+          reimbursementListViewModalVisible={reimbursementListViewModalVisible}
+          rowInfo={rowInfo}
+        />
+        <ReimbursementListEditModal
+          {...ReimbursementListEditMethods}
+          reimbursementListEditModalVisible={reimbursementListEditModalVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

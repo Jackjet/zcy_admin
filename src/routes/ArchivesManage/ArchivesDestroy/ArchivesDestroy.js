@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import { connect } from 'dva';
 import {
   Row,
@@ -46,7 +46,7 @@ export default class ArchivesWarehousing extends PureComponent {
     followUpVisible: false,
     archivesAddVisible: false,
     archivesViewVisible: false,
-    rowInfo:{},
+    rowInfo: {},
     selectedRows: [],
     formValues: {},
   };
@@ -207,34 +207,34 @@ export default class ArchivesWarehousing extends PureComponent {
       },
     });
   };
-  showViewMessage =(flag, record)=> {
+  showViewMessage = (flag, record) => {
     this.setState({
       archivesViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  showEditMessage =(flag, record)=> {
+  showEditMessage = (flag, record) => {
     this.setState({
       archivesViewVisible: !!flag,
       rowInfo: record,
     });
   };
 
-  handleDestroyApply = (record) => {
+  handleDestroyApply = record => {
     const { dispatch } = this.props;
     confirm({
       title: `申请删除档案编码编码为：${record.archivesCode}`,
-      content:(
+      content: (
         <div>
           <p>档案名称:{record.archivesName}</p>
           <p>销毁人:{record.archivesCode}</p>
           <p>销毁世时间为:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
         </div>
       ),
-      keyboard:false,
-      cancelText:'取消',
-      okText:'确定',
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
       onOk() {
         dispatch({
           type: 'rule/remove',
@@ -242,17 +242,14 @@ export default class ArchivesWarehousing extends PureComponent {
             no: record.no,
           },
         });
-        message.success('申请成功')
+        message.success('申请成功');
       },
-      onCancel() {
-
-      },
+      onCancel() {},
     });
     this.setState({
       selectedRows: [],
     });
   };
-
 
   // 查询表单
   renderSimpleForm() {
@@ -262,9 +259,7 @@ export default class ArchivesWarehousing extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="项目编号">
-              {getFieldDecorator('no')(
-                <Input placeholder="项目编号" style={{ width: 200 }} />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="项目编号" style={{ width: 200 }} />)}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -337,7 +332,11 @@ export default class ArchivesWarehousing extends PureComponent {
           </div>
         </Card>
         <ArchivesAddModal {...ArchivesAddMethods} archivesAddVisible={archivesAddVisible} />
-        <ArchivesViewModal {...ArchivesViewMethods} archivesViewVisible={archivesViewVisible} rowInfo={rowInfo} />
+        <ArchivesViewModal
+          {...ArchivesViewMethods}
+          archivesViewVisible={archivesViewVisible}
+          rowInfo={rowInfo}
+        />
       </PageHeaderLayout>
     );
   }

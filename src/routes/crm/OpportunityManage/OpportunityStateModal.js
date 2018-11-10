@@ -17,9 +17,8 @@ import {
   TimePicker,
 } from 'antd';
 import { connect } from 'dva';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import styles from './style.less';
-
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -42,7 +41,7 @@ const formItemLayout = {
 };
 
 const formItemLayoutTextArea = {
-  style:{
+  style: {
     paddingRight: 150,
     width: '110%',
   },
@@ -74,7 +73,13 @@ class BusinessStateModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, handleBusinessStateVisible, businessStateVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      handleBusinessStateVisible,
+      businessStateVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -135,7 +140,7 @@ class BusinessStateModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleBusinessStateVisible()}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Card>
@@ -146,7 +151,7 @@ class BusinessStateModal extends PureComponent {
                     {getFieldDecorator('businessStatus', {
                       rules: [{ required: true, message: '商机状态' }],
                     })(
-                      <Select placeholder="商机状态" style={{ width: 150 }} >
+                      <Select placeholder="商机状态" style={{ width: 150 }}>
                         <Option key="1">启用</Option>
                         <Option key="2">禁用</Option>
                       </Select>
@@ -158,10 +163,8 @@ class BusinessStateModal extends PureComponent {
                 <Col>
                   <Form.Item {...formItemLayout} label={fieldLabels.statusData}>
                     {getFieldDecorator('statusData', {
-                      initialValue:`${moment().format("YYYY-MM-DD HH:mm:ss")}`,
-                    })(
-                      <Input placeholder="时间" style={{ width: 150 }} />
-                    )}
+                      initialValue: `${moment().format('YYYY-MM-DD HH:mm:ss')}`,
+                    })(<Input placeholder="时间" style={{ width: 150 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -170,9 +173,7 @@ class BusinessStateModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
                     {getFieldDecorator('remarks', {
                       rules: [{ required: false, message: '请输入备注' }],
-                    })(
-                      <TextArea placeholder="请输入备注" style={{ width: 150 }} row={4} />
-                    )}
+                    })(<TextArea placeholder="请输入备注" style={{ width: 150 }} row={4} />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -180,7 +181,6 @@ class BusinessStateModal extends PureComponent {
           </Card>
         </div>
       </Modal>
-
     );
   }
 }

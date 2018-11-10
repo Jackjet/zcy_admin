@@ -21,8 +21,6 @@ import moment from 'moment';
 import { connect } from 'dva';
 import styles from './Style.less';
 
-
-
 const props = {
   name: 'file',
   action: '//jsonplaceholder.typicode.com/posts/',
@@ -66,7 +64,7 @@ class StatementReviewModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleRadioGroup = (e)=>{
+  handleRadioGroup = e => {
     this.setState({
       radioValue: e.target.value,
     });
@@ -79,7 +77,13 @@ class StatementReviewModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, StatementReviewVisible, handleStatementReviewVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      StatementReviewVisible,
+      handleStatementReviewVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { radioValue } = this.state;
     const validate = () => {
@@ -138,36 +142,44 @@ class StatementReviewModal extends PureComponent {
         </span>
       );
     };
-    const columns = [{
-      title: '审评人',
-      dataIndex: 'name',
-      key: 'name',
-    }, {
-      title: '审评日期',
-      dataIndex: 'age',
-      key: 'age',
-    }, {
-      title: '点评内容',
-      dataIndex: 'address',
-      key: 'address',
-    }];
+    const columns = [
+      {
+        title: '审评人',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '审评日期',
+        dataIndex: 'age',
+        key: 'age',
+      },
+      {
+        title: '点评内容',
+        dataIndex: 'address',
+        key: 'address',
+      },
+    ];
 
-    const data = [{
-      key: '1',
-      name: '汪工',
-      age: '2018/9/7',
-      address: 'good',
-    }, {
-      key: '2',
-      name: '申工',
-      age: '2018/9/8',
-      address: 'very good',
-    }, {
-      key: '3',
-      name: '盛工',
-      age: '2018/9/9',
-      address: 'very very good',
-    }];
+    const data = [
+      {
+        key: '1',
+        name: '汪工',
+        age: '2018/9/7',
+        address: 'good',
+      },
+      {
+        key: '2',
+        name: '申工',
+        age: '2018/9/8',
+        address: 'very good',
+      },
+      {
+        key: '3',
+        name: '盛工',
+        age: '2018/9/9',
+        address: 'very very good',
+      },
+    ];
     return (
       <Modal
         title="日报查看"
@@ -177,7 +189,7 @@ class StatementReviewModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancel}
-        okText='确定'
+        okText="确定"
       >
         <Card>
           <div>
@@ -187,19 +199,15 @@ class StatementReviewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="报告类型">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入组织名称' }],
-                      initialValue:`日报`,
-                    })(
-                      <Input />
-                    )}
+                      initialValue: `日报`,
+                    })(<Input />)}
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item {...formItemLayout} label="报告日期">
                     {getFieldDecorator('reportData', {
                       rules: [{ required: true, message: '报告日期' }],
-                    })(
-                      <DatePicker />
-                    )}
+                    })(<DatePicker />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -208,9 +216,7 @@ class StatementReviewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="已完结工作">
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '已完结工作' }],
-                    })(
-                      <TextArea placeholder="已完结工作" />
-                    )}
+                    })(<TextArea placeholder="已完结工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -219,9 +225,7 @@ class StatementReviewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="未完成工作">
                     {getFieldDecorator('isCompany', {
                       rules: [{ required: true, message: '未完成工作' }],
-                    })(
-                      <TextArea placeholder="未完成工作" />
-                    )}
+                    })(<TextArea placeholder="未完成工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -230,9 +234,7 @@ class StatementReviewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="协助工作">
                     {getFieldDecorator('simpleName', {
                       rules: [{ required: false, message: '协助工作' }],
-                    })(
-                      <TextArea placeholder="协助工作" />
-                    )}
+                    })(<TextArea placeholder="协助工作" />)}
                   </Form.Item>
                 </Col>
               </Row>
@@ -274,9 +276,7 @@ class StatementReviewModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="审阅点评">
                     {getFieldDecorator('principal', {
                       rules: [{ required: false, message: '审阅点评' }],
-                    })(
-                      <Table columns={columns} dataSource={data} />
-                    )}
+                    })(<Table columns={columns} dataSource={data} />)}
                   </Form.Item>
                 </Col>
               </Row>

@@ -24,7 +24,7 @@ import {
   Table,
   message,
 } from 'antd';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 import StandardTable from 'components/StandardTable';
 import { connect } from 'dva';
 import styles from '../add/style.less';
@@ -35,12 +35,12 @@ const getValue = obj =>
     .join(',');
 const { Step } = Steps;
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
+for (let i = 0; i < 10; i += 1) {
   mockData.push({
     key: i.toString(),
     title: `人员${i + 1}`,
   });
-};
+}
 const { TreeNode } = Tree;
 const fileList = [
   {
@@ -70,7 +70,7 @@ const { Panel } = Collapse;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const fieldLabels = {
-  ProjectCode:'项目编码',
+  ProjectCode: '项目编码',
   ReportName: '报告名称',
   type: '项目类别',
   years: '年度',
@@ -93,11 +93,11 @@ const fieldLabels = {
   jfw: '交付物',
   demand: '客户需求',
   attachment: '附件',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
+  companyName: '单位名称',
+  companyAddress: '单位地址',
+  taxNumber: '税号',
+  openAccountBank: '开户银行',
+  bankAccount: '银行账户',
   contractCode: '合同编码',
   contractType: '合同类别',
   projectName: '项目名称',
@@ -136,8 +136,8 @@ const formItemLayout = {
 class ProjectApplyAddModal extends PureComponent {
   state = {
     width: '100%',
-    selectedRows:[],
-    targetKeys:[],
+    selectedRows: [],
+    targetKeys: [],
     selectedKeys: [],
     applyDate: moment(Date.now()),
   };
@@ -148,32 +148,31 @@ class ProjectApplyAddModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleUploadFile = (info)=>{
-    console.log(`${info.file.name}+1111`)
+  handleUploadFile = info => {
+    console.log(`${info.file.name}+1111`);
   };
 
-  handleOnChange = (info)=>{
+  handleOnChange = info => {
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
     if (info.file.status === 'done') {
       message.success(`${info.file.name} file uploaded successfully`);
-      console.log(`${info.file.name}`)
+      console.log(`${info.file.name}`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
       this.handleUploadFile(info);
-      console.log(`${info.file.name}`)
+      console.log(`${info.file.name}`);
     }
   };
 
-  handleChange = (nextTargetKeys) => {
+  handleChange = nextTargetKeys => {
     this.setState({ targetKeys: nextTargetKeys });
   };
 
   handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
-
 
   // 选中的行
   handleSelectRows = rows => {
@@ -221,7 +220,16 @@ class ProjectApplyAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting , projectApplyAddVisible, handleProjectApplyAddVisible, rule: { data }, loading, rowInfo} = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      projectApplyAddVisible,
+      handleProjectApplyAddVisible,
+      rule: { data },
+      loading,
+      rowInfo,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedKeys, selectedRows, applyDate } = this.state;
     const validate = () => {
@@ -286,41 +294,49 @@ class ProjectApplyAddModal extends PureComponent {
       headers: {
         authorization: 'authorization-text',
       },
-      showUploadList:false,
-      onChange:this.handleOnChange,
+      showUploadList: false,
+      onChange: this.handleOnChange,
     };
-    const uploadColumns = [{
-      title: '文件名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>,
-    }, {
-      title: '操作',
-      dataIndex: 'age',
-      key: 'age',
-      render: text => <a>{text}</a>,
-    }, {
-      title: '版本',
-      dataIndex: 'address',
-      key: 'address',
-      render: text => <a>{text}</a>,
-    }];
-    const uploadData = [{
-      key: '1',
-      name: '文件1',
-      age: '在线编辑',
-      address: '3.0',
-    }, {
-      key: '2',
-      name: '文件2',
-      age: '在线编辑',
-      address: '2.0',
-    }, {
-      key: '3',
-      name: '文件3',
-      age: '在线编辑',
-      address: '1.0',
-    }];
+    const uploadColumns = [
+      {
+        title: '文件名称',
+        dataIndex: 'name',
+        key: 'name',
+        render: text => <a>{text}</a>,
+      },
+      {
+        title: '操作',
+        dataIndex: 'age',
+        key: 'age',
+        render: text => <a>{text}</a>,
+      },
+      {
+        title: '版本',
+        dataIndex: 'address',
+        key: 'address',
+        render: text => <a>{text}</a>,
+      },
+    ];
+    const uploadData = [
+      {
+        key: '1',
+        name: '文件1',
+        age: '在线编辑',
+        address: '3.0',
+      },
+      {
+        key: '2',
+        name: '文件2',
+        age: '在线编辑',
+        address: '2.0',
+      },
+      {
+        key: '3',
+        name: '文件3',
+        age: '在线编辑',
+        address: '1.0',
+      },
+    ];
     const columns = [
       {
         title: '清单编号',
@@ -370,7 +386,7 @@ class ProjectApplyAddModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
-        okText='提交'
+        okText="提交"
       >
         <div>
           <Form layout="horizontal">
@@ -387,17 +403,18 @@ class ProjectApplyAddModal extends PureComponent {
                 <Step status="wait" title="生成知识体系" />
               </Steps>
             </Card>
-            <Collapse defaultActiveKey={['1','2']} >
+            <Collapse defaultActiveKey={['1', '2']}>
               <Panel header="项目信息" key="1">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={23} pull={5}>
                     <Form.Item {...formItemLayout} label={fieldLabels.name}>
                       {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入项目名称' }],
-                        initialValue:`${rowInfo.customerName}` === 'undefined'?'':`${rowInfo.customerName}`,
-                      })(
-                        <Input readOnly placeholder="请输入项目名称" style={{width:'140%'}} />
-                      )}
+                        initialValue:
+                          `${rowInfo.customerName}` === 'undefined'
+                            ? ''
+                            : `${rowInfo.customerName}`,
+                      })(<Input readOnly placeholder="请输入项目名称" style={{ width: '140%' }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -406,30 +423,24 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.type}>
                       {getFieldDecorator('type', {
                         rules: [{ required: true, message: '请选择项目类别' }],
-                        initialValue:`${rowInfo.projectType}`,
-                      })(
-                        <Input readOnly placeholder="请选择项目类别" style={{ width: 200 }} />
-                      )}
+                        initialValue: `${rowInfo.projectType}`,
+                      })(<Input readOnly placeholder="请选择项目类别" style={{ width: 200 }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.years}>
                       {getFieldDecorator('years', {
                         rules: [{ required: true, message: '请选择年度' }],
-                        initialValue:`${moment().format('YYYY')}`,
-                      })(
-                        <Input readOnly placeholder="请选择年度" style={{ width: '100%' }} />
-                      )}
+                        initialValue: `${moment().format('YYYY')}`,
+                      })(<Input readOnly placeholder="请选择年度" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label={fieldLabels.status}>
                       {getFieldDecorator('status', {
                         rules: [{ required: true, message: '请选择项目状态' }],
-                        initialValue:`新建`,
-                      })(
-                        <Input readOnly placeholder="请选择项目状态" style={{ width: '100%' }} />
-                      )}
+                        initialValue: `新建`,
+                      })(<Input readOnly placeholder="请选择项目状态" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -438,10 +449,9 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="项目编号">
                       {getFieldDecorator('number', {
                         rules: [{ required: false, message: '请输入项目编码' }],
-                        initialValue:`${rowInfo.projectCode}` === 'undefined'?'':`${rowInfo.projectCode}`,
-                      })(
-                        <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
-                      )}
+                        initialValue:
+                          `${rowInfo.projectCode}` === 'undefined' ? '' : `${rowInfo.projectCode}`,
+                      })(<Input readOnly placeholder="自动带出" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -477,27 +487,21 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.fzcompany}>
                       {getFieldDecorator('fzcompany', {
                         rules: [{ required: true, message: '负责公司' }],
-                      })(
-                        <Input readOnly placeholder="负责公司" style={{ width: '100%' }} />
-                      )}
+                      })(<Input readOnly placeholder="负责公司" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label="项目负责人">
                       {getFieldDecorator('fzperson', {
                         rules: [{ required: true, message: '项目负责人' }],
-                      })(
-                        <Input readOnly placeholder="负责公司" style={{ width: '100%' }} />
-                      )}
+                      })(<Input readOnly placeholder="负责公司" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label="项目部门">
                       {getFieldDecorator('fzperson', {
                         rules: [{ required: true, message: '项目部门' }],
-                      })(
-                        <Input readOnly placeholder="自动带出" style={{ width: '100%' }} />
-                      )}
+                      })(<Input readOnly placeholder="自动带出" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -506,38 +510,31 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.fee}>
                       {getFieldDecorator('fee', {
                         rules: [{ required: true, message: '请输入项目费用' }],
-                      })(
-                        <Input readOnly placeholder="请输入项目费用" style={{ width: '100%' }} />
-                      )}
+                      })(<Input readOnly placeholder="请输入项目费用" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item {...formItemLayout} label="业务来源">
                       {getFieldDecorator('billSource', {
                         rules: [{ required: true, message: '业务来源' }],
-                        initialValue:`${rowInfo.BillSource}`,
-                      })(
-                        <Input readOnly placeholder="业务来源" style={{ width: '100%' }} />
-                      )}
+                        initialValue: `${rowInfo.BillSource}`,
+                      })(<Input readOnly placeholder="业务来源" style={{ width: '100%' }} />)}
                     </Form.Item>
                   </Col>
-                  {
-                    (`${rowInfo.BillSource}`=== `合伙人`)&& (
-                      <Col span={8}>
-                        <Form.Item {...formItemLayout} label='合伙人'>
-                          {getFieldDecorator('partner')(
-                            <Input readOnly style={{ width: '100%' }} placeholder="合伙人" />
-                          )}
-                        </Form.Item>
-                      </Col>
-                    )
-                  }
+                  {`${rowInfo.BillSource}` === `合伙人` && (
+                    <Col span={8}>
+                      <Form.Item {...formItemLayout} label="合伙人">
+                        {getFieldDecorator('partner')(
+                          <Input readOnly style={{ width: '100%' }} placeholder="合伙人" />
+                        )}
+                      </Form.Item>
+                    </Col>
+                  )}
                 </Row>
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='施工单位'>
-                      {getFieldDecorator('shigongdanwei',{
-                      })(
+                    <Form.Item {...formItemLayout} label="施工单位">
+                      {getFieldDecorator('shigongdanwei', {})(
                         <Search
                           readOnly
                           placeholder="施工单位"
@@ -548,7 +545,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='合同编号'>
+                    <Form.Item {...formItemLayout} label="合同编号">
                       {getFieldDecorator('contractCode')(
                         <div>
                           <Input readOnly style={{ width: '68%' }} placeholder="合同编号" />
@@ -558,11 +555,10 @@ class ProjectApplyAddModal extends PureComponent {
                       )}
                     </Form.Item>
                   </Col>
-
                 </Row>
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='开始时间'>
+                    <Form.Item {...formItemLayout} label="开始时间">
                       {getFieldDecorator('startDate')(
                         <Input readOnly style={{ width: '100%' }} placeholder="请输入开始时间" />
                       )}
@@ -592,11 +588,11 @@ class ProjectApplyAddModal extends PureComponent {
                 <Row className={styles['fn-mb-15']}>
                   <Col span={23} pull={5}>
                     <Form.Item {...formItemLayout} label={fieldLabels.biztype}>
-                      {getFieldDecorator('biztype',{
-                      })(
+                      {getFieldDecorator('biztype', {})(
                         <Checkbox.Group style={{ width: '100%' }}>
                           <Row>
-                            { ( `${rowInfo.projectType}` === `工程造价业务项目`|| `${rowInfo.projectType}` ===`可研报告` ) && (
+                            {(`${rowInfo.projectType}` === `工程造价业务项目` ||
+                              `${rowInfo.projectType}` === `可研报告`) && (
                               <span>
                                 <Col span={8}>
                                   <Checkbox value="A">预算编制</Checkbox>
@@ -619,7 +615,8 @@ class ProjectApplyAddModal extends PureComponent {
                               </span>
                             )}
 
-                            { ( `${rowInfo.projectType}` === `招标代理业务项目`|| `${rowInfo.projectType}`===`可研报告` ) && (
+                            {(`${rowInfo.projectType}` === `招标代理业务项目` ||
+                              `${rowInfo.projectType}` === `可研报告`) && (
                               <span>
                                 <Col span={8}>
                                   <Checkbox value="G">政府采购招标代理</Checkbox>
@@ -654,25 +651,25 @@ class ProjectApplyAddModal extends PureComponent {
                   </Col>
                 </Row>
                 <Divider orientation="left">{rowInfo.projectType}</Divider>
-                { ( `${rowInfo.projectType}` === `工程造价业务项目` )&& (
+                {`${rowInfo.projectType}` === `工程造价业务项目` && (
                   <div>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='项目个数'>
+                        <Form.Item {...formItemLayout} label="项目个数">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="项目个数" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='送审金额'>
+                        <Form.Item {...formItemLayout} label="送审金额">
                           {getFieldDecorator('contractCode')(
                             <Input style={{ width: '100%' }} placeholder="送审金额" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核减额'>
+                        <Form.Item {...formItemLayout} label="核减额">
                           {getFieldDecorator('partner')(
                             <Input style={{ width: '100%' }} placeholder="合伙人" />
                           )}
@@ -681,21 +678,21 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核增额'>
+                        <Form.Item {...formItemLayout} label="核增额">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="核增额" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='建筑面积'>
+                        <Form.Item {...formItemLayout} label="建筑面积">
                           {getFieldDecorator('contractCode')(
                             <Input style={{ width: '100%' }} placeholder="建筑面积" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核定或预算总造价'>
+                        <Form.Item {...formItemLayout} label="核定或预算总造价">
                           {getFieldDecorator('partner')(
                             <Input style={{ width: '100%' }} placeholder="核定或预算总造价" />
                           )}
@@ -704,7 +701,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={23} pull={5}>
-                        <Form.Item {...formItemLayout} label='备注'>
+                        <Form.Item {...formItemLayout} label="备注">
                           {getFieldDecorator('shigongdanwei')(
                             <TextArea style={{ width: '100%' }} placeholder="备注" />
                           )}
@@ -713,25 +710,25 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                   </div>
                 )}
-                { ( `${rowInfo.projectType}` === `可研报告` ) && (
+                {`${rowInfo.projectType}` === `可研报告` && (
                   <div>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='项目个数'>
+                        <Form.Item {...formItemLayout} label="项目个数">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="项目个数" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='送审金额'>
+                        <Form.Item {...formItemLayout} label="送审金额">
                           {getFieldDecorator('contractCode')(
                             <Input style={{ width: '100%' }} placeholder="送审金额" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核减额'>
+                        <Form.Item {...formItemLayout} label="核减额">
                           {getFieldDecorator('partner')(
                             <Input style={{ width: '100%' }} placeholder="合伙人" />
                           )}
@@ -740,21 +737,21 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核增额'>
+                        <Form.Item {...formItemLayout} label="核增额">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="核增额" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='建筑面积'>
+                        <Form.Item {...formItemLayout} label="建筑面积">
                           {getFieldDecorator('contractCode')(
                             <Input style={{ width: '100%' }} placeholder="建筑面积" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item {...formItemLayout} label='核定或预算总造价'>
+                        <Form.Item {...formItemLayout} label="核定或预算总造价">
                           {getFieldDecorator('partner')(
                             <Input style={{ width: '100%' }} placeholder="核定或预算总造价" />
                           )}
@@ -763,7 +760,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={23} pull={5}>
-                        <Form.Item {...formItemLayout} label='备注'>
+                        <Form.Item {...formItemLayout} label="备注">
                           {getFieldDecorator('shigongdanwei')(
                             <TextArea style={{ width: '100%' }} placeholder="备注" />
                           )}
@@ -772,43 +769,43 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                   </div>
                 )}
-                { ( `${rowInfo.projectType}` === `招标代理业务项目`) && (
+                {`${rowInfo.projectType}` === `招标代理业务项目` && (
                   <div>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='招标公告发布'>
+                        <Form.Item {...formItemLayout} label="招标公告发布">
                           {getFieldDecorator('shigongdanwei')(
-                            <DatePicker  style={{ width: '100%' }} placeholder="招标公告发布" />
+                            <DatePicker style={{ width: '100%' }} placeholder="招标公告发布" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='招标文件发布'>
+                        <Form.Item {...formItemLayout} label="招标文件发布">
                           {getFieldDecorator('contractCode')(
-                            <DatePicker  style={{ width: '100%' }} placeholder="招标文件发布" />
+                            <DatePicker style={{ width: '100%' }} placeholder="招标文件发布" />
                           )}
                         </Form.Item>
                       </Col>
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='开标日期'>
+                        <Form.Item {...formItemLayout} label="开标日期">
                           {getFieldDecorator('shigongdanwei')(
-                            <DatePicker  style={{ width: '100%' }} placeholder="开标日期" />
+                            <DatePicker style={{ width: '100%' }} placeholder="开标日期" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='结束日期'>
+                        <Form.Item {...formItemLayout} label="结束日期">
                           {getFieldDecorator('contractCode')(
-                            <DatePicker  style={{ width: '100%' }} placeholder="结束日期" />
+                            <DatePicker style={{ width: '100%' }} placeholder="结束日期" />
                           )}
                         </Form.Item>
                       </Col>
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='项目个数'>
+                        <Form.Item {...formItemLayout} label="项目个数">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="项目个数" />
                           )}
@@ -817,14 +814,14 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='控制价'>
+                        <Form.Item {...formItemLayout} label="控制价">
                           {getFieldDecorator('shigongdanwei')(
                             <Input style={{ width: '100%' }} placeholder="控制价" />
                           )}
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Form.Item {...formItemLayout} label='中标价'>
+                        <Form.Item {...formItemLayout} label="中标价">
                           {getFieldDecorator('contractCode')(
                             <Input style={{ width: '100%' }} placeholder="中标价" />
                           )}
@@ -833,7 +830,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Row>
                     <Row className={styles['fn-mb-15']}>
                       <Col span={21} pull={3}>
-                        <Form.Item {...formItemLayout} label='备注'>
+                        <Form.Item {...formItemLayout} label="备注">
                           {getFieldDecorator('shigongdanwei')(
                             <TextArea style={{ width: '100%' }} placeholder="备注" />
                           )}
@@ -847,14 +844,12 @@ class ProjectApplyAddModal extends PureComponent {
                 <Row className={styles['fn-mb-15']}>
                   <Col span={5} offset={6}>
                     <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
-                      {getFieldDecorator('assignor', {
-
-                      })(
+                      {getFieldDecorator('assignor', {})(
                         <div className={styles.divBorder}>
                           <Tree defaultExpandAll>
                             <TreeNode title="杭州至诚" key="0-0">
-                              <TreeNode title="管理层1" key="0-0-0" >
-                                <TreeNode title="员工1" key="0-0-0-0"  />
+                              <TreeNode title="管理层1" key="0-0-0">
+                                <TreeNode title="员工1" key="0-0-0-0" />
                                 <TreeNode title="员工2" key="0-0-0-1" />
                               </TreeNode>
                               <TreeNode title="管理层2" key="0-0-1">
@@ -863,8 +858,8 @@ class ProjectApplyAddModal extends PureComponent {
                               </TreeNode>
                             </TreeNode>
                             <TreeNode title="义务至诚" key="0-1">
-                              <TreeNode title="董事会" key="0-1-0" >
-                                <TreeNode title="主管1" key="0-1-0-0"  />
+                              <TreeNode title="董事会" key="0-1-0">
+                                <TreeNode title="主管1" key="0-1-0-0" />
                                 <TreeNode title="主管2" key="0-1-0-1" />
                               </TreeNode>
                               <TreeNode title="财务部" key="0-1-1">
@@ -876,10 +871,9 @@ class ProjectApplyAddModal extends PureComponent {
                       )}
                     </Form.Item>
                   </Col>
-                  <Col span={13} >
-                    <Form.Item >
-                      {getFieldDecorator('personal', {
-                      })(
+                  <Col span={13}>
+                    <Form.Item>
+                      {getFieldDecorator('personal', {})(
                         <div>
                           <Transfer
                             dataSource={mockData}
@@ -895,7 +889,6 @@ class ProjectApplyAddModal extends PureComponent {
                             render={item => item.title}
                           />
                         </div>
-
                       )}
                     </Form.Item>
                   </Col>
@@ -904,7 +897,7 @@ class ProjectApplyAddModal extends PureComponent {
               <Panel header="资料上传" key="3">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='底稿'>
+                    <Form.Item {...formItemLayout} label="底稿">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -920,7 +913,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='文档'>
+                    <Form.Item {...formItemLayout} label="文档">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -935,7 +928,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='图片'>
+                    <Form.Item {...formItemLayout} label="图片">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -956,7 +949,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
-                        <div style={{marginTop: -25}}>
+                        <div style={{ marginTop: -25 }}>
                           <Table
                             showHeader={false}
                             pagination={false}
@@ -985,18 +978,14 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
                       {getFieldDecorator('contractCode', {
                         rules: [{ required: true, message: '不重复的数字' }],
-                      })(
-                        <Input placeholder="自动生成" />
-                      )}
+                      })(<Input placeholder="自动生成" />)}
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
                       {getFieldDecorator('contractTitle', {
                         rules: [{ required: true, message: '请输入合同标题' }],
-                      })(
-                        <Input placeholder="请输入合同标题" />
-                      )}
+                      })(<Input placeholder="请输入合同标题" />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1008,12 +997,12 @@ class ProjectApplyAddModal extends PureComponent {
                       })(<Input placeholder="请输入合同标题" />)}
                     </Form.Item>
                   </Col>
-                  <Col span={12} >
+                  <Col span={12}>
                     <Form.Item {...formItemLayout} label={fieldLabels.contractStatus}>
                       {getFieldDecorator('contractStatus', {
                         rules: [{ required: true, message: '请选择合同性质' }],
                       })(
-                        <Select placeholder="请选择合同性质" >
+                        <Select placeholder="请选择合同性质">
                           <Option value="c">工程</Option>
                           <Option value="h">建设</Option>
                           <Option value="h">其它</Option>
@@ -1028,7 +1017,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('dfCompany', {
                         rules: [{ required: false, message: '对方公司' }],
                       })(
-                        <Select placeholder="对方公司" >
+                        <Select placeholder="对方公司">
                           <Option value="xiao">请选择</Option>
                           <Option value="z">公司A</Option>
                           <Option value="f">公司B</Option>
@@ -1046,7 +1035,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('authorizedAgent', {
                         rules: [{ required: false, message: '客户授权代理人' }],
                       })(
-                        <Select placeholder="请选择客户授权代理人" >
+                        <Select placeholder="请选择客户授权代理人">
                           <Option value="xiao">请选择</Option>
                           <Option value="z">公司A</Option>
                           <Option value="f">公司B</Option>
@@ -1082,7 +1071,7 @@ class ProjectApplyAddModal extends PureComponent {
                   <Col span={24} pull={4}>
                     <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                       {getFieldDecorator('remark')(
-                        <TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />
+                        <TextArea placeholder="请输入备注信息" rows={4} style={{ width: '170%' }} />
                       )}
                     </Form.Item>
                   </Col>
@@ -1091,7 +1080,7 @@ class ProjectApplyAddModal extends PureComponent {
               <Panel header="审核报告" key="5">
                 <Row className={styles['fn-mb-15']}>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='底稿'>
+                    <Form.Item {...formItemLayout} label="底稿">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -1107,7 +1096,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='文档'>
+                    <Form.Item {...formItemLayout} label="文档">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -1122,7 +1111,7 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item {...formItemLayout} label='图片'>
+                    <Form.Item {...formItemLayout} label="图片">
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '请输入单位名称' }],
                       })(
@@ -1143,7 +1132,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '底稿文档列表' }],
                       })(
-                        <div style={{marginTop: -25}}>
+                        <div style={{ marginTop: -25 }}>
                           <Table
                             showHeader={false}
                             pagination={false}
@@ -1159,7 +1148,7 @@ class ProjectApplyAddModal extends PureComponent {
                       {getFieldDecorator('companyName', {
                         rules: [{ required: false, message: '终稿文档列表' }],
                       })(
-                        <div style={{marginTop: -25}}>
+                        <div style={{ marginTop: -25 }}>
                           <Table
                             showHeader={false}
                             pagination={false}
@@ -1186,11 +1175,10 @@ class ProjectApplyAddModal extends PureComponent {
                     </Form.Item>
                   </Col>
                   <Col span={2}>
-                    <Form.Item {...formItemLayout} >
-                      {getFieldDecorator('button', {
-                      })(
+                    <Form.Item {...formItemLayout}>
+                      {getFieldDecorator('button', {})(
                         <div>
-                          <Button type="primary" >生成报告号</Button>
+                          <Button type="primary">生成报告号</Button>
                         </div>
                       )}
                     </Form.Item>
@@ -1199,13 +1187,9 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="报告日期">
                       {getFieldDecorator('companyAddress', {
                         rules: [{ required: true, message: '报告日期' }],
-                        initialValue:this.state.applyDate,
+                        initialValue: this.state.applyDate,
                       })(
-                        <DatePicker
-                          placeholder="报告日期"
-                          showTime
-                          format="YYYY-MM-DD HH:mm:ss"
-                        />
+                        <DatePicker placeholder="报告日期" showTime format="YYYY-MM-DD HH:mm:ss" />
                       )}
                     </Form.Item>
                   </Col>
@@ -1224,13 +1208,9 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="申请（盖章）时间">
                       {getFieldDecorator('ApplyData', {
                         rules: [{ required: true, message: '申请（盖章）时间' }],
-                        initialValue:this.state.applyDate,
+                        initialValue: this.state.applyDate,
                       })(
-                        <DatePicker
-                          placeholder="申请时间"
-                          showTime
-                          format="YYYY-MM-DD HH:mm:ss"
-                        />
+                        <DatePicker placeholder="申请时间" showTime format="YYYY-MM-DD HH:mm:ss" />
                       )}
                     </Form.Item>
                   </Col>
@@ -1247,10 +1227,8 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="文印份数">
                       {getFieldDecorator('PrintingCopies', {
                         rules: [{ required: true, message: '文印份数' }],
-                        initialValue:`1`,
-                      })(
-                        <InputNumber placeholder="文印份数" min={1} max={99} />,
-                      )}
+                        initialValue: `1`,
+                      })(<InputNumber placeholder="文印份数" min={1} max={99} />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1261,18 +1239,14 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="档案号">
                       {getFieldDecorator('visitors', {
                         rules: [{ required: false, message: '档案号' }],
-                      })(
-                        <Input placeholder="档案号"  />
-                      )}
+                      })(<Input placeholder="档案号" />)}
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item {...formItemLayout} label="归档日期">
                       {getFieldDecorator('visitType', {
                         rules: [{ required: false, message: '归档日期' }],
-                      })(
-                        <Input placeholder="归档日期"  />
-                      )}
+                      })(<Input placeholder="归档日期" />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1281,18 +1255,14 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="档案名称">
                       {getFieldDecorator('visitType', {
                         rules: [{ required: false, message: '档案名称' }],
-                      })(
-                        <Input placeholder="档案名称" />
-                      )}
+                      })(<Input placeholder="档案名称" />)}
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item {...formItemLayout} label="存放位置">
                       {getFieldDecorator('visitDate', {
                         rules: [{ required: false, message: '存放位置' }],
-                      })(
-                        <Input placeholder="存放位置" />
-                      )}
+                      })(<Input placeholder="存放位置" />)}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1301,9 +1271,7 @@ class ProjectApplyAddModal extends PureComponent {
                     <Form.Item {...formItemLayout} label="备注">
                       {getFieldDecorator('connectBusiness', {
                         rules: [{ required: false, message: '备注' }],
-                      })(
-                        <TextArea placeholder="备注" />
-                      )}
+                      })(<TextArea placeholder="备注" />)}
                     </Form.Item>
                   </Col>
                 </Row>

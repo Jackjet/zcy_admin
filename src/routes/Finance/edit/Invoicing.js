@@ -71,8 +71,8 @@ const fieldLabels = {
   invoiceType: '开票类型',
   invoicePersonnel: '开票人员',
   taxNumber: '税号',
-  invoiceNumber:'发票号码',
-  invoiceDate:'开票时间',
+  invoiceNumber: '发票号码',
+  invoiceDate: '开票时间',
 };
 
 @connect(({ rule, loading }) => ({
@@ -82,7 +82,7 @@ const fieldLabels = {
 @Form.create()
 class Invoicing extends PureComponent {
   state = {
-    selectedRows:[],
+    selectedRows: [],
   };
 
   componentDidMount() {
@@ -106,9 +106,7 @@ class Invoicing extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={12} sm={24}>
             <FormItem label="合同标题">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" style={{ width: 200 }} />
-              )}
+              {getFieldDecorator('no')(<Input placeholder="请输入" style={{ width: 200 }} />)}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -126,11 +124,18 @@ class Invoicing extends PureComponent {
     );
   }
 
-
   render() {
-    const { form, dispatch, submitting, invoicingVisible, handleInvoicingVisible,  rule: { data }, loading } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      invoicingVisible,
+      handleInvoicingVisible,
+      rule: { data },
+      loading,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { selectedRows } =this.state;
+    const { selectedRows } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -206,7 +211,6 @@ class Invoicing extends PureComponent {
       },
     ];
     return (
-
       <Modal
         title="开票"
         style={{ top: 150 }}
@@ -219,8 +223,8 @@ class Invoicing extends PureComponent {
         onCancel={() => handleInvoicingVisible()}
       >
         <div>
-          <Collapse defaultActiveKey={['1','2']}>
-            <Panel header="开票信息" key="1" >
+          <Collapse defaultActiveKey={['1', '2']}>
+            <Panel header="开票信息" key="1">
               <Card>
                 <Form layout="inline">
                   <Row className={styles['fn-mb-15']}>
@@ -242,9 +246,7 @@ class Invoicing extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceMoney}>
                         {getFieldDecorator('invoiceMoney', {
                           rules: [{ required: false, message: '请输入开票金额' }],
-                        })(
-                          <Input disabled placeholder="请输入开票金额" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请输入开票金额" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -253,18 +255,14 @@ class Invoicing extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceNumber}>
                         {getFieldDecorator('invoiceNumber', {
                           rules: [{ required: false, message: '请输入开票号码' }],
-                        })(
-                          <Input placeholder="请选择开票名称" style={{ width: 200 }} />
-                        )}
+                        })(<Input placeholder="请选择开票名称" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.invoiceDate}>
                         {getFieldDecorator('invoiceDate', {
                           rules: [{ required: false, message: '请输入开票时间' }],
-                        })(
-                          <DatePicker placeholder="请输入开票时间" style={{ width: 200 }} />
-                        )}
+                        })(<DatePicker placeholder="请输入开票时间" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -273,18 +271,14 @@ class Invoicing extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoiceCompany}>
                         {getFieldDecorator('invoiceCompany', {
                           rules: [{ required: false, message: '请选择开票公司' }],
-                        })(
-                          <Input disabled placeholder="请选择开票公司" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请选择开票公司" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item {...formhz11} label={fieldLabels.specificBusinessType}>
                         {getFieldDecorator('specificBusinessType', {
                           rules: [{ required: false, message: '请选择开票类型' }],
-                        })(
-                          <Input disabled placeholder="请选择开票类型" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请选择开票类型" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -293,9 +287,7 @@ class Invoicing extends PureComponent {
                       <Form.Item {...formhz11} label={fieldLabels.invoicePersonnel}>
                         {getFieldDecorator('invoicePersonnel', {
                           rules: [{ required: false, message: '请选择开票人员' }],
-                        })(
-                          <Input disabled placeholder="请选择开票人员" style={{ width: 200 }} />
-                        )}
+                        })(<Input disabled placeholder="请选择开票人员" style={{ width: 200 }} />)}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -305,7 +297,11 @@ class Invoicing extends PureComponent {
                         {getFieldDecorator('taxNumber', {
                           rules: [{ required: false, message: '请输入税号' }],
                         })(
-                          <Input disabled placeholder="请输入税号" className={styles['ant-input-lg']} />
+                          <Input
+                            disabled
+                            placeholder="请输入税号"
+                            className={styles['ant-input-lg']}
+                          />
                         )}
                       </Form.Item>
                     </Col>
