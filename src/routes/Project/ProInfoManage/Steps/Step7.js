@@ -1,36 +1,31 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'dva';
-import {Route, Redirect, Switch, routerRedux} from 'dva/router';
-import moment from 'moment';
 import {
   Row,
   Col,
-  Card,
   Form,
   Input,
   Select,
   Icon,
   Button,
-  Menu,
   DatePicker,
   Divider,
   Layout,
-  Modal,
   Steps,
   Collapse,
   Checkbox,
   Upload,
   Tree,
-  Transfer,
-  Table,
-  InputNumber,
+  Card,
+  message,
 } from 'antd';
-import StandardTable from 'components/StandardTable';
-import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import styles from '../../list/Style.less';
-import NotFound from "../../../Exception/404";
-import {getRoutes} from "../../../../utils/utils";
+import moment from "moment/moment";
+import { routerRedux } from 'dva/router';
+import styles from './style.less';
 
+const { Search } = Input;
+const ProTypeOption = {"001":"工程造价业务项目", "002":"可研报告", "003":"招标代理业务项目"};
+const BillSourceOption = ['合伙人', '可研报告', '招标代理业务项目'];
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
   mockData.push({
@@ -39,7 +34,7 @@ for (let i = 0; i < 10; i+=1) {
   });
 };
 const { TextArea } = Input;
-const { TreeNode } = Tree;
+const { Option } = Select;
 const fileList = [
   {
     uid: -1,
@@ -62,6 +57,7 @@ const props2 = {
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const fieldLabels = {
   ProjectCode:'项目编码',
   ReportName: '报告名称',
@@ -120,168 +116,187 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
-const { Panel } = Collapse;
-const { Step } = Steps;
-const {Content, Sider} = Layout;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
+
 @Form.create()
 class Step7 extends React.PureComponent {
+  state = {
+    BillSourceOptionData:``,
+    BillSourceValue:``,
+    ProTypeOptionData:``,
+    TestOption:``,
+    ProTypeValue:``,
+    BillTableOptionTable:``,
+  };
+  componentDidMount() {
+    this.handleBillSourceOption();
+    this.handleProTypeOption();
+    this.handleBillTableOptionTable();
+  }
+  handleBillSourceOption = () => {
+    const optionData = BillSourceOption.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillSourceOptionData: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+  handleProTypeOption = () => {
+    const ProTypeValues = Object.values(ProTypeOption);
+    const ProTypeKeys = Object.keys(ProTypeOption);
+    const optionData = ProTypeValues.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      ProTypeOptionData: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+  handleGetBillSourceValue = (val) =>{
+    console.log(val);
+    this.setState({
+      BillSourceValue: val,
+    });
+  }; // 获取业务来源的Option的值
+
+  handleProTypeSourceValue = (val) =>{
+    this.setState({
+      ProTypeValue: val,
+    });
+  }; // 获取业务来源的Option的值
+
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+
+
+
+
   render() {
-    const { dispatch, submitting, form} = this.props;
+    const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const uploadProps = {
-      name: 'file',
-      action: '//jsonplaceholder.typicode.com/posts/',
-      headers: {
-        authorization: 'authorization-text',
-      },
-      showUploadList:false,
-      onChange:this.handleOnChange,
-    };
-    const uploadColumns = [{
-      title: '文件名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>,
-    }, {
-      title: '操作',
-      dataIndex: 'age',
-      key: 'age',
-      render: text => <a>{text}</a>,
-    }, {
-      title: '版本',
-      dataIndex: 'address',
-      key: 'address',
-      render: text => <a>{text}</a>,
-    }];
-    const uploadData = [{
-      key: '1',
-      name: '文件1',
-      age: '在线编辑',
-      address: '3.0',
-    }, {
-      key: '2',
-      name: '文件2',
-      age: '在线编辑',
-      address: '2.0',
-    }, {
-      key: '3',
-      name: '文件3',
-      age: '在线编辑',
-      address: '1.0',
-    }];
-    const columnsProcess = [
-      {
-        title: '项目频度',
-        dataIndex: 'projectRate',
-      },
-      {
-        title: '计划时间',
-        dataIndex: 'planDate',
-      },
-      {
-        title: '工程阶段',
-        dataIndex: 'stage',
-      },
-      {
-        title: '问题',
-        dataIndex: 'problem',
-      },
-      {
-        title: '协助',
-        dataIndex: 'assist',
-      },
-    ];
-    const onPrev = () =>{
-      this.props.dispatch(routerRedux.push('/project/projectInfo/confirm'));
-    };
-    const onValidateForm = e => {
-      e.preventDefault();
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
+    const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
-          dispatch({
-            type: 'form/submitStepForm',
-            payload: {
-              ...values,
+          /*dispatch({
+            type: 'person/add',
+            payload: values,
+            callback: (res) => {
+              if(res.meta.status !== "000000"){
+                message.error(res.meta.errmsg);
+              } else {
+                message.success("提交成功!");
+
+              }
             },
-          });
-          this.props.dispatch(routerRedux.push('/project/projectInfo/process'));
+          });*/
+          dispatch(routerRedux.push('/project/projectInfo/createReportCode'));
         }
       });
     };
-
+    const onPrev = () => {
+      dispatch(routerRedux.push('/project/projectInfo/createContract'));
+    };
     return (
-      <div>
-        <Form layout="horizontal" className={styles.stepForm}>
+      <Card>
+        <Form layout="horizontal">
           <Row className={styles['fn-mb-15']}>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label='底稿'>
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label="委托单位(全称)">
+                {getFieldDecorator('weituoUnit', {
+                  rules: [{ required: false, message: '委托单位(全称)' }],
                 })(
-                  <div>
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 底稿
-                      </Button>
-                    </Upload>
-                    <br />
-                  </div>
+                  <Input placeholder="委托单位(全称)" />
                 )}
               </Form.Item>
             </Col>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label='文档'>
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label="联系人">
+                {getFieldDecorator('LinkMan', {
+                  rules: [{ required: false, message: '联系人' }],
                 })(
-                  <div>
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 文档
-                      </Button>
-                    </Upload>
-                  </div>
+                  <Input placeholder="联系人" />
                 )}
               </Form.Item>
             </Col>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label='图片'>
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+          </Row>
+          <Row className={styles['fn-mb-15']}>
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label="联系电话">
+                {getFieldDecorator('phone', {
+                  rules: [{ required: false, message: '联系电话' }],
                 })(
-                  <div>
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 图片
-                      </Button>
-                    </Upload>
-                  </div>
+                  <Input placeholder="联系电话" />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={12} >
+              <Form.Item {...formItemLayout} label="回函地址">
+                {getFieldDecorator('address', {
+                  rules: [{ required: false, message: '回函地址' }],
+                })(
+                  <Input placeholder="回函地址" />
                 )}
               </Form.Item>
             </Col>
           </Row>
           <Row>
-            <Col span={6} push={2}>
-              <Form.Item {...formItemLayout} lable="文档列表">
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
-                })(
-                  <div style={{marginTop: -25}}>
-                    <Table
-                      showHeader={false}
-                      pagination={false}
-                      columns={uploadColumns}
-                      dataSource={uploadData}
-                    />
-                  </div>
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
                 )}
               </Form.Item>
             </Col>
           </Row>
+          <Row>
+            <Col>
+              <Form.Item label="事由">
+                {getFieldDecorator('zhipaiCode')(
+                  <TextArea placeholder="事由" style={{ minHeight: 32 }} rows={4} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="具体内容">
+                {getFieldDecorator('zhipaiCode')(
+                  <TextArea placeholder="具体内容" style={{ minHeight: 32 }} rows={4} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Col span={8}>
+            <Form.Item {...formItemLayout} label='附件'>
+              {getFieldDecorator('companyName', {
+                rules: [{ required: false, message: '附件' }],
+              })(
+                <div>
+                  <Upload {...props2}>
+                    <Button>
+                      <Icon type="upload" /> 上传
+                    </Button>
+                  </Upload>
+                </div>
+              )}
+            </Form.Item>
+          </Col>
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{
@@ -293,22 +308,19 @@ class Step7 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }} >
+            <Button onClick={onPrev} style={{ left: 400 }}>
               上一步
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交
             </Button>
-
           </Form.Item>
         </Form>
-      </div>
-
+      </Card>
     );
   }
 }
-export default connect(({ form, loading }) => ({
-  submitting: loading.effects['form/submitStepForm'],
-  data: form.step,
-}))(Step7);
 
+export default connect(({ person, loading }) => ({
+  submitting: loading.effects['person/add'],
+}))(Step7);

@@ -58,6 +58,7 @@ const props2 = {
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const fieldLabels = {
   ProjectCode:'项目编码',
   ReportName: '报告名称',
@@ -125,10 +126,12 @@ class Step6 extends React.PureComponent {
     ProTypeOptionData:``,
     TestOption:``,
     ProTypeValue:``,
+    BillTableOptionTable:``,
   };
   componentDidMount() {
     this.handleBillSourceOption();
     this.handleProTypeOption();
+    this.handleBillTableOptionTable();
   }
   handleBillSourceOption = () => {
     const optionData = BillSourceOption.map((data, index) => {
@@ -167,11 +170,22 @@ class Step6 extends React.PureComponent {
     });
   }; // 获取业务来源的Option的值
 
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
 
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -187,9 +201,12 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/confirm'));
+          message.success("提交");
         }
       });
+    };
+    const onPrev = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/createKnowledgeSystem'));
     };
     return (
       <Card>
@@ -198,21 +215,21 @@ class Step6 extends React.PureComponent {
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.companyName}>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: true, message: '请输入单位名称' }],
+                  rules: [{ required: false, message: '请输入单位名称' }],
                 })(<Input placeholder="请输入单位名称" className={styles['fn-mb-15']} />)}
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.companyAddress}>
                 {getFieldDecorator('companyAddress', {
-                  rules: [{ required: true, message: '请输入单位地址' }],
+                  rules: [{ required: false, message: '请输入单位地址' }],
                 })(<Input placeholder="请输入单位地址" className={styles['fn-mb-15']} />)}
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.taxNumber}>
                 {getFieldDecorator('taxNumber', {
-                  rules: [{ required: true, message: '请输入税号' }],
+                  rules: [{ required: false, message: '请输入税号' }],
                 })(<Input placeholder="请输入税号" className={styles['fn-mb-15']} />)}
               </Form.Item>
             </Col>
@@ -221,15 +238,24 @@ class Step6 extends React.PureComponent {
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.openAccountBank}>
                 {getFieldDecorator('openAccountBank', {
-                  rules: [{ required: true, message: '请输入开户银行' }],
+                  rules: [{ required: false, message: '请输入开户银行' }],
                 })(<Input placeholder="请输入开户银行" className={styles['fn-mb-15']} />)}
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.bankAccount}>
                 {getFieldDecorator('bankAccount', {
-                  rules: [{ required: true, message: '请输入银行账户' }],
+                  rules: [{ required: false, message: '请输入银行账户' }],
                 })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item {...formItemLayout} label='工程造价咨询表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -244,7 +270,10 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} style={{ left: 400 }}>
+            <Button onClick={onPrev} style={{ left: 400 }}>
+              上一步
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交
             </Button>
           </Form.Item>

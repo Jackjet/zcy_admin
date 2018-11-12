@@ -321,6 +321,10 @@ export const getRouterData = app => {
       name: "审批信息",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step12')),
     },
+    '/project/projectInfo/bignessAbstract': {
+      name: "重大会审纪要",
+      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step13')),
+    },
 
 
     '/form/step-form/info': {

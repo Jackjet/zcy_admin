@@ -23,6 +23,7 @@ import moment from "moment/moment";
 import { routerRedux } from 'dva/router';
 import styles from './style.less';
 
+const { Panel }= Collapse;
 const { Search } = Input;
 const ProTypeOption = {"001":"工程造价业务项目", "002":"可研报告", "003":"招标代理业务项目"};
 const BillSourceOption = ['合伙人', '可研报告', '招标代理业务项目'];
@@ -186,120 +187,140 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/confirm'));
+          dispatch(routerRedux.push('/project/projectInfo/examineReport'));
         }
       });
     };
     return (
       <Card>
         <Form layout="horizontal">
-          <Row className={styles['fn-mb-15']}>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label={fieldLabels.contractCode}>
-                {getFieldDecorator('contractCode', {
-                  rules: [{ required: false, message: '不重复的数字' }],
-                })(
-                  <Input placeholder="自动生成" />
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label={fieldLabels.contractTitle}>
-                {getFieldDecorator('contractTitle', {
-                  rules: [{ required: false, message: '请输入合同标题' }],
-                })(
-                  <Input placeholder="请输入合同标题" />
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label={fieldLabels.totalAmount}>
-                {getFieldDecorator('totalAmount', {
-                  rules: [{ required: false, message: '请输入总金额' }],
-                })(<Input placeholder="请输入合同标题" />)}
-              </Form.Item>
-            </Col>
-            <Col span={12} >
-              <Form.Item {...formItemLayout} label={fieldLabels.contractStatus}>
-                {getFieldDecorator('contractStatus', {
-                  rules: [{ required: false, message: '请选择合同性质' }],
-                })(
-                  <Select placeholder="请选择合同性质" >
-                    <Option value="c">工程</Option>
-                    <Option value="h">建设</Option>
-                    <Option value="h">其它</Option>
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label={fieldLabels.dfCompany}>
-                {getFieldDecorator('dfCompany', {
-                  rules: [{ required: false, message: '对方公司' }],
-                })(
-                  <Select placeholder="对方公司" >
-                    <Option value="xiao">请选择</Option>
-                    <Option value="z">公司A</Option>
-                    <Option value="f">公司B</Option>
-                    <Option value="fd">公司C</Option>
-                    <Option value="sn">公司D</Option>
-                    <Option value="zf">公司E</Option>
-                    <Option value="sy">公司F</Option>
-                    <Option value="jr">公司H</Option>
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label={fieldLabels.authorizedAgent}>
-                {getFieldDecorator('authorizedAgent', {
-                  rules: [{ required: false, message: '客户授权代理人' }],
-                })(
-                  <Select placeholder="请选择客户授权代理人" >
-                    <Option value="xiao">请选择</Option>
-                    <Option value="z">公司A</Option>
-                    <Option value="f">公司B</Option>
-                    <Option value="fd">公司C</Option>
-                    <Option value="sn">公司D</Option>
-                    <Option value="zf">公司E</Option>
-                    <Option value="sy">公司F</Option>
-                    <Option value="jr">公司H</Option>
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={24} pull={4}>
-              <Form.Item {...formItemLayout} label={fieldLabels.attachment}>
-                {getFieldDecorator('attachment ', {
-                  initialValue: '1',
-                })(
-                  <Upload {...props2}>
-                    <Button type="primary">
-                      <Icon type="upload" /> 上传附件
-                    </Button>
-                    <span>
-                      *只能上传pdf;doc/docx;xls/xlsx;ppt/pptx;txt/jpg/png/gif，最多上传5个附件
-                    </span>
-                  </Upload>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={24} pull={4}>
-              <Form.Item {...formItemLayout} label={fieldLabels.remark}>
-                {getFieldDecorator('remark')(
-                  <TextArea placeholder="请输入备注信息" rows={4} style={{width:'170%'}} />
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
+          <Collapse defaultActiveKey={['1','2','3']} >
+            <Panel header="结算" key="1">
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="工程量计算">
+                    {getFieldDecorator('contractCode', {
+                      rules: [{ required: false, message: '工程量计算' }],
+                    })(
+                      <Input placeholder="工程量计算" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="套价">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '套价' }],
+                    })(
+                      <Input placeholder="套价" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="项目组稽核">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '项目组稽核' }],
+                    })(
+                      <Input placeholder="项目组稽核" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="报告生成">
+                    {getFieldDecorator('contractCode', {
+                      rules: [{ required: false, message: '报告生成' }],
+                    })(
+                      <Input placeholder="报告生成" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="核对">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '核对' }],
+                    })(
+                      <Input placeholder="核对" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Panel>
+            <Panel header="预算" key="2">
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label="工程量计算">
+                    {getFieldDecorator('contractCode', {
+                      rules: [{ required: false, message: '工程量计算' }],
+                    })(
+                      <Input placeholder="工程量计算" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label="套价">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '套价' }],
+                    })(
+                      <Input placeholder="套价" />
+                    )}
+                  </Form.Item>
+                </Col>
+
+              </Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label="项目组稽核">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '项目组稽核' }],
+                    })(
+                      <Input placeholder="项目组稽核" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item {...formItemLayout} label="报告生成">
+                    {getFieldDecorator('contractCode', {
+                      rules: [{ required: false, message: '报告生成' }],
+                    })(
+                      <Input placeholder="报告生成" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Panel>
+            <Panel header="跟踪审计" key="3" >
+              <Row className={styles['fn-mb-15']}>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="清单复核">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '清单复核' }],
+                    })(
+                      <Input placeholder="清单复核" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="项目进度">
+                    {getFieldDecorator('contractCode', {
+                      rules: [{ required: false, message: '项目进度' }],
+                    })(
+                      <Input placeholder="项目进度" />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item {...formItemLayout} label="阶段性报告">
+                    {getFieldDecorator('contractTitle', {
+                      rules: [{ required: false, message: '阶段性报告' }],
+                    })(
+                      <Input placeholder="阶段性报告" />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Panel>
+          </Collapse>
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{

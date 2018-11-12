@@ -26,6 +26,7 @@ import styles from './style.less';
 const { Search } = Input;
 const ProTypeOption = {"001":"工程造价业务项目", "002":"可研报告", "003":"招标代理业务项目"};
 const BillSourceOption = ['合伙人', '可研报告', '招标代理业务项目'];
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
   mockData.push({
@@ -124,10 +125,12 @@ class Step1 extends React.PureComponent {
     ProTypeOptionData:``,
     TestOption:``,
     ProTypeValue:``,
+    BillTableOptionTable:``,
   };
   componentDidMount() {
     this.handleBillSourceOption();
     this.handleProTypeOption();
+    this.handleBillTableOptionTable();
   }
   handleBillSourceOption = () => {
     const optionData = BillSourceOption.map((data, index) => {
@@ -137,6 +140,17 @@ class Step1 extends React.PureComponent {
     });
     this.setState({
       BillSourceOptionData: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
@@ -170,7 +184,7 @@ class Step1 extends React.PureComponent {
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -321,11 +335,11 @@ class Step1 extends React.PureComponent {
               </Form.Item>
             </Col>
             {
-              ( BillSourceValue === `0`)&& (
+              ( BillSourceValue === `合伙人`)&& (
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label='合伙人'>
                     {getFieldDecorator('partner')(
-                      <Input  style={{ width: '100%' }} placeholder="合伙人" />
+                      <Input style={{ width: '100%' }} placeholder="合伙人" />
                     )}
                   </Form.Item>
                 </Col>
@@ -381,6 +395,17 @@ class Step1 extends React.PureComponent {
                     placeholder="指派编号+弹出项目指派列表"
                     style={{ width: 200 }}
                   />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={23} pull={5}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
                 )}
               </Form.Item>
             </Col>

@@ -115,6 +115,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 
 @Form.create()
 class Step6 extends React.PureComponent {
@@ -124,10 +125,12 @@ class Step6 extends React.PureComponent {
     ProTypeOptionData:``,
     TestOption:``,
     ProTypeValue:``,
+    BillTableOptionTable:``,
   };
   componentDidMount() {
     this.handleBillSourceOption();
     this.handleProTypeOption();
+    this.handleBillTableOptionTable();
   }
   handleBillSourceOption = () => {
     const optionData = BillSourceOption.map((data, index) => {
@@ -166,11 +169,22 @@ class Step6 extends React.PureComponent {
     });
   }; // 获取业务来源的Option的值
 
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
 
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -186,46 +200,117 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/confirm'));
+          dispatch(routerRedux.push('/project/projectInfo/bignessAbstract'));
         }
       });
+    };
+    const onPrev = () => {
+      dispatch(routerRedux.push('/project/projectInfo/examineReport'));
     };
     return (
       <Card>
         <Form layout="horizontal">
-          <Row className={styles['fn-mb-15']}>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label="报告号">
+          <Row>
+            <Col span={15} pull={2}>
+              <Form.Item {...formItemLayout} label="项目名称">
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '报告号' }],
+                  rules: [{ required: false, message: '项目名称' }],
                 })(
-                  <div>
-                    <Input readOnly placeholder="报告号" className={styles['fn-mb-15']} />
-                  </div>
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={2}>
-              <Form.Item {...formItemLayout} >
-                {getFieldDecorator('button', {
-                })(
-                  <div>
-                    <Button type="primary" >生成报告号</Button>
-                  </div>
+                  <Input readOnly placeholder="项目名称" className={styles['fn-mb-15']} />
                 )}
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label="报告日期">
+              <Form.Item {...formItemLayout} label="咨询类型" >
+                {getFieldDecorator('button', {
+                  rules: [{ required: false, message: '咨询类型' }],
+                })(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="咨询类型" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={15} pull={2}>
+              <Form.Item {...formItemLayout} label="工程地址">
                 {getFieldDecorator('companyAddress', {
-                  rules: [{ required: false, message: '报告日期' }],
-                  initialValue:this.state.applyDate,
+                  rules: [{ required: false, message: '工程地址' }],
+                })(
+                  <Input
+                    placeholder="工程地址"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item {...formItemLayout} label="踏勘时间">
+                {getFieldDecorator('companyAddress', {
+                  rules: [{ required: false, message: '踏勘时间' }],
                 })(
                   <DatePicker
-                    placeholder="报告日期"
+                    placeholder="踏勘时间"
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
                   />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={15} pull={2}>
+              <Form.Item {...formItemLayout} label="踏勘人员">
+                {getFieldDecorator('companyAddress', {
+                  rules: [{ required: false, message: '踏勘人员' }],
+                })(
+                  <Input
+                    placeholder="踏勘人员"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item {...formItemLayout} label="记录人">
+                {getFieldDecorator('companyAddress', {
+                  rules: [{ required: false, message: '记录人' }],
+                  initialValue:this.state.applyDate,
+                })(
+                  <Input
+                    placeholder="踏勘人员"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={15} pull={2}>
+              <Form.Item {...formItemLayout} label="踏勘目的">
+                {getFieldDecorator('companyAddress', {
+                  rules: [{ required: false, message: '踏勘目的' }],
+                  initialValue:this.state.applyDate,
+                })(
+                  <Input
+                    placeholder="踏勘目的"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={9}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="现场实际情况记录">
+                {getFieldDecorator('zhipaiCode')(
+                  <TextArea placeholder="现场实际情况记录" style={{ minHeight: 32 }} rows={4} />
                 )}
               </Form.Item>
             </Col>
@@ -241,7 +326,10 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} style={{ left: 400 }}>
+            <Button onClick={onPrev} style={{ left: 400 }}>
+              上一步
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交
             </Button>
           </Form.Item>

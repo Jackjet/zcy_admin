@@ -31,7 +31,7 @@ import styles from '../../list/Style.less';
 import NotFound from "../../../Exception/404";
 import {getRoutes} from "../../../../utils/utils";
 
-
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
   mockData.push({
@@ -133,8 +133,10 @@ class Step4 extends React.PureComponent {
   state = {
     targetKeys: [],
     selectedRows:``,
+    BillTableOptionTable:``,
   };
   componentDidMount() {
+    this.handleBillTableOptionTable();
     this.props.dispatch({
       type: 'project/fetch',
       payload: {
@@ -188,60 +190,63 @@ class Step4 extends React.PureComponent {
     });
   }; // 分页器的下一页 第几页 方法
 
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+
   render() {
     const { form, project: { data }, dispatch, submitting, loading } = this.props;
-    const { selectedKeys, selectedRows } = this.state;
+    const { selectedKeys, selectedRows, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
       dispatch(routerRedux.push('/project/projectInfo/result'));
     };
-    const columnsProcess = [
-      {
-        title: '项目频度',
-        dataIndex: 'name',
-      },
-      {
-        title: '计划时间',
-        dataIndex: 'number',
-      },
-      {
-        title: '工程阶段',
-        dataIndex: 'stage',
-      },
-      {
-        title: '问题',
-        dataIndex: 'problem',
-      },
-      {
-        title: '协助',
-        dataIndex: 'assist',
-      },
-    ];
     const onValidateForm = e => {
       e.preventDefault();
       validateFields((err, values) => {
-        if (!err) {
-          dispatch({
-            type: 'form/submitStepForm',
-            payload: {
-              ...data,
-              ...values,
-            },
-          });
-        }
+        this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
       });
     };
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
-          <StandardTable
-            selectedRows={selectedRows}
-            loading={loading}
-            data={data}
-            columns={columnsProcess}
-            onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-          />
+          <Row>
+            <Col span={23} pull={5}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="项目实施计划安排">
+                {getFieldDecorator('zhipaiCode')(
+                  <TextArea placeholder="项目实施计划安排" style={{ minHeight: 32 }} rows={4} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="咨询操作过程中重点、难点的具体实施措施">
+                {getFieldDecorator('zhipaiCode')(
+                  <TextArea placeholder="咨询操作过程中重点、难点的具体实施措施" style={{ minHeight: 32 }} rows={4} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{
@@ -253,16 +258,15 @@ class Step4 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
-              提交
-            </Button>
             <Button onClick={onPrev} style={{ marginLeft: 8, left: 400 }}>
               上一步
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
+              提交
             </Button>
           </Form.Item>
         </Form>
       </div>
-
     );
   }
 }

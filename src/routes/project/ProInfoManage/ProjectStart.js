@@ -75,6 +75,8 @@ export default class ProjectStart extends PureComponent {
         return 2;
       case 'approvalMessage':
         return 3;
+      case 'bignessAbstract':
+        return 3;
       default:
         return 0;
     }
@@ -217,6 +219,9 @@ export default class ProjectStart extends PureComponent {
     const onStep12 = () => {
       this.props.dispatch(routerRedux.push('/project/projectInfo/approvalMessage'));
     };
+    const onStep13 = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/bignessAbstract'));
+    };
 
     return (
       <PageHeaderLayout>
@@ -233,14 +238,15 @@ export default class ProjectStart extends PureComponent {
                       <Step title="项目信息" onClick={onStep1} />
                       <Step title="人员分配" onClick={onStep2} />
                       <Step title="资料上传" onClick={onStep3} />
-                      <Step title="过程管理" onClick={onStep4} />
+                      <Step title="实施方案" onClick={onStep4} />
                     </Steps>
                   )}
                   {stepVisible === `1` && (
                     <Steps current={this.getCurrentStep()} className={styles.steps}>
-                      <Step title="生成合同" onClick={onStep6} />
-                      <Step title="报告审核" onClick={onStep7} />
-                      <Step title="生成报告号" onClick={onStep8} />
+                      <Step title="项目进度管理" onClick={onStep6} />
+                      <Step title="项目函件管理" onClick={onStep7} />
+                      <Step title="现场踏勘管理" onClick={onStep8} />
+                      <Step title="重大会审纪要" onClick={onStep13} />
                     </Steps>
                   )}
                   {stepVisible === `2` && (

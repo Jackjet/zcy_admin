@@ -24,6 +24,7 @@ import moment from "moment/moment";
 import { routerRedux } from 'dva/router';
 import styles from './style.less';
 
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const { Search } = Input;
 const ProTypeOption = {"001":"工程造价业务项目", "002":"可研报告", "003":"招标代理业务项目"};
 const BillSourceOption = ['合伙人', '可研报告', '招标代理业务项目'];
@@ -125,10 +126,12 @@ class Step6 extends React.PureComponent {
     ProTypeOptionData:``,
     TestOption:``,
     ProTypeValue:``,
+    BillTableOptionTable:``,
   };
   componentDidMount() {
     this.handleBillSourceOption();
     this.handleProTypeOption();
+    this.handleBillTableOptionTable();
   }
   handleBillSourceOption = () => {
     const optionData = BillSourceOption.map((data, index) => {
@@ -167,11 +170,23 @@ class Step6 extends React.PureComponent {
     });
   }; // 获取业务来源的Option的值
 
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+
 
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -187,9 +202,12 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/confirm'));
+          dispatch(routerRedux.push('/project/projectInfo/createKnowledgeSystem'));
         }
       });
+    };
+    const onPrev = () => {
+      this.props.dispatch(routerRedux.push('/project/projectInfo/signature'));
     };
     return (
       <Card>
@@ -234,6 +252,17 @@ class Step6 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
+          <Row>
+            <Col span={21} pull={3}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
           <Row className={styles['fn-mb-15']}>
             <Col span={24} pull={4}>
               <Form.Item {...formItemLayout} label="备注">
@@ -256,7 +285,10 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} style={{ left: 400 }}>
+            <Button onClick={onPrev} style={{ left: 400 }}>
+              上一步
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交
             </Button>
           </Form.Item>
