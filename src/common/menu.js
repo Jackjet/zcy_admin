@@ -406,6 +406,12 @@ const menuData = [
         path: 'CodeRule',
       },
       {
+        key: 'billTable',
+        name: '业务用表',
+        path: 'billTable',
+      },
+
+      {
         key: 'authorization',
         name: '权限管理',
         path: 'authorization',

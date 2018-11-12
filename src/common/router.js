@@ -93,9 +93,9 @@ export const getRouterData = app => {
     '/crm/visit': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/VisitManage/VisitList')),
     },
-    '/system/dictType': {
-      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
-      name: '数据字典类型管理',
+    '/system/billTable': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/BillTable/list/BillTable')),
+      name: '业务用表',
     },
     '/system/dictManage': {
       component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
@@ -104,6 +104,10 @@ export const getRouterData = app => {
     '/projectAllow/projectAllocation': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
+    },
+    '/system/dictType': {
+      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
+      name: '数据字典类型管理',
     },
 
     '/project/signatureInfoManage': {
