@@ -31,7 +31,7 @@ import styles from '../../list/Style.less';
 import NotFound from "../../../Exception/404";
 import {getRoutes} from "../../../../utils/utils";
 
-
+const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
   mockData.push({
@@ -132,15 +132,31 @@ const getValue = obj =>
 class Step2 extends React.PureComponent {
   state = {
     targetKeys: [],
+    BillTableOptionTable:``,
   };
+
+  componentDidMount() {
+    this.handleBillTableOptionTable();
+  }
 
   handleChange = (nextTargetKeys) => {
     this.setState({ targetKeys: nextTargetKeys });
   };
 
+  handleBillTableOptionTable = () => {
+    const optionData = BillTable.map((data, index) => {
+      const val = `${data}`;
+      const keyNum = `${index}`;
+      return <Option key={keyNum} value={val}>{val}</Option>;
+    });
+    this.setState({
+      BillTableOptionTable: optionData,
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
   render() {
     const { form, data, dispatch, submitting } = this.props;
-    const { selectedKeys } = this.state;
+    const { selectedKeys, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
       dispatch(routerRedux.push('/project/projectInfo/info'));
@@ -163,6 +179,17 @@ class Step2 extends React.PureComponent {
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
+          <Row>
+            <Col span={23} pull={5}>
+              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
+                {getFieldDecorator('contractCode')(
+                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
+                    {BillTableOptionTable}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
           <Row className={styles['fn-mb-15']}>
             <Col span={5} offset={6}>
               <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
