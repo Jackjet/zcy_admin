@@ -17,8 +17,8 @@ import {
 } from 'antd';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import styles from './style.less';
-import AllocationAddModal from './ProAssignAddModal.js';
+import styles from './Style.less';
+import AllocationAddModal from './AssignmentAddModal.js';
 
 
 const FormItem = Form.Item;
@@ -30,12 +30,12 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ project, loading }) => ({
+  project,
+  loading: loading.models.project,
 }))
 @Form.create()
-export default class ProAssignList extends PureComponent {
+export default class CooperationProList extends PureComponent {
   state = {
     AllocationAddVisible: false,
     expandForm: false,
@@ -48,7 +48,7 @@ export default class ProAssignList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'project/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -85,7 +85,7 @@ export default class ProAssignList extends PureComponent {
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'project/fetch',
       payload: params,
     });
   };
@@ -114,7 +114,7 @@ export default class ProAssignList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'company/remove',
+          type: 'project/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -147,7 +147,7 @@ export default class ProAssignList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'company/fetch',
+        type: 'project/fetch',
         payload: values,
       });
     });
@@ -157,7 +157,7 @@ export default class ProAssignList extends PureComponent {
     const { selectedRows } = this.state;
     if (!selectedRows) return;
     dispatch({
-      type: 'company/remove',
+      type: 'project/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -185,7 +185,7 @@ export default class ProAssignList extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'company/add',
+      type: 'project/add',
       payload: {
         description: fields.desc,
       },
@@ -249,7 +249,7 @@ export default class ProAssignList extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { project: { data }, loading } = this.props;
     const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
 
     const columns = [
@@ -264,8 +264,8 @@ export default class ProAssignList extends PureComponent {
         align: 'center',
       },
       {
-        title: '项目经理',
-        dataIndex: 'partnerEnterprise',
+        title: '合伙人',
+        dataIndex: 'partner',
         align: 'center',
       },
       {
@@ -292,7 +292,7 @@ export default class ProAssignList extends PureComponent {
     );
 
     const AllocationAddMethods = {
-      handleAllocationAddVisible: this.handleAllocationAddVisible,
+      handleProjectAssignmentAddVisible: this.handleAllocationAddVisible,
     };
 
     return (
@@ -331,7 +331,7 @@ export default class ProAssignList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <AllocationAddModal {...AllocationAddMethods} AllocationAddVisible={AllocationAddVisible} choiceTypeValue={choiceTypeValue} />
+        <AllocationAddModal {...AllocationAddMethods} projectAssigVisible={AllocationAddVisible} choiceTypeValue={choiceTypeValue} />
       </PageHeaderLayout>
     );
   }

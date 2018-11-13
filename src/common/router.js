@@ -105,6 +105,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
     },
+    '/projectAllow/projectAssign': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/cooperationProject/CooperationProList')),
+      name: '跨部门跨公司指派单',
+    },
     '/system/dictType': {
       component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/list/DictType')),
       name: '数据字典类型',
