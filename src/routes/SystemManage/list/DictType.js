@@ -27,23 +27,36 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ dictType, loading }) => ({
+  dictType,
+  loading: loading.models.dictType,
 }))
 @Form.create()
 // PureComponent优化Component的性能
-export default class TableList extends PureComponent {
+export default class DictType extends PureComponent {
   state = {
     modalVisible: false,
     selectedRows: [],
     formValues: {},
   };
 
+  // 组件渲染完成 dom加载完成
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'dictType/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("查询出错，请稍后再试！")
+        }else{
+          //
+
+        }
+      },
     });
   }
   // 选中的条数已经选中的价格的和   参数（页码，过滤，把东西分类检出）
@@ -73,7 +86,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'dictType/fetch',
       payload: params,
     });
   };
@@ -85,7 +98,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'dictType/fetch',
       payload: {},
     });
   };
@@ -97,7 +110,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'dictType/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -139,7 +152,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'dictType/fetch',
         payload: values,
       });
     });
@@ -152,20 +165,6 @@ export default class TableList extends PureComponent {
     });
   };
 
-  // 新增功能实现
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
-  };
 
   showDeleteConfirm = () => {
     confirm({
@@ -207,24 +206,20 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { dictType: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
     const columns = [
       {
-        title: '字典ID',
-        dataIndex: 'dictID',
+        title: '编码',
+        dataIndex: 'number',
       },
       {
-        title: '字典编码',
-        dataIndex: 'code',
-      },
-      {
-        title: '字典类别名称',
-        dataIndex: 'dictTypeName',
+        title: '名称',
+        dataIndex: 'name',
       },
       {
         title: '备注',
-        dataIndex: 'remarks',
+        dataIndex: 'remark',
       },
       {
         title: '操作',
@@ -247,7 +242,6 @@ export default class TableList extends PureComponent {
     );
 
     const parentMethods = {
-      handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
     };
 

@@ -1,16 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Modal } from 'antd';
+import { Card, Form, Col, Row, Input, Modal,Select } from 'antd';
 import { connect } from 'dva';
 import styles from './DictTypeAdd.less';
 import { message } from 'antd/lib/index';
+import SeniorModal from '../../../components/MoveModal';
 
 const { TextArea } = Input;
 const fieldLabels = {
-  number: '客户编码',
-  code: '编码',
-  name: '客户名称',
-  dateRange: '生效日期',
-  remarks: '备注',
+  number: '编码',
+  name: '名称',
+  remark: '备注',
   dictType: '字典类别',
   dictName: '字典名称',
   status: '状态',
@@ -28,12 +27,14 @@ const formItemLayout = {
   },
 };
 
-class DictTypeAdd extends PureComponent {
+class DictAdd extends PureComponent {
   state = {
     width: '90%',
+    DictTypeOptionData:'',
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.handleDictOption();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -45,24 +46,72 @@ class DictTypeAdd extends PureComponent {
       this.setState({ width });
     }
   };
+
+  //下拉选择change事件
+  handleDictValueChange = (val) =>{
+    console.log(val);
+  };
+
+  //初始化 获取所有的字典类型
+  handleDictOption = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dict/getAllDictType',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("获取数据字典类型失败！"+res.data.alert_msg)
+        }else{
+          //使用箭头函数
+          const optionData = res.data.list.map((data) => {
+            return <Option key={data.id} value={data.id}>{data.name}</Option>;
+          });
+          this.setState({
+            DictTypeOptionData: optionData,
+          });
+        }
+      },
+    });
+
+  };
+
+
   render() {
-    const { dispatch, modalVisible, form, handleAdd, handleModalVisible } = this.props;
+    const { dispatch, modalVisible, form, handleModalVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'dict/add',
             payload: values,
+            callback: (res) => {
+              if(res.meta.status !== '000000' ) {
+                message.error("添加数据字典错误，请稍后再试！"+res.data.alert_msg)
+              }else{
+                //
+                form.resetFields();
+                handleModalVisible(false);
+
+                dispatch({
+                  type: 'dict/fetch',
+                  payload: {
+                    page: 1,
+                    pageSize: 10,
+                  }
+                });
+              }
+            },
           });
-          message.success('添加成功');
-          form.resetFields();
-          handleModalVisible(false);
+
+
         }
       });
     };
-    const errors = getFieldsError();
+    /*const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
       if (!errors || errorCount === 0) {
@@ -100,15 +149,15 @@ class DictTypeAdd extends PureComponent {
           {errorCount}
         </span>
       );
-    };
+    };*/
     const cancelDate = () => {
       form.resetFields();
       handleModalVisible(false);
     };
     return (
       <div>
-        <Modal
-          title="数据字典基本信息新增"
+        <SeniorModal
+          title="数据字典新增"
           style={{ top: 20 }}
           visible={modalVisible}
           width="35%"
@@ -120,8 +169,8 @@ class DictTypeAdd extends PureComponent {
             <Form layout="horizontal">
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.code}>
-                    {getFieldDecorator('code', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
+                    {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                     })(<Input placeholder="请输入编码" />)}
                   </Form.Item>
@@ -130,16 +179,21 @@ class DictTypeAdd extends PureComponent {
               <Row>
                 <Col lg={24} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label={fieldLabels.dictType}>
-                    {getFieldDecorator('dictType', {
+                    {getFieldDecorator('dictTypeId', {
                       rules: [{ required: true, message: '请选择字典类别' }],
-                    })(<Input placeholder="请选择字典类别" />)}
+                    })(
+                      <Select getPopupContainer={triggerNode => triggerNode.parentNode}
+                        onChange={this.handleDictValueChange} placeholder="请选择字典类别" style={{ width: '100%' }} >
+                        {this.state.DictTypeOptionData}
+                      </Select>
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.dictName}>
-                    {getFieldDecorator('dictName', {
+                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
+                    {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入字典名称' }],
                     })(<Input placeholder="请输入字典名称" />)}
                   </Form.Item>
@@ -147,8 +201,8 @@ class DictTypeAdd extends PureComponent {
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
-                    {getFieldDecorator('remarks')(
+                  <Form.Item {...formItemLayout} label={fieldLabels.remark}>
+                    {getFieldDecorator('remark')(
                       <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
                     )}
                   </Form.Item>
@@ -156,7 +210,7 @@ class DictTypeAdd extends PureComponent {
               </Row>
             </Form>
           </Card>
-        </Modal>
+        </SeniorModal>
       </div>
     );
   }
@@ -164,5 +218,5 @@ class DictTypeAdd extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(DictTypeAdd));
+  submitting: loading.effects['dict/add'],
+}))(Form.create()(DictAdd));

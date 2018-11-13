@@ -3,15 +3,13 @@ import { Card, Form, Col, Row, Input, Modal } from 'antd';
 import { connect } from 'dva';
 import styles from './DictTypeAdd.less';
 import { message } from 'antd/lib/index';
+import SeniorModal from '../../../components/MoveModal';
 
 const { TextArea } = Input;
 const fieldLabels = {
-  number: '客户编码',
-  code: '编码',
-  name: '客户名称',
-  dateRange: '生效日期',
-  remarks: '备注',
-  dictTypeName: '字典类别名称',
+  number: '编码',
+  name: '名称',
+  remark: '备注',
   status: '状态',
 };
 
@@ -51,22 +49,40 @@ class DictTypeAdd extends PureComponent {
     }
   };
   render() {
-    const { dispatch, modalVisible, form, handleAdd, handleModalVisible } = this.props;
+    const { dispatch, modalVisible, form, handleModalVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'dictType/add',
             payload: values,
+            callback: (res) => {
+            if(res.meta.status !== '000000' ) {
+              message.error("添加数据字典类型错误，请稍后再试！"+res.data.alert_msg)
+            }else{
+              //
+              form.resetFields();
+              handleModalVisible(false);
+              dispatch({
+                type: 'dictType/fetch',
+                payload: {
+                  page: 1,
+                  pageSize: 10,
+                }
+              });
+
+
+            }
+           },
           });
-          message.success('添加成功');
-          handleModalVisible(false);
+
+
         }
       });
     };
-    const errors = getFieldsError();
+   /* const errors = getFieldsError();
     const getErrorInfo = () => {
       const errorCount = Object.keys(errors).filter(key => errors[key]).length;
       if (!errors || errorCount === 0) {
@@ -104,15 +120,15 @@ class DictTypeAdd extends PureComponent {
           {errorCount}
         </span>
       );
-    };
+    };*/
     const cancelDate = () => {
       form.resetFields();
       handleModalVisible(false);
     };
     return (
       <div>
-        <Modal
-          title="数据字典类型信息新增"
+        <SeniorModal
+          title="数据字典类型新增"
           style={{ top: 20 }}
           // 对话框是否可见
           visible={modalVisible}
@@ -126,8 +142,8 @@ class DictTypeAdd extends PureComponent {
             <Form layout="inline">
               <Row className={styles['row-h']}>
                 <Col span={24}>
-                  <Form.Item {...codeSpace} label={fieldLabels.code}>
-                    {getFieldDecorator('code', {
+                  <Form.Item {...codeSpace} label={fieldLabels.number}>
+                    {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                     })(<Input placeholder="请输入编码" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -135,8 +151,8 @@ class DictTypeAdd extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={24}>
-                  <Form.Item {...dictTypeNameSpace} label={fieldLabels.dictTypeName}>
-                    {getFieldDecorator('dictTypeName', {
+                  <Form.Item {...dictTypeNameSpace} label={fieldLabels.name}>
+                    {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择字典类别名称' }],
                     })(<Input placeholder="请选择字典类别名称" style={{ width: 200 }} />)}
                   </Form.Item>
@@ -144,8 +160,8 @@ class DictTypeAdd extends PureComponent {
               </Row>
               <Row className={styles['row-h']}>
                 <Col span={24}>
-                  <Form.Item {...remarksSpace} label={fieldLabels.remarks}>
-                    {getFieldDecorator('remarks')(
+                  <Form.Item {...remarksSpace} label={fieldLabels.remark}>
+                    {getFieldDecorator('remark')(
                       <TextArea placeholder="请输入备注" style={{ width: 200, height: 100 }} />
                     )}
                   </Form.Item>
@@ -153,7 +169,7 @@ class DictTypeAdd extends PureComponent {
               </Row>
             </Form>
           </Card>
-        </Modal>
+        </SeniorModal>
       </div>
     );
   }
@@ -161,5 +177,5 @@ class DictTypeAdd extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+  submitting: loading.effects['dictType/add'],
 }))(Form.create()(DictTypeAdd));

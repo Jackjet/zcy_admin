@@ -98,16 +98,16 @@ export const getRouterData = app => {
       name: '业务用表',
     },
     '/system/dictManage': {
-      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictManage')),
-      name: '数据字典管理',
+      component: dynamicWrapper(app, ['dict'], () => import('../routes/SystemManage/list/Dict')),
+      name: '数据字典',
     },
     '/projectAllow/projectAllocation': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
     },
     '/system/dictType': {
-      component: dynamicWrapper(app, [], () => import('../routes/SystemManage/list/DictType')),
-      name: '数据字典类型管理',
+      component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/list/DictType')),
+      name: '数据字典类型',
     },
 
     '/project/signatureInfoManage': {

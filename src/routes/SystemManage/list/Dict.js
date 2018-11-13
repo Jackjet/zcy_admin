@@ -21,8 +21,9 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from './DictManage.less';
-import DictManageAdd from '../add/DictManageAdd';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu/PageLeftTreeMenu';
+import styles from './Dict.less';
+import DictManageAdd from '../add/DictAdd';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -35,26 +36,97 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ dict, loading }) => ({
+  dict,
+  loading: loading.models.dict,
 }))
 @Form.create()
-export default class TableList extends PureComponent {
+export default class Dict extends PureComponent {
   state = {
     modalVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
+    dictTypeTree:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'dict/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("查询出错，请稍后再试！")
+        }else{
+          //
+
+        }
+      },
+    });
+
+    //查询树形结构
+    dispatch({
+      type: 'dict/getDictTypeTree',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("获取数据字典类型失败！"+res.data.alert_msg)
+        }else{
+          this.setState({
+            dictTypeTree : res.data.list,
+          });
+        }
+      },
     });
   }
+ // 左边树形菜单 点击事件
+  menuClick = e => {
+    console.log(e.key);
+    this.setState({
+      selectedKey: e.key,
+    });
+    //根据id 查询列表
+    if(e.key){
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'dict/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+          dictTypeId:e.key,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error("查询出错，请稍后再试！")
+          }else{
+            //
+
+          }
+        },
+      });
+    }
+
+
+  };
+
+  //左边树形菜单 打开收缩事件
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
 
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
@@ -88,8 +160,16 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'dict/fetch',
       payload: params,
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("查询出错，请稍后再试！")
+        }else{
+          //
+
+        }
+      },
     });
   };
 
@@ -100,7 +180,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'dict/fetch',
       payload: {},
     });
   };
@@ -120,7 +200,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'dict/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -160,7 +240,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'dict/fetch',
         payload: values,
       });
     });
@@ -174,7 +254,7 @@ export default class TableList extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'dict/add',
       payload: {
         description: fields.desc,
       },
@@ -237,90 +317,20 @@ export default class TableList extends PureComponent {
     );
   }
 
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(<InputNumber style={{ width: '100%' }} />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </span>
-        </div>
-      </Form>
-    );
-  }
+
 
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    return this.state.expandForm ? this.renderSimpleForm() : this.renderSimpleForm();
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { dict: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [
       {
         title: '编码',
-        dataIndex: 'dictID',
+        dataIndex: 'number',
       },
       {
         title: '名称',
@@ -328,25 +338,7 @@ export default class TableList extends PureComponent {
       },
       {
         title: '备注',
-        dataIndex: 'remarks',
-      },
-      {
-        title: '状态',
-        dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-        ],
-        onFilter: (value, record) => record.status.toString() === value,
-        render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },
+        dataIndex: 'remark',
       },
       {
         title: '操作',
@@ -380,7 +372,15 @@ export default class TableList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              <PageLeftTreeMenu
+                /*menus={router.menus}*/
+                menus={this.state.dictTypeTree}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
