@@ -88,13 +88,12 @@ class EditableTable extends PureComponent {
   };
   render() {
     const { dataSource } = this.state;
-    const columns = this.columns;
     return (
       <div>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           设置业务员
         </Button>
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table bordered dataSource={dataSource} columns={this.columns} />
       </div>
     );
   }

@@ -63,6 +63,11 @@ const menuData = [
         name: '项目指派',
         path: 'projectAllocation',
       },
+      {
+        key: 'projectAssign',
+        name: '跨部门跨公司指派单 ',
+        path: 'projectAssign',
+      },
     ],
   },
   {

@@ -172,7 +172,7 @@ class ContractEditModal extends PureComponent {
     };
     return (
       <Modal
-        title="合同基本信息新增"
+        title="合同基本信息编辑"
         visible={contractEditVisible}
         width="75%"
         maskClosable={false}
@@ -199,7 +199,12 @@ class ContractEditModal extends PureComponent {
                     {getFieldDecorator('contractType', {
                       rules: [{ required: true, message: '请选择合同类别' }],
                     })(
-                      <Select onChange={this.handleGetOptionValue} onMouseEnter={this.handleChoiceContractType} placeholder="请选择合同类别" >
+                      <Select
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                        onChange={this.handleGetOptionValue}
+                        onMouseEnter={this.handleChoiceContractType}
+                        placeholder="请选择合同类别"
+                      >
                         {contractOptionData}
                       </Select>
                     )}

@@ -18,6 +18,8 @@ import {
   Tree,
   Card,
   message,
+  Slider,
+  Progress,
 } from 'antd';
 import moment from "moment/moment";
 import { routerRedux } from 'dva/router';
@@ -191,9 +193,99 @@ class Step6 extends React.PureComponent {
         }
       });
     };
+    const marks = {
+      0: '0%',
+      20: '20%',
+      30: '30%',
+      50: '50%',
+      100: {
+        style: {
+          color: '#f50',
+        },
+        label: <strong>100%</strong>,
+      },
+    };
     return (
       <Card>
         <Form layout="horizontal">
+          <Card>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="项目总进度">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '项目总进度' }],
+                  })(
+                    <div>
+                      <Progress percent={80} status="active" strokeColor />
+                    </div>
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="资料上传">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '资料上传' }],
+                  })(
+                    <div>
+                      <Slider marks={marks} step={null} defaultValue={50} />
+                    </div>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} >
+                <Form.Item {...formItemLayout} label="修改人">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '修改人' }],
+                  })(
+                    <Input placeholder='修改人' />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} pull={1} >
+                <Form.Item {...formItemLayout} label="修改时间">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '修改时间' }],
+                  })(
+                    <Input placeholder='修改时间' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="实施方案">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '实施方案' }],
+                  })(
+                    <div>
+                      <Slider marks={marks} step={null} defaultValue={30} />
+                    </div>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} >
+                <Form.Item {...formItemLayout} label="修改人">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '修改人' }],
+                  })(
+                    <Input placeholder='修改人' />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} pull={1} >
+                <Form.Item {...formItemLayout} label="修改时间">
+                  {getFieldDecorator('contractCode', {
+                    rules: [{ required: false, message: '修改时间' }],
+                  })(
+                    <Input placeholder='修改时间' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+          </Card>
+
           <Collapse defaultActiveKey={['1','2','3']} >
             <Panel header="结算" key="1">
               <Row className={styles['fn-mb-15']}>
