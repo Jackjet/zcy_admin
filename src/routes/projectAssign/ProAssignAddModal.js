@@ -9,6 +9,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
+import {message} from "antd/lib/index";
 
 const { Search } = Input;
 const { TextArea } = Input;
@@ -56,10 +57,16 @@ class ContractAddModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'dept/add',
             payload: values,
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                handleAllocationAddVisible(false);
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
-          handleAllocationAddVisible(false);
         }
       });
     };
@@ -85,7 +92,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
-                    {getFieldDecorator('projectName', {
+                    {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入项目名称' }],
                     })(
                       <Input placeholder="请输入项目名称" style={{width:'100%'}} />
@@ -96,7 +103,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label="部门经理">
-                    {getFieldDecorator('authorizedAgent', {
+                    {getFieldDecorator('number', {
                       rules: [{ required: false, message: '部门经理' }],
                     })(
                       <Search placeholder="请选择部门经理" />
@@ -107,7 +114,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label="项目经理">
-                    {getFieldDecorator('authorizedAgent', {
+                    {getFieldDecorator('parentId', {
                       rules: [{ required: false, message: '项目经理' }],
                     })(
                       <Search placeholder="请选择项目经理" />

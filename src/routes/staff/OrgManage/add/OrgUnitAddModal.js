@@ -10,7 +10,8 @@ import {
   Select,
   Popover,
   Modal,
-  message,TreeSelect
+  message,
+  TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './Style.less';
@@ -106,7 +107,7 @@ class OrgUnitAddModal extends PureComponent {
   onOrgTreeSelectChange = (value) => {
     console.log(value);
 
-  }
+  };
 
 
   render() {

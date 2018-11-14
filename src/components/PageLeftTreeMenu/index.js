@@ -1,6 +1,5 @@
 import React from 'react';
-import { Menu, Icon } from 'antd';
-import { Link } from 'dva/router';
+import { Menu } from 'antd';
 
 const renderMenuItem = item => ( // item.route 菜单单独跳转的路由
   <Menu.Item

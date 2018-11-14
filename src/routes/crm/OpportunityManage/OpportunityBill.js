@@ -520,7 +520,7 @@ export default class BusinessOpportunity extends PureComponent {
           rowInfo={rowInfo}
         />
         <BusinessStateModal {...businessStateMethods} businessStateVisible={businessStateVisible} />
-        <ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} rowInfo={rowInfo} />
+        {/*<ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} rowInfo={rowInfo} />*/}
       </PageHeaderLayout>
     );
   }

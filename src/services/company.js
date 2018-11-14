@@ -7,7 +7,7 @@ export async function queryCompany(params) {
     body: params,
   });
 }
-//组织树形
+// 组织树形
 export async function getLeftTreeMenu() {
   return request('/company/getLeftTreeMenu', {
     method: 'POST',

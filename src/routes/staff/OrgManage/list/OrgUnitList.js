@@ -18,8 +18,8 @@ import {
   Badge,
 } from 'antd';
 import moment from "moment/moment";
-import PageLeftTreeMenu from '../../../../components/PageLeftTreeMenu/PageLeftTreeMenu';
-import StandardTable from '../../../../components/StandardTable/index';
+import PageLeftTreeMenu from '../../../../components/PageLeftTreeMenu';
+import StandardTable from '../../../../components/StandardTable';
 import styles from './OrgUnitList.less';
 import OrgUnitAddModal from '../add/OrgUnitAddModal';
 import OrgUnitViewModal from '../select/OrgUnitViewModal';
@@ -607,7 +607,7 @@ export default class OrgUnitList extends PureComponent {
              {/* {this.treeMenu()}*/}
               <PageLeftTreeMenu
                  /*menus={router.menus}*/
-               menus={this.state.orgTreeMenu}
+                menus={this.state.orgTreeMenu}
                 onClick={this.menuClick}
                 mode="inline"
                 selectedKeys={[this.state.selectedKey]}

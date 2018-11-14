@@ -69,9 +69,9 @@ const SalesManage = Form.create()(props => {
   );
 });
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dept, loading }) => ({
+  dept,
+  loading: loading.models.dept,
 }))
 @Form.create()
 export default class CusApplyBill extends PureComponent {
@@ -110,7 +110,7 @@ export default class CusApplyBill extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -137,7 +137,7 @@ export default class CusApplyBill extends PureComponent {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: params,
     });
   };
@@ -150,7 +150,7 @@ export default class CusApplyBill extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: {},
     });
   };
@@ -174,7 +174,7 @@ export default class CusApplyBill extends PureComponent {
       okText: '确定',
       onOk() {
         dispatch({
-          type: 'company/remove',
+          type: 'dept/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -210,7 +210,7 @@ export default class CusApplyBill extends PureComponent {
       okText: '确定',
       onOk() {
         dispatch({
-          type: 'company/remove',
+          type: 'dept/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -248,7 +248,7 @@ export default class CusApplyBill extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'company/fetch',
+        type: 'dept/fetch',
         payload: values,
       });
     });
@@ -407,7 +407,7 @@ export default class CusApplyBill extends PureComponent {
           <Col md={16} sm={24}>
             <FormItem label="创建日期">
               {getFieldDecorator('date', {
-                companys: [{ required: false, message: '请选择创建日期' }],
+                rules: [{ required: false, message: '请选择创建日期' }],
               })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
             </FormItem>
           </Col>
@@ -435,7 +435,7 @@ export default class CusApplyBill extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { dept: { data }, loading } = this.props;
     const {
       selectedRows,
       cusApplyAddVisible,
@@ -449,21 +449,21 @@ export default class CusApplyBill extends PureComponent {
     const columns = [
       {
         title: '编码',
-        dataIndex: 'cusApplyCode',
+        dataIndex: 'number',
         width: 150,
         fixed: 'left',
       },
       {
         title: '名称',
-        dataIndex: 'cusApplyName',
+        dataIndex: 'name',
       },
       {
         title: '联系人',
-        dataIndex: 'cusApplyLinkman',
+        dataIndex: 'linkman',
       },
       {
         title: '所属公司',
-        dataIndex: 'cusApplyCompany',
+        dataIndex: 'company',
       },
       {
         title: '行业',
@@ -509,11 +509,11 @@ export default class CusApplyBill extends PureComponent {
       },
       {
         title: '手机',
-        dataIndex: 'mobilePhone',
+        dataIndex: 'phone',
       },
       {
         title: '审核状态',
-        dataIndex: 'cusApplyStatus',
+        dataIndex: 'status',
         filters: [
           {
             text: status[0],

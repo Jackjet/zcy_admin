@@ -19,7 +19,7 @@ import {
   Divider,
   Radio,
 } from 'antd';
-import PageLeftTreeMenu from '../../components/PageLeftTreeMenu/PageLeftTreeMenu';
+import PageLeftTreeMenu from '../../components/PageLeftTreeMenu/index';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import router from './configDataMenu';

@@ -15,7 +15,7 @@ import {
   DatePicker,
   message,
 } from 'antd';
-import StandardTable from '../../components/StandardTable/index';
+import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Style.less';
 import AllocationAddModal from './AssignmentAddModal.js';
@@ -30,9 +30,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ project, loading }) => ({
-  project,
-  loading: loading.models.project,
+@connect(({ dept, loading }) => ({
+  dept,
+  loading: loading.models.dept,
 }))
 @Form.create()
 export default class CooperationProList extends PureComponent {
@@ -44,14 +44,23 @@ export default class CooperationProList extends PureComponent {
     openKeys: ['sub1'],
     choiceTypeKey: 0,
     choiceTypeValue:'',
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
   };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'project/fetch',
+      type: 'dept/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          console.log(res.meta.status);
+        } else {
+          //
+        }
       },
     });
   }
@@ -64,7 +73,8 @@ export default class CooperationProList extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
-  };
+  }; // 左边树展开关闭方法
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -75,38 +85,55 @@ export default class CooperationProList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'project/fetch',
+      type: 'dept/fetch',
       payload: params,
     });
   };
+
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
     });
-  };
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dept/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          console.log(res.meta.status);
+        } else {
+          //
+        }
+      },
     });
-  };
+  }; // 重置方法
+
   handleGetMenuValue = (MenuValue) => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });
-  };
+  }; // 左边菜单树点击获得值
+
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -114,7 +141,7 @@ export default class CooperationProList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'project/remove',
+          type: 'dept/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -129,11 +156,13 @@ export default class CooperationProList extends PureComponent {
         break;
     }
   };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  };
+  }; // 获取勾选的行
+
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -141,23 +170,35 @@ export default class CooperationProList extends PureComponent {
       if (err) return;
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
       this.setState({
         formValues: values,
       });
       dispatch({
-        type: 'project/fetch',
+        type: 'dept/fetch',
         payload: values,
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
+
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
     if (!selectedRows) return;
     dispatch({
-      type: 'project/remove',
+      type: 'dept/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -167,7 +208,8 @@ export default class CooperationProList extends PureComponent {
         });
       },
     });
-  };
+  }; // 暂时不启用
+
   handleAllocationAddVisible = flag => {
     /*if(this.state.choiceTypeKey === 0) {
       message.config({
@@ -181,21 +223,22 @@ export default class CooperationProList extends PureComponent {
     this.setState({
       AllocationAddVisible: !!flag,
     });
+    if (!flag) {
+      this.props.dispatch({
+        type: 'dept/fetch',
+        payload: {
+          page: this.state.pageCurrent,
+          pageSize: this.state.pageSizeCurrent,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          }
+        },
+      });
+    }
   };
 
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'project/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      AllocationAddVisible: false,
-    });
-  };
   rootSubmenuKeys = ['sub1'];
 
   treeMenu() {
@@ -223,6 +266,7 @@ export default class CooperationProList extends PureComponent {
       </Menu>
     );
   }
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -249,7 +293,7 @@ export default class CooperationProList extends PureComponent {
   }
 
   render() {
-    const { project: { data }, loading } = this.props;
+    const { dept: { data }, loading } = this.props;
     const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
 
     const columns = [
@@ -286,7 +330,6 @@ export default class CooperationProList extends PureComponent {
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );

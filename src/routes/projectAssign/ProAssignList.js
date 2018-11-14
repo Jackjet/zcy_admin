@@ -14,13 +14,21 @@ import {
   Menu,
   DatePicker,
   message,
+  Modal,
 } from 'antd';
+import moment from "moment/moment";
+import PageLeftTreeMenu from '../../components/PageLeftTreeMenu';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import AllocationAddModal from './ProAssignAddModal.js';
 
-
+message.config({
+  top: 100, // 提示框弹出位置
+  duration: 3, // 自动关闭延时，单位秒
+  maxCount: 1, // 最大显示数目
+});
+const { confirm } = Modal;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Content,  Sider } = Layout;
@@ -30,31 +38,41 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dept, loading }) => ({
+  dept,
+  loading: loading.models.dept,
 }))
 @Form.create()
 export default class ProAssignList extends PureComponent {
   state = {
-    AllocationAddVisible: false,
-    expandForm: false,
-    selectedRows: [],
-    formValues: {},
-    openKeys: ['sub1'],
+    AllocationAddVisible: false, // 新增状态
+    selectedRows: [], // 选中行
+    formValues: {}, // 表单值
+    openKeys: ['sub1'], // treeMenu 的父节点id
     choiceTypeKey: 0,
     choiceTypeValue:'',
+    pageCurrent:``, // 当前页
+    pageSizeCurrent:``, // 当前页大小
+    proTypeTreeMenu:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.meta.errmsg);
+        }
       },
     });
   }
+
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -64,76 +82,113 @@ export default class ProAssignList extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
-  };
+  }; // 菜单树父节点开关方法
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+    const filters = Object.keys(filtersArg).reduce((obj, key) => { // reduce() 方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
-      type: 'company/fetch',
+      type: 'dept/fetch',
       payload: params,
     });
-  };
+  }; // 分页器上一页，下一页方法
+
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
     });
-  };
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
+    dispatch({
+      type: 'dept/fetch',
+      payload: {},
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+      },
     });
-  };
+  }; // 搜索的重置方法
+
   handleGetMenuValue = (MenuValue) => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });
   };
-  handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    if (!selectedRows) return;
+
+  /*handleMenuClick = e => {
+    const thisParam = this;
+    const nameCompany = thisParam.state.selectedRows.map(row => row.name).join(`,\n`);
     switch (e.key) {
       case 'remove':
-        dispatch({
-          type: 'company/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
+        confirm({
+          title: '确定删除以下部门?',
+          content: (
+            <div>
+              <p>部门名称: {nameCompany}</p>
+              <p>操作人:当前登录用户</p>
+              <p>时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+            </div>
+          ),
+          onOk() {
+            thisParam.props.dispatch({
+              type: 'dept/removeMore',
+              payload: {
+                ids: thisParam.state.selectedRows.map(row => row.id).join(','),
+              },
+              callback: () => {
+                thisParam.setState({
+                  selectedRows: [],
+                });
+                thisParam.props.dispatch({
+                  type: 'dept/fetch',
+                  payload: {
+                    page: thisParam.state.pageCurrent,
+                    pageSize: thisParam.state.pageSizeCurrent,
+                  },
+                });
+                message.success('部门已删除');
+              },
             });
+          },
+          onCancel() {
+            console.log('Cancel');
           },
         });
         break;
       default:
         break;
     }
-  };
+  };*/
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  };
+  }; // 获取当前选中的行
+
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -141,33 +196,29 @@ export default class ProAssignList extends PureComponent {
       if (err) return;
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
       this.setState({
         formValues: values,
       });
       dispatch({
-        type: 'company/fetch',
+        type: 'dept/fetch',
         payload: values,
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
-  };
-  handleDeleteClick = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    if (!selectedRows) return;
-    dispatch({
-      type: 'company/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
-  };
+  }; // 查询方法
+
   handleAllocationAddVisible = flag => {
     /*if(this.state.choiceTypeKey === 0) {
       message.config({
@@ -181,21 +232,22 @@ export default class ProAssignList extends PureComponent {
     this.setState({
       AllocationAddVisible: !!flag,
     });
-  };
+    if(!flag){
+      this.props.dispatch({
+        type: 'dept/fetch',
+        payload: {
+          page: this.state.pageCurrent,
+          pageSize: this.state.pageSizeCurrent,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error(res.meta.errmsg);  // 返回错误信息
+          }
+        },
+      })
+    }
+  }; // 申请单新增
 
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'company/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      AllocationAddVisible: false,
-    });
-  };
   rootSubmenuKeys = ['sub1'];
 
   treeMenu() {
@@ -223,6 +275,19 @@ export default class ProAssignList extends PureComponent {
       </Menu>
     );
   }
+
+  menuClick = e => {
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -249,8 +314,8 @@ export default class ProAssignList extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
-    const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
+    const { dept: { data }, loading } = this.props;
+    const { selectedRows, AllocationAddVisible, choiceTypeValue, proTypeTreeMenu } = this.state;
 
     const columns = [
       {
@@ -265,7 +330,12 @@ export default class ProAssignList extends PureComponent {
       },
       {
         title: '项目经理',
-        dataIndex: 'partnerEnterprise',
+        dataIndex: 'proMan',
+        align: 'center',
+      },
+      {
+        title: '部门经理',
+        dataIndex: 'deptMan',
         align: 'center',
       },
       {
@@ -286,7 +356,6 @@ export default class ProAssignList extends PureComponent {
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
@@ -300,7 +369,15 @@ export default class ProAssignList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              {/*{this.treeMenu()}*/}
+              <PageLeftTreeMenu
+                menus={proTypeTreeMenu}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>

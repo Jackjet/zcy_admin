@@ -15,14 +15,16 @@ import {
   Popconfirm,
   Layout,
   Badge,
+  Modal,
 } from 'antd';
 import moment from 'moment/moment';
-import StandardTable from '../../../components/StandardTable/index';
+import StandardTable from '../../../components/StandardTable';
 import styles from './DepartmentList.less';
 import DepartmentAddModal from './DepartmentAddModal';
 import DepartmentViewModal from './DepartmentViewModal';
 import DepartmentEditModal from './DepartmentEditModal';
 
+const { confirm } = Modal;
 const statusMap = ['error', 'success', 'processing'];
 const statusText = ['禁用', '启用', '提交'];
 const { Content, Sider } = Layout;
@@ -133,11 +135,6 @@ export default class DepartmentList extends PureComponent {
       },
     });
   }; // 搜索的重置方法
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  };
 
   handleMenuClick = e => {
     const thisParam = this;

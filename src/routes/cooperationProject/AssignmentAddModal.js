@@ -119,63 +119,28 @@ class AssignmentAddModal extends PureComponent {
   };
   render() {
     const { form, dispatch, submitting, projectAssigVisible, handleProjectAssignmentAddVisible } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError, getFieldValue } = form;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
     const { dataSource } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
+            type: 'dept/add',
             payload: values,
+            callback: res => {
+              if (res.meta.status === '000000') {
+                handleProjectAssignmentAddVisible(false);
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
-          form.resetFields();
-          handleProjectAssignmentAddVisible(false);
         }
       });
     };
     const cancelDate = () => {
-      form.resetFields();
       handleProjectAssignmentAddVisible(false);
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
     };
     const columns = [
       {
@@ -214,7 +179,9 @@ class AssignmentAddModal extends PureComponent {
       },
     ];
     return (
-      <ModalWin
+      <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="新增项目指派"
         style={{ top: 20 }}
         visible={projectAssigVisible}
@@ -230,8 +197,8 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="指派编号">
-                    {getFieldDecorator('authorizedAgent', {
-                      rules: [{ required: true, message: '指派编号' }],
+                    {getFieldDecorator('number', {
+                      rules: [{ required: false, message: '指派编号' }],
                     })(
                       <Input placeholder="默认带出" />
                     )}
@@ -241,8 +208,8 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="平台">
-                    {getFieldDecorator('where', {
-                      rules: [{ required: true, message: '平台' }],
+                    {getFieldDecorator('name', {
+                      rules: [{ required: false, message: '平台' }],
                     })(
                       <Input placeholder="平台" />
                     )}
@@ -252,8 +219,8 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="部门">
-                    {getFieldDecorator('authorizedAgent', {
-                      rules: [{ required: true, message: '部门' }],
+                    {getFieldDecorator('parentId', {
+                      rules: [{ required: false, message: '部门' }],
                     })(
                       <Input placeholder="当前登录人所在部门" />
                     )}
@@ -283,7 +250,7 @@ class AssignmentAddModal extends PureComponent {
             </Form>
           </Card>
         </div>
-      </ModalWin>
+      </Modal>
     );
   }
 }

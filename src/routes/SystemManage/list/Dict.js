@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu/PageLeftTreeMenu';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu/index';
 import styles from './Dict.less';
 import DictManageAdd from '../add/DictAdd';
 
