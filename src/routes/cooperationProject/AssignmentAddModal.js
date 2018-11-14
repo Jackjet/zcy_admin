@@ -208,10 +208,10 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="平台">
-                    {getFieldDecorator('name', {
+                    {getFieldDecorator('company', {
                       rules: [{ required: false, message: '平台' }],
                     })(
-                      <Input placeholder="平台" />
+                      <Input placeholder="登录人所在公司" />
                     )}
                   </Form.Item>
                 </Col>
@@ -219,7 +219,7 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="部门">
-                    {getFieldDecorator('parentId', {
+                    {getFieldDecorator('department', {
                       rules: [{ required: false, message: '部门' }],
                     })(
                       <Input placeholder="当前登录人所在部门" />
@@ -233,6 +233,7 @@ class AssignmentAddModal extends PureComponent {
                     bordered
                     dataSource={dataSource}
                     columns={columns}
+                    pagination={false}
                   />
                 </Col>
               </Row>

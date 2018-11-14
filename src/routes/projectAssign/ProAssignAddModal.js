@@ -14,7 +14,7 @@ import {message} from "antd/lib/index";
 const { Search } = Input;
 const { TextArea } = Input;
 const fieldLabels = {
-  projectCode:'编码',
+  projectCode:'指派编码',
   projectType:'项目类别',
   projectName:'项目名称',
   year:'年度',
@@ -89,6 +89,17 @@ class ContractAddModal extends PureComponent {
         <div>
           <Card>
             <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formItemLayout} label={fieldLabels.projectCode}>
+                    {getFieldDecorator('number', {
+                      rules: [{ required: true, message: '请输入指派编码' }],
+                    })(
+                      <Input placeholder="请输入指派编码" style={{width:'100%'}} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
