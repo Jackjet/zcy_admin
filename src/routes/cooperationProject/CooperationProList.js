@@ -30,9 +30,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ dept, loading }) => ({
-  dept,
-  loading: loading.models.dept,
+@connect(({ proPartnerRelation, loading }) => ({
+  proPartnerRelation,
+  loading: loading.models.proPartnerRelation,
 }))
 @Form.create()
 export default class CooperationProList extends PureComponent {
@@ -50,7 +50,7 @@ export default class CooperationProList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'dept/fetch',
+      type: 'proPartnerRelation/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -99,7 +99,7 @@ export default class CooperationProList extends PureComponent {
     }
 
     dispatch({
-      type: 'dept/fetch',
+      type: 'proPartnerRelation/fetch',
       payload: params,
     });
   };
@@ -112,7 +112,7 @@ export default class CooperationProList extends PureComponent {
     });
     const { dispatch } = this.props;
     dispatch({
-      type: 'dept/fetch',
+      type: 'proPartnerRelation/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -141,7 +141,7 @@ export default class CooperationProList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'dept/remove',
+          type: 'proPartnerRelation/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -175,7 +175,7 @@ export default class CooperationProList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'dept/fetch',
+        type: 'proPartnerRelation/fetch',
         payload: values,
         callback: res => {
           if (res.meta.status !== '000000') {
@@ -198,7 +198,7 @@ export default class CooperationProList extends PureComponent {
     const { selectedRows } = this.state;
     if (!selectedRows) return;
     dispatch({
-      type: 'dept/remove',
+      type: 'proPartnerRelation/remove',
       payload: {
         no: selectedRows.map(row => row.no).join(','),
       },
@@ -225,7 +225,7 @@ export default class CooperationProList extends PureComponent {
     });
     if (!flag) {
       this.props.dispatch({
-        type: 'dept/fetch',
+        type: 'proPartnerRelation/fetch',
         payload: {
           page: this.state.pageCurrent,
           pageSize: this.state.pageSizeCurrent,
@@ -293,7 +293,7 @@ export default class CooperationProList extends PureComponent {
   }
 
   render() {
-    const { dept: { data }, loading } = this.props;
+    const { proPartnerRelation: { data }, loading } = this.props;
     const { selectedRows, AllocationAddVisible, choiceTypeValue } = this.state;
 
     const columns = [

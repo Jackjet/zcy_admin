@@ -14,7 +14,9 @@ import {
   Badge,
   Divider,
   Layout,
+  Popconfirm,
 } from 'antd';
+import moment from "moment/moment";
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
@@ -23,6 +25,7 @@ import CustomerApplyViewTabs from './CusApplyTabsViewModal.js';
 import EditableTable from '../../EditableTable/EditableTable';
 import ContactsAddModal from './ContactsAddModal';
 import CustomerApplyEditModal from './CusApplyEditModal';
+
 
 const { confirm } = Modal;
 const { Content } = Layout;
@@ -33,18 +36,15 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['success', 'processing'];
-const status = ['已审核', '审核中'];
-const industry = [
-  '制造业',
-  '服务业',
-  '房地产建筑',
-  '三农业务',
-  '政府购买',
-  '商业',
-  '非营利组织',
-  '其他',
-];
+const statusMap = ['default','processing','success' ];
+const linkManTypeValue = ['工程', '招标', '采购'];
+const statusValue = ['待审核', '审核中', '已审核'];
+message.config({
+  top: 100, // 提示框弹出位置
+  duration: 3, // 自动关闭延时，单位秒
+  maxCount: 1, // 最大显示数目
+});
+
 
 // 设置业务员
 const SalesManage = Form.create()(props => {
@@ -69,9 +69,9 @@ const SalesManage = Form.create()(props => {
   );
 });
 
-@connect(({ dept, loading }) => ({
-  dept,
-  loading: loading.models.dept,
+@connect(({ cusApplication, loading }) => ({
+  cusApplication,
+  loading: loading.models.cusApplication,
 }))
 @Form.create()
 export default class CusApplyBill extends PureComponent {
@@ -104,16 +104,27 @@ export default class CusApplyBill extends PureComponent {
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
+
+    pageCurrent:``,
+    pageSizeCurrent:``,
+
   };
 
   // 生命周期方法 加载页面
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'dept/fetch',
+      type: 'cusApplication/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+
+        }else{
+
+        }
       },
     });
   }
@@ -128,16 +139,20 @@ export default class CusApplyBill extends PureComponent {
       return newObj;
     }, {});
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
-      type: 'dept/fetch',
+      type: 'cusApplication/fetch',
       payload: params,
     });
   };
@@ -150,8 +165,16 @@ export default class CusApplyBill extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'dept/fetch',
+      type: 'cusApplication/fetch',
       payload: {},
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+
+      },
     });
   };
 
@@ -162,69 +185,36 @@ export default class CusApplyBill extends PureComponent {
     });
   };
 
-  // 选中行批量删除方法
-  handleDeleteMoreClick = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    if (!selectedRows) return;
-    confirm({
-      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard: false,
-      cancelText: '取消',
-      okText: '确定',
-      onOk() {
-        dispatch({
-          type: 'dept/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-        });
-        message.success('删除成功');
-      },
-      onCancel() {
-        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
-      },
-    });
-    this.setState({
-      selectedRows: [],
-    });
-  };
-
   // 当前行删除按钮操作
-  handleDeleteClick = () => {
+  showDeleteMessage =(flag, record)=> {
     const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    if (this.state.selectedRows.length === 0) {
-      message.config({
-        top: 100,
-        duration: 2,
-        maxCount: 1,
-      });
-      message.warning('请勾选');
-      return false;
-    }
-    confirm({
-      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard: false,
-      cancelText: '取消',
-      okText: '确定',
-      onOk() {
-        dispatch({
-          type: 'dept/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-        });
-        message.success('删除成功');
+    dispatch({
+      type: 'cusApplication/remove',
+      payload: {
+        id: record.id,
+        deleteFlag: 0,
       },
-      onCancel() {
-        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      callback: ( res ) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'cusApplication/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.success('删除成功!');
+        }
+
       },
     });
-    this.setState({
-      selectedRows: [],
-    });
-  };
+  }; // 信息单个删除方法
 
   // 获取选中的行
   handleSelectRows = rows => {
@@ -241,22 +231,31 @@ export default class CusApplyBill extends PureComponent {
       if (err) return;
       const values = {
         ...fieldsValue,
-        // ??
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
       this.setState({
         formValues: values,
       });
       dispatch({
-        type: 'dept/fetch',
+        type: 'cusApplication/fetch',
         payload: values,
+        callback: (res) => {
+          if(res.meta.status !== '000000'){
+            message.error(res.meta.errmsg);  // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
 
   // 隐藏和显示客户增加界面
   handleCusApplyAddVisible = flag => {
-    this.props.form.setFields();
     this.setState({
       cusApplyAddVisible: !!flag,
     });
@@ -306,8 +305,37 @@ export default class CusApplyBill extends PureComponent {
     });
   };
 
+  handleCancelCancel = (record) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cusApplication/cancelCancel',
+      payload: {
+        id: record.id,
+        status: 2,
+      },
+      callback: ( res ) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'cusApplication/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.success('提交成功!');
+        }
+      },
+    });
+  };
+
   // 弹窗查看当前行的数据
-  showViewMessage = (flag, text, record) => {
+  showViewMessage = (flag, record) => {
     this.setState({
       cusApplyTabsViewVisible: !!flag,
       rowInfo: record,
@@ -322,7 +350,7 @@ export default class CusApplyBill extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode', {})(
+              {getFieldDecorator('keyWord', {})(
                 <div>
                   <Input placeholder="请输入客户编码和名称" />
                 </div>
@@ -435,7 +463,7 @@ export default class CusApplyBill extends PureComponent {
   }
 
   render() {
-    const { dept: { data }, loading } = this.props;
+    const { cusApplication: { data }, loading } = this.props;
     const {
       selectedRows,
       cusApplyAddVisible,
@@ -459,52 +487,32 @@ export default class CusApplyBill extends PureComponent {
       },
       {
         title: '联系人',
-        dataIndex: 'linkman',
+        dataIndex: 'linkMan',
       },
       {
         title: '所属公司',
-        dataIndex: 'company',
+        dataIndex: 'companyId',
       },
       {
-        title: '行业',
-        dataIndex: 'industry',
+        title: '联系人业务性质',
+        dataIndex: 'linkManTypeId',
         filters: [
           {
-            text: industry[0],
+            text: linkManTypeValue[0],
             value: 0,
           },
           {
-            text: industry[1],
+            text: linkManTypeValue[1],
             value: 1,
           },
           {
-            text: industry[2],
+            text: linkManTypeValue[2],
             value: 2,
           },
-          {
-            text: industry[3],
-            value: 3,
-          },
-          {
-            text: industry[4],
-            value: 4,
-          },
-          {
-            text: industry[5],
-            value: 5,
-          },
-          {
-            text: industry[6],
-            value: 6,
-          },
-          {
-            text: industry[7],
-            value: 7,
-          },
         ],
-        onFilter: (value, record) => record.industry.toString() === value,
+        onFilter: (value, record) => record.linkManTypeId.toString() === value,
         render(val) {
-          return <Badge status text={industry[val]} />;
+          return <Badge status text={linkManTypeValue[val]} />;
         },
       },
       {
@@ -516,30 +524,44 @@ export default class CusApplyBill extends PureComponent {
         dataIndex: 'status',
         filters: [
           {
-            text: status[0],
+            text: statusValue[0],
             value: 0,
           },
           {
-            text: status[1],
+            text: statusValue[1],
             value: 1,
           },
+          {
+            text: statusValue[2],
+            value: 2,
+          },
         ],
-        onFilter: (value, record) => record.cusApplyStatus.toString() === value,
+        onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
+          return <Badge status={statusMap[val-1]} text={statusValue[val-1]} />;
         },
       },
       {
         title: '操作',
         width: 200,
         fixed: 'right',
-        render: (text, record, index) => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
+            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
-            <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick}>删除</a>
+            {
+              ( record.status === 1) && (
+                <span>
+                  <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+                  <Divider type="vertical" />
+                  <a onClick={() => this.handleCancelCancel(record)}>提交</a>
+                  <Divider type="vertical" />
+                  <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+                    <a>删除</a>
+                  </Popconfirm>
+                </span>
+              )
+            }
           </Fragment>
         ),
       },

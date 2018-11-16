@@ -374,22 +374,14 @@ export default class OrgUnitList extends PureComponent {
               keyWord: this.state.formValues.keyWord,
             },
           });
-          message.config({
-            top: 100, // 提示框弹出位置
-            duration: 3, // 自动关闭延时，单位秒
-            maxCount: 1, // 最大显示数目
-          });
-          message.success('编码规则启用成功!');
+          message.success('启用成功!');
         }
-
-
       },
     });
 
   }; // 公司状态启用方法
 
   handleCancel = (record) => {
-
     const { dispatch } = this.props;
     dispatch({
       type: 'company/cancel',

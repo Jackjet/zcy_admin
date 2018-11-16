@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Card, Form, Icon, Col, Row, Input, Popover, Modal, Cascader, Collapse } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
+import {message} from "antd/lib/index";
 
 const industry = [
   '制造业',
@@ -120,13 +121,30 @@ class CusApplyEditModal extends PureComponent {
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          form.resetFields();
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
+            type: 'cusInfoManage/update',
+            payload: {
+              ...values,
+              id: rowInfo.id,
+              key: rowInfo.key,
+            },
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                handleCusApplyEditVisible(false);
+                this.props.dispatch({
+                    type: 'cusInfoManage/fetch',
+                    payload: {
+                      page: this.state.pageCurrent,
+                      pageSize: this.state.pageSizeCurrent,
+                    },
+                  });
+                message.success("公司更新成功!")
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
-          handleCusApplyEditVisible(false);
         }
       });
     };
@@ -171,6 +189,8 @@ class CusApplyEditModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="客户申请单信息编辑"
         style={{ top: 20 }}
         visible={cusApplyEditVisible}
@@ -190,26 +210,27 @@ class CusApplyEditModal extends PureComponent {
                         <Row className={styles['fn-mb-15']}>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusApplyName}>
-                              {getFieldDecorator('cusApplyName', {
+                              {getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请输入客户名称' }],
-                                initialValue: `${rowInfo.customerName}`,
-                              })(<Input readOnly placeholder="请输入客户名称" />)}
+                                initialValue: rowInfo.name === null?"":rowInfo.name,
+                              })(<Input placeholder="请输入客户名称" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.industry}>
                               {getFieldDecorator('industry', {
-                                rules: [{ required: true, message: '请选择行业' }],
-                                initialValue: `${industry[rowInfo.industry]}`,
-                              })(<Input readOnly placeholder="请选择行业" />)}
+                                rules: [{ required: false, message: '请选择行业' }],
+                              })(
+                                <Input placeholder="请选择行业" />
+                              )}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusApplyCompany}>
-                              {getFieldDecorator('cusApplyCompany', {
-                                rules: [{ required: true, message: '所属公司' }],
-                                initialValue: `${rowInfo.company}`,
-                              })(<Input readOnly placeholder="所属公司" />)}
+                              {getFieldDecorator('companyId', {
+                                rules: [{ required: false, message: '所属公司' }],
+                                initialValue: rowInfo.companyId === null?"":rowInfo.companyId,
+                              })(<Input placeholder="所属公司" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -218,46 +239,47 @@ class CusApplyEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.incomeTax}>
                               {getFieldDecorator('incomeTax', {
                                 rules: [{ required: false, message: '请选择所得税征收方式' }],
-                              })(<Input readOnly placeholder="请选择所得税征收方式" />)}
+                              })(
+                                <Input placeholder="请选择所得税征收方式" />
+                              )}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.taxCode}>
                               {getFieldDecorator('taxCode', {
                                 rules: [{ required: false, message: '请输入税务登记号' }],
-                              })(<Input readOnly placeholder="请输入税务登记号" />)}
+                              })(<Input placeholder="请输入税务登记号" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusApplyStatus}>
-                              {getFieldDecorator('cusApplyStatus', {
-                                rules: [{ required: true, message: '状态' }],
-                                initialValue: `${status[rowInfo.cusApplyStatus]}`,
-                              })(<Input readOnly placeholder="请选择状态" />)}
+                              {getFieldDecorator('status', {
+                                rules: [{ required: false, message: '状态' }],
+                              })(<Input  placeholder="请选择状态" />)}
                             </Form.Item>
                           </Col>
                         </Row>
                         <Row className={styles['fn-mb-15']}>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusApplyCode}>
-                              {getFieldDecorator('cusApplyCode', {
+                              {getFieldDecorator('number', {
                                 rules: [{ required: false, message: '请输入客户编码' }],
-                                initialValue: `${rowInfo.cusApplyCode}`,
-                              })(<Input readOnly placeholder="请输入客户编码" />)}
+                                initialValue: rowInfo.number === null?"":rowInfo.number,
+                              })(<Input  placeholder="请输入客户编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.pinyin}>
                               {getFieldDecorator('pinyin', {
                                 rules: [{ required: false, message: '请输入拼音码' }],
-                              })(<Input readOnly placeholder="请输入拼音码" />)}
+                              })(<Input  placeholder="请输入拼音码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.simpleName}>
                               {getFieldDecorator('simpleName', {
                                 rules: [{ required: false, message: '请输入简称' }],
-                              })(<Input readOnly placeholder="请输入简称" />)}
+                              })(<Input  placeholder="请输入简称" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -265,24 +287,24 @@ class CusApplyEditModal extends PureComponent {
                         <Row className={styles['fn-mb-15']}>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusApplyMobilePhone}>
-                              {getFieldDecorator('cusApplyMobilePhone', {
-                                rules: [{ required: true, message: '请输入手机号码' }],
-                                initialValue: `${rowInfo.cusApplyMobilePhone}`,
-                              })(<Input readOnly placeholder="请输入手机号码" />)}
+                              {getFieldDecorator('phone', {
+                                rules: [{ required: false, message: '请输入手机号码' }],
+                                initialValue: rowInfo.phone === null?"":rowInfo.phone,
+                              })(<Input  placeholder="请输入手机号码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.email}>
                               {getFieldDecorator('email', {
                                 rules: [{ required: false, message: '请输入电子邮箱' }],
-                              })(<Input readOnly placeholder="请输入电子邮箱" />)}
+                              })(<Input  placeholder="请输入电子邮箱" />)}
                             </Form.Item>
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.companyPhone}>
                               {getFieldDecorator('companyPhone', {
                                 rules: [{ required: false, message: '请输入公司电话' }],
-                              })(<Input readOnly placeholder="请输入公司电话" />)}
+                              })(<Input  placeholder="请输入公司电话" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -292,16 +314,16 @@ class CusApplyEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.postalCode}>
                               {getFieldDecorator('postalCode', {
                                 rules: [{ required: false, message: '请输入邮政编码' }],
-                              })(<Input readOnly placeholder="请输入邮政编码" />)}
+                              })(<Input  placeholder="请输入邮政编码" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
                             <Form.Item {...formItemLayout} label={fieldLabels.region}>
                               {getFieldDecorator('region', {
-                                rules: [{ required: true, message: '请选择所在区域' }],
+                                rules: [{ required: false, message: '请选择所在区域' }],
                               })(
                                 <Cascader
-                                  readOnly
+
                                   options={optionshz}
                                   placeholder="请选择所在区域"
                                 />
@@ -314,14 +336,14 @@ class CusApplyEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.url}>
                               {getFieldDecorator('url', {
                                 rules: [{ required: false, message: '请输入网站主页' }],
-                              })(<Input readOnly placeholder="请输入网站主页" />)}
+                              })(<Input  placeholder="请输入网站主页" />)}
                             </Form.Item>
                           </Col>
                           <Col span={16}>
                             <Form.Item {...formItemLayout} label={fieldLabels.address}>
                               {getFieldDecorator('address', {
                                 rules: [{ required: false, message: '请输入详细地址' }],
-                              })(<Input readOnly placeholder="请输入详细地址" />)}
+                              })(<Input  placeholder="请输入详细地址" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -330,7 +352,7 @@ class CusApplyEditModal extends PureComponent {
                             <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                               {getFieldDecorator('remark', {
                                 rules: [{ required: false, message: '请输入备注' }],
-                              })(<TextArea readOnly placeholder="请输入备注" />)}
+                              })(<TextArea  placeholder="请输入备注" />)}
                             </Form.Item>
                           </Col>
                         </Row>
@@ -347,7 +369,7 @@ class CusApplyEditModal extends PureComponent {
                             rules: [{ required: false, message: '请输入单位名称' }],
                           })(
                             <Input
-                              readOnly
+
                               placeholder="请输入单位名称"
                               className={styles['fn-mb-15']}
                             />
@@ -360,7 +382,7 @@ class CusApplyEditModal extends PureComponent {
                             rules: [{ required: false, message: '请输入单位地址' }],
                           })(
                             <Input
-                              readOnly
+
                               placeholder="请输入单位地址"
                               className={styles['fn-mb-15']}
                             />
@@ -373,7 +395,7 @@ class CusApplyEditModal extends PureComponent {
                             rules: [{ required: false, message: '请输入税号' }],
                           })(
                             <Input
-                              readOnly
+
                               placeholder="请输入税号"
                               className={styles['fn-mb-15']}
                             />
@@ -388,7 +410,7 @@ class CusApplyEditModal extends PureComponent {
                             rules: [{ required: false, message: '请输入开户银行' }],
                           })(
                             <Input
-                              readOnly
+
                               placeholder="请输入开户银行"
                               className={styles['fn-mb-15']}
                             />
@@ -401,7 +423,6 @@ class CusApplyEditModal extends PureComponent {
                             rules: [{ required: false, message: '请输入银行账户' }],
                           })(
                             <Input
-                              readOnly
                               placeholder="请输入银行账户"
                               className={styles['fn-mb-15']}
                             />

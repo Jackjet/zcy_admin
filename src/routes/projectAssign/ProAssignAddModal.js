@@ -57,7 +57,7 @@ class ContractAddModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'dept/add',
+            type: 'projectAssignment/add',
             payload: values,
             callback: (res) => {
               if(res.meta.status === '000000' ) {
@@ -114,7 +114,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label="部门经理">
-                    {getFieldDecorator('number', {
+                    {getFieldDecorator('departmentId', {
                       rules: [{ required: false, message: '部门经理' }],
                     })(
                       <Search placeholder="请选择部门经理" />
@@ -125,7 +125,7 @@ class ContractAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label="项目经理">
-                    {getFieldDecorator('parentId', {
+                    {getFieldDecorator('projectId', {
                       rules: [{ required: false, message: '项目经理' }],
                     })(
                       <Search placeholder="请选择项目经理" />

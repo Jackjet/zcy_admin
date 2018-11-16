@@ -81,10 +81,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
     },
     '/crm/customerApply': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
+      component: dynamicWrapper(app, ['cusApplication'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
     },
     '/crm/customer': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/CusInfoManage/CusBill')),
+      component: dynamicWrapper(app, ['cusInfoManage'], () => import('../routes/crm/CusInfoManage/CusBill')),
     },
     '/crm/business': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/crm/OpportunityManage/OpportunityBill')
@@ -102,11 +102,11 @@ export const getRouterData = app => {
       name: '数据字典',
     },
     '/projectAllow/projectAllocation': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/projectAssign/ProAssignList')),
+      component: dynamicWrapper(app, ['projectAssignment'], () => import('../routes/projectAssign/ProAssignList')),
       name: '项目指派',
     },
     '/projectAllow/projectAssign': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/cooperationProject/CooperationProList')),
+      component: dynamicWrapper(app, ['proPartnerRelation'], () => import('../routes/cooperationProject/CooperationProList')),
       name: '跨部门跨公司指派单',
     },
     '/system/dictType': {

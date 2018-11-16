@@ -15,6 +15,7 @@ import {
   Badge,
   Divider,
   Layout,
+  Popconfirm,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -73,9 +74,9 @@ const SalesManage = Form.create()(props => {
   );
 });
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ cusInfoManage, loading }) => ({
+  cusInfoManage,
+  loading: loading.models.cusInfoManage,
 }))
 @Form.create()
 export default class CustomerList extends PureComponent {
@@ -110,16 +111,27 @@ export default class CustomerList extends PureComponent {
 
     // 左边菜单树的起始状态
     openKeys: ['sub1'],
+
+    pageCurrent:``,
+    pageSizeCurrent:``,
+
   };
 
   // 生命周期方法 加载页面
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'cusInfoManage/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+
+        }else{
+
+        }
       },
     });
   }
@@ -147,17 +159,21 @@ export default class CustomerList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'cusInfoManage/fetch',
       payload: params,
     });
   };
@@ -170,8 +186,16 @@ export default class CustomerList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'company/fetch',
+      type: 'cusInfoManage/fetch',
       payload: {},
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+
+      },
     });
   };
 
@@ -210,40 +234,35 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  handleDeleteClick = () => {
+  showDeleteMessage =(flag, record)=> {
     const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    if (this.state.selectedRows.length === 0) {
-      message.config({
-        top: 100,
-        duration: 2,
-        maxCount: 1,
-      });
-      message.warning('请勾选');
-      return false;
-    }
-    confirm({
-      title: `确认删除编码为：${selectedRows.map(row => row.customerCode).join(',')}的客户`,
-      keyboard: false,
-      cancelText: '取消',
-      okText: '确定',
-      onOk() {
-        dispatch({
-          type: 'company/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-        });
-        message.success('删除成功');
+    dispatch({
+      type: 'cusInfoManage/remove',
+      payload: {
+        id: record.id,
+        deleteFlag: 0,
       },
-      onCancel() {
-        message.error(`编码为的客户：${selectedRows.map(row => row.customerCode).join(',')}未删除`);
+      callback: ( res ) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            selectedRows: [],
+          });
+          dispatch({
+            type: 'cusInfoManage/fetch',
+            payload: {
+              page: this.state.pageCurrent,
+              pageSize: this.state.pageSizeCurrent,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+          message.success('删除成功!');
+        }
+
       },
     });
-    this.setState({
-      selectedRows: [],
-    });
-  };
+  }; // 信息单个删除方法
 
   // 获取选中的行
   handleSelectRows = rows => {
@@ -255,24 +274,30 @@ export default class CustomerList extends PureComponent {
   // 查询方法
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
-        // ??
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
-        type: 'company/fetch',
+        type: 'cusInfoManage/fetch',
         payload: values,
+        callback: (res) => {
+          if(res.meta.status !== '000000'){
+            message.error(res.meta.errmsg);  // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
@@ -281,7 +306,7 @@ export default class CustomerList extends PureComponent {
   handleCustomerAddVisible = flag => {
     this.props.form.setFields();
     this.setState({
-      customerAddVisible: !!flag,
+      cusApplication: !!flag,
     });
   };
 
@@ -290,6 +315,23 @@ export default class CustomerList extends PureComponent {
     this.setState({
       customerEditVisible: !!flag,
     });
+    if(!flag){
+      this.props.dispatch({
+        type: 'cusInfoManage/fetch',
+        payload: {
+          page: this.state.pageCurrent,
+          pageSize: this.state.pageSizeCurrent,
+        },
+        callback: (res) => {
+          if(res.meta.status === '000000' ) {
+
+          } else {
+            message.error(res.meta.errmsg);  // 返回错误信息
+            // this.props.data = res.data;
+          }
+        },
+      })
+    }
   };
 
   // 隐藏和显示联系人增加界面
@@ -308,6 +350,7 @@ export default class CustomerList extends PureComponent {
       tabsViewVisible: !!flag,
     });
   };
+
   handleCustomerDistributionVisible = flag => {
     this.setState({
       customerDistributionVisible: !!flag,
@@ -330,20 +373,6 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 添加表单数据
-  handleCustomerAdd = fields => {
-    this.props.dispatch({
-      type: 'company/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      customerAddVisible: false,
-    });
-  };
   handleAddContact = fields => {
     this.props.dispatch({
       type: 'company/add',
@@ -359,6 +388,7 @@ export default class CustomerList extends PureComponent {
 
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
+
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -386,7 +416,6 @@ export default class CustomerList extends PureComponent {
       </Menu>
     );
   }
-
   // 弹窗展示当前行的数据
   showEditMessage = (flag, record) => {
     this.setState({
@@ -497,9 +526,9 @@ export default class CustomerList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('customerCode', {})(
+              {getFieldDecorator('keyWord', {})(
                 <div>
-                  <Input placeholder="请输入客户编码和名称" />
+                  <Input placeholder="请输入关键字" />
                 </div>
               )}
             </FormItem>
@@ -523,7 +552,7 @@ export default class CustomerList extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { cusInfoManage: { data }, loading } = this.props;
     const {
       selectedRows,
       customerAddVisible,
@@ -538,20 +567,19 @@ export default class CustomerList extends PureComponent {
     const columns = [
       {
         title: '编码',
-        dataIndex: 'cusCode',
-        /* fixed: 'left',*/
+        dataIndex: 'number',
       },
       {
         title: '名称',
-        dataIndex: 'cusName',
+        dataIndex: 'name',
       },
       {
         title: '联系人',
-        dataIndex: 'cusLinkman',
+        dataIndex: 'linkman',
       },
       {
         title: '所属公司',
-        dataIndex: 'cusCompany',
+        dataIndex: 'companyId',
       },
       {
         title: '行业',
@@ -597,11 +625,11 @@ export default class CustomerList extends PureComponent {
       },
       {
         title: '手机',
-        dataIndex: 'cusMobilePhone',
+        dataIndex: 'phone',
       },
       {
         title: '状态',
-        dataIndex: 'cusStatus',
+        dataIndex: 'status',
         filters: [
           {
             text: status[0],
@@ -626,20 +654,22 @@ export default class CustomerList extends PureComponent {
             <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
             <Divider type="vertical" />
             <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
-            {record.customerStatus === 1 && (
+            {record.status === 1 && (
               <span>
                 <Divider type="vertical" />
                 <a>启用</a>
               </span>
             )}
-            {record.customerStatus === 0 && (
+            {record.status === 0 && (
               <span>
                 <Divider type="vertical" />
                 <a>停用</a>
               </span>
             )}
             <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick}>删除</a>
+            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+              <a>删除</a>
+            </Popconfirm>
           </Fragment>
         ),
       },
@@ -647,7 +677,6 @@ export default class CustomerList extends PureComponent {
 
     const ParentMethods = {
       handleCustomerAddVisible: this.handleCustomerAddVisible,
-      handleCustomerAdd: this.handleCustomerAdd,
       handleCustomerEditVisible: this.handleCustomerEditVisible,
       handleContactsVisible: this.handleContactsVisible,
       handleTabsViewVisible: this.handleTabsViewVisible,
@@ -710,10 +739,7 @@ export default class CustomerList extends PureComponent {
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
         <CustomerViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
         <SalesManage {...ParentMethods} salesVisible={salesVisible} />
-        <CustomerDistributionModal
-          {...ParentMethods}
-          customerDistributionVisible={customerDistributionVisible}
-        />
+        <CustomerDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
       </PageHeaderLayout>
     );
   }

@@ -13,6 +13,35 @@ module.exports = {
       '^company': '/company',
     },
   },
+  '/cusApplication': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^cusApplication': '/cusApplication',
+    },
+  },
+  '/cusInfoManage': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^cusInfoManage': '/cusInfoManage',
+    },
+  },
+  '/projectAssignment': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^projectAssignment': '/projectAssignment',
+    },
+  },
+  '/proPartnerRelation': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^proPartnerRelation': '/proPartnerRelation',
+    },
+  },
+
   '/dept': {
     target:'http://localhost:1801',
     changeOrigin: true,

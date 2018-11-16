@@ -126,7 +126,7 @@ class AssignmentAddModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'dept/add',
+            type: 'proPartnerRelation/add',
             payload: values,
             callback: res => {
               if (res.meta.status === '000000') {
@@ -208,7 +208,7 @@ class AssignmentAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} pull={2}>
                   <Form.Item {...formItemLayout} label="平台">
-                    {getFieldDecorator('company', {
+                    {getFieldDecorator('companyId', {
                       rules: [{ required: false, message: '平台' }],
                     })(
                       <Input placeholder="登录人所在公司" />

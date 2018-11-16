@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Modal,Select } from 'antd';
+import { Card, Form, Col, Row, Input, Modal,Select, message } from 'antd';
 import { connect } from 'dva';
 import styles from './DictTypeAdd.less';
-import { message } from 'antd/lib/index';
 import SeniorModal from '../../../components/MoveModal';
 
+const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
   number: '编码',
@@ -47,12 +47,12 @@ class DictAdd extends PureComponent {
     }
   };
 
-  //下拉选择change事件
+  // 下拉选择change事件
   handleDictValueChange = (val) =>{
     console.log(val);
   };
 
-  //初始化 获取所有的字典类型
+  // 初始化 获取所有的字典类型
   handleDictOption = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -63,9 +63,9 @@ class DictAdd extends PureComponent {
       },
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
-          message.error("获取数据字典类型失败！"+res.data.alert_msg)
+          message.error("获取数据字典类型失败!"+res.data.alert_msg)
         }else{
-          //使用箭头函数
+          // 使用箭头函数
           const optionData = res.data.list.map((data) => {
             return <Option key={data.id} value={data.id}>{data.name}</Option>;
           });

@@ -15,6 +15,7 @@ import {
   DatePicker,
   message,
   Modal,
+  Badge,
 } from 'antd';
 import moment from "moment/moment";
 import PageLeftTreeMenu from '../../components/PageLeftTreeMenu';
@@ -38,9 +39,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ dept, loading }) => ({
-  dept,
-  loading: loading.models.dept,
+@connect(({ projectAssignment, loading }) => ({
+  projectAssignment,
+  loading: loading.models.projectAssignment,
 }))
 @Form.create()
 export default class ProAssignList extends PureComponent {
@@ -61,7 +62,19 @@ export default class ProAssignList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'dept/fetch',
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({
+            proTypeTreeMenu : res.data.list,
+          });
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
+    dispatch({
+      type: 'projectAssignment/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -107,7 +120,7 @@ export default class ProAssignList extends PureComponent {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
-      type: 'dept/fetch',
+      type: 'projectAssignment/fetch',
       payload: params,
     });
   }; // 分页器上一页，下一页方法
@@ -119,7 +132,7 @@ export default class ProAssignList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'dept/fetch',
+      type: 'projectAssignment/fetch',
       payload: {},
       callback: res => {
         if (res.meta.status !== '000000') {
@@ -154,7 +167,7 @@ export default class ProAssignList extends PureComponent {
           ),
           onOk() {
             thisParam.props.dispatch({
-              type: 'dept/removeMore',
+              type: 'projectAssignment/removeMore',
               payload: {
                 ids: thisParam.state.selectedRows.map(row => row.id).join(','),
               },
@@ -163,7 +176,7 @@ export default class ProAssignList extends PureComponent {
                   selectedRows: [],
                 });
                 thisParam.props.dispatch({
-                  type: 'dept/fetch',
+                  type: 'projectAssignment/fetch',
                   payload: {
                     page: thisParam.state.pageCurrent,
                     pageSize: thisParam.state.pageSizeCurrent,
@@ -201,7 +214,7 @@ export default class ProAssignList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'dept/fetch',
+        type: 'projectAssignment/fetch',
         payload: values,
         callback: res => {
           if (res.meta.status !== '000000') {
@@ -234,7 +247,7 @@ export default class ProAssignList extends PureComponent {
     });
     if(!flag){
       this.props.dispatch({
-        type: 'dept/fetch',
+        type: 'projectAssignment/fetch',
         payload: {
           page: this.state.pageCurrent,
           pageSize: this.state.pageSizeCurrent,
@@ -314,7 +327,7 @@ export default class ProAssignList extends PureComponent {
   }
 
   render() {
-    const { dept: { data }, loading } = this.props;
+    const { projectAssignment: { data }, loading } = this.props;
     const { selectedRows, AllocationAddVisible, choiceTypeValue, proTypeTreeMenu } = this.state;
 
     const columns = [

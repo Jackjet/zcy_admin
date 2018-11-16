@@ -70,7 +70,7 @@ class DictTypeAdd extends PureComponent {
                 payload: {
                   page: 1,
                   pageSize: 10,
-                }
+                },
               });
 
 
