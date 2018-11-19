@@ -1,23 +1,69 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Button, Input, message, Popconfirm, Divider } from 'antd';
-import styles from './style.less';
+import {
+  Card,
+  Form,
+  Icon,
+  Col,
+  Row,
+  Input,
+  Select,
+  Popover,
+  Cascader,
+  Checkbox,
+  Modal,
+  message,
+  Button,
+  Table,
+  Popconfirm,
+  Divider,
+} from 'antd';
+import { connect } from 'dva';
+import styles from '../CusApplyBill/style.less';
 
-export default class TableForm extends PureComponent {
-  constructor(props) {
-    super(props);
+const tableData = [
+  {
+    key: '1',
+    workId: '00001',
+    name: 'John Brown',
+    department: 'New York No. 1 Lake Park',
+  },
+  {
+    key: '2',
+    workId: '00002',
+    name: 'Jim Green',
+    department: 'London No. 1 Lake Park',
+  },
+  {
+    key: '3',
+    workId: '00003',
+    name: 'Joe Black',
+    department: 'Sidney No. 1 Lake Park',
+  },
+];
+const { Option } = Select;
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
 
-    this.state = {
-      data: props.value,
-      loading: false,
-    };
+class ContactsAddModal extends PureComponent {
+  state = {
+    width: '100%',
+    data:tableData,
+  };
+  componentDidMount() {
+    window.addEventListener('resize', this.resizeFooterToolbar);
   }
-  componentWillReceiveProps(nextProps) {
-    if ('value' in nextProps) {
-      this.setState({
-        data: nextProps.value,
-      });
-    }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
   getRowByKey(key, newData) {
     return (newData || this.state.data).filter(item => item.key === key)[0];
   }
@@ -107,7 +153,17 @@ export default class TableForm extends PureComponent {
     this.setState({ data: newData });
     this.clickedCancel = false;
   }
+
+  resizeFooterToolbar = () => {
+    const sider = document.querySelectorAll('.ant-layout-sider')[0];
+    const width = `calc(100% - ${sider.style.width})`;
+    if (this.state.width !== width) {
+      this.setState({ width });
+    }
+  };
   render() {
+    const { form, dispatch, submitting, contactsVisible, handleContactsVisible } = this.props;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
     const columns = [
       {
         title: '成员姓名',
@@ -206,26 +262,58 @@ export default class TableForm extends PureComponent {
         },
       },
     ];
+    const validate = () => {
+      validateFieldsAndScroll((error, values) => {
+        if (!error) {
+          // submit the values
+          dispatch({
+            type: 'rule/add',
+            payload: values,
+          });
+          message.success('添加成功');
+          handleContactsVisible(false);
+        }
+      });
+    };
     return (
-      <Fragment>
-        <Table
-          loading={this.state.loading}
-          columns={columns}
-          dataSource={this.state.data}
-          pagination={false}
-          rowClassName={record => {
-            return record.editable ? styles.editable : '';
-          }}
-        />
-        <Button
-          style={{ width: '100%', marginTop: 16, marginBottom: 8 }}
-          type="dashed"
-          onClick={this.newMember}
-          icon="plus"
-        >
-          新增成员
-        </Button>
-      </Fragment>
+      <Modal
+        title="联系人基本信息设置"
+        style={{ top: 20 }}
+        visible={contactsVisible}
+        width="80%"
+        maskClosable={false}
+        onOk={validate}
+        onCancel={() => handleContactsVisible()}
+      >
+        <div>
+          <Card>
+            <Fragment>
+              <Table
+                loading={this.state.loading}
+                columns={columns}
+                dataSource={this.state.data}
+                pagination={false}
+                rowClassName={record => {
+                  return record.editable ? styles.editable : '';
+                }}
+              />
+              <Button
+                style={{ width: '100%', marginTop: 16, marginBottom: 8 }}
+                type="dashed"
+                onClick={this.newMember}
+                icon="plus"
+              >
+                新增成员
+              </Button>
+            </Fragment>
+          </Card>
+        </div>
+      </Modal>
     );
   }
 }
+
+export default connect(({ global, loading }) => ({
+  collapsed: global.collapsed,
+  submitting: loading.effects['form/submitAdvancedForm'],
+}))(Form.create()(ContactsAddModal));

@@ -14,6 +14,7 @@ import {
   Cascader,
   Collapse,
   Badge,
+  Button,
 } from 'antd';
 import { connect } from 'dva';
 import StandardTable from '../../../components/StandardTable';
@@ -289,7 +290,7 @@ class CustomerViewTabs extends PureComponent {
     const columnsContacts = [
       {
         title: '编码',
-        dataIndex: 'code',
+        dataIndex: 'number',
       },
       {
         title: '名称',
@@ -297,11 +298,11 @@ class CustomerViewTabs extends PureComponent {
       },
       {
         title: '手机号',
-        dataIndex: 'mobilePhone',
+        dataIndex: 'phone',
       },
       {
         title: '办公电话',
-        dataIndex: 'companyPhone',
+        dataIndex: 'phone',
       },
       {
         title: '地址',
@@ -309,7 +310,7 @@ class CustomerViewTabs extends PureComponent {
       },
       {
         title: '联系人性质',
-        dataIndex: 'contractNature',
+        dataIndex: 'linkManTypeId',
       },
       {
         title: '状态',
@@ -479,6 +480,8 @@ class CustomerViewTabs extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="客户基本信息查看"
         style={{ top: 20 }}
         visible={tabsViewVisible}
@@ -486,7 +489,9 @@ class CustomerViewTabs extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
-        footer={null}
+        footer={
+          <Button type="primary" onClick={validate}>知道了</Button>
+        }  // 在button外面加上数据，会报迭代没有设置key属性值
       >
         <Tabs defaultActiveKey="1">
           <TabPane
@@ -507,7 +512,7 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item {...formItemLayout} label={fieldLabels.cusName}>
                             {getFieldDecorator('cusName', {
                               rules: [{ required: true, message: '请输入客户名称' }],
-                              initialValue: `${rowInfo.cusName}`,
+                              initialValue: `${rowInfo.name}`,
                             })(<Input readOnly placeholder="请输入客户名称" />)}
                           </Form.Item>
                         </Col>
@@ -523,7 +528,7 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item {...formItemLayout} label={fieldLabels.cusCompany}>
                             {getFieldDecorator('cusCompany', {
                               rules: [{ required: true, message: '所属公司' }],
-                              initialValue: `${rowInfo.cusCompany}`,
+                              initialValue: `${rowInfo.companyId}`,
                             })(<Input readOnly placeholder="所属公司" />)}
                           </Form.Item>
                         </Col>
@@ -547,7 +552,7 @@ class CustomerViewTabs extends PureComponent {
                           <Form.Item {...formItemLayout} label={fieldLabels.cusStatus}>
                             {getFieldDecorator('cusStatus', {
                               rules: [{ required: true, message: '状态' }],
-                              initialValue: `${cusStatus[rowInfo.cusStatus]}`,
+                              initialValue: `${cusStatus[rowInfo.status]}`,
                             })(<Input readOnly placeholder="请选择状态" />)}
                           </Form.Item>
                         </Col>
@@ -555,9 +560,9 @@ class CustomerViewTabs extends PureComponent {
                       <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
                           <Form.Item {...formItemLayout} label={fieldLabels.cusCode}>
-                            {getFieldDecorator('cusCode', {
+                            {getFieldDecorator('number', {
                               rules: [{ required: false, message: '请输入客户编码' }],
-                              initialValue: `${rowInfo.cusCode}`,
+                              initialValue: `${rowInfo.number}`,
                             })(<Input readOnly placeholder="请输入客户编码" />)}
                           </Form.Item>
                         </Col>
@@ -580,9 +585,9 @@ class CustomerViewTabs extends PureComponent {
                       <Row className={styles['fn-mb-15']}>
                         <Col span={8}>
                           <Form.Item {...formItemLayout} label={fieldLabels.cusMobilePhone}>
-                            {getFieldDecorator('cusMobilePhone', {
+                            {getFieldDecorator('phone', {
                               rules: [{ required: true, message: '请输入手机号码' }],
-                              initialValue: `${rowInfo.cusMobilePhone}`,
+                              initialValue: `${rowInfo.phone}`,
                             })(<Input readOnly placeholder="请输入手机号码" />)}
                           </Form.Item>
                         </Col>

@@ -42,6 +42,30 @@ module.exports = {
     },
   },
 
+  '/opportunity': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^opportunity': '/opportunity',
+    },
+  },
+
+  '/visit': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^visit': '/visit',
+    },
+  },
+
+  '/contract': {
+    target:'http://localhost:1801',
+    changeOrigin: true,
+    pathRewrite: {
+      '^contract': '/contract',
+    },
+  },
+
   '/dept': {
     target:'http://localhost:1801',
     changeOrigin: true,

@@ -175,6 +175,8 @@ class CustomerEditModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="客户基本信息编辑"
         style={{ top: 20 }}
         visible={customerEditVisible}
@@ -194,9 +196,9 @@ class CustomerEditModal extends PureComponent {
                         <Row className={styles['fn-mb-15']}>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusName}>
-                              {getFieldDecorator('cusName', {
+                              {getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请输入客户名称' }],
-                                initialValue: `${rowInfo.cusName}`,
+                                initialValue: `${rowInfo.name}`,
                               })(<Input placeholder="请输入客户名称" />)}
                             </Form.Item>
                           </Col>
@@ -210,9 +212,9 @@ class CustomerEditModal extends PureComponent {
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusCompany}>
-                              {getFieldDecorator('cusCompany', {
+                              {getFieldDecorator('company', {
                                 rules: [{ required: true, message: '所属公司' }],
-                                initialValue: `${rowInfo.cusCompany}`,
+                                initialValue: `${rowInfo.company}`,
                               })(<Input placeholder="所属公司" />)}
                             </Form.Item>
                           </Col>
@@ -234,9 +236,9 @@ class CustomerEditModal extends PureComponent {
                           </Col>
                           <Col span={8}>
                             <Form.Item {...formItemLayout} label={fieldLabels.cusStatus}>
-                              {getFieldDecorator('cusStatus', {
+                              {getFieldDecorator('status', {
                                 rules: [{ required: true, message: '状态' }],
-                                initialValue: `${cusStatus[rowInfo.cusStatus]}`,
+                                initialValue: `${cusStatus[rowInfo.status]}`,
                               })(<Input placeholder="请选择状态" />)}
                             </Form.Item>
                           </Col>

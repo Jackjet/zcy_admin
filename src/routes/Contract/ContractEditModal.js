@@ -123,7 +123,7 @@ class ContractEditModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'contract/edit',
             payload: values,
           });
           message.success('添加成功');
@@ -172,6 +172,8 @@ class ContractEditModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="合同基本信息编辑"
         visible={contractEditVisible}
         width="75%"

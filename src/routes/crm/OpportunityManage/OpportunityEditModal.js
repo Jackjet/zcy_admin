@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
+import {message} from "antd/lib/index";
 
 const { TreeNode } = Tree;
 const { SubMenu, MenuItemGroup } = Menu;
@@ -112,14 +113,20 @@ class BusinessEditModal extends PureComponent {
     const okHandle = () => handleBusinessEditVisible();
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          // submit the values
-          dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
-          });
-          handleBusinessEditVisible(false);
-        }
+        dispatch({
+          type: 'opportunity/edit',
+          payload: values,
+          callback: res => {
+            if (res.meta.status === '000000') {
+              dispatch({
+                type: 'opportunity/fetch',
+              });
+              handleBusinessEditVisible(false);
+            } else {
+              message.error(res.meta.errmsg);
+            }
+          },
+        });
       });
     };
     const errors = getFieldsError();

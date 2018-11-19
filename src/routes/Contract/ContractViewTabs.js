@@ -113,7 +113,6 @@ class ContractViewTabs extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
       type: 'rule/fetch',
       payload: params,
@@ -204,18 +203,7 @@ class ContractViewTabs extends PureComponent {
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { selectedRows, receiptPlanAddVisible, receiptPlanEditVisible, receiptPlanViewVisible, rowInfoCurrent, choiceCheckBox, contractOptionData } = this.state;
     const validate = () => {
-      validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          form.resetFields();
-          // submit the values
-          dispatch({
-            type: 'rule/add',
-            payload: values,
-          });
-          message.success('添加成功bbb');
-          handleContractTabsVisible(false);
-        }
-      });
+      handleContractTabsVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -467,6 +455,8 @@ class ContractViewTabs extends PureComponent {
     return (
 
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="(协议)合同基本信息查看"
         style={{ top: 20 }}
         visible={contractTabsVisible}

@@ -65,36 +65,33 @@ class CusApplyAddModal extends PureComponent {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
-          if (values.status === "待审核"){
-            const params = {
-              ...values,
-              status: 1,
-            };
-            dispatch({
+          dispatch({
               type: 'cusInfoManage/add',
-              payload: params,
+              payload: {
+                ...values,
+                status: 1,
+              },
               callback: (res) => {
                 if(res.meta.status === '000000' ) {
-                  handleCusApplyAddVisible(false);
-                  message.success('新增完成!');
-                  this.props.dispatch({
-                    type: 'cusInfoManage/fetch',
+                  dispatch({
+                    type: 'cusApplication/fetch',
                     payload: {
-                      page: this.state.pageCurrent,
-                      pageSize: this.state.pageSizeCurrent,
+                      page: 1,
+                      pageSize: 10,
                     },
-                  })
+                  });
+                  handleCusApplyAddVisible(false, true);
+                  message.success('新增完成!');
                 } else {
                   message.error(res.meta.errmsg);
                 }
               },
             });
-          }
         }
       });
     };
     const onCancel = () => {
-      handleCusApplyAddVisible(false);
+      handleCusApplyAddVisible(false, false);
     };
     return (
       <Modal
@@ -109,89 +106,86 @@ class CusApplyAddModal extends PureComponent {
         onCancel={onCancel}
         okText="提交"
       >
-        <div>
-          <Card>
-            <Form layout="horizontal">
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyCode}>
-                    {getFieldDecorator('number', {
-                      rules: [{ required: false, message: '请输入客户编码' }],
-                    })(
-                      <Input placeholder="新增自动产生" style={{ width: 200 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyName}>
-                    {getFieldDecorator('name', {
-                      rules: [{ required: false, message: '请输入客户名称' }],
-                    })(
-                      <Input
-                        onMouseEnter={this.handleLevelChange}
-                        placeholder="请输入客户名称"
-                        style={{ width: 200 }}
-                      />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyNature}>
-                    {getFieldDecorator('linkManTypeId', {
-                      rules: [{ required: false, message: '请选择联系人业务性质' }],
-                      initialValue:`请选择`,
-                    })(
-                      <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
-                        {linkManOptionData}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyStatus}>
-                    {getFieldDecorator('status', {
-                      rules: [{ required: false, message: '状态' }],
-                      initialValue:`待审核`,
-                    })(
-                      <Input  placeholder="默认待审核" style={{ width: 200 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyContacts}>
-                    {getFieldDecorator('linkMan', {
-                      rules: [{ required: false, message: '请输入联系人' }],
-                    })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={16} offset={4}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.cusApplyMobilePhone}>
-                    {getFieldDecorator('phone', {
-                      rules: [{ required: false, message: '请输出联系电话' }],
-                    })(
-                      <Input placeholder="请输出联系电话" style={{ width: 200 }} />
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Card>
-        </div>
+        <Card>
+          <Form layout="horizontal">
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyCode}>
+                  {getFieldDecorator('number', {
+                    rules: [{ required: false, message: '请输入客户编码' }],
+                  })(
+                    <Input placeholder="新增自动产生" style={{ width: 200 }} />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyName}>
+                  {getFieldDecorator('name', {
+                    rules: [{ required: false, message: '请输入客户名称' }],
+                  })(
+                    <Input
+                      onMouseEnter={this.handleLevelChange}
+                      placeholder="请输入客户名称"
+                      style={{ width: 200 }}
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyNature}>
+                  {getFieldDecorator('linkManTypeId', {
+                    rules: [{ required: false, message: '请选择联系人业务性质' }],
+                    initialValue:`请选择`,
+                  })(
+                    <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
+                      {linkManOptionData}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyStatus}>
+                  {getFieldDecorator('status', {
+                    rules: [{ required: false, message: '状态' }],
+                    initialValue:`待审核`,
+                  })(
+                    <Input readOnly placeholder="默认待审核" style={{ width: 200 }} />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyContacts}>
+                  {getFieldDecorator('linkMan', {
+                    rules: [{ required: false, message: '请输入联系人' }],
+                  })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row className={styles['fn-mb-15']}>
+              <Col span={16} offset={4}>
+                <Form.Item {...formItemLayout} label={fieldLabels.cusApplyMobilePhone}>
+                  {getFieldDecorator('phone', {
+                    rules: [{ required: false, message: '请输出联系电话' }],
+                  })(
+                    <Input placeholder="请输出联系电话" style={{ width: 200 }} />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
       </Modal>
     );
   }
 }
-export default connect(({ global, loading }) => ({
-  collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+export default connect(({ loading }) => ({
+  submitting: loading.effects['cusInfoManage/add'],
 }))(Form.create()(CusApplyAddModal));

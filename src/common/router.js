@@ -79,19 +79,23 @@ export const getRouterData = app => {
     },
     '/workplace': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
+      name:'工作台',
     },
     '/crm/customerApply': {
       component: dynamicWrapper(app, ['cusApplication'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
+      name:'客户申请单',
     },
     '/crm/customer': {
       component: dynamicWrapper(app, ['cusInfoManage'], () => import('../routes/crm/CusInfoManage/CusBill')),
+      name:'客户信息管理',
     },
     '/crm/business': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/OpportunityManage/OpportunityBill')
-      ),
+      component: dynamicWrapper(app, ['opportunity'], () => import('../routes/crm/OpportunityManage/OpportunityBill')),
+      name:'商机管理',
     },
     '/crm/visit': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/crm/VisitManage/VisitList')),
+      component: dynamicWrapper(app, ['visit'], () => import('../routes/crm/VisitManage/VisitList')),
+      name:'拜访管理',
     },
     '/system/billTable': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/BillTable/list/BillTable')),
@@ -119,11 +123,11 @@ export const getRouterData = app => {
       name: '签章信息管理',
     },
     '/contractManager/ContractInfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
+      component: dynamicWrapper(app, ['contract'], () => import('../routes/Contract/ContractList')),
       name: '合同管理',
     },
     '/contractManager/xieyiInfo': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
+      component: dynamicWrapper(app, ['contract'], () => import('../routes/Contract/ContractList')),
       name: '协议管理',
     },
     '/project/workPlanManage/workPlan': {

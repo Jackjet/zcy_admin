@@ -119,7 +119,8 @@ export default class DepartmentList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { dispatch } = this.props;
+    const { dispatch,form } = this.props;
+    form.resetFields();
     this.setState({
       formValues: {},
     });

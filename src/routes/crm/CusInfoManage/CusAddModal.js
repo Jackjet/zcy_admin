@@ -184,7 +184,7 @@ class CustomerAddmodal extends PureComponent {
           form.resetFields();
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'cusInfoManage/add',
             payload: values,
           });
           handleCustomerAddVisible(false);
@@ -236,6 +236,8 @@ class CustomerAddmodal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="客户基本信息新增"
         style={{ top: 20 }}
         visible={customerAddVisible}

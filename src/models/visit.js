@@ -1,7 +1,7 @@
-import { addCusApplication, queryCusApplication,updateCusApplication ,deleteCusApplication, statusCancelCancel  } from '../services/cusApplication';
+import { queryVisit, updateVisit, addVisit, removeVisitById, removeVisitByCondition, statusCancelCancel } from '../services/visit';
 
 export default {
-  namespace: 'cusApplication',
+  namespace: 'visit',
 
   state: {
     data: {
@@ -12,8 +12,8 @@ export default {
   },
 
   effects: {
-    *fetch({ payload ,callback}, { call, put }) {
-      const response = yield call(queryCusApplication, payload);
+    *fetch({ payload, callback }, { call, put }) {
+      const response = yield call(queryVisit, payload);
       if (response.meta.status === '000000') {
         yield put({
           type: 'save',
@@ -24,26 +24,39 @@ export default {
         callback(response); // 返回结果
       }
     },
-
-    *add({ payload, callback }, { call }) {
-      const response = yield call(addCusApplication, payload);
-      if (callback && typeof callback === 'function') {
-          callback(response); // 返回结果
-      }
-    },
-    *update({ payload, callback }, { call }) {
-      const response = yield call(updateCusApplication, payload);
+    *update({ payload ,callback}, { call }) {
+      const response = yield call(updateVisit, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
+
+    *add({ payload, callback }, { call}) {
+      const response = yield call(addVisit, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+
     *remove({ payload, callback }, { call }) {
-      const response = yield call(deleteCusApplication, payload);
+      const response = yield call(removeVisitById, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *removeMore({ payload, callback }, { call }) {
+      const response = yield call(removeVisitByCondition, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *cancelCancel({ payload, callback }, { call }) {
+      const response = yield call(statusCancelCancel, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *cancel({ payload, callback }, { call }) {
       const response = yield call(statusCancelCancel, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果

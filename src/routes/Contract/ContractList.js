@@ -39,9 +39,9 @@ const getValue = obj =>
     .map(key => obj[key])
 .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ contract, loading }) => ({
+  contract,
+  loading: loading.models.contract,
 }))
 @Form.create()
 export default class ContractList extends PureComponent {
@@ -60,14 +60,36 @@ export default class ContractList extends PureComponent {
     openKey: '',
     selectedKey: '',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
+    orgTreeMenu:``,
   };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'contract/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          console.log(res.meta.status);
+        } else {
+          //
+        }
+      },
+    });
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({
+            orgTreeMenu : res.data.list,
+          });
+        } else {
+          message.error(res.meta.errmsg);
+        }
       },
     });
   }
@@ -92,25 +114,40 @@ export default class ContractList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'contract/fetch',
       payload: params,
     });
   };
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
+    });
+    dispatch({
+      type: 'contract/fetch',
+      payload: {},
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+      },
     });
   };
   toggleForm = () => {
@@ -149,17 +186,12 @@ export default class ContractList extends PureComponent {
   };
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
@@ -167,6 +199,18 @@ export default class ContractList extends PureComponent {
       dispatch({
         type: 'company/fetch',
         payload: values,
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
@@ -200,7 +244,24 @@ export default class ContractList extends PureComponent {
     }
     this.setState({
       contractTypeVisible: !!flag,
-    });
+    });if (!flag) {
+      this.props.dispatch({
+        type: 'contract/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+            // this.props.data = res.data;
+          } else {
+            message.success('公司更新成功!');
+          }
+        },
+      });
+    }
+
   };
 
   handleContractTypeVisible = flag => {
@@ -213,30 +274,51 @@ export default class ContractList extends PureComponent {
     this.setState({
       contractAddVisible: !!flag,
     })
+    if (!flag) {
+      this.props.dispatch({
+        type: 'contract/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+            // this.props.data = res.data;
+          } else {
+            message.success('公司更新成功!');
+          }
+        },
+      });
+    }
   };
 
   handleContractEditVisible = flag => {
     this.setState({
       contractEditVisible: !!flag,
     });
+    if (!flag) {
+      this.props.dispatch({
+        type: 'contract/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+            // this.props.data = res.data;
+          } else {
+            message.success('公司更新成功!');
+          }
+        },
+      });
+    }
   };
 
   handleContractTabsVisible = flag => {
     this.setState({
       contractTabsVisible: !!flag,
-    });
-  };
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'company/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      contractAddVisible: false,
     });
   };
   rootSubmenuKeys = ['sub1'];
@@ -267,8 +349,6 @@ export default class ContractList extends PureComponent {
       firstHide: false,
     })
   };
-
-
 
   handleGetMenuValue = (MenuValue) => {
     this.setState({
@@ -306,32 +386,10 @@ export default class ContractList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={24}>
-          <Col span={6}>
-            <FormItem label="编码">
-              {getFieldDecorator('contractCode')(
-                <Input placeholder="请输入合同编码" />
-              )}
-            </FormItem>
-          </Col>
           <Col span={6} >
-            <FormItem label="名称">
-              {getFieldDecorator('contractName')(
+            <FormItem label="关键字">
+              {getFieldDecorator('keyWord')(
                 <Input placeholder="合同名称" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={6}>
-            <FormItem label="项目">
-              {getFieldDecorator('project', {
-                companys: [{ required: true, message: '请输入项目' }],
-              })(
-                <Select placeholder="请输入" style={{ width: 200 }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">工程造价业务项目</Option>
-                  <Option value="f">招标代理业务项目</Option>
-                  <Option value="fd">打包项目</Option>
-                  <Option value="sn">2010年免审批工程造价、招投标项目</Option>
-                </Select>
               )}
             </FormItem>
           </Col>
@@ -443,7 +501,7 @@ export default class ContractList extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { contract: { data }, loading } = this.props;
     const {
       selectedRows,
       contractAddVisible,
@@ -457,20 +515,20 @@ export default class ContractList extends PureComponent {
     const columns = [
       {
         title: '合同编码',
-        dataIndex: 'contractCode',
+        dataIndex: 'number',
         width: 100,
         align: 'center',
         fixed: 'left',
       },
       {
         title: '合同标题',
-        dataIndex: 'contractName',
+        dataIndex: 'title',
         width: 130,
         align: 'center',
       },
       {
         title: '对方企业',
-        dataIndex: 'partnerEnterprise',
+        dataIndex: 'name',
         align: 'center',
       },
       {
@@ -536,20 +594,12 @@ export default class ContractList extends PureComponent {
       </Menu>
     );
 
-    const contractTabsMethods = {
-      handleContractTabsVisible: this.handleContractTabsVisible,
-    };
-    const contractAddMethods = {
-      handleAdd: this.handleAdd,
-      handleContractAddVisible: this.handleContractAddVisible,
-    };
-    const contractEditMethods = {
-      handleContractEditVisible: this.handleContractEditVisible,
-    };
-
     const parentMethods = {
       handleContractTypeVisible: this.handleContractTypeVisible,
       handleContractAddVisible: this.handleContractAddVisible,
+      handleContractTabsVisible: this.handleContractTabsVisible,
+      handleAdd: this.handleAdd,
+      handleContractEditVisible: this.handleContractEditVisible,
     };
 
     return (
@@ -560,7 +610,7 @@ export default class ContractList extends PureComponent {
              {/* {this.treeMenu()}*/}
               <PageLeftTreeMenu
                 // menus={routes.menus}
-                menus={router.menus}
+                menus={this.state.orgTreeMenu}
                 onClick={this.menuClick}
                 mode="inline"
                 selectedKeys={[this.state.selectedKey]}
@@ -598,9 +648,9 @@ export default class ContractList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ContractAddModal {...contractAddMethods} contractAddVisible={contractAddVisible} choiceTypeValue={choiceTypeValue} />
-        <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
-        <ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
+        <ContractAddModal {...parentMethods} contractAddVisible={contractAddVisible} choiceTypeValue={choiceTypeValue} />
+        <ContractViewTabs {...parentMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
+        <ContractEditModal {...parentMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
         <ContractTypeModal {...parentMethods} contractTypeVisible={contractTypeVisible} />
       </PageHeaderLayout>
     );

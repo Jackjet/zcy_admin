@@ -17,22 +17,21 @@ import {
   Layout,
   Popconfirm,
 } from 'antd';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import CustomerAddModal from './CusAddModal';
-import CustomerViewTabs from './CusTabsViewModal.js';
-import EditableTable from '../../EditableTable/EditableTable';
-import ContactsAddModal from '../CusApplyBill/ContactsAddModal';
-import CustomerDistributionModal from './CustomerDistributionModal';
-import CustomerEditModal from './CusEditModal';
+import CusAddModal from './CusAddModal';
+import CusViewTabs from './CusTabsViewModal.js';
+import ContactsAddModal from './ContactsAddModal';
+import CusDistributionModal from './CustomerDistributionModal';
+import CusEditModal from './CusEditModal';
 
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 const { confirm } = Modal;
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
-
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -51,29 +50,6 @@ const industry = [
   '其他',
 ];
 
-// 设置业务员
-const SalesManage = Form.create()(props => {
-  const { salesVisible, handleSalesVisible } = props;
-  const okHandle = () => {
-    handleSalesVisible();
-  };
-  return (
-    <Modal
-      title="业务员基本信息管理"
-      style={{ top: 20 }}
-      visible={salesVisible}
-      width="40%"
-      maskClosable={false}
-      onOk={okHandle}
-      onCancel={() => handleSalesVisible()}
-    >
-      <div className={styles.editPerson}>
-        <EditableTable />
-      </div>
-    </Modal>
-  );
-});
-
 @connect(({ cusInfoManage, loading }) => ({
   cusInfoManage,
   loading: loading.models.cusInfoManage,
@@ -81,45 +57,36 @@ const SalesManage = Form.create()(props => {
 @Form.create()
 export default class CustomerList extends PureComponent {
   state = {
-    // 客户增加状态
-    customerAddVisible: false,
-
-    // 客户编辑状态
-    customerEditVisible: false,
-
-    // 联系人状态
-    contactsVisible: false,
-
-    // 客户查看状态
-    tabsViewVisible: false,
-
-    // 业务员状态
-    salesVisible: false,
-
+    customerAddVisible: false,  // 客户增加状态
+    customerEditVisible: false,  // 客户编辑状态
+    contactsVisible: false,  // 联系人状态
+    tabsViewVisible: false,  // 客户查看状态
     customerDistributionVisible: false,
-
-    // 高级搜索是否隐藏状态
-    expandForm: false,
-
-    // 选中的行
-    selectedRows: [],
-
-    formValues: {},
-
-    // 当前操作行的数据
-    rowInfo: {},
-
-    // 左边菜单树的起始状态
-    openKeys: ['sub1'],
-
-    pageCurrent:``,
-    pageSizeCurrent:``,
-
+    selectedRows: [],  // 选中的行
+    formValues: {}, // 接收查询输入框的值
+    rowInfo: {}, // 当前操作行的数据
+    pageCurrent:``, // 当前行
+    pageSizeCurrent:``, // 当前页大小
+    orgTreeMenu:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
-  // 生命周期方法 加载页面
   componentDidMount() {
     const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({
+            orgTreeMenu : res.data.list,
+          });
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
     dispatch({
       type: 'cusInfoManage/fetch',
       payload: {
@@ -128,26 +95,12 @@ export default class CustomerList extends PureComponent {
       },
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
-
-        }else{
-
+          message.error(res.meta.errmsg);
         }
       },
     });
-  }
+  }  // 生命周期方法 加载页面
 
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
-
-  // 分页
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -176,9 +129,8 @@ export default class CustomerList extends PureComponent {
       type: 'cusInfoManage/fetch',
       payload: params,
     });
-  };
+  }; // 分页器
 
-  // 搜索重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -197,16 +149,8 @@ export default class CustomerList extends PureComponent {
 
       },
     });
-  };
+  }; // 搜索重置方法
 
-  // 展开高级搜索方法
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  };
-
-  // 选中行删除方法
   handleDeleteMoreClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -232,7 +176,7 @@ export default class CustomerList extends PureComponent {
     this.setState({
       selectedRows: [],
     });
-  };
+  };  // 选中行删除方法
 
   showDeleteMessage =(flag, record)=> {
     const { dispatch } = this.props;
@@ -264,14 +208,12 @@ export default class CustomerList extends PureComponent {
     });
   }; // 信息单个删除方法
 
-  // 获取选中的行
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  };
+  }; // 获取选中的行
 
-  // 查询方法
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -300,17 +242,8 @@ export default class CustomerList extends PureComponent {
         },
       });
     });
-  };
+  }; // 查询方法
 
-  // 隐藏和显示客户增加界面
-  handleCustomerAddVisible = flag => {
-    this.props.form.setFields();
-    this.setState({
-      cusApplication: !!flag,
-    });
-  };
-
-  // 隐藏和显示客户编辑界面
   handleCustomerEditVisible = flag => {
     this.setState({
       customerEditVisible: !!flag,
@@ -332,9 +265,8 @@ export default class CustomerList extends PureComponent {
         },
       })
     }
-  };
+  }; // 隐藏和显示客户编辑界面
 
-  // 隐藏和显示联系人增加界面
   handleContactsVisible = flag => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
@@ -343,7 +275,7 @@ export default class CustomerList extends PureComponent {
     this.setState({
       contactsVisible: !!flag,
     });
-  };
+  }; // 隐藏和显示联系人增加界面
 
   handleTabsViewVisible = flag => {
     this.setState({
@@ -357,72 +289,12 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  handleSalesVisible = flag => {
-    if (this.state.selectedRows.length > 1) {
-      message.config({
-        top: 100,
-        duration: 2,
-        maxCount: 1,
-      });
-      message.warning('不支持多行选择');
-      return false;
-    }
-
-    this.setState({
-      salesVisible: !!flag,
-    });
-  };
-
-  handleAddContact = fields => {
-    this.props.dispatch({
-      type: 'company/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-    message.success('添加成功');
-    this.setState({
-      contactsVisible: false,
-    });
-  };
-
-  // 左边菜单树
-  rootSubmenuKeys = ['sub1'];
-
-  treeMenu() {
-    const { SubMenu } = Menu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>客户等级</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">贵宾客户</Menu.Item>
-          <Menu.Item key="2">一般客户</Menu.Item>
-          <Menu.Item key="3">重要客户</Menu.Item>
-          <Menu.Item key="4">潜在客户</Menu.Item>
-          <Menu.Item key="5">施工单位</Menu.Item>
-          <Menu.Item key="6">无</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
-  // 弹窗展示当前行的数据
   showEditMessage = (flag, record) => {
     this.setState({
       customerEditVisible: !!flag,
       rowInfo: record,
     });
-  };
+  }; // 弹窗展示当前行的数据
 
   showViewMessage = (flag, text, record) => {
     this.setState({
@@ -431,92 +303,18 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 高级搜索
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="编码名称">
-              {getFieldDecorator('no', {})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="移动电话">
-              {getFieldDecorator('phone', {})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="联系人">
-              {getFieldDecorator('contract', {})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="业务员">
-              {getFieldDecorator('customer', {})(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 13 }} label="行业">
-              {getFieldDecorator('status', {})(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">制造业</Option>
-                  <Option value="f">服务业</Option>
-                  <Option value="fd">房地产建筑</Option>
-                  <Option value="sn">三农业务</Option>
-                  <Option value="zf">政府购买</Option>
-                  <Option value="sy">商业</Option>
-                  <Option value="jr">金融</Option>
-                  <Option value="fyl">非营利组织</Option>
-                  <Option value="other">其他</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem style={{ paddingLeft: 24 }} label="地址">
-              {getFieldDecorator('address', {})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={16} sm={24}>
-            <FormItem label="创建日期">
-              {getFieldDecorator('date', {
-                companys: [{ required: false, message: '请选择创建日期' }],
-              })(<RangePicker placeholder={['开始日期', '结束日期']} style={{ width: '100%' }} />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              搜索
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起
-            </Button>
-          </span>
-        </div>
-      </Form>
-    );
-  }
-
-  // 判断简单 还是 高级搜索
-  renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-  }
+  menuClick = e => {
+    console.log(e.key);
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
 
   // 简单查询
   renderSimpleForm() {
@@ -527,9 +325,7 @@ export default class CustomerList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="关键字">
               {getFieldDecorator('keyWord', {})(
-                <div>
-                  <Input placeholder="请输入关键字" />
-                </div>
+                <Input placeholder="请输入关键字" />
               )}
             </FormItem>
           </Col>
@@ -540,9 +336,6 @@ export default class CustomerList extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                高级搜索
               </Button>
             </span>
           </Col>
@@ -559,7 +352,6 @@ export default class CustomerList extends PureComponent {
       customerEditVisible,
       contactsVisible,
       tabsViewVisible,
-      salesVisible,
       customerDistributionVisible,
       rowInfo,
     } = this.state;
@@ -680,7 +472,6 @@ export default class CustomerList extends PureComponent {
       handleCustomerEditVisible: this.handleCustomerEditVisible,
       handleContactsVisible: this.handleContactsVisible,
       handleTabsViewVisible: this.handleTabsViewVisible,
-      handleSalesVisible: this.handleSalesVisible,
       handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,
     };
     return (
@@ -688,12 +479,19 @@ export default class CustomerList extends PureComponent {
         <Card>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              <PageLeftTreeMenu
+                menus={this.state.orgTreeMenu}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div>
                 <div className={styles.tableList}>
-                  <div className={styles.tableListForm}>{this.renderForm()}</div>
+                  <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
                   <div className={styles.tableListOperator}>
                     {selectedRows.length > 0 && (
                       <span>
@@ -730,16 +528,11 @@ export default class CustomerList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CustomerAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
-        <CustomerEditModal
-          {...ParentMethods}
-          customerEditVisible={customerEditVisible}
-          rowInfo={rowInfo}
-        />
+        <CusAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
+        <CusEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
-        <CustomerViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
-        <SalesManage {...ParentMethods} salesVisible={salesVisible} />
-        <CustomerDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
+        <CusViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
+        <CusDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
       </PageHeaderLayout>
     );
   }

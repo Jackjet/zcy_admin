@@ -140,7 +140,7 @@ class ContractAddModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'contract/add',
             payload: values,
           });
           handleContractAddVisible(false);

@@ -30,9 +30,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ visit, loading }) => ({
+  visit,
+  loading: loading.models.visit,
 }))
 @Form.create()
 // PureComponent优化Component的性能
@@ -50,7 +50,7 @@ export default class VisitList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'visit/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -84,7 +84,7 @@ export default class VisitList extends PureComponent {
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'visit/fetch',
       payload: params,
     });
   };
@@ -96,7 +96,7 @@ export default class VisitList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'company/fetch',
+      type: 'visit/fetch',
       payload: {},
     });
   };
@@ -108,7 +108,7 @@ export default class VisitList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'company/remove',
+          type: 'visit/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -150,7 +150,7 @@ export default class VisitList extends PureComponent {
       });
 
       dispatch({
-        type: 'company/fetch',
+        type: 'visit/fetch',
         payload: values,
       });
     });
@@ -178,7 +178,7 @@ export default class VisitList extends PureComponent {
   // 新增功能实现
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'company/add',
+      type: 'visit/add',
       payload: {
         description: fields.desc,
       },
@@ -254,7 +254,7 @@ export default class VisitList extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { visit: { data }, loading } = this.props;
     const {
       selectedRows,
       visitAddVisible,
@@ -266,11 +266,11 @@ export default class VisitList extends PureComponent {
     const columns = [
       {
         title: '拜访对象',
-        dataIndex: 'visitCus',
+        dataIndex: 'name',
       },
       {
         title: '关联商机',
-        dataIndex: 'withBusiness',
+        dataIndex: 'number',
       },
       {
         title: '拜访方式',

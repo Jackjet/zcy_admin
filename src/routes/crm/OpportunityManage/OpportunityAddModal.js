@@ -17,6 +17,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
+import {message} from "antd/lib/index";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -84,8 +85,18 @@ class BusinessAddModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'form/submitAdvancedForm',
+            type: 'dept/add',
             payload: values,
+            callback: res => {
+              if (res.meta.status === '000000') {
+                dispatch({
+                  type: 'opportunity/fetch',
+                });
+                handleBusinessOppVisible(false);
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
         }
       });
@@ -131,6 +142,8 @@ class BusinessAddModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="商机基本信息新增"
         style={{ top: 20 }}
         visible={businessOppVisible}

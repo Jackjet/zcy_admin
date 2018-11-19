@@ -142,6 +142,8 @@ class VisitListViewModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="拜访信息查看"
         style={{ top: 20 }}
         // 对话框是否可见

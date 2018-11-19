@@ -35,9 +35,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ opportunity, loading }) => ({
+  opportunity,
+  loading: loading.models.opportunity,
 }))
 @Form.create()
 export default class BusinessOpportunity extends PureComponent {
@@ -52,15 +52,24 @@ export default class BusinessOpportunity extends PureComponent {
     formValues: {},
     rowInfo: [],
     openKeys: ['sub1'],
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'opportunity/fetch',
       payload: {
         page: 1,
         pageSize: 10,
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          console.log(res.meta.status);
+        } else {
+          //
+        }
       },
     });
   }
@@ -87,26 +96,41 @@ export default class BusinessOpportunity extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'opportunity/fetch',
       payload: params,
     });
   };
 
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
+    });
+    dispatch({
+      type: 'opportunity/fetch',
+      payload: {},
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error(res.meta.errmsg);
+        } else {
+          message.success('重置完成!');
+        }
+      },
     });
   };
 
@@ -165,23 +189,30 @@ export default class BusinessOpportunity extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
-        type: 'company/fetch',
+        type: 'opportunity/fetch',
         payload: values,
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
       });
     });
   };
@@ -190,6 +221,20 @@ export default class BusinessOpportunity extends PureComponent {
     this.setState({
       businessOppVisible: !!flag,
     });
+    if (!flag) {
+      this.props.dispatch({
+        type: 'opportunity/fetch',
+        payload: {
+          page: this.state.pageCurrent,
+          pageSize: this.state.pageSizeCurrent,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+          }
+        },
+      });
+    }
   };
 
   handleFollowUpVisible = flag => {
@@ -230,21 +275,26 @@ export default class BusinessOpportunity extends PureComponent {
     this.setState({
       businessEditVisible: !!flag,
     });
+    if (!flag) {
+      this.props.dispatch({
+        type: 'opportunity/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.errmsg); // 返回错误信息
+            // this.props.data = res.data;
+          } else {
+            message.success('公司更新成功!');
+          }
+        },
+      });
+    }
   };
   // 添加表单数据
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'company/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
 
-    message.success('添加成功');
-    this.setState({
-      businessOppVisible: false,
-    });
-  };
 
   // 左边菜单树
   rootSubmenuKeys = ['sub1'];
@@ -342,7 +392,7 @@ export default class BusinessOpportunity extends PureComponent {
   }
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { opportunity: { data }, loading } = this.props;
     const {
       selectedRows,
       businessOppVisible,
@@ -357,24 +407,24 @@ export default class BusinessOpportunity extends PureComponent {
     const columns = [
       {
         title: '编号',
-        dataIndex: 'businessCode',
+        dataIndex: 'number',
       },
       {
         title: '项目编号',
-        dataIndex: 'projectCode',
+        dataIndex: 'number',
       },
       {
         title: '商机名称',
-        dataIndex: 'businessName',
+        dataIndex: 'name',
       },
       {
         title: '客户名称',
-        dataIndex: 'customerForBusinessName',
+        dataIndex: 'name',
       },
 
       {
         title: '联系电话',
-        dataIndex: 'mobilePhone',
+        dataIndex: 'phone',
       },
 
       {
@@ -383,7 +433,7 @@ export default class BusinessOpportunity extends PureComponent {
       },
       {
         title: '状态',
-        dataIndex: 'businessStatus',
+        dataIndex: 'status',
         filters: [
           {
             text: status[0],
@@ -412,19 +462,19 @@ export default class BusinessOpportunity extends PureComponent {
         width: 180,
         render: (text, record) => (
           <Fragment>
-            {record.businessStatus === 0 && (
+            {record.status === `0` && (
               <div>
                 <a onClick={() => this.showViewMessage(true, record)}>查看</a>
               </div>
             )}
-            {record.businessStatus === 1 && (
+            {record.status === `1` && (
               <div>
                 <a onClick={() => this.showViewMessage(true, record)}>查看</a>
                 <Divider type="vertical" />
                 <a onClick={() => this.showEditMessage(true, record)}>商机分配</a>
               </div>
             )}
-            {record.businessStatus === 2 && (
+            {record.status === `2` && (
               <div>
                 <a onClick={() => this.showViewMessage(true, record)}>查看</a>
                 <Divider type="vertical" />
@@ -443,26 +493,12 @@ export default class BusinessOpportunity extends PureComponent {
       </Menu>
     );
 
-    const businessAddMethods = {
+    const parentMethods = {
       handleBusinessOppVisible: this.handleBusinessOppVisible,
-    };
-
-    const followUpMethods = {
       handleFollowUpVisible: this.handleFollowUpVisible,
-    };
-
-    const businessViewMethods = {
       handleBusinessViewVisible: this.handleBusinessViewVisible,
-    };
-
-    const businessEditMethods = {
       handleBusinessEditVisible: this.handleBusinessEditVisible,
-    };
-
-    const businessStateMethods = {
       handleBusinessStateVisible: this.handleBusinessStateVisible,
-    };
-    const projectAddMethods = {
       handleProjectVisible: this.handleProjectVisible,
     };
 
@@ -503,24 +539,24 @@ export default class BusinessOpportunity extends PureComponent {
             </div>
           </div>
         </Card>
-        <BusinessAddModal {...businessAddMethods} businessOppVisible={businessOppVisible} />
+        <BusinessAddModal {...parentMethods} businessOppVisible={businessOppVisible} />
         <BusinessFollowUp
-          {...followUpMethods}
+          {...parentMethods}
           followUpVisible={followUpVisible}
           rowInfo={rowInfo}
         />
         <BusinessOppView
-          {...businessViewMethods}
+          {...parentMethods}
           businessViewVisible={businessViewVisible}
           rowInfo={rowInfo}
         />
         <BusinessEditModal
-          {...businessEditMethods}
+          {...parentMethods}
           businessEditVisible={businessEditVisible}
           rowInfo={rowInfo}
         />
-        <BusinessStateModal {...businessStateMethods} businessStateVisible={businessStateVisible} />
-        {/*<ProjectAddModal {...projectAddMethods} projectVisible={projectVisible} rowInfo={rowInfo} />*/}
+        <BusinessStateModal {...parentMethods} businessStateVisible={businessStateVisible} />
+        {/*<ProjectAddModal {...parentMethods} projectVisible={projectVisible} rowInfo={rowInfo} />*/}
       </PageHeaderLayout>
     );
   }

@@ -142,7 +142,9 @@ class VisitListEditModal extends PureComponent {
     };
     return (
       <Modal
-        title="拜访新增"
+        destroyOnClose="true"
+        keyboard={false}
+        title="拜访编辑"
         style={{ top: 20 }}
         // 对话框是否可见
         visible={visitEditVisible}
