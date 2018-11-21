@@ -16,39 +16,9 @@ import {
 import { connect } from 'dva';
 import styles from './style.less';
 
-const linkManTypeOption = {"1":"工程", "2":"招标", "3":"采购"};
+const linkmanTypeOption = {"1":"工程", "2":"招标", "3":"采购"};
+const statusValue = ['待审核', '审核中', '已审核'];
 const { Option } = Select;
-const status = ['已审核', '审核中'];
-const { Panel } = Collapse;
-const { TextArea } = Input;
-
-const fieldLabels = {
-  cusApplyCode: '客户编码',
-  cusApplyLevel: '客户等级',
-  industry: '所属行业',
-  cusApplyName: '客户名称',
-  dateRange: '生效日期',
-  simpleName: '简称',
-  pinyin: ' 拼 音 码 ',
-  url: '网站主页',
-  taxCode: '税务登记号',
-  cusApplyMobilePhone: '移动手机',
-  email: '电子邮箱',
-  companyPhone: '公司电话',
-  postalCode: '邮政编码',
-  region: '所在区域',
-  incomeTax: '所得税征收方式',
-  cusApplyCompany: '所属公司',
-  address: '详细地址',
-  remark: '备注',
-  cusApplyStatus: '状态',
-  companyName: '单位名称',
-  companyAddress: '单位地址',
-  taxNumber: '税号',
-  openAccountBank: '开户银行',
-  bankAccount: '银行账户',
-};
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -63,24 +33,37 @@ const formItemLayout = {
 class CusApplyEditModal extends PureComponent {
   state = {
     width: '100%',
-    linkManOptionData: ``,
+    linkmanOptionData: ``,
+    statusOptionDate:``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleLinkManTypeChange();
+    this.handleStatusChange();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
   handleLinkManTypeChange = () => {
-    const optionData = Object.values(linkManTypeOption).map((data,index) => {
+    const optionData = Object.values(linkmanTypeOption).map((data,index) => {
       const val = `${data}`;
-      const keyNum = `${index}`;
+      const keyNum = index;
       return <Option key={keyNum} value={keyNum}>{val}</Option>;
     });
     this.setState({
-      linkManOptionData: optionData,
+      linkmanOptionData: optionData,
+    });
+  };
+
+  handleStatusChange = () => {
+    const optionData = Object.values(statusValue).map((data,index) => {
+      const val = `${data}`;
+      const keyNum = index;
+      return <Option key={keyNum} value={keyNum}>{val}</Option>;
+    });
+    this.setState({
+      statusOptionDate: optionData,
     });
   };
 
@@ -102,41 +85,46 @@ class CusApplyEditModal extends PureComponent {
       rowInfo,
     } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { linkManOptionData } = this.state;
+    const { linkmanOptionData, statusOptionDate } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
-          if( values.status === '待审核') {
-            const params = {
+          dispatch({
+            type: 'cusApplication/update',
+            payload: {
               ...values,
-              status: 1,
-            };
-            dispatch({
-              type: 'cusApplication/update',
-              payload: {
-                ...params,
-                id: rowInfo.id,
-                key: rowInfo.key,
-              },
-              callback: (res) => {
-                if(res.meta.status === '000000' ) {
-                  handleCusApplyEditVisible(false);
+              id: rowInfo.id,
+              key: rowInfo.key,
+              status: values.status+1, // 测试状态
+            },
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                if(values.status+1 === 3 && rowInfo.status !== 3 ) { // 测试判断当前状态是否为已审核
                   this.props.dispatch({
-                    type: 'cusApplication/fetch',
-                    payload: {
-                      page: this.state.pageCurrent,
-                      pageSize: this.state.pageSizeCurrent,
-                      keyWord: rowInfo.keyWord,
+                    type: 'cusInfoManage/add',
+                    payload:{
+                      ...values,
+                      id: rowInfo.id,
+                      key: rowInfo.key,
                     },
                   });
-                  message.success("申请单更新成功!")
-                } else {
-                  message.error(res.meta.errmsg);
                 }
-              },
-            });
-          }
+                handleCusApplyEditVisible(false);
+                this.props.dispatch({
+                  type: 'cusApplication/fetch',
+                  payload: {
+                    page: this.state.pageCurrent,
+                    pageSize: this.state.pageSizeCurrent,
+                    keyWord: rowInfo.keyWord,
+                  },
+                });
+                message.success("申请单更新成功!")
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
+          });
 
         }
       });
@@ -186,12 +174,12 @@ class CusApplyEditModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
                   <Form.Item {...formItemLayout} label="联系人业务性质">
-                    {getFieldDecorator('linkManTypeId', {
+                    {getFieldDecorator('linkmanTypeId', {
                       rules: [{ required: false, message: '请选择联系人业务性质' }],
-                      initialValue:rowInfo.linkManTypeId,
+                      initialValue:Object.values(linkmanTypeOption)[rowInfo.linkmanTypeId],
                     })(
                       <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
-                        {linkManOptionData}
+                        {linkmanOptionData}
                       </Select>
                     )}
                   </Form.Item>
@@ -202,9 +190,11 @@ class CusApplyEditModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="状态">
                     {getFieldDecorator('status', {
                       rules: [{ required: false, message: '状态' }],
-                      initialValue:rowInfo.status,
+                      initialValue:statusValue[rowInfo.status-1],
                     })(
-                      <Input readOnly placeholder="默认待审核" style={{ width: 200 }} />
+                      <Select readOnly placeholder="默认待审核" style={{ width: 200 }} >
+                        {statusOptionDate}
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
@@ -212,9 +202,9 @@ class CusApplyEditModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col span={16} offset={4}>
                   <Form.Item {...formItemLayout} label="联系人">
-                    {getFieldDecorator('linkMan', {
+                    {getFieldDecorator('linkman', {
                       rules: [{ required: false, message: '请输入联系人' }],
-                      initialValue:rowInfo.linkMan,
+                      initialValue:rowInfo.linkman,
                     })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>

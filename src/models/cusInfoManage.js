@@ -1,4 +1,4 @@
-import { addCusInfoManage, queryCusInfoManage,updateCusInfoManage ,deleteCusInfoManage, statusCancelCancel  } from '../services/cusInfoManage';
+import { addCustomerInfo, queryCustomerInfo,updateCustomerInfo ,deleteCustomerInfo, statusCancelCancel  } from '../services/cusInfoManage';
 
 export default {
   namespace: 'cusInfoManage',
@@ -13,7 +13,7 @@ export default {
 
   effects: {
     *fetch({ payload ,callback}, { call, put }) {
-      const response = yield call(queryCusInfoManage, payload);
+      const response = yield call(queryCustomerInfo, payload);
       if (response.meta.status === '000000') {
         yield put({
           type: 'save',
@@ -26,19 +26,19 @@ export default {
     },
 
     *add({ payload, callback }, { call}) {
-      const response = yield call(addCusInfoManage, payload);
+      const response = yield call(addCustomerInfo, payload);
       if (callback && typeof callback === 'function') {
           callback(response); // 返回结果
       }
     },
     *update({ payload, callback }, { call}) {
-      const response = yield call(updateCusInfoManage, payload);
+      const response = yield call(updateCustomerInfo, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *remove({ payload, callback }, { call}) {
-      const response = yield call(deleteCusInfoManage, payload);
+      const response = yield call(deleteCustomerInfo, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

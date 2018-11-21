@@ -35,7 +35,7 @@ const FormItem = Form.Item;
 
 
 const statusMap = ['default','processing','success' ];
-const linkManTypeValue = ['工程', '招标', '采购'];
+const linkmanTypeValue = ['工程', '招标', '采购'];
 const statusValue = ['待审核', '审核中', '已审核'];
 
 
@@ -312,7 +312,7 @@ export default class CusApplyBill extends PureComponent {
       rowInfo: {
         ...record,
         status: statusValue[record.status-1],
-        linkManTypeId: linkManTypeValue[record.linkManTypeId],
+        linkmanTypeId: linkmanTypeValue[record.linkmanTypeId],
       },
     });
   };  // 弹窗查看当前行的数据
@@ -370,28 +370,28 @@ export default class CusApplyBill extends PureComponent {
       },
       {
         title: '联系人',
-        dataIndex: 'linkMan',
+        dataIndex: 'linkman',
       },
       {
         title: '联系人业务性质',
-        dataIndex: 'linkManTypeId',
+        dataIndex: 'linkmanTypeId',
         filters: [
           {
-            text: linkManTypeValue[0],
+            text: linkmanTypeValue[0],
             value: 0,
           },
           {
-            text: linkManTypeValue[1],
+            text: linkmanTypeValue[1],
             value: 1,
           },
           {
-            text: linkManTypeValue[2],
+            text: linkmanTypeValue[2],
             value: 2,
           },
         ],
-        onFilter: (value, record) => record.linkManTypeId.toString() === value,
+        onFilter: (value, record) => record.linkmanTypeId.toString() === value,
         render(val) {
-          return <Badge status text={linkManTypeValue[val]} />;
+          return <Badge status text={linkmanTypeValue[val]} />;
         },
       },
       {
@@ -428,11 +428,11 @@ export default class CusApplyBill extends PureComponent {
           <Fragment>
             <a onClick={() => this.showViewMessage(true, record)}>查看</a>
             <Divider type="vertical" />
+            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+            <Divider type="vertical" />
             {
-              ( record.status === 1) && (
+              ( record.status === 1 || record.status === 3) && (
                 <span>
-                  <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
-                  <Divider type="vertical" />
                   <a onClick={() => this.handleCancelCancel(record)}>提交</a>
                   <Divider type="vertical" />
                   <Popconfirm title="确认删除?" onConfirm={() =>this.handleDeleteMsg(true, record)} okText="是" cancelText="否">

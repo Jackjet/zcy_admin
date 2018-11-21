@@ -3,7 +3,7 @@ import { Form, Col, Row, Input, Select, Modal, Card, message } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
-const linkManTypeOption = {"1":"工程", "2":"招标", "3":"采购"};
+const linkmanTypeOption = {"1":"工程", "2":"招标", "3":"采购"};
 const statusOption = {"1":"待审核", "2":"审核中", "3":"已审核"};
 
 const { Option } = Select;
@@ -29,7 +29,7 @@ const formItemLayout = {
 class CusApplyAddModal extends PureComponent {
   state = {
     width: '100%',
-    linkManOptionData: [],
+    linkmanOptionData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -40,13 +40,13 @@ class CusApplyAddModal extends PureComponent {
   }
 
   handleLinkManTypeChange = () => {
-    const optionData = Object.values(linkManTypeOption).map((data,index) => {
+    const optionData = Object.values(linkmanTypeOption).map((data,index) => {
       const val = `${data}`;
       const keyNum = `${index}`;
       return <Option key={keyNum} value={keyNum}>{val}</Option>;
     });
     this.setState({
-      linkManOptionData: optionData,
+      linkmanOptionData: optionData,
     });
   };
 
@@ -60,13 +60,13 @@ class CusApplyAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, cusApplyAddVisible, handleCusApplyAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { linkManOptionData } = this.state;
+    const { linkmanOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-              type: 'cusInfoManage/add',
+              type: 'cusApplication/add',
               payload: {
                 ...values,
                 status: 1,
@@ -137,12 +137,12 @@ class CusApplyAddModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={16} offset={4}>
                 <Form.Item {...formItemLayout} label={fieldLabels.cusApplyNature}>
-                  {getFieldDecorator('linkManTypeId', {
+                  {getFieldDecorator('linkmanTypeId', {
                     rules: [{ required: false, message: '请选择联系人业务性质' }],
                     initialValue:`请选择`,
                   })(
                     <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
-                      {linkManOptionData}
+                      {linkmanOptionData}
                     </Select>
                   )}
                 </Form.Item>
@@ -163,7 +163,7 @@ class CusApplyAddModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={16} offset={4}>
                 <Form.Item {...formItemLayout} label={fieldLabels.cusApplyContacts}>
-                  {getFieldDecorator('linkMan', {
+                  {getFieldDecorator('linkman', {
                     rules: [{ required: false, message: '请输入联系人' }],
                   })(<Input placeholder="请输入联系人" style={{ width: 200 }} />)}
                 </Form.Item>

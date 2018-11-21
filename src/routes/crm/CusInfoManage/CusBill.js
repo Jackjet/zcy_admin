@@ -37,8 +37,8 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-const statusMap = ['success', 'error'];
-const status = ['启用', '停用'];
+const statusMap = ['default','success', 'error'];
+const status = ['新建','启用', '停用'];
 const industry = [
   '制造业',
   '服务业',
@@ -61,7 +61,7 @@ export default class CustomerList extends PureComponent {
     customerEditVisible: false,  // 客户编辑状态
     contactsVisible: false,  // 联系人状态
     tabsViewVisible: false,  // 客户查看状态
-    customerDistributionVisible: false,
+    /*customerDistributionVisible: false, // 客户分配*/
     selectedRows: [],  // 选中的行
     formValues: {}, // 接收查询输入框的值
     rowInfo: {}, // 当前操作行的数据
@@ -283,11 +283,11 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  handleCustomerDistributionVisible = flag => {
+ /* handleCustomerDistributionVisible = flag => {
     this.setState({
       customerDistributionVisible: !!flag,
     });
-  };
+  }; // 客户分配*/
 
   showEditMessage = (flag, record) => {
     this.setState({
@@ -352,7 +352,7 @@ export default class CustomerList extends PureComponent {
       customerEditVisible,
       contactsVisible,
       tabsViewVisible,
-      customerDistributionVisible,
+      /*customerDistributionVisible,*/
       rowInfo,
     } = this.state;
 
@@ -425,16 +425,16 @@ export default class CustomerList extends PureComponent {
         filters: [
           {
             text: status[0],
-            value: 0,
+            value: 1,
           },
           {
             text: status[1],
-            value: 1,
+            value: 2,
           },
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
+          return <Badge status={statusMap[val-1]} text={status[val-1]} />;
         },
       },
       {
@@ -472,7 +472,7 @@ export default class CustomerList extends PureComponent {
       handleCustomerEditVisible: this.handleCustomerEditVisible,
       handleContactsVisible: this.handleContactsVisible,
       handleTabsViewVisible: this.handleTabsViewVisible,
-      handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,
+      /*handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,*/
     };
     return (
       <PageHeaderLayout>
@@ -495,12 +495,12 @@ export default class CustomerList extends PureComponent {
                   <div className={styles.tableListOperator}>
                     {selectedRows.length > 0 && (
                       <span>
-                        <Button
+                        {/*<Button
                           type="primary"
                           onClick={() => this.handleCustomerDistributionVisible(true)}
                         >
                           客户分配
-                        </Button>
+                        </Button>*/}
                         <Button type="primary" onClick={() => this.handleContactsVisible(true)}>
                           设置联系人
                         </Button>
@@ -532,7 +532,7 @@ export default class CustomerList extends PureComponent {
         <CusEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
         <CusViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
-        <CusDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />
+        {/*<CusDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />*/}
       </PageHeaderLayout>
     );
   }

@@ -114,7 +114,7 @@ class CusApplyViewTabs extends PureComponent {
     const columnsProcedure = [
       {
         title: '编号',
-        dataIndex: 'no',
+        dataIndex: 'number',
       },
       {
         title: '环节名称',
@@ -195,9 +195,9 @@ class CusApplyViewTabs extends PureComponent {
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label="联系人业务性质">
-                        {getFieldDecorator('linkManTypeId', {
+                        {getFieldDecorator('linkmanTypeId', {
                           rules: [{ required: false, message: '请选择联系人业务性质' }],
-                          initialValue:rowInfo.linkManTypeId,
+                          initialValue:rowInfo.linkmanTypeId,
                         })(
                           <Input readOnly placeholder="请选择联系人业务性质" style={{ width: 200 }} />
                         )}
@@ -217,9 +217,9 @@ class CusApplyViewTabs extends PureComponent {
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label="联系人">
-                        {getFieldDecorator('linkMan', {
+                        {getFieldDecorator('linkman', {
                           rules: [{ required: false, message: '请输入联系人' }],
-                          initialValue:rowInfo.linkMan,
+                          initialValue:rowInfo.linkman,
                         })(
                           <Input readOnly placeholder="请输入联系人" style={{ width: 200 }} />
                         )}

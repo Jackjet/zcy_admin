@@ -182,8 +182,12 @@ class DictAdd extends PureComponent {
                     {getFieldDecorator('dictTypeId', {
                       rules: [{ required: true, message: '请选择字典类别' }],
                     })(
-                      <Select getPopupContainer={triggerNode => triggerNode.parentNode}
-                        onChange={this.handleDictValueChange} placeholder="请选择字典类别" style={{ width: '100%' }} >
+                      <Select
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                        onChange={this.handleDictValueChange}
+                        placeholder="请选择字典类别"
+                        style={{ width: '100%' }}
+                      >
                         {this.state.DictTypeOptionData}
                       </Select>
                     )}

@@ -13,24 +13,17 @@ const fieldLabels = {
   status: '状态',
 };
 
-const codeSpace = {
-  style: {
-    paddingLeft: 62,
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+    md: { span: 10 },
   },
 };
-
-const dictTypeNameSpace = {
-  style: {
-    paddingLeft: 12,
-  },
-};
-
-const remarksSpace = {
-  style: {
-    paddingLeft: 70,
-  },
-};
-
 class DictTypeAdd extends PureComponent {
   state = {
     width: '90%',
@@ -139,28 +132,28 @@ class DictTypeAdd extends PureComponent {
           onCancel={cancelDate}
         >
           <Card>
-            <Form layout="inline">
-              <Row className={styles['row-h']}>
+            <Form layout="horizontal">
+              <Row>
                 <Col span={24}>
-                  <Form.Item {...codeSpace} label={fieldLabels.number}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.number}>
                     {getFieldDecorator('number', {
                       rules: [{ required: true, message: '请输入编码' }],
                     })(<Input placeholder="请输入编码" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row>
                 <Col span={24}>
-                  <Form.Item {...dictTypeNameSpace} label={fieldLabels.name}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择字典类别名称' }],
                     })(<Input placeholder="请选择字典类别名称" style={{ width: 200 }} />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['row-h']}>
+              <Row>
                 <Col span={24}>
-                  <Form.Item {...remarksSpace} label={fieldLabels.remark}>
+                  <Form.Item {...formItemLayout} label={fieldLabels.remark}>
                     {getFieldDecorator('remark')(
                       <TextArea placeholder="请输入备注" style={{ width: 200, height: 100 }} />
                     )}

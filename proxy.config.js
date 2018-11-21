@@ -20,11 +20,11 @@ module.exports = {
       '^cusApplication': '/cusApplication',
     },
   },
-  '/cusInfoManage': {
+  '/customerInfo': {
     target:'http://localhost:1801',
     changeOrigin: true,
     pathRewrite: {
-      '^cusInfoManage': '/cusInfoManage',
+      '^customerInfo': '/customerInfo',
     },
   },
   '/projectAssignment': {
