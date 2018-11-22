@@ -43,7 +43,7 @@ export default class LoginPage extends Component {
         callback: (res) => {
 
          /* {res.status === 'ok'  &&  this.renderMessage("222222")}*/
-          if(res.status === 'ok' ) {
+          if(res.status === 1 ) {
               this.handleSwitchOrgShowModal();
           }
             // routerRedux.push()

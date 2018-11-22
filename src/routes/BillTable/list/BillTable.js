@@ -23,6 +23,7 @@ import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './BillTable.less';
 import BillTableAdd from '../add/BillTableAdd';
+import PageLeftTreeMenu from "../../../components/PageLeftTreeMenu";
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -35,9 +36,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ billTable, loading }) => ({
+  billTable,
+  loading: loading.models.billTable,
 }))
 @Form.create()
 export default class BillTable extends PureComponent {
@@ -47,14 +48,98 @@ export default class BillTable extends PureComponent {
     selectedRows: [],
     formValues: {},
     openKeys: ['sub1'],
+    billTableTypeTree:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'billTable/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("查询出错，请稍后再试！")
+        }else{
+          //
+
+        }
+      },
+    });
+    //查询树形结构
+    dispatch({
+      type: 'billTable/getDictTreeByTypeId',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+        dictTypeId:"65bfc4a9ed4c11e88ac1186024a65a7c",
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("获取类型失败！"+res.data.alert_msg)
+        }else{
+          this.setState({
+            billTableTypeTree : res.data.list,
+          });
+        }
+      },
     });
   }
+
+
+// 左边树形菜单 点击事件
+menuClick = e => {
+  console.log(e.key);
+  this.setState({
+    selectedKey: e.key,
+  });
+  //根据id 查询列表
+  if(e.key){
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dict/fetch',
+      payload: {
+        page: 1,
+        pageSize: 10,
+        dictTypeId:e.key,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("查询出错，请稍后再试！")
+        }else{
+          //
+
+        }
+      },
+    });
+  }
+
+
+};
+
+//左边树形菜单 打开收缩事件
+openMenu = v => {
+  this.setState({
+    openKey: v[v.length - 1],
+    firstHide: false,
+  })
+};
+
+onOpenChange = openKeys => {
+  const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+  if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+    this.setState({ openKeys });
+  } else {
+    this.setState({
+      openKeys: latestOpenKey ? [latestOpenKey] : [],
+    });
+  }
+};
 
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
@@ -88,7 +173,7 @@ export default class BillTable extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'billTable/fetch',
       payload: params,
     });
   };
@@ -100,7 +185,7 @@ export default class BillTable extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'billTable/fetch',
       payload: {},
     });
   };
@@ -120,7 +205,7 @@ export default class BillTable extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'billTable/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -160,7 +245,7 @@ export default class BillTable extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'billTable/fetch',
         payload: values,
       });
     });
@@ -174,7 +259,7 @@ export default class BillTable extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'billTable/add',
       payload: {
         description: fields.desc,
       },
@@ -188,28 +273,7 @@ export default class BillTable extends PureComponent {
 
   rootSubmenuKeys = ['sub1'];
 
-  treeMenu() {
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 140 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>业务用表</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">工程造价咨询</Menu.Item>
-          <Menu.Item key="2">招标代理</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -241,7 +305,7 @@ export default class BillTable extends PureComponent {
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { billTable: { data }, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [
@@ -290,7 +354,15 @@ export default class BillTable extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              <PageLeftTreeMenu
+                /*menus={router.menus}*/
+                menus={this.state.billTableTypeTree}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>

@@ -268,30 +268,7 @@ export default class Dict extends PureComponent {
 
   rootSubmenuKeys = ['sub1'];
 
-  treeMenu() {
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 140 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>字典类别</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">学习</Menu.Item>
-          <Menu.Item key="2">项目</Menu.Item>
-          <Menu.Item key="3">工作</Menu.Item>
-          <Menu.Item key="4">放假</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
+
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (

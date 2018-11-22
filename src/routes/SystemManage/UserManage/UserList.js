@@ -18,7 +18,7 @@ import {
 import moment from 'moment/moment';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import PersonAddModal from './UserAddModal';
+import PersonAddModal from './UserModal';
 import PersonViewModal from './UserViewModal';
 import PersonEditModal from './UserEditModal';
 import DistributionRoleModal from './Role/DistributionRoleModal';

@@ -19,7 +19,7 @@ export default {
         payload: response,
       });
       // Login
-      if (response.status === 'ok') {
+      if (response.status === 1) {
           reloadAuthorized();
         if (callback && typeof callback === 'function') {
             callback(response); // 返回结果

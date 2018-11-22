@@ -35,7 +35,7 @@ export default {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        currentUser: action.payload,
+        currentUser: action.payload.data.list,
       };
     },
     changeNotifyCount(state, action) {
@@ -43,7 +43,7 @@ export default {
         ...state,
         currentUser: {
           ...state.currentUser,
-          notifyCount: action.payload,
+          notifyCount: action.payload.data.list,
         },
       };
     },

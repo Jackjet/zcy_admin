@@ -98,7 +98,7 @@ export const getRouterData = app => {
       name:'拜访管理',
     },
     '/system/billTable': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/BillTable/list/BillTable')),
+      component: dynamicWrapper(app, ['billTable'], () => import('../routes/BillTable/list/BillTable')),
       name: '业务用表',
     },
     '/system/dictManage': {
