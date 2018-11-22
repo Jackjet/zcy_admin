@@ -206,7 +206,7 @@ class Step6 extends React.PureComponent {
       });
     };
     const onPrev = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/createKnowledgeSystem'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/createKnowledgeSystem'));
     };
     return (
       <Card>

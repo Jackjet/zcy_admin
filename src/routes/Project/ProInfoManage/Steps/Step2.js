@@ -159,7 +159,7 @@ class Step2 extends React.PureComponent {
     const { selectedKeys, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
-      dispatch(routerRedux.push('/project/projectInfo/info'));
+      dispatch(routerRedux.push('/project/projectStart/info'));
     };
     const onValidateForm = e => {
       e.preventDefault();
@@ -172,7 +172,7 @@ class Step2 extends React.PureComponent {
               ...values,
             },
           });
-          dispatch(routerRedux.push('/project/projectInfo/result'));
+          dispatch(routerRedux.push('/project/projectStart/result'));
         }
       });
     };

@@ -731,36 +731,13 @@ export default class ProjectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal
-          {...parentMethods}
-          projectVisible={projectVisible}
-          choiceTypeValue={choiceTypeValue}
-          rowInfo={rowInfo}
-        />
-        <ProjectChildrenAddModal
-          {...parentMethods}
-          projectChildrenAddVisible={projectChildrenAddVisible}
-        />
-        <ProjectViewTabs
-          {...parentMethods}
-          projectTabsVisible={projectTabsVisible}
-          rowInfo={rowInfo}
-        />
-        <ProjectEditModal
-          {...parentMethods}
-          projectEditVisible={projectEditVisible}
-          rowInfo={rowInfo}
-        />
+        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
+        <ProjectChildrenAddModal{...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
+        <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
+        <ProjectEditModal{...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
         <ProjectPlanAddModal {...parentMethods} projectPlanAddVisible={projectPlanAddVisible} />
-        <ProjectApplyAddModal
-          {...parentMethods}
-          projectApplyAddVisible={projectApplyAddVisible}
-          rowInfo={rowInfo}
-        />
-        <ProjectProcessAddModal
-          {...parentMethods}
-          projectProcessAddVisible={projectProcessAddVisible}
-        />
+        <ProjectApplyAddModal {...parentMethods}  projectApplyAddVisible={projectApplyAddVisible}  rowInfo={rowInfo} />
+        <ProjectProcessAddModal {...parentMethods} projectProcessAddVisible={projectProcessAddVisible} />
         <AppraisalList {...parentMethods} appraisalVisible={appraisalVisible} />
         <SignatureAddModal {...parentMethods} signatureAddVisible={signatureAddVisible} />
       </PageHeaderLayout>

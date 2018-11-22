@@ -207,12 +207,12 @@ class Step4 extends React.PureComponent {
     const { selectedKeys, selectedRows, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
-      dispatch(routerRedux.push('/project/projectInfo/result'));
+      dispatch(routerRedux.push('/project/projectStart/result'));
     };
     const onValidateForm = e => {
       e.preventDefault();
       validateFields((err, values) => {
-        this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
+        this.props.dispatch(routerRedux.push('/project/projectStart/createContract'));
       });
     };
     return (

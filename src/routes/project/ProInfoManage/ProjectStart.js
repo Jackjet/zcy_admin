@@ -59,7 +59,7 @@ export default class ProjectStart extends PureComponent {
         return 2;
       case 'process':
         return 3;
-      case 'projectInfo':
+      case 'projectStart':
         return 0;
       case 'createContract':
         return 0;
@@ -94,7 +94,7 @@ export default class ProjectStart extends PureComponent {
         return 2;
       case 'process':
         return 3;
-      case 'projectInfo':
+      case 'projectStart':
         return 4;
       case 'createContract':
         return 5;
@@ -137,13 +137,13 @@ export default class ProjectStart extends PureComponent {
     });
     switch (MenuValue.key) {
       case '0':
-        this.props.dispatch(routerRedux.push('/project/projectInfo/info'));
+        this.props.dispatch(routerRedux.push('/project/projectStart/info'));
         break;
       case '1':
-        this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
+        this.props.dispatch(routerRedux.push('/project/projectStart/createContract'));
         break;
       case '2':
-        this.props.dispatch(routerRedux.push('/project/projectInfo/signature'));
+        this.props.dispatch(routerRedux.push('/project/projectStart/signature'));
         break;
       default:
         break;
@@ -187,40 +187,40 @@ export default class ProjectStart extends PureComponent {
     const { rule: { data }, loading } = this.props;
     const { stepVisible } = this.state;
     const onStep1 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/info'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/info'));
     };
     const onStep2 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/confirm'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/confirm'));
     };
     const onStep3 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/result'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/result'));
     };
     const onStep4 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/process'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/process'));
     };
     const onStep6 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/createContract'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/createContract'));
     };
     const onStep7 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/examineReport'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/examineReport'));
     };
     const onStep8 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/createReportCode'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/createReportCode'));
     };
     const onStep9 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/signature'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/signature'));
     };
     const onStep10 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/projectFile'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/projectFile'));
     };
     const onStep11 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/createKnowledgeSystem'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/createKnowledgeSystem'));
     };
     const onStep12 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/approvalMessage'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/approvalMessage'));
     };
     const onStep13 = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/bignessAbstract'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/bignessAbstract'));
     };
 
     return (

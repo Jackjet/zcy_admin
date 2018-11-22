@@ -189,12 +189,12 @@ class Step13 extends React.PureComponent {
     const { getFieldDecorator, validateFields } = form;
     const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onPrev = () => {
-      this.props.dispatch(routerRedux.push('/project/projectInfo/createReportCode'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/createReportCode'));
     };
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
-          dispatch(routerRedux.push('/project/projectInfo/confirm'));
+          dispatch(routerRedux.push('/project/projectStart/confirm'));
         }
       });
     };

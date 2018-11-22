@@ -201,7 +201,7 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/projectFile'));
+          dispatch(routerRedux.push('/project/projectStart/projectFile'));
         }
       });
     };

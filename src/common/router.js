@@ -117,6 +117,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/list/DictType')),
       name: '数据字典类型',
     },
+    '/system/userManage': {
+      component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/UserManage/UserList')),
+      name: '用户管理',
+    },
 
     '/project/signatureInfoManage': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Project/SignatureAndSealInfoManage/SignatureBill')),
@@ -281,62 +285,76 @@ export const getRouterData = app => {
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
-    '/project/projectinfoBAK': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProjectList')),
-      name: '项目信息列表管理',
+
+
+    '/projectBAK/projectInfoManageBAK': {
+      component: dynamicWrapper(app, ['company'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectList')),
+      name: '项目信息管理(备份)',
     },
-    '/project/projectInfo': {
+    '/projectBAK/projectStartBAK': {
+      component: dynamicWrapper(app, ['company','project'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectStart')),
+      name: '项目信息启动(备份)',
+    },
+    '/project/projectInfoMange': {
+      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProjectList')),
+      name: '项目信息管理',
+    },
+    '/project/projectStart': {
       component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
       name: '项目信息启动',
     },
-    '/project/projectInfo/info': {
+
+
+    '/project/projectStart/info': {
       name: '项目基本信息',
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step1')),
     },
-    '/project/projectInfo/confirm': {
+    '/project/projectStart/confirm': {
       name: '项目人员配置',
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step2')),
     },
-    '/project/projectInfo/result': {
+    '/project/projectStart/result': {
       name: '项目资料上传',
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step3')),
     },
-    '/project/projectInfo/process': {
+    '/project/projectStart/process': {
       name: "项目过程管理",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step4')),
     },
-    '/project/projectInfo/createContract': {
+    '/project/projectStart/createContract': {
       name: "生成合同",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step6')),
     },
-    '/project/projectInfo/examineReport': {
+    '/project/projectStart/examineReport': {
       name: "审核报告",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step7')),
     },
-    '/project/projectInfo/createReportCode': {
+    '/project/projectStart/createReportCode': {
       name: "生成报告号",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step8')),
     },
-    '/project/projectInfo/signature': {
+    '/project/projectStart/signature': {
       name: "盖章(文印)/签字",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step9')),
     },
-    '/project/projectInfo/projectFile': {
+    '/project/projectStart/projectFile': {
       name: "项目归档",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step10')),
     },
-    '/project/projectInfo/createKnowledgeSystem': {
+    '/project/projectStart/createKnowledgeSystem': {
       name: "生成知识体系",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step11')),
     },
-    '/project/projectInfo/approvalMessage': {
+    '/project/projectStart/approvalMessage': {
       name: "审批信息",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step12')),
     },
-    '/project/projectInfo/bignessAbstract': {
+    '/project/projectStart/bignessAbstract': {
       name: "重大会审纪要",
       component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step13')),
     },
+
+
 
 
     '/form/step-form/info': {

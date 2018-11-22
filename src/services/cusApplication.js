@@ -53,4 +53,16 @@ export async function statusCancelCancel(params) {
   });
 }
 
+// 树形
+export async function getDictTree(params) {
+  return request('/api/dict/getDictTreeByTypeId', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
 

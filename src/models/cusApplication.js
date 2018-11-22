@@ -1,4 +1,4 @@
-import { addCusApplication, queryCusApplication,updateCusApplication ,deleteCusApplication, statusCancelCancel  } from '../services/cusApplication';
+import { addCusApplication, queryCusApplication,updateCusApplication ,deleteCusApplication, statusCancelCancel, getDictTree  } from '../services/cusApplication';
 
 export default {
   namespace: 'cusApplication',
@@ -45,6 +45,12 @@ export default {
     },
     *cancelCancel({ payload, callback }, { call }) {
       const response = yield call(statusCancelCancel, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *getDictTree({ payload, callback }, { call }) {
+      const response = yield call(getDictTree, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

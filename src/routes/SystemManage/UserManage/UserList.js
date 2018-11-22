@@ -18,9 +18,9 @@ import {
 import moment from 'moment/moment';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import PersonAddModal from './PersonAddModal';
-import PersonViewModal from './PersonViewModal';
-import PersonEditModal from './PersonEditModal';
+import PersonAddModal from './UserAddModal';
+import PersonViewModal from './UserViewModal';
+import PersonEditModal from './UserEditModal';
 import DistributionRoleModal from './Role/DistributionRoleModal';
 import DistributionAuthorityModal from './Authority/DistributionAuthorityModal';
 import BatchDisAuthorityModal from './Authority/BatchDisAuthorityModal';
@@ -50,7 +50,7 @@ const getValue = obj =>
   loading: loading.models.person,
 }))
 @Form.create()
-export default class PersonManageList extends PureComponent {
+export default class UserList extends PureComponent {
   state = {
     PersonAddVisible: false,
     PersonViewVisible: false,
@@ -581,7 +581,7 @@ export default class PersonManageList extends PureComponent {
                   >
                     新建
                   </Button>
-                  {/*{selectedRows.length > 0 && (
+                  {selectedRows.length > 0 && (
                     <span>
                       <Button
                         type="primary"
@@ -604,7 +604,7 @@ export default class PersonManageList extends PureComponent {
                         </Button>
                       </Dropdown>
                     </span>
-                  )}*/}
+                  )}
                 </div>
                 <StandardTable
                   selectedRows={selectedRows}

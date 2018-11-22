@@ -76,22 +76,21 @@ const menuData = [
     path: 'project',
     children: [
       {
-        key: 'projectInfoList',
+        key: 'projectStart',
         name: '项目启动',
-        path: 'projectInfo',
+        path: 'projectStart',
       },
       {
-        key: 'projectinfoListBAK',
-        name: '项目信息查询',
-        path: 'projectinfoBAK',
+        key: 'projectInfoMange',
+        name: '项目信息管理',
+        path: 'projectInfoMange',
       },
       /*{
         key: 'signatureInfoManage',
         name: '签章信息管理',
         path: 'signatureInfoManage',
       },*/
-
-     /* {
+      /* {
         key: 'workplanList',
         name: '工时计划管理',
         path: 'workplan',
@@ -110,20 +109,75 @@ const menuData = [
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },*/
-     /* {
+      /* {
         key: 'workrocord',
         name: '项目工作记录',
         path: 'workplan1',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },*/
-     /* {
+      /* {
         key: 'projectDestroy',
         name: '项目销毁',
         path: 'projectDestroy',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },*/
+    ],
+  },
+  {
+    name: '项目管理备份',
+    icon: 'folder-add',
+    path: 'projectBAK',
+    children: [
+      {
+        key: 'projectStartBAK',
+        name: '项目启动',
+        path: 'projectStartBAK',
+      },
+      {
+        key: 'projectInfoManageBAK',
+        name: '项目信息管理',
+        path: 'projectInfoManageBAK',
+      },
+      /*{
+        key: 'signatureInfoManage',
+        name: '签章信息管理',
+        path: 'signatureInfoManage',
+      },*/
+      /* {
+         key: 'workplanList',
+         name: '工时计划管理',
+         path: 'workplan',
+         children: [
+           {
+             key: 'workplanlist1',
+             name: '项目计划',
+             path: 'workplan12',
+           },
+           {
+             key: 'pworkquery',
+             name: '项目工时查询',
+             path: 'workquery',
+           },
+         ],
+         // hideInBreadcrumb: true,
+         // hideInMenu: true,
+       },*/
+      /* {
+         key: 'workrocord',
+         name: '项目工作记录',
+         path: 'workplan1',
+         // hideInBreadcrumb: true,
+         // hideInMenu: true,
+       },*/
+      /* {
+         key: 'projectDestroy',
+         name: '项目销毁',
+         path: 'projectDestroy',
+         // hideInBreadcrumb: true,
+         // hideInMenu: true,
+       },*/
     ],
   },
   {
@@ -414,6 +468,12 @@ const menuData = [
         key: 'billTable',
         name: '业务用表',
         path: 'billTable',
+      },
+
+      {
+        key: 'userList',
+        name: '用户管理',
+        path: 'userManage',
       },
 
       {

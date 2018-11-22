@@ -203,12 +203,12 @@ class Step7 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/createReportCode'));
+          dispatch(routerRedux.push('/project/projectStart/createReportCode'));
         }
       });
     };
     const onPrev = () => {
-      dispatch(routerRedux.push('/project/projectInfo/createContract'));
+      dispatch(routerRedux.push('/project/projectStart/createContract'));
     };
     return (
       <Card>

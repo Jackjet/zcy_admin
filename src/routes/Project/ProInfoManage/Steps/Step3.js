@@ -217,7 +217,7 @@ class Step3 extends React.PureComponent {
       },
     ];
     const onPrev = () =>{
-      this.props.dispatch(routerRedux.push('/project/projectInfo/confirm'));
+      this.props.dispatch(routerRedux.push('/project/projectStart/confirm'));
     };
     const onValidateForm = e => {
       e.preventDefault();
@@ -229,7 +229,7 @@ class Step3 extends React.PureComponent {
               ...values,
             },
           });
-          this.props.dispatch(routerRedux.push('/project/projectInfo/process'));
+          this.props.dispatch(routerRedux.push('/project/projectStart/process'));
         }
       });
     };
@@ -237,17 +237,6 @@ class Step3 extends React.PureComponent {
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
-          <Row>
-            <Col span={23} pull={5}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
               <Form.Item {...formItemLayout} label='底稿'>

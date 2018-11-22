@@ -182,21 +182,22 @@ class Step1 extends React.PureComponent {
 
 
   render() {
-    const { form, dispatch, loading, submitting } = this.props;
+    const { form, dispatch, loading, submitting, handleNext } = this.props;
     const { getFieldDecorator, validateFields } = form;
     const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
           dispatch({
-            type: 'person/add',
+            type: 'dept/add',
             payload: values,
             callback: (res) => {
               if(res.meta.status !== "000000"){
                 message.error(res.meta.errmsg);
               } else {
                 message.success("提交成功!");
-                dispatch(routerRedux.push('/project/projectInfo/confirm'));
+                handleNext(true);
+                /*dispatch(routerRedux.push('/project/projectStart/confirm'));*/
               }
             },
           });
@@ -220,7 +221,7 @@ class Step1 extends React.PureComponent {
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.type}>
-                {getFieldDecorator('type', {
+                {getFieldDecorator('number', {
                   rules: [{ required: false, message: '请选择项目类别' }],
                 })(
                   <Select onChange={this.handleProTypeSourceValue} placeholder="请选择项目类别" style={{ width: 200 }} >
@@ -231,7 +232,7 @@ class Step1 extends React.PureComponent {
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.years}>
-                {getFieldDecorator('years', {
+                {getFieldDecorator('parentId', {
                   rules: [{ required: false, message: '请选择年度' }],
                 })(
                   <Input  placeholder="请选择年度" style={{ width: '100%' }} />
@@ -674,9 +675,14 @@ class Step1 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
-              提交
-            </Button>
+            <span>
+              <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
+                保存
+              </Button>
+              <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
+                提交
+              </Button>
+            </span>
           </Form.Item>
         </Form>
       </Card>
@@ -684,6 +690,6 @@ class Step1 extends React.PureComponent {
   }
 }
 
-export default connect(({ person, loading }) => ({
-  submitting: loading.effects['person/add'],
+export default connect(({ dept, loading }) => ({
+  submitting: loading.effects['dept/add'],
 }))(Step1);

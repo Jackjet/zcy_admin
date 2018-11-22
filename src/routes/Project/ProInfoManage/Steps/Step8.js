@@ -200,12 +200,12 @@ class Step6 extends React.PureComponent {
               }
             },
           });*/
-          dispatch(routerRedux.push('/project/projectInfo/bignessAbstract'));
+          dispatch(routerRedux.push('/project/projectStart/bignessAbstract'));
         }
       });
     };
     const onPrev = () => {
-      dispatch(routerRedux.push('/project/projectInfo/examineReport'));
+      dispatch(routerRedux.push('/project/projectStart/examineReport'));
     };
     return (
       <Card>
