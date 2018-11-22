@@ -54,8 +54,8 @@ export async function statusCancelCancel(params) {
 }
 
 // 树形
-export async function getDictTree(params) {
-  return request('/api/dict/getDictTreeByTypeId', {
+export async function getDictByCondition(params) {
+  return request('/api/dict/getDictByCondition', {
     method: 'POST',
     body: {
       ...params,

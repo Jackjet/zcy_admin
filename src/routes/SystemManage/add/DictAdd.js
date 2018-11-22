@@ -62,6 +62,7 @@ class DictAdd extends PureComponent {
         pageSize: 9999,
       },
       callback: (res) => {
+        console.log(res.data.list);
         if(res.meta.status !== '000000' ) {
           message.error("获取数据字典类型失败!"+res.data.alert_msg)
         }else{

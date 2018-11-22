@@ -29,24 +29,38 @@ const formItemLayout = {
 class CusApplyAddModal extends PureComponent {
   state = {
     width: '100%',
-    linkmanOptionData: [],
+    linkmanOption: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleLinkManTypeChange();
+    console.log(this.props.linkmanOptionData);
+
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
   handleLinkManTypeChange = () => {
-    const optionData = Object.values(linkmanTypeOption).map((data,index) => {
-      const val = `${data}`;
-      const keyNum = `${index}`;
-      return <Option key={keyNum} value={keyNum}>{val}</Option>;
-    });
-    this.setState({
-      linkmanOptionData: optionData,
+    const {dispatch,handleLinkManTypeChange} = this.props;
+    dispatch({
+      type: 'cusApplication/getDict',
+      payload: {
+        dictTypeId: '3af03ec8ed4311e88ac1186024a65a7c',
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          handleLinkManTypeChange(res.data.list);
+          const optionData = res.data.list.map((data) => {
+            return <Option key={data.id} value={data.id}>{data.name}</Option>;
+          });
+          this.setState({
+            linkmanOption: optionData,
+          });
+        }
+      },
     });
   };
 
@@ -60,10 +74,14 @@ class CusApplyAddModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, cusApplyAddVisible, handleCusApplyAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { linkmanOptionData } = this.state;
+    const { linkmanOption } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
+          // if (values.linkmanTypeId === `请选择`) {
+          //   message.error("请选择业务联系人类别");
+          //   return false;
+          // }
           // submit the values
           dispatch({
               type: 'cusApplication/add',
@@ -95,7 +113,7 @@ class CusApplyAddModal extends PureComponent {
     };
     return (
       <Modal
-        destroyOnClose="true"
+       /* destroyOnClose="true"*/
         keyboard={false}
         title="客户申请单信息新增"
         style={{ top: 20 }}
@@ -138,11 +156,11 @@ class CusApplyAddModal extends PureComponent {
               <Col span={16} offset={4}>
                 <Form.Item {...formItemLayout} label={fieldLabels.cusApplyNature}>
                   {getFieldDecorator('linkmanTypeId', {
-                    rules: [{ required: false, message: '请选择联系人业务性质' }],
+                    rules: [{ required: true, message: '请选择联系人业务性质' }],
                     initialValue:`请选择`,
                   })(
                     <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
-                      {linkmanOptionData}
+                      {linkmanOption}
                     </Select>
                   )}
                 </Form.Item>

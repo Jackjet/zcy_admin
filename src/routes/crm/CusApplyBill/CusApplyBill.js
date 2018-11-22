@@ -91,9 +91,11 @@ export default class CusApplyBill extends PureComponent {
     openKeys: ['sub1'],  // 左边菜单树的起始状态
     pageCurrent:``, // 当前页
     pageSizeCurrent:``, // 当前页大小
+    linkmanOptionData: [],
   };
 
   componentDidMount() {
+    this.handleLinkManTypeChange();
     const { dispatch } = this.props;
     dispatch({
       type: 'cusApplication/fetch',
@@ -227,6 +229,12 @@ export default class CusApplyBill extends PureComponent {
     });
   }; // 查询方法
 
+  handleLinkManTypeChange = (optionData) => {
+    this.setState({
+      linkmanOptionData: optionData,
+    }); // 接收子页面查询到的下拉列表的optionData值
+  };
+
   handleCusApplyAddVisible = flag => {
     this.setState({
       cusApplyAddVisible: !!flag,
@@ -305,7 +313,6 @@ export default class CusApplyBill extends PureComponent {
     });
   }; // 提交客户申请单
 
-
   showViewMessage = (flag, record) => {
     this.setState({
       cusApplyTabsViewVisible: !!flag,
@@ -355,6 +362,7 @@ export default class CusApplyBill extends PureComponent {
       cusApplyTabsViewVisible,
       salesVisible,
       rowInfo,
+      linkmanOptionData,
     } = this.state;
 
     const columns = [
@@ -377,21 +385,35 @@ export default class CusApplyBill extends PureComponent {
         dataIndex: 'linkmanTypeId',
         filters: [
           {
-            text: linkmanTypeValue[0],
+            text: 1,
             value: 0,
           },
           {
-            text: linkmanTypeValue[1],
+            text: 2,
             value: 1,
           },
           {
-            text: linkmanTypeValue[2],
+            text: 3,
             value: 2,
           },
         ],
+        /*filters:() => {
+          return  [ {text:1, value:2 } ]
+        },*/
         onFilter: (value, record) => record.linkmanTypeId.toString() === value,
         render(val) {
-          return <Badge status text={linkmanTypeValue[val]} />;
+          let linkmanTypeData = "";
+          if(linkmanOptionData){
+            linkmanTypeData  =  linkmanOptionData.map((params) => {
+              if(val === params.id){
+                return params.name;
+              }
+              return "";
+            });
+          }else {
+            linkmanTypeData =  "";
+          }
+          return <Badge status text={linkmanTypeData} />;
         },
       },
       {
@@ -452,6 +474,7 @@ export default class CusApplyBill extends PureComponent {
       handleContactsVisible: this.handleContactsVisible,
       handleCusApplyTabsViewVisible: this.handleCusApplyTabsViewVisible,
       handleSalesVisible: this.handleSalesVisible,
+      handleLinkManTypeChange:this.handleLinkManTypeChange,
     };
 
     return (
@@ -491,7 +514,7 @@ export default class CusApplyBill extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CustomerApplyAddModal {...ParentMethods} cusApplyAddVisible={cusApplyAddVisible} />
+        <CustomerApplyAddModal {...ParentMethods} cusApplyAddVisible={cusApplyAddVisible} linkmanOptionData={linkmanOptionData} />
         <CustomerApplyViewTabs {...ParentMethods} cusApplyTabsViewVisible={cusApplyTabsViewVisible} rowInfo={rowInfo} />
         <CustomerApplyEditModal{...ParentMethods} cusApplyEditVisible={cusApplyEditVisible} rowInfo={rowInfo} />
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
