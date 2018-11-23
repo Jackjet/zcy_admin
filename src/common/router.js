@@ -118,7 +118,7 @@ export const getRouterData = app => {
       name: '数据字典类型',
     },
     '/system/userManage': {
-      component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/UserManage/UserList')),
+      component: dynamicWrapper(app, ['user'], () => import('../routes/SystemManage/UserManage/UserList')),
       name: '用户管理',
     },
 
@@ -303,7 +303,6 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
       name: '项目信息启动',
     },
-
 
     '/project/projectStart/info': {
       name: '项目基本信息',
