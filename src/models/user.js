@@ -1,4 +1,5 @@
 import { query as queryUsers, queryCurrent,addUser,updateUser,deleteUser } from '../services/user';
+import {getLeftTreeMenu} from "../services/company";
 
 export default {
   namespace: 'user',
@@ -43,12 +44,17 @@ export default {
         callback(response); // 返回结果
       }
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent(_, {put }) {
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: localStorage.getItem("user"),
       });
+    },
+    *getLeftTreeMenu({ callback }, { call}) {
+      const response = yield call(getLeftTreeMenu);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
   },
 
@@ -62,16 +68,7 @@ export default {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        currentUser: action.payload.data.list,
-      };
-    },
-    changeNotifyCount(state, action) {
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          notifyCount: action.payload.data.list,
-        },
+        currentUser: action.payload,
       };
     },
   },

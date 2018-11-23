@@ -34,6 +34,7 @@ export default class LoginPage extends Component {
   handleSubmit = (err, values) => {
     const { type } = this.state;
     if (!err) {
+      this.setState({userName:values.userName})
       this.props.dispatch({
         type: 'login/login',
         payload: {
@@ -43,8 +44,13 @@ export default class LoginPage extends Component {
         callback: (res) => {
 
          /* {res.status === 'ok'  &&  this.renderMessage("222222")}*/
-          if(res.status === 1 ) {
+          if(res.meta.status === '000000' ) {
               this.handleSwitchOrgShowModal();
+
+            localStorage.setItem('user', JSON.stringify(res.data.list));
+
+          }else{
+            localStorage.setItem('user', "");
           }
             // routerRedux.push()
 

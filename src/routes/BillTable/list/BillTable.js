@@ -98,7 +98,7 @@ menuClick = e => {
   this.setState({
     selectedKey: e.key,
   });
-  //根据id 查询列表
+  // 根据id 查询列表
   if(e.key){
     const { dispatch } = this.props;
     dispatch({
@@ -113,13 +113,10 @@ menuClick = e => {
           message.error("查询出错，请稍后再试！")
         }else{
           //
-
         }
       },
     });
   }
-
-
 };
 
 //左边树形菜单 打开收缩事件

@@ -2,14 +2,14 @@ import request from '../utils/request';
 
 // 组织查询
 export async function queryCompany(params) {
-  return request('/company/getCompanyInfosByCondition', {
+  return request('/api/company/getCompanyInfosByCondition', {
     method: 'POST',
     body: params,
   });
 }
 // 组织树形
 export async function getLeftTreeMenu() {
-  return request('/company/getLeftTreeMenu', {
+  return request('/api/company/getLeftTreeMenu', {
     method: 'POST',
   });
 }
@@ -17,7 +17,7 @@ export async function getLeftTreeMenu() {
 
 // 组织更新
 export async function updateCompany(params) {
-  return request('/company/updateCompany', {
+  return request('/api/company/updateCompany', {
     method: 'POST',
     body: {
       ...params,
@@ -28,7 +28,7 @@ export async function updateCompany(params) {
 
 // 组织新建
 export async function addCompany(params) {
-  return request('/company/saveCompany', {
+  return request('/api/company/saveCompany', {
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +39,7 @@ export async function addCompany(params) {
 
 // 组织删除
 export async function removeCompanyById(params) {
-  return request('/company/deleteCompanyById', {
+  return request('/api/company/deleteCompanyById', {
     method: 'POST',
     body: {
       ...params,
@@ -51,7 +51,7 @@ export async function removeCompanyById(params) {
 
 // 组织批量删除
 export async function removeCompanyByCondition(params) {
-  return request('/company/deleteCompanyByList', {
+  return request('/api/company/deleteCompanyByList', {
     method: 'POST',
     body: {
       ...params,
@@ -62,7 +62,7 @@ export async function removeCompanyByCondition(params) {
 
 // 组织状态启动
 export async function statusCancelCancel(params) {
-  return request('/company/cancelCancelStatus', {
+  return request('/api/company/cancelCancelStatus', {
     method: 'POST',
     body: {
       ...params,
@@ -73,7 +73,7 @@ export async function statusCancelCancel(params) {
 
 // 组织状态禁用
 export async function statusCancel(params) {
-  return request('/company/cancelCancelStatus', {
+  return request('/api/company/cancelCancelStatus', {
     method: 'POST',
     body: {
       ...params,

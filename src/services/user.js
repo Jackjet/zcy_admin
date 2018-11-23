@@ -1,9 +1,7 @@
 import request from '../utils/request';
 
-//查询所有用户
+// 查询所有用户
 export async function query(params) {
-  return request('/api/users');
-
   return request('/api/user/getUserByCondition', {
     method: 'POST',
     body: {
@@ -14,8 +12,14 @@ export async function query(params) {
 }
 
 // 查询当前用户
-export async function queryCurrent() {
-  return request('/api/currentUser');
+export async function queryCurrent(params) {
+  return request('/api/currentUser', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
 }
 
 // 用户更新
@@ -49,4 +53,6 @@ export async function deleteUser (params) {
       method: 'post',
     },
   });
+
 }
+

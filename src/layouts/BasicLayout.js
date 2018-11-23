@@ -192,6 +192,7 @@ class BasicLayout extends React.PureComponent {
     this.props.dispatch({
       type: 'user/fetchCurrent',
     });
+
   }
   componentWillUnmount() {
     unenquireScreen(this.enquireHandler);

@@ -16,6 +16,7 @@ import {
   Badge,
 } from 'antd';
 import moment from 'moment/moment';
+import PageLeftTreeMenu from "../../../components/PageLeftTreeMenu";
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './UserModal';
@@ -45,9 +46,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({ person, loading }) => ({
-  person,
-  loading: loading.models.person,
+@connect(({ user, loading }) => ({
+  user,
+  loading: loading.models.user,
 }))
 @Form.create()
 export default class UserList extends PureComponent {
@@ -70,12 +71,16 @@ export default class UserList extends PureComponent {
     leftTreeVal: ``,
     choiceTypeKey:``,
     choiceTypeValue: ``,
+    billTableTypeTree:[], // 左边树形列表
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'person/fetch',
+      type: 'user/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -84,6 +89,24 @@ export default class UserList extends PureComponent {
         if (res.meta.status !== '000000') {
         } else {
           //
+        }
+      },
+    });
+    //查询树形结构
+    dispatch({
+      type: 'billTable/getDictTreeByTypeId',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+        dictTypeId:"84ef4a13ee0d11e88aa5186024a65a7c",
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("获取类型失败！"+res.data.alert_msg)
+        }else{
+          this.setState({
+            billTableTypeTree : res.data.list,
+          });
         }
       },
     });
@@ -123,7 +146,7 @@ export default class UserList extends PureComponent {
     }
 
     dispatch({
-      type: 'person/fetch',
+      type: 'user/fetch',
       payload: params,
     });
   };
@@ -135,7 +158,7 @@ export default class UserList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'person/fetch',
+      type: 'user/fetch',
       payload: {},
       callback: res => {
         if (res.meta.status !== '000000') {
@@ -169,7 +192,7 @@ export default class UserList extends PureComponent {
           ),
           onOk() {
             thisParam.props.dispatch({
-              type: 'person/removeMore',
+              type: 'user/removeMore',
               payload: {
                 ids: thisParam.state.selectedRows.map(row => row.id).join(','),
               },
@@ -178,7 +201,7 @@ export default class UserList extends PureComponent {
                   selectedRows: [],
                 });
                 thisParam.props.dispatch({
-                  type: 'person/fetch',
+                  type: 'user/fetch',
                   payload: {
                     page: 1,
                     pageSize: 10,
@@ -204,6 +227,54 @@ export default class UserList extends PureComponent {
     }
   };
 
+  // 左边树形菜单 点击事件
+  menuClick = e => {
+    const { billTableTypeTree } = this.state;
+    console.log(e.key);
+    let vailData = "";
+    if (billTableTypeTree && billTableTypeTree[0].children) {
+      vailData =  billTableTypeTree[0].children.map((params) => {
+        if(e.key === params.key){
+          return params.title;
+        }
+        return "";
+      })
+    }
+    this.setState({
+      selectedKey: e.key,
+      choiceTypeKey: e.key,
+      choiceTypeValue: vailData,
+    });
+    // 根据id 查询列表
+    /*if(e.key){
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'dict/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+          dictTypeId:e.key,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error("查询出错，请稍后再试！")
+          }else{
+            //
+
+          }
+        },
+      });
+    }*/
+  };
+
+// 左边树形菜单 打开收缩事件
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -222,7 +293,7 @@ export default class UserList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'person/fetch',
+        type: 'user/fetch',
         payload: values,
         callback: res => {
           if (res.meta.status !== '000000') {
@@ -246,7 +317,6 @@ export default class UserList extends PureComponent {
     });
   };
 
-
   handlePersonViewVisible = flag => {
     this.setState({
       PersonViewVisible: !!flag,
@@ -257,23 +327,6 @@ export default class UserList extends PureComponent {
     this.setState({
       PersonEditVisible: !!flag,
     });
-    if (!flag) {
-      this.props.dispatch({
-        type: 'person/fetch',
-        payload: {
-          page: 1,
-          pageSize: 10,
-        },
-        callback: res => {
-          if (res.meta.status !== '000000') {
-            message.error(res.meta.errmsg); // 返回错误信息
-            // this.props.data = res.data;
-          } else {
-            message.success('公司更新成功!');
-          }
-        },
-      });
-    }
   };
 
   handleBatchDisRoleVisible = flag => {
@@ -337,7 +390,7 @@ export default class UserList extends PureComponent {
   showDeleteMessage = (flag, record) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'person/remove',
+      type: 'user/remove',
       payload: {
         id: record.id,
         deleteFlag: 0,
@@ -350,7 +403,7 @@ export default class UserList extends PureComponent {
             selectedRows: [],
           });
           dispatch({
-            type: 'person/fetch',
+            type: 'user/fetch',
             payload: {
               page: this.state.pageCurrent,
               pageSize: this.state.pageSizeCurrent,
@@ -366,7 +419,7 @@ export default class UserList extends PureComponent {
   handleCancelCancel = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'person/cancelCancel',
+      type: 'user/cancelCancel',
       payload: {
         id: record.id,
         status: 1,
@@ -379,7 +432,7 @@ export default class UserList extends PureComponent {
           selectedRows: [],
         });
         dispatch({
-          type: 'person/fetch',
+          type: 'user/fetch',
           payload: {
             page: this.state.pageCurrent,
             pageSize: this.state.pageSizeCurrent,
@@ -459,7 +512,7 @@ export default class UserList extends PureComponent {
   }
 
   render() {
-    const { person: { data }, loading } = this.props;
+    const { user: { data }, loading } = this.props;
     const {
       selectedRows,
       PersonAddVisible,
@@ -476,42 +529,30 @@ export default class UserList extends PureComponent {
     } = this.state;
     const columns = [
       {
-        title: '工号',
-        dataIndex: 'number',
+        title: '用户账户',
+        dataIndex: 'userName',
+        fixed: 'left',
+        width: 150,
       },
       {
-        title: '姓名',
-        dataIndex: 'name',
+        title: '所属用户组',
+        dataIndex: 'group',
       },
       {
-        title: '性别',
-        dataIndex: 'sex',
-        filters: [
-          {
-            text: sexValue[0],
-            value: 0,
-          },
-          {
-            text: sexValue[1],
-            value: 1,
-          },
-        ],
-        onFilter: (value, record) => record.sex.toString() === value,
-        render(val) {
-          return <Badge status={sexStatusMap[val]} text={sexValue[val]} />;
-        },
+        title: '所属公司',
+        dataIndex: 'company',
       },
       {
-        title: '岗位',
-        dataIndex: 'post',
+        title: '用户实名',
+        dataIndex: 'person',
       },
       {
-        title: '移动电话',
-        dataIndex: 'mobilePhone',
+        title: '账号生效日期',
+        dataIndex: 'effectiveDate',
       },
       {
-        title: '办公电话',
-        dataIndex: 'officePhone',
+        title: '缺省公司',
+        dataIndex: 'defaultOrg',
       },
       {
         title: '状态',
@@ -561,14 +602,26 @@ export default class UserList extends PureComponent {
       handleDistributionAuthorityVisible: this.handleDistributionAuthorityVisible,
       handleBatchDisAuthorityVisible: this.handleBatchDisAuthorityVisible,
       handleOrgRangeBillVisible: this.handleOrgRangeBillVisible,
+      pageCurrent: this.state.pageCurrent,
+      pageSizeCurrent: this.state.pageSizeCurrent,
     };
+
+
 
     return (
       <PageHeaderLayout>
         <Card>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+             {/* {this.treeMenu()}*/}
+              <PageLeftTreeMenu
+                menus={this.state.billTableTypeTree}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
@@ -607,6 +660,7 @@ export default class UserList extends PureComponent {
                   )}
                 </div>
                 <StandardTable
+                  scroll={{ x: 1500}}
                   selectedRows={selectedRows}
                   loading={loading}
                   data={data}

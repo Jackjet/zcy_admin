@@ -37,3 +37,8 @@ export function setAuthority(authority) {
 
   return localStorage.setItem('antd-pro-authority', authorityvalue);
 }
+
+export function setuser(user) {
+  localStorage.setItem('user', JSON.stringify(user));
+}
+

@@ -83,6 +83,16 @@ class UserModal extends PureComponent {
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.props.dispatch({
+      type: 'user/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({treeData : res.data.list});
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -129,7 +139,7 @@ class UserModal extends PureComponent {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'person/add',
+            type: 'user/add',
             payload: {
               ...values,
               group: choiceTypeKey,
@@ -137,7 +147,7 @@ class UserModal extends PureComponent {
             callback: res => {
               if (res.meta.status === '000000') {
                 this.props.dispatch({
-                  type: 'person/fetch',
+                  type: 'user/fetch',
                   payload: {
                     page: 1,
                     pageSize: 10,
@@ -195,7 +205,7 @@ class UserModal extends PureComponent {
                           rules: [{ required: false, message: '请输入所属用户组' }],
                           initialValue: choiceTypeValue,
                         })(
-                          <Input placeholder="请输入所属用户组" />
+                          <Input readOnly placeholder="请输入所属用户组" />
                         )}
                       </Form.Item>
                     </Col>
@@ -217,7 +227,7 @@ class UserModal extends PureComponent {
                           <TreeSelect
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             treeData={this.state.treeData}
-                            placeholder="请选择缺省公司"
+                            placeholder="请选择所属公司"
                             treeDefaultExpandAll
                             onChange={this.onOrgTreeSelectChange}
                           />
@@ -264,7 +274,7 @@ class UserModal extends PureComponent {
                       rules: [{ required: false, message: '请输入账号生效日期' }],
                       initialValue: moment().format('YYYY-MM-DD'),
                     })(
-                      <Input placeholder="请输入账号生效日期" />
+                      <Input readOnly placeholder="请输入账号生效日期" />
                     )}
                   </Form.Item>
                 </Col>

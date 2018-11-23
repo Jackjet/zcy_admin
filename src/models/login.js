@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import {fakeAccountLogin, fakeReset, fakeRegister} from '../services/api';
-import { setAuthority } from '../utils/authority';
+import { setAuthority,setuser } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 
 
@@ -19,7 +19,7 @@ export default {
         payload: response,
       });
       // Login
-      if (response.status === 1) {
+      if (response.meta.status === '000000') {
           reloadAuthorized();
         if (callback && typeof callback === 'function') {
             callback(response); // 返回结果
@@ -58,11 +58,12 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-     setAuthority(payload.currentAuthority);
+     setAuthority(payload.data.list.currentAuthority);
+     setuser(payload.data.list);
       return {
           ...state,
-          status: payload.status,
-          type: payload.type,
+          status: payload.meta.status,
+          type: payload.data.list.type,
       };
     },
     registerHandle(state, { payload }) {
@@ -70,7 +71,7 @@ export default {
       reloadAuthorized();
       return {
         ...state,
-        status: payload.status,
+        status: payload.meta.status,
       };
     },
   },
