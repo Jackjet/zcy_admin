@@ -10,7 +10,6 @@ export async function queryActivities(params) {
     method: 'POST',
       body: {
     ...params,
-        method: 'delete',
     },
   });
 }
