@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent,addUser,updateUser,deleteUser } from '../services/user';
+import { query as queryUsers,addUser,updateUser,deleteUser } from '../services/user';
 import {getLeftTreeMenu} from "../services/company";
 
 export default {
@@ -47,7 +47,7 @@ export default {
     *fetchCurrent(_, {put }) {
       yield put({
         type: 'saveCurrentUser',
-        payload: localStorage.getItem("user"),
+        payload: JSON.parse(localStorage.getItem("user")),
       });
     },
     *getLeftTreeMenu({ callback }, { call}) {

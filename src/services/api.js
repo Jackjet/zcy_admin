@@ -5,8 +5,14 @@ export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
 
-export async function queryActivities() {
-  return request('/api/activities');
+export async function queryActivities(params) {
+  return request('/api/message/getMessageByCondition',{
+    method: 'POST',
+      body: {
+    ...params,
+        method: 'delete',
+    },
+  });
 }
 
 export async function queryRule(params) {

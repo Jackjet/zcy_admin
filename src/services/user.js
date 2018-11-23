@@ -12,7 +12,7 @@ export async function query(params) {
 }
 
 // 查询当前用户
-export async function queryCurrent(params) {
+/*export async function queryCurrent(params) {
   return request('/api/currentUser', {
     method: 'POST',
     body: {
@@ -20,7 +20,7 @@ export async function queryCurrent(params) {
       method: 'post',
     },
   });
-}
+}*/
 
 // 用户更新
 export async function updateUser (params) {

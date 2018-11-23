@@ -37,9 +37,9 @@ export default {
         window.history.replaceState(null, 'login', urlParams.href);
       } finally {
         yield put({
-          type: 'changeLoginStatus',
+          type: 'changeLogoutStatus',
           payload: {
-            status: false,
+            status: "999999",
             currentAuthority: 'guest',
           },
         });
@@ -58,12 +58,21 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-     setAuthority(payload.data.list.currentAuthority);
-     setuser(payload.data.list);
+      setAuthority(payload.data.list.currentAuthority);
+      setuser(payload.data.list);
       return {
           ...state,
           status: payload.meta.status,
           type: payload.data.list.type,
+      };
+    },
+    changeLogoutStatus(state, { payload }) {
+      setAuthority(payload.currentAuthority);
+      setuser("");
+      return {
+        ...state,
+        status: payload.status,
+        type: payload.type,
       };
     },
     registerHandle(state, { payload }) {

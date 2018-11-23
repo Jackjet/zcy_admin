@@ -46,11 +46,6 @@ export default class LoginPage extends Component {
          /* {res.status === 'ok'  &&  this.renderMessage("222222")}*/
           if(res.meta.status === '000000' ) {
               this.handleSwitchOrgShowModal();
-
-            localStorage.setItem('user', JSON.stringify(res.data.list));
-
-          }else{
-            localStorage.setItem('user', "");
           }
             // routerRedux.push()
 

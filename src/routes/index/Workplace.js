@@ -79,14 +79,22 @@ function callback(key) {
   chart,
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
+  projectMessage: loading.effects['message/fetchList'],
 }))
 export default class Workplace extends PureComponent {
-  state = {
-    projectTemAuthVisible: false,
-    projectAssigVisible: false,
-    ScheduleAddVisible: false,
-    rangePickerValue: getTimeDistance('year'),
-  };
+   //constructor(props){
+     //super(props);
+     state = {
+       projectTemAuthVisible: false,
+       projectAssigVisible: false,
+       ScheduleAddVisible: false,
+       rangePickerValue: getTimeDistance('year'),
+       currentUser: JSON.parse(localStorage.getItem("user")),
+       timeValue:"",
+     };
+   //}
+
+
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -99,6 +107,8 @@ export default class Workplace extends PureComponent {
     /* dispatch({
       type: 'chart/fetch',
     });*/
+
+    this.getTimeValue();
   }
 
   componentWillUnmount() {
@@ -211,7 +221,38 @@ export default class Workplace extends PureComponent {
     });
   }
 
+    getTimeValue(){
+        const now = new Date();
+        const hour = now.getHours();
+        if(hour < 6){
+           this.setState({timeValue:"凌晨好,"+ this.state.currentUser.name +",最敬业的就是你！"});
+        }
+        else if (hour < 9){
+          this.setState({timeValue:"早上好,"+ this.state.currentUser.name +",又是元气满满的一天！"});
+        }
+        else if (hour < 12){
+          this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+        }
+        else if (hour < 14){
+          this.setState({timeValue:"中午好,"+ this.state.currentUser.name +",要休息一下下！"});
+        }
+        else if (hour < 17){
+          this.setState({timeValue:"下午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+        }
+        else if (hour < 19){
+          this.setState({timeValue:"傍晚好,"+ this.state.currentUser.name +",开心的一天结束了！"});
+        }
+        else if (hour < 22){
+          this.setState({timeValue:"晚上好,"+ this.state.currentUser.name +",要早些休息！"});
+        }
+        else {
+          this.setState({timeValue:"夜里好,"+ this.state.currentUser.name +",要早些休息！"});
+        }
+    }
+
+
   render() {
+    const {currentUser,timeValue} =  this.state;
     const {
       ScheduleAddVisible,
       projectTemAuthVisible,
@@ -263,7 +304,7 @@ export default class Workplace extends PureComponent {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.contentTitle}>早安，申杰东，祝你开心每一天！</div>
+          <div className={styles.contentTitle}>{timeValue}</div>
           <div>技术专家 | 至诚软件－研发中心－CTO</div>
         </div>
       </div>
