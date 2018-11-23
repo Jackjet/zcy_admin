@@ -20,11 +20,9 @@ import {
   message,
 } from 'antd';
 import moment from "moment/moment";
-import { routerRedux } from 'dva/router';
 import styles from './style.less';
 
 const { Search } = Input;
-const ProTypeOption = {"001":"工程造价业务项目", "002":"可研报告", "003":"招标代理业务项目"};
 const BillSourceOption = ['合伙人', '可研报告', '招标代理业务项目'];
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
@@ -120,11 +118,11 @@ const formItemLayout = {
 @Form.create()
 class Step1 extends React.PureComponent {
   state = {
-    BillSourceOptionData:``,
+    BillSourceOptionData: [],  // 业务来源类型option
     BillSourceValue:``,
-    ProTypeOptionData:``,
+    ProTypeOptionData: [], // 项目类型option
     TestOption:``,
-    ProTypeValue:``,
+    ProTypeValue: ``,
     BillTableOptionTable:``,
   };
   componentDidMount() {
@@ -133,13 +131,21 @@ class Step1 extends React.PureComponent {
     this.handleBillTableOptionTable();
   }
   handleBillSourceOption = () => {
-    const optionData = BillSourceOption.map((data, index) => {
-      const val = `${data}`;
-      const keyNum = `${index}`;
-      return <Option key={keyNum} value={val}>{val}</Option>;
-    });
-    this.setState({
-      BillSourceOptionData: optionData,
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cusApplication/getDict', // 接口
+      payload: {
+        dictTypeId: 'be407dc3eefc11e89655186024a65a7c', // 数据类型id
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            BillSourceOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
@@ -155,15 +161,21 @@ class Step1 extends React.PureComponent {
   }; // 根据数据中的数据，动态加载业务来源的Option
 
   handleProTypeOption = () => {
-    const ProTypeValues = Object.values(ProTypeOption);
-    const ProTypeKeys = Object.keys(ProTypeOption);
-    const optionData = ProTypeValues.map((data, index) => {
-      const val = `${data}`;
-      const keyNum = `${index}`;
-      return <Option key={keyNum} value={val}>{val}</Option>;
-    });
-    this.setState({
-      ProTypeOptionData: optionData,
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cusApplication/getDict', // 接口
+      payload: {
+        dictTypeId: '1821fe9feef711e89655186024a65a7c', // 数据类型id
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            ProTypeOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
@@ -175,21 +187,25 @@ class Step1 extends React.PureComponent {
   }; // 获取业务来源的Option的值
 
   handleProTypeSourceValue = (val) =>{
-    this.setState({
-      ProTypeValue: val,
-    });
+    console.log(this.state.ProTypeOptionData.id);
+    console.log(val);
+    if (val === this.state.ProTypeOptionData.id ){
+      this.setState({
+        ProTypeValue: this.state.ProTypeOptionData.name,
+      });
+    }
   }; // 获取业务来源的Option的值
 
 
   render() {
     const { form, dispatch, loading, submitting, handleNext } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeValue, BillTableOptionTable } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
           dispatch({
-            type: 'dept/add',
+            type: 'cusApplication/add',
             payload: values,
             callback: (res) => {
               if(res.meta.status !== "000000"){
@@ -221,18 +237,23 @@ class Step1 extends React.PureComponent {
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.type}>
-                {getFieldDecorator('number', {
+                {getFieldDecorator('type', {
                   rules: [{ required: false, message: '请选择项目类别' }],
                 })(
-                  <Select onChange={this.handleProTypeSourceValue} placeholder="请选择项目类别" style={{ width: 200 }} >
-                    {ProTypeOptionData}
+                  <Select
+                    onChange={this.handleProTypeSourceValue}
+                    placeholder="请选择项目类别"
+                    style={{ width: 200 }}
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
+                  >
+                    {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
                 )}
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.years}>
-                {getFieldDecorator('parentId', {
+                {getFieldDecorator('year', {
                   rules: [{ required: false, message: '请选择年度' }],
                 })(
                   <Input  placeholder="请选择年度" style={{ width: '100%' }} />
@@ -273,7 +294,7 @@ class Step1 extends React.PureComponent {
             </Col>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.cuslink}>
-                {getFieldDecorator('cuslink', {
+                {getFieldDecorator('linkman', {
                   rules: [{ required: false, message: '请选择客户联系人' }],
                 })(
                   <div>
@@ -288,7 +309,7 @@ class Step1 extends React.PureComponent {
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
               <Form.Item {...formItemLayout} label={fieldLabels.fzcompany}>
-                {getFieldDecorator('fzcompany', {
+                {getFieldDecorator('company', {
                   rules: [{ required: false, message: '负责公司' }],
                 })(
                   <Input  placeholder="负责公司" style={{ width: '100%' }} />
@@ -329,8 +350,13 @@ class Step1 extends React.PureComponent {
                 {getFieldDecorator('billSource', {
                   rules: [{ required: false, message: '业务来源' }],
                 })(
-                  <Select onChange={this.handleGetBillSourceValue} placeholder="业务来源" style={{ width: '100%' }} >
-                    {BillSourceOptionData}
+                  <Select
+                    onChange={this.handleGetBillSourceValue}
+                    placeholder="请选择业务来源"
+                    style={{ width: 200 }}
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
+                  >
+                    {this.state.BillSourceOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
                 )}
               </Form.Item>

@@ -14,6 +14,7 @@ import {
   Divider,
   Layout,
   Badge,
+  Modal,
 } from 'antd';
 import moment from 'moment/moment';
 import PageLeftTreeMenu from "../../../components/PageLeftTreeMenu";
@@ -34,6 +35,7 @@ message.config({
   duration: 2,
   maxCount: 1,
 });
+const { confirm } = Modal;
 const { Content, Sider } = Layout;
 const statusMap = ['default', 'success'];
 const status = ['离职', '在职'];
@@ -91,26 +93,27 @@ export default class UserList extends PureComponent {
           //
         }
       },
-    });
-    //查询树形结构
+    }); // 列表数据查询
+
     dispatch({
       type: 'billTable/getDictTreeByTypeId',
       payload: {
         page: 1,
         pageSize: 9999,
-        dictTypeId:"84ef4a13ee0d11e88aa5186024a65a7c",
+        dictTypeId:"84ef4a13ee0d11e88aa5186024a65a7c", // 父节点的id
       },
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
           message.error("获取类型失败！"+res.data.alert_msg)
         }else{
           this.setState({
-            billTableTypeTree : res.data.list,
+            billTableTypeTree : res.data.list, // 获取的树的数据
           });
         }
       },
-    });
+    });  // 查询树形结构
   }
+
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -120,7 +123,8 @@ export default class UserList extends PureComponent {
         openKeys: latestOpenKey ? [latestOpenKey] : [],
       });
     }
-  };
+  }; // treeMenu父节点打开关闭方法
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues, pageCurrent, pageSizeCurrent } = this.state;
@@ -146,7 +150,7 @@ export default class UserList extends PureComponent {
     }
 
     dispatch({
-      type: 'user/fetch',
+      type: 'user/fetch', // 翻页时，上一页下一页刷新列表
       payload: params,
     });
   };
@@ -168,13 +172,13 @@ export default class UserList extends PureComponent {
         }
       },
     });
-  };
+  }; // 重置方法
 
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
-  };
+  }; // 简单搜索和高级搜索切换
 
   handleMenuClick = e => {
     const thisParam = this;
@@ -225,9 +229,9 @@ export default class UserList extends PureComponent {
       default:
         break;
     }
-  };
+  }; // 删除方法
 
-  // 左边树形菜单 点击事件
+
   menuClick = e => {
     const { billTableTypeTree } = this.state;
     console.log(e.key);
@@ -265,21 +269,20 @@ export default class UserList extends PureComponent {
         },
       });
     }*/
-  };
+  }; // 左边树形菜单 点击事件
 
-// 左边树形菜单 打开收缩事件
   openMenu = v => {
     this.setState({
       openKey: v[v.length - 1],
       firstHide: false,
     })
-  };
+  }; // 左边树形菜单 打开收缩事件
 
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  };
+  }; // 获取选中的行
 
   handleSearch = e => {
     e.preventDefault();
@@ -309,26 +312,23 @@ export default class UserList extends PureComponent {
         },
       });
     });
-  };
+  }; // 查询方法
 
   handlePersonAddVisible = flag => {
     this.setState({
       PersonAddVisible: !!flag,
     });
   };
-
   handlePersonViewVisible = flag => {
     this.setState({
       PersonViewVisible: !!flag,
     });
   };
-
   handlePersonEditVisible = flag => {
     this.setState({
       PersonEditVisible: !!flag,
     });
   };
-
   handleBatchDisRoleVisible = flag => {
     this.setState({
       BatchDisRoleVisible: !!flag,

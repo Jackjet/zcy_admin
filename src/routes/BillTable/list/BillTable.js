@@ -71,7 +71,7 @@ export default class BillTable extends PureComponent {
         }
       },
     });
-    //查询树形结构
+    // 查询树形结构
     dispatch({
       type: 'billTable/getDictTreeByTypeId',
       payload: {

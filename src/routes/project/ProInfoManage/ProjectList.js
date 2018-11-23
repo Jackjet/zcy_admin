@@ -18,6 +18,7 @@ import {
   Layout,
   Modal,
 } from 'antd';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu';
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
@@ -65,52 +66,61 @@ const status = [
   '完成',
 ];
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ cusApplication, loading }) => ({
+  cusApplication,
+  loading: loading.models.cusApplication,
 }))
 @Form.create()
 export default class ProjectList extends PureComponent {
   state = {
-    projectVisible: false,
+    proAddVisible: false, // 项目新增modal显示
     projectApplyAddVisible: false,
-    projectChildrenAddVisible: false,
-    projectEditVisible: false,
-    projectTabsVisible: false,
-    expandForm: false,
-    selectedRows: [],
-    choiceTypeKey: '0',
-    choiceTypeValue: '',
-    rowInfo: {},
-    formValues: {},
-    openKeys: ['sub1'],
-    projectPlanAddVisible: false,
-    projectProcessAddVisible: false,
-    appraisalVisible: false,
-    signatureAddVisible: false,
+    projectChildrenAddVisible: false, // 子项目新增modal显示
+    projectEditVisible: false, // 项目编辑modal显示
+    projectTabsVisible: false, // 项目查看modal显示
+    expandForm: false, // 简单搜索和高级搜索之间切换
+    selectedRows: [], // 获取选中的行的集合
+    choiceTypeKey: '', // 左边树点击时的key
+    choiceTypeValue: '', // 左边树点击时的val
+    rowInfo: {}, // 获取当前行的数据
+    formValues: {}, // form表单的数据集
+    projectPlanAddVisible: false, // 项目计划新增modal显示
+    projectProcessAddVisible: false, // 项目审核新增
+    appraisalVisible: false, // 评价
+    signatureAddVisible: false, // 签字。盖章
+    proTypeTree:[], // 左边树形列表
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'company/fetch',
+      type: 'cusApplication/fetch',
       payload: {
         page: 1,
         pageSize: 10,
       },
     });
-  }
-
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
+    dispatch({
+      type: 'billTable/getDictTreeByTypeId',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+        dictTypeId:"1821fe9feef711e89655186024a65a7c",
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error("获取类型失败！"+res.data.alert_msg)
+        }else{
+          this.setState({
+            proTypeTree : res.data.list,
+          });
+        }
+      },
+    });
+  } // 加载组建时,加载列表数据
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -133,10 +143,10 @@ export default class ProjectList extends PureComponent {
     }
 
     dispatch({
-      type: 'company/fetch',
+      type: 'cusApplication/fetch',
       payload: params,
     });
-  };
+  }; // 分页器上一页下一页方法，刷新页面
 
   handleFormReset = () => {
     const { form, dispatch } = this.props;
@@ -148,20 +158,18 @@ export default class ProjectList extends PureComponent {
       type: 'rule/fetch',
       payload: {},
     });
-  };
+  }; // 重置方法
 
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
-  };
+  }; // 简单查询和高级查询切换
 
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-
     if (!selectedRows) return;
-
     switch (e.key) {
       case 'remove':
         dispatch({
@@ -182,40 +190,39 @@ export default class ProjectList extends PureComponent {
       default:
         break;
     }
-  };
+  }; // 批量操作 点击方法
 
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  };
+  }; // 获取当前选中的行
 
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
         type: 'rule/fetch',
         payload: values,
       });
     });
-  };
+  }; // 页表查询方法
 
-  handleProjectVisible = flag => {
-    if (this.state.choiceTypeKey === '0') {
+  handleProAddVisible = flag => {
+    if (this.state.choiceTypeKey) {
+      this.setState({
+        proAddVisible: !!flag,
+      });
+    } else {
       message.config({
         top: 100,
         duration: 2,
@@ -223,88 +230,136 @@ export default class ProjectList extends PureComponent {
       });
       message.warning('请选择工程类别');
       return false;
-    } else {
-      this.setState({
-        projectVisible: !!flag,
-      });
     }
-  };
+  }; // 项目新增显示隐藏方法
   handleProjectApplyAddVisible = flag => {
     this.setState({
       projectApplyAddVisible: !!flag,
     });
-  };
-  handleProjectPlanAddVisible = flag => {
-    this.setState({
-      projectPlanAddVisible: !!flag,
-    });
-  };
-
-  handleProjectProcessAddVisible = flag => {
-    this.setState({
-      projectProcessAddVisible: !!flag,
-    });
-  };
-
+  }; // 审批环节显示隐藏方法
   showProjectApplyAddVisible = (flag, record) => {
     this.setState({
       projectApplyAddVisible: !!flag,
       rowInfo: record,
     });
-  };
-
+  }; // 审批环节显示隐藏方法 并 传参数
+  handleProjectPlanAddVisible = flag => {
+    this.setState({
+      projectPlanAddVisible: !!flag,
+    });
+  }; // 项目计划显示隐藏方法
+  handleProjectProcessAddVisible = flag => {
+    this.setState({
+      projectProcessAddVisible: !!flag,
+    });
+  }; // 项目新增过程汇报方法
   handleProjectChildrenAddVisible = flag => {
     this.setState({
       projectChildrenAddVisible: !!flag,
     });
-  };
-
+  }; // 项目新增子项目方法
   handleAppraisalVisible = flag => {
     this.setState({
       appraisalVisible: !!flag,
     });
-  };
-
+  }; // 考评启动方法
   handleProjectEditVisible = flag => {
     this.setState({
       projectEditVisible: !!flag,
     });
-  };
-
+  }; // 项目编辑方法
+  showEditMessage = (flag, record) => {
+    this.setState({
+      projectEditVisible: !!flag,
+      rowInfo: record,
+    });
+  }; // 项目编辑方法 带入当前行数据
   handleProjectTabsVisible = flag => {
     this.setState({
       projectTabsVisible: !!flag,
     });
-  };
+  }; // 项目基本信息查看方法
+  showViewMessage = (flag, record) => {
+    this.setState({
+      projectTabsVisible: !!flag,
+      rowInfo: record,
+    });
+  }; // 项目基本信息查看方法 带入当前行数据
+  handleDeleteClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
 
+    if (!selectedRows) return;
+
+    dispatch({
+      type: 'rule/remove',
+      payload: {
+        no: selectedRows.map(row => row.no).join(','),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  }; // 删除方法
   handleSignatureAddVisible = flag => {
     this.setState({
       signatureAddVisible: !!flag,
     });
-  };
+  }; // 签章申请方法
 
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
+  menuClick = e => {
+    const { proTypeTree } = this.state;
+    console.log(e.key);
+    let vailData = "";
+    if (proTypeTree && proTypeTree[0].children) {
+      vailData =  proTypeTree[0].children.map((params) => {
+        if(e.key === params.key){
+          return params.title;
+        }
+        return "";
+      })
+    }
     this.setState({
-      projectVisible: false,
+      selectedKey: e.key,
+      choiceTypeKey: e.key,
+      choiceTypeValue: vailData,
     });
-  };
+    // 根据id 查询列表
+    /*if(e.key){
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'dict/fetch',
+        payload: {
+          page: 1,
+          pageSize: 10,
+          dictTypeId:e.key,
+        },
+        callback: (res) => {
+          if(res.meta.status !== '000000' ) {
+            message.error("查询出错，请稍后再试！")
+          }else{
+            //
 
-  rootSubmenuKeys = ['sub1'];
+          }
+        },
+      });
+    }*/
+  }; // 左边树形菜单 点击事件
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  }; // 左边树形菜单 打开收缩事件
 
   handleGetMenuValue = MenuValue => {
     this.setState({
       choiceTypeKey: MenuValue.key,
       choiceTypeValue: MenuValue.item.props.children,
     });
-  };
+  }; // 获取左边树点击的节点的key和val
 
   treeMenu() {
     const { SubMenu } = Menu;
@@ -334,39 +389,6 @@ export default class ProjectList extends PureComponent {
     );
   }
 
-  handleDeleteClick = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    dispatch({
-      type: 'rule/remove',
-      payload: {
-        no: selectedRows.map(row => row.no).join(','),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
-  };
-
-  showViewMessage = (flag, record) => {
-    this.setState({
-      projectTabsVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-  showEditMessage = (flag, record) => {
-    this.setState({
-      projectEditVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
   handleDestroyApply = record => {
     const { dispatch } = this.props;
     confirm({
@@ -395,7 +417,7 @@ export default class ProjectList extends PureComponent {
     this.setState({
       selectedRows: [],
     });
-  };
+  }; // 申请销毁方法
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -403,25 +425,9 @@ export default class ProjectList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="编号名称">
-              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="年度">
-              {getFieldDecorator('years', {
-                rules: [{ required: true, message: '请选择年度' }],
-              })(
-                <Select placeholder="请选择年度" style={{ width: 200 }}>
-                  <Option value="xiao">请选择</Option>
-                  <Option value="z">2018</Option>
-                  <Option value="f">2019</Option>
-                  <Option value="fd">2020</Option>
-                  <Option value="sn">2021</Option>
-                  <Option value="zf">2022</Option>
-                  <Option value="sy">2023</Option>
-                  <Option value="jr">2024</Option>
-                </Select>
+            <FormItem label="关键字">
+              {getFieldDecorator('keyWord')(
+                <Input placeholder="请输入关键字" />
               )}
             </FormItem>
           </Col>
@@ -441,7 +447,7 @@ export default class ProjectList extends PureComponent {
         </Row>
       </Form>
     );
-  }
+  } // 简单查询
 
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
@@ -519,17 +525,17 @@ export default class ProjectList extends PureComponent {
         </div>
       </Form>
     );
-  }
+  } // 高级查询
 
   renderForm() {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-  }
+  } // 简单查询高级查询切换
 
   render() {
-    const { company: { data }, loading } = this.props;
+    const { cusApplication: { data }, loading } = this.props;
     const {
       selectedRows,
-      projectVisible,
+      proAddVisible,
       projectApplyAddVisible,
       projectTabsVisible,
       rowInfo,
@@ -668,8 +674,7 @@ export default class ProjectList extends PureComponent {
       },
     ];
     const parentMethods = {
-      handleAdd: this.handleAdd,
-      handleProjectVisible: this.handleProjectVisible,
+      handleProAddVisible: this.handleProAddVisible,
       handleProjectApplyAddVisible: this.handleProjectApplyAddVisible,
       handleProjectChildrenAddVisible: this.handleProjectChildrenAddVisible,
       handleProjectTabsVisible: this.handleProjectTabsVisible,
@@ -684,7 +689,14 @@ export default class ProjectList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              <PageLeftTreeMenu
+                menus={this.state.proTypeTree} // 菜单列表值
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
@@ -693,7 +705,7 @@ export default class ProjectList extends PureComponent {
                   <Button
                     icon="plus"
                     type="primary"
-                    onClick={() => this.handleProjectVisible(true)}
+                    onClick={() => this.handleProAddVisible(true)}
                   >
                     新建
                   </Button>
@@ -731,7 +743,7 @@ export default class ProjectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...parentMethods} projectVisible={projectVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
+        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
         <ProjectChildrenAddModal{...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal{...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />

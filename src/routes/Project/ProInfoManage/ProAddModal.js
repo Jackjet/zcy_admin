@@ -161,13 +161,10 @@ class ProjectAddModal extends PureComponent {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleBillSourceChange();
     this.handleCheckBoxChange();
-
-
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-
   onCellChange = (key, dataIndex) => {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -331,8 +328,8 @@ class ProjectAddModal extends PureComponent {
       form,
       dispatch,
       submitting,
-      projectVisible,
-      handleProjectVisible,
+      proAddVisible,
+      handleProAddVisible,
       choiceTypeValue,
       rowInfo,
     } = this.props;
@@ -350,7 +347,7 @@ class ProjectAddModal extends PureComponent {
       choiceTypeKey,
     } = this.state;
     const onCancel = () => {
-      handleProjectVisible(false);
+      handleProAddVisible(false);
     };
     const columns = [
       {
@@ -463,7 +460,7 @@ class ProjectAddModal extends PureComponent {
         keyboard={false}
         title="项目基本信息新增"
         style={{ top: 20 }}
-        visible={projectVisible}
+        visible={proAddVisible}
         width="85%"
         maskClosable={false}
         onCancel={onCancel}
@@ -518,24 +515,6 @@ class ProjectAddModal extends PureComponent {
                       )
                     )}
                   </div>
-                 {/* <div className="steps-action">
-                    {
-                      current < StepOption.length - 1
-                      && <Button type="primary" onClick={() => this.next()}>Next</Button>
-                    }
-                    {
-                      current === StepOption.length - 1
-                      && <Button type="primary" onClick={() => message.success('Processing complete!')}>Done</Button>
-                    }
-                    {
-                      current > 0
-                      && (
-                        <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                          Previous
-                        </Button>
-                      )
-                    }
-                  </div>*/}
                 </div>
               </Content>
             </Layout>

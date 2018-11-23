@@ -288,7 +288,7 @@ export const getRouterData = app => {
 
 
     '/projectBAK/projectInfoManageBAK': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectList')),
+      component: dynamicWrapper(app, ['company','cusApplication'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectList')),
       name: '项目信息管理(备份)',
     },
     '/projectBAK/projectStartBAK': {
@@ -296,7 +296,7 @@ export const getRouterData = app => {
       name: '项目信息启动(备份)',
     },
     '/project/projectInfoMange': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/Project/ProInfoManage/ProjectList')),
+      component: dynamicWrapper(app, ['company','cusApplication'], () => import('../routes/Project/ProInfoManage/ProjectList')),
       name: '项目信息管理',
     },
     '/project/projectStart': {
