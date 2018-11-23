@@ -67,6 +67,9 @@ export default class UserList extends PureComponent {
     OrgRangeBillVisible: false,
     pageCurrent: ``,
     pageSizeCurrent: ``,
+    leftTreeVal: ``,
+    choiceTypeKey:``,
+    choiceTypeValue: ``,
   };
 
   componentDidMount() {
@@ -241,21 +244,8 @@ export default class UserList extends PureComponent {
     this.setState({
       PersonAddVisible: !!flag,
     });
-    if (!flag) {
-      this.props.dispatch({
-        type: 'person/fetch',
-        payload: {
-          page: 1,
-          pageSize: 10,
-        },
-        callback: res => {
-          if (res.meta.status !== '000000') {
-            message.error(res.meta.errmsg); // 返回错误信息
-          }
-        },
-      });
-    }
   };
+
 
   handlePersonViewVisible = flag => {
     this.setState({
@@ -406,6 +396,13 @@ export default class UserList extends PureComponent {
     });
   }; // 公司状态启用方法
   rootSubmenuKeys = ['sub1'];
+
+  handleGetMenuValue = (MenuValue) => {
+    this.setState({
+      choiceTypeKey: MenuValue.key,
+      choiceTypeValue: MenuValue.item.props.children,
+    });
+  };
   treeMenu() {
     const { SubMenu } = Menu;
     return (
@@ -414,6 +411,7 @@ export default class UserList extends PureComponent {
         openKeys={this.state.openKeys}
         onOpenChange={this.onOpenChange}
         style={{ width: 130 }}
+        onClick={this.handleGetMenuValue}
       >
         <SubMenu
           key="sub1"
@@ -473,6 +471,8 @@ export default class UserList extends PureComponent {
       DistributionAuthorityVisible,
       BatchDisAuthorityVisible,
       OrgRangeBillVisible,
+      choiceTypeKey,
+      choiceTypeValue,
     } = this.state;
     const columns = [
       {
@@ -617,7 +617,7 @@ export default class UserList extends PureComponent {
               </div>
             </Content>
           </Layout>
-          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible} />
+          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible} choiceTypeValue={choiceTypeValue} choiceTypeKey={choiceTypeKey} />
           <PersonViewModal
             {...parentMethods}
             PersonViewVisible={PersonViewVisible}

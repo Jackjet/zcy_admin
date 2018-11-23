@@ -13,8 +13,10 @@ import {
   Icon,
   Modal,
   Popover,
+  TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
+import moment from "moment/moment";
 import styles from './UserListAdd.less';
 
 const { Option } = Select;
@@ -35,7 +37,7 @@ const fieldLabels = {
   backupEMail: '备用邮箱',
   defaultOrg: '缺省公司',
   group: '所属用户组',
-  remark: '描述'
+  remark: '描述',
 };
 const formItemLayout = {
   labelCol: {
@@ -52,6 +54,24 @@ class UserModal extends PureComponent {
     width: '90%',
     previewVisible: false,
     previewImage: '',
+    treeData:[{
+      title: 'Node1',
+      value: '0-0',
+      key: '0-0',
+      children: [{
+        title: 'Child Node1',
+        value: '0-0-1',
+        key: '0-0-1',
+      }, {
+        title: 'Child Node2',
+        value: '0-0-2',
+        key: '0-0-2',
+      }],
+    }, {
+      title: 'Node2',
+      value: '0-1',
+      key: '0-1',
+    }],
     fileList: [
       {
         uid: '-1',
@@ -70,6 +90,11 @@ class UserModal extends PureComponent {
 
   handleCancel = () => this.setState({ previewVisible: false });
 
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  };
+
   handlePreview = file => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
@@ -78,6 +103,15 @@ class UserModal extends PureComponent {
   };
 
   handleChange = ({ fileList }) => this.setState({ fileList });
+
+  checkConfirm = (rule, value, callback) => {
+    const { form } = this.props;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('两次输入的密码不匹配!');
+    } else {
+      callback();
+    }
+  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -88,7 +122,7 @@ class UserModal extends PureComponent {
   };
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
-    const { form, dispatch, PersonAddVisible, handlePersonAddVisible } = this.props;
+    const { form, dispatch, PersonAddVisible, handlePersonAddVisible, choiceTypeKey, choiceTypeValue } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -96,9 +130,19 @@ class UserModal extends PureComponent {
           // submit the values
           dispatch({
             type: 'person/add',
-            payload: values,
+            payload: {
+              ...values,
+              group: choiceTypeKey,
+            },
             callback: res => {
               if (res.meta.status === '000000') {
+                this.props.dispatch({
+                  type: 'person/fetch',
+                  payload: {
+                    page: 1,
+                    pageSize: 10,
+                  },
+                });
                 handlePersonAddVisible(false);
               } else {
                 message.error(res.meta.errmsg);
@@ -140,18 +184,18 @@ class UserModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.userName}>
                         {getFieldDecorator('userName', {
                           rules: [{ required: true, message: '请输入用户账号' }],
-                        })(<Input placeholder="请输入用户账号" />)}
+                        })(
+                          <Input placeholder="请输入用户账号" />
+                        )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.group}>
                         {getFieldDecorator('group', {
                           rules: [{ required: false, message: '请输入所属用户组' }],
+                          initialValue: choiceTypeValue,
                         })(
-                          <Select placeholder="请输入所属用户组">
-                            <Option value="1">已婚</Option>
-                            <Option value="2">未婚</Option>
-                          </Select>
+                          <Input placeholder="请输入所属用户组" />
                         )}
                       </Form.Item>
                     </Col>
@@ -170,10 +214,13 @@ class UserModal extends PureComponent {
                         {getFieldDecorator('company', {
                           rules: [{ required: false, message: '请选择所属公司' }],
                         })(
-                          <Select placeholder="请选择所属公司">
-                            <Option value="1">男</Option>
-                            <Option value="2">女</Option>
-                          </Select>
+                          <TreeSelect
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            treeData={this.state.treeData}
+                            placeholder="请选择缺省公司"
+                            treeDefaultExpandAll
+                            onChange={this.onOrgTreeSelectChange}
+                          />
                         )}
                       </Form.Item>
                     </Col>
@@ -215,14 +262,20 @@ class UserModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.effectiveDate}>
                     {getFieldDecorator('effectiveDate', {
                       rules: [{ required: false, message: '请输入账号生效日期' }],
-                    })(<Input placeholder="请输入账号生效日期" />)}
+                      initialValue: moment().format('YYYY-MM-DD'),
+                    })(
+                      <Input placeholder="请输入账号生效日期" />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.invalidationDate}>
                     {getFieldDecorator('invalidationDate', {
                       rules: [{ required: false, message: '请输入账号失效日期' }],
-                    })(<Input placeholder="请输入账号失效日期" />)}
+                      initialValue: '2099-12-31',
+                    })(
+                      <Input readOnly placeholder="请输入账号失效日期" />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -230,11 +283,7 @@ class UserModal extends PureComponent {
                     {getFieldDecorator('password', {
                       rules: [{ required: false, message: '请输入用户密码' }],
                     })(
-                      <Select placeholder="请输入用户密码">
-                        <Option value="1">良好</Option>
-                        <Option value="2">一般</Option>
-                        <Option value="3">体质差</Option>
-                      </Select>
+                      <Input type='password' placeholder="请输入用户密码" />
                     )}
                   </Form.Item>
                 </Col>
@@ -243,12 +292,12 @@ class UserModal extends PureComponent {
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.repassword}>
                     {getFieldDecorator('repassword', {
-                      rules: [{ required: false, message: '请输入确认密码' }],
+                      rules: [
+                        { required: false, message: '请输入确认密码' },
+                        {validator: this.checkConfirm},
+                        ],
                     })(
-                      <Select placeholder="请输入确认密码">
-                        <Option value="g">至诚</Option>
-                        <Option value="y">事务所有限公司</Option>
-                      </Select>
+                      <Input type='password' placeholder="请输入确认密码" />
                     )}
                   </Form.Item>
                 </Col>
@@ -257,11 +306,7 @@ class UserModal extends PureComponent {
                     {getFieldDecorator('email', {
                       rules: [{ required: false, message: '请输入电子邮箱' }],
                     })(
-                      <Select placeholder="请输入电子邮箱">
-                        <Option value="1">合伙人1</Option>
-                        <Option value="2">合伙人2</Option>
-                        <Option value="3">合伙人3</Option>
-                      </Select>
+                      <Input placeholder="请输入电子邮箱" />
                     )}
                   </Form.Item>
                 </Col>
@@ -270,11 +315,7 @@ class UserModal extends PureComponent {
                     {getFieldDecorator('officePhone', {
                       rules: [{ required: false, message: '请输入办公电话' }],
                     })(
-                      <Select placeholder="请输入办公电话">
-                        <Option value="1">在职</Option>
-                        <Option value="2">外派</Option>
-                        <Option value="3">请假</Option>
-                      </Select>
+                      <Input placeholder="请输入办公电话" />
                     )}
                   </Form.Item>
                 </Col>
@@ -284,7 +325,9 @@ class UserModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.homePhone}>
                     {getFieldDecorator('homePhone', {
                       rules: [{ required: false, message: '请输入家庭电话' }],
-                    })(<Input placeholder="请输入家庭电话" />)}
+                    })(
+                      <Input placeholder="请输入家庭电话" />
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -292,11 +335,7 @@ class UserModal extends PureComponent {
                     {getFieldDecorator('backupEMail', {
                       rules: [{ required: false, message: '请输入备用邮箱' }],
                     })(
-                      <Select placeholder="请输入备用邮箱">
-                        <Option value="g">总经理</Option>
-                        <Option value="y">开发部</Option>
-                        <Option value="s">审计部</Option>
-                      </Select>
+                      <Input placeholder="请输入备用邮箱" />
                     )}
                   </Form.Item>
                 </Col>
@@ -304,7 +343,15 @@ class UserModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.defaultOrg}>
                     {getFieldDecorator('defaultOrg', {
                       rules: [{ required: false, message: '请选择缺省公司' }],
-                    })(<DatePicker placeholder="请选择缺省公司" />)}
+                    })(
+                      <TreeSelect
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        treeData={this.state.treeData}
+                        placeholder="请选择缺省公司"
+                        treeDefaultExpandAll
+                        onChange={this.onOrgTreeSelectChange}
+                      />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
