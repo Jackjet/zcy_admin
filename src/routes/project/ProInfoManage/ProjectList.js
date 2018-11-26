@@ -218,9 +218,6 @@ export default class ProjectList extends PureComponent {
   }; // 页表查询方法
 
   handleProAddVisible = flag => {
-    this.setState({
-      proAddVisible: !!flag,
-    });
     if (this.state.choiceTypeKey) {
       this.setState({
         proAddVisible: !!flag,
