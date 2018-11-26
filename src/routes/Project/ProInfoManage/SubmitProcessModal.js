@@ -49,13 +49,44 @@ class SubmitProcessModal extends PureComponent {
     width: '90%',
     selectedKeys: [],
     targetKeys: [],
+    ProTypeOptionData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.handleProTypeOption();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleProTypeOption = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cusApplication/getDict', // 接口
+      payload: {
+        dictTypeId: '1821fe9feef711e89655186024a65a7c', // 数据类型id
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            ProTypeOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
+
+  handleProTypeSourceValue = (val) =>{
+    console.log(this.state.ProTypeOptionData.id);
+    console.log(val);
+    if (val === this.state.ProTypeOptionData.id ){
+      this.setState({
+        ProTypeValue: this.state.ProTypeOptionData.name,
+      });
+    }
+  }; // 获取业务来源的Option的值
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -63,18 +94,6 @@ class SubmitProcessModal extends PureComponent {
     if (this.state.width !== width) {
       this.setState({ width });
     }
-  };
-
-  handelDescription() {
-    const { dispatch } = this.props;
-    return (
-      <Select placeholder="请选择对象" style={{ width: 100 }}>
-        <Option value="1">请选择</Option>
-        <Option value="2">对象A</Option>
-        <Option value="3">对象B</Option>
-        <Option value="4">对象C</Option>
-      </Select>
-    )
   };
 
   render() {
@@ -113,10 +132,263 @@ class SubmitProcessModal extends PureComponent {
           <Card>
             <Form layout="horizontal">
               <Row>
-                <Col>
-                  <Steps current={1}>
-                    {steps.map((item) => <Step title={item.title} description={this.handelDescription()} />)}
-                  </Steps>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row className={styles["row-h"]}>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('year', {
+                      rules: [{ required: false, message: '请选择年度' }],
+                    })(
+                      <Select
+                        onChange={this.handleProTypeSourceValue}
+                        placeholder="请选择项目类别"
+                        style={{ width: 150 }}
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                      >
+                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      </Select>
+                    )}
+                  </Form.Item>
                 </Col>
               </Row>
             </Form>
