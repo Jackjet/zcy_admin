@@ -121,3 +121,14 @@ Any Contribution of following ways will be welcome:
   2018/10/31
     删除操作，如果删除的条数在当前页的第一条，删除后列表刷新的处理问题
     （返回到上一页，刷新。还是返回第一页）
+    
+  
+  2018/11/26
+    ant design离线Icon图标不显示问题
+    
+    官网下载inconfont包或者通过命令npm install antd-iconfont安装iconfont包（安装成功后文件在项目的node_modules/antd-iconfont）
+    拷贝antd-iconfont到已打包的static目录下（通过npm run build打包），可根据情况修改antd-iconfont文件夹名称（途中我修改的是iconfont）
+    、
+    进入static/css文件中，打开css文件搜索https，
+    替换css中所有涉及到https://at.alicdn.com...的url，替换为拷贝后的iconfont的相对路径
+    注意：替换中原url中涉及到的.eot、.woff后缀需要保留，替换为../iconfont/iconfont.eot、../iconfont/iconfont.woff等
