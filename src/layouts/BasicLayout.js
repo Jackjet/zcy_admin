@@ -187,10 +187,11 @@ class BasicLayout extends React.PureComponent {
 
     const {dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("user"));
-    if(!user.name){
+   /* if(!user.name){
       dispatch(routerRedux.push("/user/login"));
       return;
-    }
+    }*/
+
     this.enquireHandler = enquireScreen(mobile => {
       this.setState({
         isMobile: mobile,

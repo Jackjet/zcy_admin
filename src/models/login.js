@@ -3,7 +3,6 @@ import {fakeAccountLogin, fakeReset, fakeRegister} from '../services/api';
 import { setAuthority,setuser } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 
-
 export default {
   namespace: 'login',
 
@@ -21,6 +20,22 @@ export default {
       // Login
       if (response.meta.status === '000000') {
           reloadAuthorized();
+        const urlParams = new URL(window.location.href);
+
+        //如果是用户登录时返回登录路径，则以用户登录路径为准
+        let defaultPath = response.data.list.path;
+        if(defaultPath){
+          yield put(
+            routerRedux.push({
+              pathname: defaultPath,
+              search: JSON.stringify({
+                redirect: window.location.href,
+              }),
+            })
+          );
+        }else {
+          //不知道怎么玩呢，走默认的好了
+        }
 
         if (callback && typeof callback === 'function') {
             callback(response); // 返回结果

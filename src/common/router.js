@@ -83,6 +83,13 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['chart','message'], () => import('../routes/index/Workplace')),
       name:'工作台',
     },
+
+
+    '/PersonWorkplace': {
+      component: dynamicWrapper(app, ['chart','message'], () => import('../routes/index/WorkplacePerson')),
+      name:'工作台',
+    },
+
     '/crm/customerApply': {
       component: dynamicWrapper(app, ['cusApplication'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
       name:'客户申请单',
