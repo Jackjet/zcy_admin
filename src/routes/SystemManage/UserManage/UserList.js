@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import moment from 'moment/moment';
 import PageLeftTreeMenu from "../../../components/PageLeftTreeMenu";
-import StandardTable from '../../../components/StandardTable/index';
+import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import PersonAddModal from './UserModal';
 import PersonViewModal from './UserViewModal';

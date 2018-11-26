@@ -186,8 +186,8 @@ class BasicLayout extends React.PureComponent {
   componentDidMount() {
 
     const {dispatch} = this.props;
-    const user = localStorage.getItem("user");
-    if(!user){
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user.name){
       dispatch(routerRedux.push("/user/login"));
       return;
     }

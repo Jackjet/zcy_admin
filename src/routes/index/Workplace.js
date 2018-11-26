@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {Fragment, PureComponent} from 'react';
 import moment from 'moment';
 import numeral from 'numeral';
 import { connect } from 'dva';
@@ -30,6 +30,8 @@ import { getTimeDistance } from '../../utils/utils';
 import styles from './Workplace.less';
 import TemAuthorizationModal from '../projectTemAuth/TemAuthorization';
 import ProjectAssignmentModal from '../projectassignment/AssignmentAddModal';
+import StandardTable from "../../components/MessageTable";
+
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -40,7 +42,7 @@ for (let i = 0; i < 7; i += 1) {
     total: 323234,
   });
 }
-
+const status = ['未读', '已读'];
 const { TabPane } = Tabs;
 const { Html } = Guide;
 const dataPie = [
@@ -96,12 +98,19 @@ export default class Workplace extends PureComponent {
        rangePickerValue: getTimeDistance('year'),
        currentUser: JSON.parse(localStorage.getItem("user")),
        timeValue:"",
+       pageCurrent: ``,
+       pageSizeCurrent: ``,
      };
    //}
 
   componentDidMount() {
     console.log(this.props);
     const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user.name){
+      dispatch(routerRedux.push("/user/login"));
+      return;
+    }
     dispatch({
       type: 'project/fetchNotice',
     });
@@ -213,13 +222,13 @@ export default class Workplace extends PureComponent {
       this.setState({timeValue:"早上好,"+ this.state.currentUser.name +",又是元气满满的一天！"});
     }
     else if (hour < 12){
-      this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+      this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得喝些咖啡！"});
     }
     else if (hour < 14){
       this.setState({timeValue:"中午好,"+ this.state.currentUser.name +",要休息一下下！"});
     }
     else if (hour < 17){
-      this.setState({timeValue:"下午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+      this.setState({timeValue:"下午好,"+ this.state.currentUser.name +",记得喝些咖啡！"});
     }
     else if (hour < 19){
       this.setState({timeValue:"傍晚好,"+ this.state.currentUser.name +",开心的一天结束了！"});
@@ -231,6 +240,38 @@ export default class Workplace extends PureComponent {
       this.setState({timeValue:"夜里好,"+ this.state.currentUser.name +",要早些休息！"});
     }
   }
+
+
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    const { dispatch } = this.props;
+    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+    const params = {
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+    };
+
+    this.setState({
+      pageCurrent: params.page,
+      pageSizeCurrent: params.pageSize,
+    });
+
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    dispatch({
+      type: 'user/fetch', // 翻页时，上一页下一页刷新列表
+      payload: params,
+    });
+  };
+
 
   renderActivities() {
     const { activities: { list } } = this.props;
@@ -248,10 +289,10 @@ export default class Workplace extends PureComponent {
       return (
         <List.Item key={item.id}>
           <List.Item.Meta
-            avatar={<Avatar src={item.user.avatar} />}
+            avatar={<Avatar src={item.userInfo.avatar} />}
             title={
               <span>
-                <a className={styles.username}>{item.user.name}</a>
+                <a className={styles.username}>{item.userInfo.name}</a>
                 &nbsp;
                 <span className={styles.event}>{events}</span>
               </span>
@@ -267,7 +308,58 @@ export default class Workplace extends PureComponent {
     });
   }
 
+
+
   render() {
+    const listData = [];
+    for (let i = 0; i < 23; i++) {
+      listData.push({
+        href: 'http://ant.design',
+        title: `ant design part ${i}`,
+        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+        description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+      });
+    }
+    const columns = [
+      {
+        title: '优先级',
+        dataIndex: 'title',
+        fixed: 'left',
+        width: 150,
+      },
+      {
+        title: '主题',
+        dataIndex: 'description',
+      },
+      {
+        title: '接收时间',
+        dataIndex: 'href',
+      },
+      {
+        title: '发送人',
+        dataIndex: 'content',
+      },
+      {
+        title: '状态',
+        dataIndex: 'personStatus',
+        /*filters: [
+          {
+            text: status[0],
+            value: 0,
+          },
+          {
+            text: status[1],
+            value: 1,
+          },
+        ],
+        onFilter: (value, record) => record.status.toString() === value,
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
+        },*/
+      },
+    ];
+
     const {currentUser,timeValue, proAddVisible, proAssignAddVisible} =  this.state;
     const {
       ScheduleAddVisible,
@@ -450,6 +542,83 @@ export default class Workplace extends PureComponent {
           <div className={styles['fn-right']}>
             <Icon type="edit" theme="outlined" />
           </div>
+          <h3 className={styles.headerh3}>消息中心</h3>
+        </div>
+        <Row gutter={24} className={styles['row-h']}>
+          <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+            <Card
+              className={styles.projectList}
+              style={{ marginBottom: 24, height: 'auto', borderRadius: 6 }}
+              bordered={false}
+              bodyStyle={{ padding: 0 }}
+            >
+              <Tabs
+                defaultActiveKey="notice"
+                onChange={this.callback}
+                tabBarExtraContent={moreMessage}
+              >
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="notification" />公告通知
+                    </span>
+                  }
+                  key="notice"
+                >
+                  <List loading={activitiesLoading} size="large">
+                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
+                  </List>
+                </TabPane>
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="bell" />待办消息
+                    </span>
+                  }
+                  key="bellMes"
+                >
+                  <List loading={activitiesLoading} size="large">
+                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
+                  </List>
+                </TabPane>
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="bell" />预警消息
+                    </span>
+                  }
+                  key="Earlywarning"
+                >
+                  <List loading={activitiesLoading} size="large">
+                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
+                  </List>
+                </TabPane>
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="bell" />项目消息
+                    </span>
+                  }
+                  key="projctMes"
+                >
+                  <StandardTable
+                    loading={activitiesLoading}
+                    data={listData}
+                    columns={columns}
+                    onChange={this.handleStandardTableChange}
+                  />
+
+
+
+                </TabPane>
+              </Tabs>
+            </Card>
+          </Col>
+        </Row>
+        <div className={styles.header}>
+          <div className={styles['fn-right']}>
+            <Icon type="edit" theme="outlined" />
+          </div>
           <h3 className={styles.headerh3}>快捷常用工具</h3>
         </div>
         <Card className={styles.cardstyle}>
@@ -584,81 +753,7 @@ export default class Workplace extends PureComponent {
             </Col>
           </Row>
         </Card>
-        <div className={styles.header}>
-          <div className={styles['fn-right']}>
-            <Icon type="edit" theme="outlined" />
-          </div>
-          <h3 className={styles.headerh3}>消息中心</h3>
-        </div>
-        <Row gutter={24} className={styles['row-h']}>
-          <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              className={styles.projectList}
-              style={{ marginBottom: 24, height: 'auto', borderRadius: 6 }}
-              bordered={false}
-              bodyStyle={{ padding: 0 }}
-            >
-              <Tabs
-                defaultActiveKey="notice"
-                onChange={this.callback}
-                tabBarExtraContent={moreMessage}
-              >
-                <TabPane
-                  tab={
-                    <span>
-                      <Icon type="notification" />公告通知
-                    </span>
-                  }
-                  key="notice"
-                >
-                  <List loading={activitiesLoading} size="large">
-                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
-                  </List>
-                </TabPane>
-                <TabPane
-                  tab={
-                    <span>
-                      <Icon type="bell" />待办消息
-                    </span>
-                  }
-                  key="bellMes"
-                >
-                  <List loading={activitiesLoading} size="large">
-                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
-                  </List>
-                </TabPane>
-                <TabPane
-                  tab={
-                    <span>
-                      <Icon type="bell" />预警消息
-                    </span>
-                  }
-                  key="Earlywarning"
-                >
-                  <List loading={activitiesLoading} size="large">
-                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
-                  </List>
-                </TabPane>
-                <TabPane
-                  tab={
-                    <span>
-                      <Icon type="bell" />项目消息
-                    </span>
-                  }
-                  key="projctMes"
-                >
-                  <List
-                    loading={activitiesLoading}
-                    size="large"
-                    /*pagination={paginationProps}*/
-                  >
-                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
-                  </List>
-                </TabPane>
-              </Tabs>
-            </Card>
-          </Col>
-        </Row>
+
         <div className={styles.header}>
           <div className={styles['fn-right']}>
             <Icon type="edit" theme="outlined" />

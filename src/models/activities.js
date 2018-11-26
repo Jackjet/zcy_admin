@@ -12,7 +12,7 @@ export default {
       const response = yield call(queryActivities);
       yield put({
         type: 'saveList',
-        payload: Array.isArray(response) ? response : [],
+        payload: response,
       });
     },
   },
@@ -21,7 +21,7 @@ export default {
     saveList(state, action) {
       return {
         ...state,
-        list: action.payload,
+        list: action.payload.data.list,
       };
     },
   },
