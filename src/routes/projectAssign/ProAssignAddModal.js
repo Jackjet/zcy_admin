@@ -50,7 +50,7 @@ class ContractAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, AllocationAddVisible, handleAllocationAddVisible } = this.props;
+    const { form, dispatch, proAssignAddVisible, handleProAssignAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll} = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -61,7 +61,7 @@ class ContractAddModal extends PureComponent {
             payload: values,
             callback: (res) => {
               if(res.meta.status === '000000' ) {
-                handleAllocationAddVisible(false);
+                handleProAssignAddVisible(false);
               } else {
                 message.error(res.meta.errmsg);
               }
@@ -71,7 +71,7 @@ class ContractAddModal extends PureComponent {
       });
     };
     const resetDate = () =>{
-      handleAllocationAddVisible(false);
+      handleProAssignAddVisible(false);
     };
     return (
       <Modal
@@ -79,7 +79,7 @@ class ContractAddModal extends PureComponent {
         keyboard={false}
         title="新增项目指派"
         style={{top:20}}
-        visible={AllocationAddVisible}
+        visible={proAssignAddVisible}
         width="35%"
         maskClosable={false}
         onOk={validate}

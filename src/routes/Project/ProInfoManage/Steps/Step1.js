@@ -20,6 +20,7 @@ import {
   message,
 } from 'antd';
 import moment from "moment/moment";
+import SubmitProcessModal from '../SubmitProcessModal';
 import styles from './style.less';
 
 const { Search } = Input;
@@ -124,6 +125,7 @@ class Step1 extends React.PureComponent {
     TestOption:``,
     ProTypeValue: ``,
     BillTableOptionTable:``,
+    submitProcessVisible: false,
   };
   componentDidMount() {
     this.handleBillSourceOption();
@@ -179,6 +181,12 @@ class Step1 extends React.PureComponent {
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
+  handleSubmitProcessVisible = flag => {
+    this.setState({
+      submitProcessVisible: !!flag,
+    });
+  };
+
   handleGetBillSourceValue = (val) =>{
     console.log(val);
     this.setState({
@@ -200,7 +208,10 @@ class Step1 extends React.PureComponent {
   render() {
     const { form, dispatch, loading, submitting, handleNext } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeValue, BillTableOptionTable } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeValue, BillTableOptionTable, submitProcessVisible } = this.state;
+    const parentMethods = {
+      handleSubmitProcessVisible: this.handleSubmitProcessVisible,
+    };
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -705,12 +716,13 @@ class Step1 extends React.PureComponent {
               <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ left: 400 }}>
                 保存
               </Button>
-              <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
+              <Button type="primary" onClick={() => this.handleSubmitProcessVisible(true)} style={{ marginLeft: 8, left: 400 }}>
                 提交
               </Button>
             </span>
           </Form.Item>
         </Form>
+        <SubmitProcessModal {...parentMethods} submitProcessVisible={submitProcessVisible} />
       </Card>
     );
   }

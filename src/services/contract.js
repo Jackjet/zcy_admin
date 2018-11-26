@@ -2,7 +2,7 @@ import request from '../utils/request';
 
 // 部门查询
 export async function queryContract(params) {
-  return request('/dept/getDeptInfosByCondition', {
+  return request('/api/dept/getDeptInfosByCondition', {
     method: 'POST',
     body: params,
   });
@@ -10,7 +10,7 @@ export async function queryContract(params) {
 
 // 部门更新
 export async function updateContract(params) {
-  return request('/dept/updateDept', {
+  return request('/api/dept/updateDept', {
     method: 'POST',
     body: {
       ...params,
@@ -21,7 +21,7 @@ export async function updateContract(params) {
 
 // 部门新建
 export async function addContract(params) {
-  return request('/dept/saveDept', {
+  return request('/api/dept/saveDept', {
     method: 'POST',
     body: {
       ...params,
@@ -32,7 +32,7 @@ export async function addContract(params) {
 
 // 部门删除
 export async function removeContractById(params) {
-  return request('/dept/deleteDeptById', {
+  return request('/api/dept/deleteDeptById', {
     method: 'POST',
     body: {
       ...params,
@@ -44,7 +44,7 @@ export async function removeContractById(params) {
 
 // 部门批量删除
 export async function removeContractByCondition(params) {
-  return request('/dept/deleteDeptByList', {
+  return request('/api/dept/deleteDeptByList', {
     method: 'POST',
     body: {
       ...params,
@@ -55,7 +55,7 @@ export async function removeContractByCondition(params) {
 
 // 部门状态启动
 export async function statusCancelCancel(params) {
-  return request('/dept/cancelCancelStatus', {
+  return request('/api/dept/cancelCancelStatus', {
     method: 'POST',
     body: {
       ...params,

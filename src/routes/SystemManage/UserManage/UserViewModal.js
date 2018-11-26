@@ -22,7 +22,7 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
-  account: '帐号',
+  userName: '帐号',
   employeeNumber: '工号',
   name: '姓名',
   branchOffice: '所属分公司',
@@ -209,8 +209,8 @@ class UserViewModal extends PureComponent {
                       <div>
                         <Row>
                           <Col span={8}>
-                            <Form.Item {...formItemLayout} label={fieldLabels.account}>
-                              {getFieldDecorator('account', {
+                            <Form.Item {...formItemLayout} label={fieldLabels.userName}>
+                              {getFieldDecorator('userName', {
                                 rules: [{ required: true, message: '请输入帐号' }],
                               })(<Input placeholder="请输入帐号" />)}
                             </Form.Item>
