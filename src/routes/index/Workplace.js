@@ -98,6 +98,11 @@ export default class Workplace extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const user = localStorage.getItem("user");
+    if(!user){
+      dispatch(routerRedux.push("/user/login"));
+      return;
+    }
     dispatch({
       type: 'project/fetchNotice',
     });
@@ -231,7 +236,7 @@ export default class Workplace extends PureComponent {
           this.setState({timeValue:"早上好,"+ this.state.currentUser.name +",又是元气满满的一天！"});
         }
         else if (hour < 12){
-          this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+          this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得喝点有营养！"});
         }
         else if (hour < 14){
           this.setState({timeValue:"中午好,"+ this.state.currentUser.name +",要休息一下下！"});

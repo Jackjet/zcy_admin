@@ -77,6 +77,8 @@ export const getRouterData = app => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
+
+
     '/workplace': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/index/Workplace')),
       name:'工作台',
@@ -419,9 +421,11 @@ export const getRouterData = app => {
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     },
+
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
+
     '/user/reset': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/ResetPassword')),
     },

@@ -1,7 +1,7 @@
 // use localStorage to store the authority info, which might be sent from server in actual project.
 export function getAuthority() {
   const exp =30000;
-  const curTime = new Date().getTime();
+ /* const curTime = new Date().getTime();
   const key = localStorage.getItem('antd-pro-authority');
   if(key){
     if(isJSON(key)){
@@ -13,10 +13,9 @@ export function getAuthority() {
     }else{
       return "18888888888";
     }
-  }
-  return "guest";
-
-  //return localStorage.getItem('antd-pro-authority') || '';
+  }*/
+  // return localStorage.getItem('antd-pro-authority') || ['admin', 'user'];
+  return localStorage.getItem('antd-pro-authority') || 'guest';  //修改这里为guest.
 }
 
 
@@ -32,10 +31,12 @@ function isJSON(str) {
 
 export function setAuthority(authority) {
 
-  let curTime = new Date().getTime();
+  /*let curTime = new Date().getTime();
   let authorityvalue = JSON.stringify({data:authority,time:curTime});
 
-  return localStorage.setItem('antd-pro-authority', authorityvalue);
+  return localStorage.setItem('antd-pro-authority', authorityvalue);*/
+  return localStorage.setItem('antd-pro-authority', authority);
+
 }
 
 export function setuser(user) {

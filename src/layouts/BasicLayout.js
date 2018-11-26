@@ -184,12 +184,19 @@ class BasicLayout extends React.PureComponent {
     };
   }
   componentDidMount() {
+
+    const {dispatch} = this.props;
+    const user = localStorage.getItem("user");
+    if(!user){
+      dispatch(routerRedux.push("/user/login"));
+      return;
+    }
     this.enquireHandler = enquireScreen(mobile => {
       this.setState({
         isMobile: mobile,
       });
     });
-    this.props.dispatch({
+    dispatch({
       type: 'user/fetchCurrent',
     });
   }

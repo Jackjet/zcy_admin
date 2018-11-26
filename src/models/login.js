@@ -21,6 +21,7 @@ export default {
       // Login
       if (response.meta.status === '000000') {
           reloadAuthorized();
+
         if (callback && typeof callback === 'function') {
             callback(response); // 返回结果
         }
