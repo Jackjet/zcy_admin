@@ -18,9 +18,12 @@ import {
   Divider,
   DatePicker,
   Select,
+  message,
 } from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
+import ProAssignAddModal from '../projectAssign/ProAssignAddModal';
+import ProjectAddModal from '../Project/ProInfoManage/ProAddModal';
 import ScheduleAddModal from '../schedule/ScheduleAddModal';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { getTimeDistance } from '../../utils/utils';
@@ -88,21 +91,17 @@ export default class Workplace extends PureComponent {
        projectTemAuthVisible: false,
        projectAssigVisible: false,
        ScheduleAddVisible: false,
+       proAddVisible: false,
+       proAssignAddVisible: false,
        rangePickerValue: getTimeDistance('year'),
        currentUser: JSON.parse(localStorage.getItem("user")),
        timeValue:"",
      };
    //}
 
-
-
   componentDidMount() {
+    console.log(this.props);
     const { dispatch } = this.props;
-    const user = localStorage.getItem("user");
-    if(!user){
-      dispatch(routerRedux.push("/user/login"));
-      return;
-    }
     dispatch({
       type: 'project/fetchNotice',
     });
@@ -157,6 +156,19 @@ export default class Workplace extends PureComponent {
     });
   };
 
+  // 项目新增显示隐藏方法
+  handleProAddVisible = flag => {
+    this.setState({
+      proAddVisible: !!flag,
+    });
+  };
+
+  handleProAssignAddVisible = flag => {
+    this.setState({
+      proAssignAddVisible: !!flag,
+    });
+  };
+
   handleRangePickerChange = rangePickerValue => {
     this.setState({
       rangePickerValue,
@@ -188,6 +200,35 @@ export default class Workplace extends PureComponent {
       rangePickerValue[1].isSame(value[1], 'day')
     ) {
       return styles.currentDate;
+    }
+  }
+
+  getTimeValue(){
+    const now = new Date();
+    const hour = now.getHours();
+    if(hour < 6){
+      this.setState({timeValue:"凌晨好,"+ this.state.currentUser.name +",最敬业的就是你！"});
+    }
+    else if (hour < 9){
+      this.setState({timeValue:"早上好,"+ this.state.currentUser.name +",又是元气满满的一天！"});
+    }
+    else if (hour < 12){
+      this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+    }
+    else if (hour < 14){
+      this.setState({timeValue:"中午好,"+ this.state.currentUser.name +",要休息一下下！"});
+    }
+    else if (hour < 17){
+      this.setState({timeValue:"下午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
+    }
+    else if (hour < 19){
+      this.setState({timeValue:"傍晚好,"+ this.state.currentUser.name +",开心的一天结束了！"});
+    }
+    else if (hour < 22){
+      this.setState({timeValue:"晚上好,"+ this.state.currentUser.name +",要早些休息！"});
+    }
+    else {
+      this.setState({timeValue:"夜里好,"+ this.state.currentUser.name +",要早些休息！"});
     }
   }
 
@@ -226,38 +267,8 @@ export default class Workplace extends PureComponent {
     });
   }
 
-    getTimeValue(){
-        const now = new Date();
-        const hour = now.getHours();
-        if(hour < 6){
-           this.setState({timeValue:"凌晨好,"+ this.state.currentUser.name +",最敬业的就是你！"});
-        }
-        else if (hour < 9){
-          this.setState({timeValue:"早上好,"+ this.state.currentUser.name +",又是元气满满的一天！"});
-        }
-        else if (hour < 12){
-          this.setState({timeValue:"上午好,"+ this.state.currentUser.name +",记得喝点有营养！"});
-        }
-        else if (hour < 14){
-          this.setState({timeValue:"中午好,"+ this.state.currentUser.name +",要休息一下下！"});
-        }
-        else if (hour < 17){
-          this.setState({timeValue:"下午好,"+ this.state.currentUser.name +",记得到喝些咖啡！"});
-        }
-        else if (hour < 19){
-          this.setState({timeValue:"傍晚好,"+ this.state.currentUser.name +",开心的一天结束了！"});
-        }
-        else if (hour < 22){
-          this.setState({timeValue:"晚上好,"+ this.state.currentUser.name +",要早些休息！"});
-        }
-        else {
-          this.setState({timeValue:"夜里好,"+ this.state.currentUser.name +",要早些休息！"});
-        }
-    }
-
-
   render() {
-    const {currentUser,timeValue} =  this.state;
+    const {currentUser,timeValue, proAddVisible, proAssignAddVisible} =  this.state;
     const {
       ScheduleAddVisible,
       projectTemAuthVisible,
@@ -362,19 +373,13 @@ export default class Workplace extends PureComponent {
       total: 50,
     };
 
-    // 新增日程
-    const ScheduleAddMethods = {
-      handleScheduleAddVisible: this.handleScheduleAddVisible,
-    };
-
     // 项目临时授权
-    const ProjectTemAuthAddMethods = {
+    const parentMethods = {
+      handleProAssignAddVisible: this.handleProAssignAddVisible,
+      handleProAddVisible: this.handleProAddVisible,
       handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
-    };
-
-    // 项目指派
-    const ProjectAssignmentAddMethods = {
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
+      handleScheduleAddVisible: this.handleScheduleAddVisible,
     };
 
     return (
@@ -551,6 +556,30 @@ export default class Workplace extends PureComponent {
                   <Icon className={styles.iconhz} type="star" />
                 </div>
                 <h5>项目临时授权</h5>
+              </a>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <a
+                className={styles['shortcut-box3']}
+                type="primary"
+                onClick={() => this.handleProAddVisible(true)}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>非项目指派</h5>
+              </a>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <a
+                className={styles['shortcut-box3']}
+                type="primary"
+                onClick={() => this.handleProAssignAddVisible(true)}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>跨项目指派</h5>
               </a>
             </Col>
           </Row>
@@ -1047,15 +1076,17 @@ export default class Workplace extends PureComponent {
             </Card>
           </Col>
         </Row>
-        <ScheduleAddModal {...ScheduleAddMethods} ScheduleAddVisible={ScheduleAddVisible} />
+        <ScheduleAddModal {...parentMethods} ScheduleAddVisible={ScheduleAddVisible} />
         <TemAuthorizationModal
-          {...ProjectTemAuthAddMethods}
+          {...parentMethods}
           projectTemAuthVisible={projectTemAuthVisible}
         />
         <ProjectAssignmentModal
-          {...ProjectAssignmentAddMethods}
+          {...parentMethods}
           projectAssigVisible={projectAssigVisible}
         />
+        <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
+        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
       </PageHeaderLayout>
     );
   }

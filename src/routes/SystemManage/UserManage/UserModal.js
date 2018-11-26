@@ -23,8 +23,8 @@ const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
   userName: '用户账号',
-  person: '用户实名',
-  company: '所属公司',
+  personId: '用户实名',
+  companyId: '所属公司',
   type: '用户类型',
   effectiveDate: '账号生效日期',
   invalidationDate: '账号失效日期',
@@ -36,7 +36,7 @@ const fieldLabels = {
   homePhone: '家庭电话',
   backupEMail: '备用邮箱',
   defaultOrg: '缺省公司',
-  group: '所属用户组',
+  groupId: '所属用户组',
   remark: '描述',
 };
 const formItemLayout = {
@@ -200,8 +200,8 @@ class UserModal extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.group}>
-                        {getFieldDecorator('group', {
+                      <Form.Item {...formItemLayout} label={fieldLabels.groupId}>
+                        {getFieldDecorator('groupId', {
                           rules: [{ required: false, message: '请输入所属用户组' }],
                           initialValue: choiceTypeValue,
                         })(
@@ -220,8 +220,8 @@ class UserModal extends PureComponent {
                       </Form.Item>
                     </Col>*/}
                     <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.company}>
-                        {getFieldDecorator('company', {
+                      <Form.Item {...formItemLayout} label={fieldLabels.companyId}>
+                        {getFieldDecorator('companyId', {
                           rules: [{ required: false, message: '请选择所属公司' }],
                         })(
                           <TreeSelect
@@ -235,8 +235,8 @@ class UserModal extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item {...formItemLayout} label={fieldLabels.person}>
-                        {getFieldDecorator('person', {
+                      <Form.Item {...formItemLayout} label={fieldLabels.personId}>
+                        {getFieldDecorator('personId', {
                           rules: [{ required: true, message: '请选择用户实名' }],
                         })(<Input placeholder="请选择用户实名" />)}
                       </Form.Item>

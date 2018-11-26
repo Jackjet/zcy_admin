@@ -22,7 +22,7 @@ import PageLeftTreeMenu from '../../components/PageLeftTreeMenu';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import AllocationAddModal from './ProAssignAddModal.js';
+import ProAssignAddModal from './ProAssignAddModal.js';
 
 message.config({
   top: 100, // 提示框弹出位置
@@ -46,7 +46,7 @@ const getValue = obj =>
 @Form.create()
 export default class ProAssignList extends PureComponent {
   state = {
-    AllocationAddVisible: false, // 新增状态
+    proAssignAddVisible: false, // 新增状态
     selectedRows: [], // 选中行
     formValues: {}, // 表单值
     openKeys: ['sub1'], // treeMenu 的父节点id
@@ -232,7 +232,7 @@ export default class ProAssignList extends PureComponent {
     });
   }; // 查询方法
 
-  handleAllocationAddVisible = flag => {
+  handleProAssignAddVisible = flag => {
     /*if(this.state.choiceTypeKey === 0) {
       message.config({
         top: 100,
@@ -243,7 +243,7 @@ export default class ProAssignList extends PureComponent {
       return false;
     }*/
     this.setState({
-      AllocationAddVisible: !!flag,
+      proAssignAddVisible: !!flag,
     });
     if(!flag){
       this.props.dispatch({
@@ -328,7 +328,7 @@ export default class ProAssignList extends PureComponent {
 
   render() {
     const { projectAssignment: { data }, loading } = this.props;
-    const { selectedRows, AllocationAddVisible, choiceTypeValue, proTypeTreeMenu } = this.state;
+    const { selectedRows, proAssignAddVisible, choiceTypeValue, proTypeTreeMenu } = this.state;
 
     const columns = [
       {
@@ -374,7 +374,7 @@ export default class ProAssignList extends PureComponent {
     );
 
     const AllocationAddMethods = {
-      handleAllocationAddVisible: this.handleAllocationAddVisible,
+      handleProAssignAddVisible: this.handleProAssignAddVisible,
     };
 
     return (
@@ -396,7 +396,7 @@ export default class ProAssignList extends PureComponent {
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
                 <div className={styles.tableListOperator}>
-                  <Button icon="plus" type="primary" onClick={() => this.handleAllocationAddVisible(true)}>
+                  <Button icon="plus" type="primary" onClick={() => this.handleProAssignAddVisible(true)}>
                     新建
                   </Button>
                   {selectedRows.length > 0 && (
@@ -421,7 +421,7 @@ export default class ProAssignList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <AllocationAddModal {...AllocationAddMethods} AllocationAddVisible={AllocationAddVisible} choiceTypeValue={choiceTypeValue} />
+        <ProAssignAddModal {...AllocationAddMethods} proAssignAddVisible={proAssignAddVisible} choiceTypeValue={choiceTypeValue} />
       </PageHeaderLayout>
     );
   }

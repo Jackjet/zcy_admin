@@ -345,6 +345,7 @@ class ProjectAddModal extends PureComponent {
       CusOptionData,
       current,
       choiceTypeKey,
+      submitProcessVisible,
     } = this.state;
     const onCancel = () => {
       handleProAddVisible(false);
