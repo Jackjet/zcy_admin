@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Modal,TreeSelect ,Upload,Button,Icon } from 'antd';
+import { Card, Form, Col, Row, Input, Modal,TreeSelect ,Select,Upload,Button,Icon } from 'antd';
 import { connect } from 'dva';
 import styles from './BillTableAdd.less';
 import { message } from 'antd/lib/index';
 
+const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
   number: '编码',
   name: '表格名称',
   template: '模板',
-  remarks: '说明',
+  remark: '说明',
   billType: '业务类别',
 };
 
@@ -25,33 +26,16 @@ const formItemLayout = {
   },
 };
 
-const treeData = [{
-  title: 'Node1',
-  value: '0-0',
-  key: '0-0',
-  children: [{
-    title: 'Child Node1',
-    value: '0-0-1',
-    key: '0-0-1',
-  }, {
-    title: 'Child Node2',
-    value: '0-0-2',
-    key: '0-0-2',
-  }],
-}, {
-  title: 'Node2',
-  value: '0-1',
-  key: '0-1',
-}];
-
 class BillTableAdd extends PureComponent {
   state = {
     width: '90%',
     fileList: [],
     uploading: false,
+    billTypeOption:'',
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.handleBillTableOption();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -64,44 +48,91 @@ class BillTableAdd extends PureComponent {
     }
   };
 
+  // 初始化 获取所有的字典类型
+  handleBillTableOption = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dict/fetch',
+      payload: {
+        page: 1,
+        pageSize: 9999,
+        dictTypeId:"65bfc4a9ed4c11e88ac1186024a65a7c",
+      },
+      callback: (res) => {
+        console.log(res.data.list);
+        if(res.meta.status !== '000000' ) {
+          message.error("获取业务用表类型失败!"+res.data.alert_msg)
+        }else{
+          // 使用箭头函数
+          const optionData = res.data.list.map((data) => {
+            return <Option key={data.id} value={data.id}>{data.name}</Option>;
+          });
+          this.setState({
+            billTypeOption: optionData,
+          });
+        }
+      },
+    });
+
+  };
+
+
   //（导入项目）上传文件变化时走的钩子函数
   handleChange = (info) => {
     console.log('info-->', info)
-    const isxlsx = info.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const isxls = "application/vnd.ms-excel";
-    if (!isxls && !isxlsx) {
-      message.error('仅支持xls xlsx');
+    const isdocordocx = info.file.type === 'application/msword' ||  info.file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const ispdf = info.file.type === 'application/pdf';
+    if (!isdocordocx && !ispdf) {
+      message.error('仅支持doc pdf');
+      return false;
     }
     const isLt1M = info.file.size / 1024 / 1024 < 1;
     if (!isLt1M) {
       message.error('文件限制1G 以下');
     }
-    if (!((isxlsx || isxls) && isLt1M)) {
+    if (!((isdocordocx || ispdf) && isLt1M)) {
       return false;
     }
-    let formData = new FormData()
-    formData.append('file', info.file, info.file.name)
 
-  }
-  //上传之前校验
-  beforeUpload = (file) => {
-    return false
   }
 
   render() {
-    const { dispatch, modalVisible, form, handleAdd, handleModalVisible } = this.props;
+    const { dispatch, modalVisible, form, handleModalVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
+
+           const formData = new FormData()
+           formData.append('file', values.template.file, values.template.file.name);
+           formData.append('billTypeId',values.billType);
+           formData.append('name',values.name);
+           formData.append('number',values.number);
+           formData.append('remark',values.remark);
           dispatch({
-            type: 'rule/add',
-            payload: values,
+            type: 'billTable/add',
+            payload: formData,
+            callback: (res) => {
+              if(res.meta.status !== '000000' ) {
+                message.error("添加业务用表失败，请稍后再试！"+res.data.alert_msg)
+              }else{
+                //
+                message.success('添加成功');
+                form.resetFields();
+                handleModalVisible(false);
+
+                dispatch({
+                  type: 'billTable/fetch',
+                  payload: {
+                    page: 1,
+                    pageSize: 10,
+                  }
+                });
+              }
+            },
           });
-          message.success('添加成功');
-          form.resetFields();
-          handleModalVisible(false);
+
         }
       });
     };
@@ -151,7 +182,8 @@ class BillTableAdd extends PureComponent {
 
     //附件模板
     const props = {
-      action: '//jsonplaceholder.typicode.com/posts/',
+      name:"file",//发到后台的文件参数名
+      onChange:this.handleChange,//上传文件改变时的状态
       onRemove: (file) => {
         this.setState(({ fileList }) => {
           const index = fileList.indexOf(file);
@@ -165,7 +197,7 @@ class BillTableAdd extends PureComponent {
       beforeUpload: (file) => {
         this.setState(({ fileList }) => ({
           fileList: [...fileList, file],
-        }));
+        })) ;
         return false;
       },
       fileList: this.state.fileList,
@@ -209,14 +241,14 @@ class BillTableAdd extends PureComponent {
                     {getFieldDecorator('billType', {
                       rules: [{ required: true, message: '请选择业务类型' }],
                     })(
-                      <TreeSelect
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        treeData={treeData}
-                        placeholder="请选择业务类型"
-                        treeDefaultExpandAll
-                        onChange={this.onOrgTreeSelectChange}
+                      <Select
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                        onChange={this.handleDictValueChange}
+                        placeholder="请选业务类型"
+                        style={{ width: '100%' }}
                       >
-                      </TreeSelect>
+                        {this.state.billTypeOption}
+                      </Select>
                     )}
                   </Form.Item>
                 </Col>
@@ -237,8 +269,8 @@ class BillTableAdd extends PureComponent {
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label={fieldLabels.remarks}>
-                    {getFieldDecorator('remarks')(
+                  <Form.Item {...formItemLayout} label={fieldLabels.remark}>
+                    {getFieldDecorator('remark')(
                       <TextArea placeholder="请输入备注" style={{ minHeight: 32 }} rows={4} />
                     )}
                   </Form.Item>
@@ -254,5 +286,5 @@ class BillTableAdd extends PureComponent {
 
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+  submitting: loading.effects['billTable/add'],
 }))(Form.create()(BillTableAdd));

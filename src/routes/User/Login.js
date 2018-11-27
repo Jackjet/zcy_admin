@@ -23,6 +23,7 @@ export default class LoginPage extends Component {
     value:'',
     companyId:'',
     companyName:'',
+    pathName:'',
 
   };
 
@@ -46,6 +47,7 @@ export default class LoginPage extends Component {
          /* {res.status === 'ok'  &&  this.renderMessage("222222")}*/
           if(res.meta.status === '000000' ) {
               this.handleSwitchOrgShowModal();
+              this.setState({pathName:res.data.list.path})
           }
             // routerRedux.push()
 
@@ -64,10 +66,11 @@ export default class LoginPage extends Component {
 // 登录公司选择确定
   handleOk = () => {
     this.setState({ loading: true });
+    const pathname = this.state.pathName ==null? "/": this.state.pathName;
     setTimeout(() => {
       this.setState({ loading: false, switchOrgvisible: false });
       this.props.dispatch(routerRedux.push({
-        pathname: '/',
+        pathname: pathname,
         query: {companyId: this.state.companyId,companyName:this.state.companyName}
       }));
     }, 1000);

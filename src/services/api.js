@@ -6,10 +6,19 @@ export async function queryProjectNotice() {
 }
 
 export async function queryActivities(params) {
-  return request('/api/message/getMessageByCondition',{
+  return request('/api/message/queryActivities',{
     method: 'POST',
       body: {
     ...params,
+    },
+  });
+}
+
+export async function queryMessage(params) {
+  return request('/api/message/getMessageByCondition',{
+    method: 'POST',
+    body: {
+      ...params,
     },
   });
 }

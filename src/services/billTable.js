@@ -8,43 +8,31 @@ export async function queryBillTable(params) {
   });
 }
 
-
 // 业务用表更新
-export async function updateDict(params) {
-  return request('/api/dict/updateDict', {
+export async function updateBillTable(params) {
+  return request('/api/billTable/updateBillTable', {
     method: 'POST',
     body: {
       ...params,
       method: 'post',
     },
+
   });
 }
 
 // 业务用表新建
-export async function addNewDict(params) {
-  return request('/api/dict/addNewDict', {
+export async function addBillTable(params) {
+  return request('/api/billTable/addBillTable', {
     method: 'POST',
-    body: {
-      ...params,
-      method: 'post',
-    },
-  });
+    body: params,
+    //headers:{"Content-Type": "multipart/form-data"}
+});
 }
+
 
 // 业务用表删除
-export async function deleteDict(params) {
-  return request('/api/dict/deleteDict', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'post',
-    },
-  });
-}
-
-// 所有数据字典类型
-export async function getAllDictType(params) {
-  return request('/api/dictType/getAllDictTypes', {
+export async function deleteBillTable(params) {
+  return request('/api/billTable/deleteBillTable', {
     method: 'POST',
     body: {
       ...params,

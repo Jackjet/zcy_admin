@@ -1,17 +1,21 @@
-import { queryActivities } from '../services/api';
+import { queryMessage } from '../services/api';
 
 export default {
   namespace: 'message',
 
   state: {
-    list: [],
+    messageData : {
+      list: [],
+      pagination: {},
+      total:'',
+    },
   },
 
   effects: {
     *fetchList(_, { call, put }) {
       const currentUser = JSON.parse(localStorage.getItem("user"));
-      const payload = {userName:currentUser.userName}
-      const response = yield call(queryActivities,payload);
+      const payload = {userName:currentUser.userName};
+      const response = yield call(queryMessage,payload);
       yield put({
         type: 'saveList',
         payload: Array.isArray(response) ? response : [],
@@ -23,7 +27,7 @@ export default {
     saveList(state, action) {
       return {
         ...state,
-        list: action.payload,
+        messageData: action.payload.data,
       };
     },
   },

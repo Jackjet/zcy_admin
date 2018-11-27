@@ -44,27 +44,77 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  const defaultOptions = {
-    credentials: 'include',
-  };
+    const defaultOptions = {
+      credentials: 'include',
+    };
 
   const newOptions = { ...defaultOptions, ...options };
-      if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
-        if (!(newOptions.body instanceof FormData)) {
-          newOptions.headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json; charset=utf-8',
-            ...newOptions.headers,
-      };
-      newOptions.body = JSON.stringify(newOptions.body);
-    } else {
-      // newOptions.body is FormData
-      newOptions.headers = {
-        Accept: 'application/json',
-        ...newOptions.headers,
-      };
+    if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+      if (!(newOptions.body instanceof FormData)) {
+        newOptions.headers = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          ...newOptions.headers,
+        };
+        newOptions.body = JSON.stringify(newOptions.body);
+      } else {
+        // newOptions.body is FormData
+        // newOptions.headers = {
+        //   "Content-Type": "multipart/form-data",
+        //  // ...newOptions.headers,
+        // };
+        //newOptions = {...options}
+        //newOptions.headers = {"Content-Type": "multipart/form-data"}
+        return requestcore(url,options);
+
+      }
     }
-  }
+
+
+  return fetch(url, newOptions)
+    .then(checkStatus)
+    .then(response => {
+      if (newOptions.method === 'DELETE' || response.status === 204) {
+        return response.text();
+      }
+      return response.json();
+    })
+    .catch(e => {
+      const { dispatch } = store;
+      const status = e.name;
+      if (status === 401) {
+        dispatch({
+          type: 'login/logout',
+        });
+        return;
+      }
+      if (status === 403) {
+        dispatch(routerRedux.push('/exception/403'));
+        return;
+      }
+      if (status <= 504 && status >= 500) {
+        dispatch(routerRedux.push('/exception/500'));
+        return;
+      }
+      if (status >= 404 && status < 422) {
+        dispatch(routerRedux.push('/exception/404'));
+      }
+    });
+}
+
+ function requestcore(url, options) {
+
+  const newOptions = {  ...options };
+  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+
+      // newOptions.body is FormData
+      // newOptions.headers = {
+      //   "Content-Type": "multipart/form-data",
+      //  // ...newOptions.headers,
+      // };
+     // newOptions.headers = {"Content-Type": "multipart/form-data"}
+
+    }
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {

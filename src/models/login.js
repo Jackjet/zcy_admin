@@ -23,7 +23,7 @@ export default {
         const urlParams = new URL(window.location.href);
 
         //如果是用户登录时返回登录路径，则以用户登录路径为准
-        let defaultPath = response.data.list.path;
+        /*let defaultPath = response.data.list.path;
         if(defaultPath){
           yield put(
             routerRedux.push({
@@ -33,9 +33,9 @@ export default {
               }),
             })
           );
-        }else {
+        }*/
           //不知道怎么玩呢，走默认的好了
-        }
+
 
         if (callback && typeof callback === 'function') {
             callback(response); // 返回结果

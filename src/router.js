@@ -26,6 +26,7 @@ function RouterConfig({ history, app }) {
           <Route path="/user" component={UserLayout} />
           <AuthorizedRoute
             path="/"
+            authority={['admin', 'user']}
             render={props => <BasicLayout {...props} />}
             redirectPath="/user/login"
           />

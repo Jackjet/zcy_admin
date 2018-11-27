@@ -78,10 +78,11 @@ function callback(key) {
   }
 }
 
-@connect(({ project, activities, chart, loading }) => ({
+@connect(({ project, activities, chart,message,loading }) => ({
   project,
   activities,
   chart,
+    message,
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
   projectMessage: loading.effects['message/fetchList'],
@@ -117,9 +118,6 @@ export default class Workplace extends PureComponent {
     dispatch({
       type: 'activities/fetchList',
     });
-    /* dispatch({
-      type: 'chart/fetch',
-    });*/
 
     this.getTimeValue();
   }
@@ -311,16 +309,6 @@ export default class Workplace extends PureComponent {
 
 
   render() {
-    const listData = [];
-    for (let i = 0; i < 23; i++) {
-      listData.push({
-        href: 'http://ant.design',
-        title: `ant design part ${i}`,
-        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-      });
-    }
     const columns = [
       {
         title: '优先级',
@@ -360,7 +348,7 @@ export default class Workplace extends PureComponent {
       },
     ];
 
-    const {currentUser,timeValue, proAddVisible, proAssignAddVisible} =  this.state;
+    const {timeValue, proAddVisible, proAssignAddVisible} =  this.state;
     const {
       ScheduleAddVisible,
       projectTemAuthVisible,
@@ -377,7 +365,7 @@ export default class Workplace extends PureComponent {
         <span style={{ paddingRight: 15 }}>更多</span>{' '}
       </a>
     );
-    const { activitiesLoading, chart, loading } = this.props;
+    const { message : { messageData },activitiesLoading, chart, loading } = this.props;
     const { salesData } = chart;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -603,7 +591,7 @@ export default class Workplace extends PureComponent {
                 >
                   <StandardTable
                     loading={activitiesLoading}
-                    data={listData}
+                    data={messageData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
                   />

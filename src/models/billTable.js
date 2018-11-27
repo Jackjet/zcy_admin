@@ -1,4 +1,4 @@
-import { queryBillTable, addNewDict, updateDict,deleteDict,getAllDictType,getDictTreeByTypeId } from '../services/billTable';
+import { queryBillTable, addBillTable, updateBillTable,deleteBillTable,getDictTreeByTypeId } from '../services/billTable';
 
 export default {
   namespace: 'billTable',
@@ -25,19 +25,19 @@ export default {
       }
     },
     *add({ payload, callback }, { call}) {
-      const response = yield call(addNewDict, payload);
+      const response = yield call(addBillTable, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *update({ payload, callback }, { call}) {
-      const response = yield call(updateDict, payload);
+      const response = yield call(updateBillTable, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *remove({ payload, callback }, { call}) {
-      const response = yield call(deleteDict, payload);
+      const response = yield call(deleteBillTable, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
