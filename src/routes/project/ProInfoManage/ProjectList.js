@@ -148,6 +148,25 @@ export default class ProjectList extends PureComponent {
     });
   }; // 分页器上一页下一页方法，刷新页面
 
+  handleSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+      this.setState({
+        formValues: values,
+      });
+      dispatch({
+        type: 'rule/fetch',
+        payload: values,
+      });
+    });
+  }; // 页表查询方法
+
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -198,24 +217,7 @@ export default class ProjectList extends PureComponent {
     });
   }; // 获取当前选中的行
 
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-      this.setState({
-        formValues: values,
-      });
-      dispatch({
-        type: 'rule/fetch',
-        payload: values,
-      });
-    });
-  }; // 页表查询方法
+
 
   handleProAddVisible = flag => {
     if (this.state.choiceTypeKey) {

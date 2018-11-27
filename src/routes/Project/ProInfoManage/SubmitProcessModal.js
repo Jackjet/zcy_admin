@@ -14,10 +14,13 @@ import {
   Popover,
   Tree,
   Steps,
+  Button,
 } from 'antd';
 import { connect } from 'dva';
+import ExecutorModal from './ExecutorModal';
 import styles from './style.less';
 
+const { Search } = Input;
 const { Step } = Steps;
 const { TreeNode } = Tree;
 const { Option } = Select;
@@ -49,44 +52,87 @@ class SubmitProcessModal extends PureComponent {
     width: '90%',
     selectedKeys: [],
     targetKeys: [],
-    ProTypeOptionData: [],
+    ProcOptionData: [],
+    executorVisible: false,
+    person1Disabled: true,
+    person2Disabled: true,
+    person3Disabled: true,
+    person4Disabled: true,
+    person5Disabled: true,
+    person6Disabled: true,
+    person7Disabled: true,
+    person8Disabled: true,
+
+    executorMsg: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
-    this.handleProTypeOption();
+    this.handleProcOption();
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleProTypeOption = () => {
+  handleProcOption = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'cusApplication/getDict', // 接口
       payload: {
-        dictTypeId: '1821fe9feef711e89655186024a65a7c', // 数据类型id
+        dictTypeId: 'f1dbc531f1ef11e88e960c54a52b2744', // 审批流程数据类型id
       },
       callback: (res) => {
         if(res.meta.status !== "000000"){
           message.error(res.meta.errmsg);
         } else {
           this.setState({
-            ProTypeOptionData: res.data.list, // 返回结果集给对应的状态
+            ProcOptionData: res.data.list, // 返回结果集给对应的状态
           });
         }
       },
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
-  handleProTypeSourceValue = (val) =>{
-    console.log(this.state.ProTypeOptionData.id);
-    console.log(val);
-    if (val === this.state.ProTypeOptionData.id ){
-      this.setState({
-        ProTypeValue: this.state.ProTypeOptionData.name,
-      });
-    }
-  }; // 获取业务来源的Option的值
+  getSeqVal = () => {
+    console.log(this.props.form.getFieldValue('seq1'))
+  };
+
+  handleGetExecutorMsg = (text) => {
+    console.log(text);
+    this.setState({
+      executorMsg: text,
+    });
+  };
+
+  handlePerson1DisabledChange = (flag) => {
+    this.setState({ person1Disabled: flag });
+  };
+  handlePerson2DisabledChange = (flag) => {
+    this.setState({ person2Disabled: flag });
+  };
+  handlePerson3DisabledChange = (flag) => {
+    this.setState({ person3Disabled: flag });
+  };
+  handlePerson4DisabledChange = (flag) => {
+    this.setState({ person4Disabled: flag });
+  };
+  handlePerson5DisabledChange = (flag) => {
+    this.setState({ person5Disabled: flag });
+  };
+  handlePerson6DisabledChange = (flag) => {
+    this.setState({ person6Disabled: flag });
+  };
+  handlePerson7DisabledChange = (flag) => {
+    this.setState({ person7Disabled: flag });
+  };
+  handlePerson8DisabledChange = (flag) => {
+    this.setState({ person8Disabled: flag });
+  };
+
+  handleExecutorVisible = (flag) => {
+    this.setState({
+      executorVisible: !!flag,
+    });
+  };
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -99,9 +145,66 @@ class SubmitProcessModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, submitProcessVisible, handleSubmitProcessVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { selectedKeys } = this.state;
+    const {
+      selectedKeys,
+      executorVisible,
+      person1Disabled,
+      person2Disabled,
+      person3Disabled,
+      person4Disabled,
+      person5Disabled,
+      person6Disabled,
+      person7Disabled,
+      person8Disabled,
+      executorMsg,
+    } = this.state;
+    const parentMethods = {
+      handleExecutorVisible: this.handleExecutorVisible,
+      handleGetExecutorMsg: this.handleGetExecutorMsg,
+    };
+
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
+
+        console.log(values);
+
+        const auditPersonVal = []; // 执行人id集合
+        for (let i = 8; i<16; i+=1) {
+          auditPersonVal.push({
+            auditPerson:Object.values(values)[i],
+          });
+        }
+        console.log(auditPersonVal);
+
+
+        const seqVal = []; // 序号集合
+        for (let i = 0; i<8; i+=1) {
+          seqVal.push({
+            seq:Object.keys(values)[i],
+          });
+        }
+        console.log(seqVal);
+
+
+        const nodeNameVal = []; // 节点名称集合
+        for (let i = 0; i<8; i+=1) {
+          nodeNameVal.push({
+            nodeName:Object.values(values)[i],
+          });
+        }
+        console.log(nodeNameVal);
+
+        const arrayList=[]; // 返回结果集合
+        for(let i=0; i<8; i+=1){
+          arrayList.push({seq:seqVal[i].seq, nodeName:nodeNameVal[i].nodeName, auditPerson:auditPersonVal[i].auditPerson})
+        }
+        console.log(arrayList);
+        /*const nodeName = nodeNameVal.map(item => {
+          return (
+            {nodeName: item, seq: values.seq, auditPerson: values.person1 }
+          )
+        });*/
+
         if (!error) {
           // submit the values
           dispatch({
@@ -109,7 +212,6 @@ class SubmitProcessModal extends PureComponent {
             payload: values,
           });
           message.success('添加成功');
-          handleSubmitProcessVisible(false);
         }
       });
     };
@@ -118,7 +220,7 @@ class SubmitProcessModal extends PureComponent {
       <Modal
         destroyOnClose="true"
         keyboard={false}
-        title="流程"
+        title="生成审批流程"
         style={{ top: 20 }}
         // 对话框是否可见
         visible={submitProcessVisible}
@@ -127,135 +229,137 @@ class SubmitProcessModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={() => handleSubmitProcessVisible(false)}
+        okText="启动"
       >
         <div>
           <Card>
+            <Button onClick={() => this.getSeqVal()}>test</Button>
             <Form layout="horizontal">
               <Row>
                 <Col span={3}>
-                  <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                  <Form.Item {...formItemLayout} >
+                    {getFieldDecorator('seq1', {
+                      rules: [{ required: false, message: 'seq1' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson1DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq2', {
+                      rules: [{ required: false, message: 'seq2' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson2DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq3', {
+                      rules: [{ required: false, message: 'seq3' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson3DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq4', {
+                      rules: [{ required: false, message: 'seq4' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson4DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq5', {
+                      rules: [{ required: false, message: 'seq5' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson5DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq6', {
+                      rules: [{ required: false, message: 'seq6' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson6DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq7', {
+                      rules: [{ required: false, message: 'seq7' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson7DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('seq8', {
+                      rules: [{ required: false, message: 'seq8' }],
                     })(
                       <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                        onChange={() => this.handlePerson8DisabledChange(false)}
+                        placeholder="请选择节点"
                         style={{ width: 150 }}
                         getPopupContainer={triggerNode => triggerNode.parentNode}
                       >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                        {this.state.ProcOptionData.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
                       </Select>
                     )}
                   </Form.Item>
@@ -263,136 +367,122 @@ class SubmitProcessModal extends PureComponent {
               </Row>
               <Row className={styles["row-h"]}>
                 <Col span={3}>
-                  <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                  <Form.Item {...formItemLayout} >
+                    {getFieldDecorator('person1', {
+                      rules: [{ required: false, message: 'person1' }],
+                      initialValue: executorMsg.map(item => item.name),
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person1Disabled}
+                        placeholder="input search text"
+                        onSearch={() => this.handleExecutorVisible(true)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person2', {
+                      rules: [{ required: false, message: 'person2' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person2Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person3', {
+                      rules: [{ required: false, message: 'person3' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person3Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person4', {
+                      rules: [{ required: false, message: 'person4' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person4Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person5', {
+                      rules: [{ required: false, message: 'person5' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person5Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person6', {
+                      rules: [{ required: false, message: 'person6' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person6Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person7', {
+                      rules: [{ required: false, message: 'person7' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person7Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item {...formItemLayout}>
-                    {getFieldDecorator('year', {
-                      rules: [{ required: false, message: '请选择年度' }],
+                    {getFieldDecorator('person8', {
+                      rules: [{ required: false, message: 'person8' }],
                     })(
-                      <Select
-                        onChange={this.handleProTypeSourceValue}
-                        placeholder="请选择项目类别"
+                      <Search
+                        disabled={person8Disabled}
+                        placeholder="input search text"
+                        onSearch={value => console.log(value)}
                         style={{ width: 150 }}
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                      >
-                        {this.state.ProTypeOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
-                      </Select>
+                      />
                     )}
                   </Form.Item>
                 </Col>
               </Row>
             </Form>
           </Card>
+          <ExecutorModal {...parentMethods} executorVisible={executorVisible} />
         </div>
       </Modal>
     );

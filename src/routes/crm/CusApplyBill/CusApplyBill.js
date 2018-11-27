@@ -138,6 +138,36 @@ export default class CusApplyBill extends PureComponent {
     });
   }; // 公共列表组建分页
 
+  handleSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+      };
+      this.setState({
+        formValues: values,
+      });
+      dispatch({
+        type: 'cusApplication/fetch',
+        payload: values,
+        callback: (res) => {
+          if(res.meta.status !== '000000'){
+            message.error(res.meta.errmsg);  // 返回错误信息
+          } else {
+            this.setState({
+              selectedRows: [],
+              pageCurrent: 1,
+              pageSizeCurrent: res.data.pagination.pageSize,
+            });
+            message.success('查询完成!');
+          }
+        },
+      });
+    });
+  }; // 查询方法
+
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -199,35 +229,7 @@ export default class CusApplyBill extends PureComponent {
     });
   }; // 获取选中的行
 
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-      };
-      this.setState({
-        formValues: values,
-      });
-      dispatch({
-        type: 'cusApplication/fetch',
-        payload: values,
-        callback: (res) => {
-          if(res.meta.status !== '000000'){
-            message.error(res.meta.errmsg);  // 返回错误信息
-          } else {
-            this.setState({
-              selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
-            });
-            message.success('查询完成!');
-          }
-        },
-      });
-    });
-  }; // 查询方法
+
 
   handleLinkManTypeChange = (optionData) => {
     this.setState({
