@@ -19,6 +19,7 @@ import {
   DatePicker,
   Select,
   message,
+  Table,
 } from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
@@ -312,7 +313,7 @@ export default class Workplace extends PureComponent {
 
   render() {
     const listData = [];
-    for (let i = 0; i < 23; i++) {
+    for (let i = 0; i < 23; i+=1) {
       listData.push({
         href: 'http://ant.design',
         title: `ant design part ${i}`,
@@ -601,15 +602,12 @@ export default class Workplace extends PureComponent {
                   }
                   key="projctMes"
                 >
-                  <StandardTable
+                  <Table
                     loading={activitiesLoading}
-                    data={listData}
+                    dataSource={listData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
                   />
-
-
-
                 </TabPane>
               </Tabs>
             </Card>
