@@ -413,11 +413,11 @@ export default class ProcedureList extends PureComponent {
       },
       {
         title: '完成时间',
-        dataIndex: 'fee',
+        dataIndex: 'finshTime',
       },
       {
         title: '消耗时间',
-        dataIndex: 'fee',
+        dataIndex: 'feeTime',
       },
     ];
 

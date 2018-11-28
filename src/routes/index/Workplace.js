@@ -22,6 +22,7 @@ import {
 } from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
+import MessageModal from './MessageModal';
 import ProAssignAddModal from '../projectAssign/ProAssignAddModal';
 import ProjectAddModal from '../Project/ProInfoManage/ProAddModal';
 import ScheduleAddModal from '../schedule/ScheduleAddModal';
@@ -99,16 +100,18 @@ export default class Workplace extends PureComponent {
        ScheduleAddVisible: false,
        proAddVisible: false,
        proAssignAddVisible: false,
+       messageInfoVisible: false,
        rangePickerValue: getTimeDistance('year'),
        currentUser: JSON.parse(localStorage.getItem("user")),
        timeValue:"",
        pageCurrent: ``,
        pageSizeCurrent: ``,
+       rowInfo: {},
+       rowTextColor: false,  //  false 表示未读  true 已读
      };
    //}
 
   componentDidMount() {
-    console.log(this.props);
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("user"));
    /* if(!user.name){
@@ -126,7 +129,7 @@ export default class Workplace extends PureComponent {
       payload:{
         page:1,
         pageSize:10,
-      }
+      },
     });
 
     this.getTimeValue();
@@ -186,6 +189,33 @@ export default class Workplace extends PureComponent {
     });
   };
 
+  // 控制项目信息弹窗
+  handleMessageInfoVisible = (flag) => {
+    this.setState({
+      messageInfoVisible: !!flag,
+    });
+  };
+
+  // 根据当前行的id, 查询对应的项目信息
+  GetMsgVisible = (flag, record) => {
+    this.props.dispatch({
+      type: 'cusApplication/fetch', // 接口修改项目接口
+      payload:{
+        id: '0489342eee0811e88aa5186024a65a7c',  // 点击行的项目id
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            rowInfo: res.data.list[0],
+            messageInfoVisible: !!flag,
+          });
+        }
+      },
+    });
+  };
+
   handleRangePickerChange = rangePickerValue => {
     this.setState({
       rangePickerValue,
@@ -204,6 +234,10 @@ export default class Workplace extends PureComponent {
     /* this.props.dispatch({
       type: 'chart/fetchSalesData',
     });*/
+  };
+
+  handleViewInfo = () => {
+    console.log("双击了");
   };
 
   isActive(type) {
@@ -249,7 +283,6 @@ export default class Workplace extends PureComponent {
     }
   }
 
-
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues, pageCurrent, pageSizeCurrent } = this.state;
@@ -279,7 +312,6 @@ export default class Workplace extends PureComponent {
       payload: params,
     });
   };
-
 
   renderActivities() {
     const { activities: { list } } = this.props;
@@ -319,10 +351,24 @@ export default class Workplace extends PureComponent {
 
 
   render() {
+    const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading } = this.props;
+    const {
+      ScheduleAddVisible,
+      projectTemAuthVisible,
+      projectAssigVisible,
+      rangePickerValue,
+      timeValue,
+      proAddVisible,
+      proAssignAddVisible,
+      messageInfoVisible,
+      rowInfo,
+    } = this.state;
+
     const columns = [
       {
         title: '优先级',
         dataIndex: 'priority',
+        className:'',
         filters: [
           {
             text: msgPriority[0],
@@ -339,13 +385,13 @@ export default class Workplace extends PureComponent {
         ],
         onFilter: (value, record) => record.priority.toString() === value,
         render(val) {
-          if(val ==20){
+          if(val === 20){
             return <Badge status={msgPriority[2]} text={msgPriority[2]} />;
           }
-          if(val ==10){
+          if(val === 10){
             return <Badge status={msgPriority[1]} text={msgPriority[1]} />;
           }
-          if(val ==0){
+          if(val === 0){
             return <Badge status={msgPriority[0]} text={msgPriority[0]} />;
           }
 
@@ -383,13 +429,6 @@ export default class Workplace extends PureComponent {
       },
     ];
 
-    const {timeValue, proAddVisible, proAssignAddVisible} =  this.state;
-    const {
-      ScheduleAddVisible,
-      projectTemAuthVisible,
-      projectAssigVisible,
-      rangePickerValue,
-    } = this.state;
     const moreCharts = (
       <a onClick={() => this.handleLink()}>
         <span style={{ paddingRight: 15 }}>更多图表</span>
@@ -400,7 +439,7 @@ export default class Workplace extends PureComponent {
         <span style={{ paddingRight: 15 }}>更多</span>{' '}
       </a>
     );
-    const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading } = this.props;
+
     const { salesData } = chart;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -495,6 +534,7 @@ export default class Workplace extends PureComponent {
       handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
       handleScheduleAddVisible: this.handleScheduleAddVisible,
+      handleMessageInfoVisible: this.handleMessageInfoVisible,
     };
 
     return (
@@ -629,10 +669,15 @@ export default class Workplace extends PureComponent {
                     data={messageData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
+                    rowClassName={(record, index) => record.id ==='2dcdc8cef2c811e89ed5186024a65a7c'?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
+                    onRow={(record) => {  // 表格行点击事件
+                      return {
+                        onDoubleClick: () => {
+                          this.GetMsgVisible(true, record)
+                        },
+                      };
+                    }}
                   />
-
-
-
                 </TabPane>
               </Tabs>
             </Card>
@@ -1205,6 +1250,7 @@ export default class Workplace extends PureComponent {
         />
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
         <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
+        <MessageModal  {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }
