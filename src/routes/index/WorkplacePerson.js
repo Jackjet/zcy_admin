@@ -43,6 +43,9 @@ for (let i = 0; i < 7; i += 1) {
   });
 }
 const status = ['未读', '已读'];
+const msgPriority = ['低','中','高'];
+const MsgType = ['通知','任务','更新消息','事物消息','即时消息','办公消息'];
+const msgBizType = ['工作流消息','预警','即时消息','催办','办公'];
 const { TabPane } = Tabs;
 const { Html } = Guide;
 const dataPie = [
@@ -78,13 +81,14 @@ function callback(key) {
   }
 }
 
-@connect(({ project, activities, chart, loading }) => ({
+@connect(({ project, activities,sysMessage, chart, loading }) => ({
   project,
   activities,
   chart,
+  sysMessage,
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
-  projectMessage: loading.effects['message/fetchList'],
+  projectMessage: loading.effects['sysMessage/fetchList'],
 }))
 export default class WorkplacePerson extends PureComponent {
    //constructor(props){
@@ -120,6 +124,13 @@ export default class WorkplacePerson extends PureComponent {
     /* dispatch({
       type: 'chart/fetch',
     });*/
+    dispatch({
+      type: 'sysMessage/fetchList',
+      payload:{
+        page:1,
+        pageSize:10,
+      }
+    });
 
     this.getTimeValue();
   }
@@ -311,39 +322,53 @@ export default class WorkplacePerson extends PureComponent {
 
 
   render() {
-    const listData = [];
-    for (let i = 0; i < 23; i++) {
-      listData.push({
-        href: 'http://ant.design',
-        title: `ant design part ${i}`,
-        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-      });
-    }
     const columns = [
       {
         title: '优先级',
-        dataIndex: 'title',
-        fixed: 'left',
-        width: 150,
+        dataIndex: 'priority',
+        filters: [
+          {
+            text: msgPriority[0],
+            value: 0,
+          },
+          {
+            text: msgPriority[1],
+            value: 10,
+          },
+          {
+            text: msgPriority[2],
+            value: 20,
+          },
+        ],
+        onFilter: (value, record) => record.status.toString() === value,
+        render(val) {
+          if(val ==20){
+            return <Badge status={msgPriority[2]} text={msgPriority[2]} />;
+          }
+          if(val ==10){
+            return <Badge status={msgPriority[1]} text={msgPriority[1]} />;
+          }
+          if(val ==0){
+            return <Badge status={msgPriority[0]} text={msgPriority[0]} />;
+          }
+        },
       },
       {
         title: '主题',
-        dataIndex: 'description',
+        dataIndex: 'title',
       },
       {
-        title: '接收时间',
-        dataIndex: 'href',
+        title: '发送时间',
+        dataIndex: 'sendTime',
       },
       {
         title: '发送人',
-        dataIndex: 'content',
+        dataIndex: 'sender',
       },
       {
         title: '状态',
-        dataIndex: 'personStatus',
-        /*filters: [
+        dataIndex: 'status',
+        filters: [
           {
             text: status[0],
             value: 0,
@@ -355,8 +380,8 @@ export default class WorkplacePerson extends PureComponent {
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
-        },*/
+          return <Badge status={status[val]} text={status[val]} />;
+        },
       },
     ];
 
@@ -377,7 +402,7 @@ export default class WorkplacePerson extends PureComponent {
         <span style={{ paddingRight: 15 }}>更多</span>{' '}
       </a>
     );
-    const { activitiesLoading, chart, loading } = this.props;
+    const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading  } = this.props;
     const { salesData } = chart;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -543,8 +568,8 @@ export default class WorkplacePerson extends PureComponent {
                   key="projctMes"
                 >
                   <StandardTable
-                    loading={activitiesLoading}
-                    data={listData}
+                    loading={projectMessage}
+                    data={messageData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
                   />

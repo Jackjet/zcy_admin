@@ -80,13 +80,13 @@ export const getRouterData = app => {
 
 
     '/workplace': {
-      component: dynamicWrapper(app, ['chart','message'], () => import('../routes/index/Workplace')),
+      component: dynamicWrapper(app, ['chart','sysMessage'], () => import('../routes/index/Workplace')),
       name:'工作台',
     },
 
 
     '/PersonWorkplace': {
-      component: dynamicWrapper(app, ['chart','message'], () => import('../routes/index/WorkplacePerson')),
+      component: dynamicWrapper(app, ['chart','sysMessage'], () => import('../routes/index/WorkplacePerson')),
       name:'工作台',
     },
 

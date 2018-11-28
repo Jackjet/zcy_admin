@@ -1,7 +1,7 @@
 import { queryMessage } from '../services/api';
 
 export default {
-  namespace: 'message',
+  namespace: 'sysMessage',
 
   state: {
     messageData : {
@@ -18,7 +18,7 @@ export default {
       const response = yield call(queryMessage,payload);
       yield put({
         type: 'saveList',
-        payload: Array.isArray(response) ? response : [],
+        payload: response,
       });
     },
   },
