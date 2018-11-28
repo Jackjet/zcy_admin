@@ -14,7 +14,7 @@ export default {
   effects: {
     *fetchList(_, { call, put }) {
       const currentUser = JSON.parse(localStorage.getItem("user"));
-      const payload = {userName:currentUser.userName};
+      const payload = {userName:currentUser.userName,uid:currentUser.id};
       const response = yield call(queryMessage,payload);
       yield put({
         type: 'saveList',
