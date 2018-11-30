@@ -293,6 +293,7 @@ class ProjectAddModal extends PureComponent {
         >
           <Menu.Item key="0">项目信息管理</Menu.Item>
           <Menu.Item key="1">项目实施管理</Menu.Item>
+          <Menu.Item key="3">项目审批管理</Menu.Item>
           <Menu.Item key="2">项目成果管理</Menu.Item>
         </SubMenu>
       </Menu>
@@ -498,6 +499,15 @@ class ProjectAddModal extends PureComponent {
                         </Steps>
                       )
                     )}
+
+                    {(
+                      choiceTypeKey === `3` && (
+                        <Steps current={current} className={styles.steps} >
+                          {StepOption3.map(item => <Step key={item.title} title={item.title} onClick={() => this.handleCallBack(StepOption3, item)} />)}
+                        </Steps>
+                      )
+                    )}
+
                   </div>
                   <div className={styles["steps-action"]}>
                     {(

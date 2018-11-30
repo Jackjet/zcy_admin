@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment ,PureComponent} from 'react';
 import { connect } from 'dva';
 import {
   Row,
@@ -116,8 +116,7 @@ const formItemLayout = {
   },
 };
 
-@Form.create()
-class Step1 extends React.PureComponent {
+class Step1 extends PureComponent {
   state = {
     BillSourceOptionData: [],  // 业务来源类型option
     BillSourceValue:``,
@@ -195,13 +194,15 @@ class Step1 extends React.PureComponent {
   }; // 获取业务来源的Option的值
 
   handleProTypeSourceValue = (val) =>{
-    console.log(this.state.ProTypeOptionData.id);
     console.log(val);
-    if (val === this.state.ProTypeOptionData.id ){
-      this.setState({
-        ProTypeValue: this.state.ProTypeOptionData.name,
-      });
-    }
+    this.state.ProTypeOptionData.forEach(item =>{
+      if (val === item.id ){
+        this.setState({
+          ProTypeValue: item.name,
+        });
+      }
+    });
+
   }; // 获取业务来源的Option的值
 
 
@@ -310,7 +311,7 @@ class Step1 extends React.PureComponent {
                 })(
                   <div>
                     <Input  placeholder="请选择客户联系人" style={{ width: '63%' }} />
-                    <Divider type="vertical" />
+                    <Divider type="vertical" className={styles['ant-verticalHz']}/>
                     <a>新增联系人</a>
                   </div>
                 )}
@@ -402,7 +403,7 @@ class Step1 extends React.PureComponent {
                 {getFieldDecorator('contractCode')(
                   <div>
                     <Input  style={{ width: '68%' }} placeholder="合同编号" />
-                    <Divider type="vertical" />
+                    <Divider type="vertical"  />
                     <a>新增合同</a>
                   </div>
                 )}
@@ -437,17 +438,7 @@ class Step1 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={23} pull={5}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
+
           <Row className={styles['fn-mb-15']}>
             <Col span={23} pull={5}>
               <Form.Item {...formItemLayout} label={fieldLabels.biztype}>
@@ -730,4 +721,4 @@ class Step1 extends React.PureComponent {
 
 export default connect(({ dept, loading }) => ({
   submitting: loading.effects['dept/add'],
-}))(Step1);
+}))(Form.create()(Step1));

@@ -21,7 +21,7 @@
 
 .steps:global(.ant-steps) {
   max-width: 750px;
-  margin: 16px auto;
+  margin: 0px auto;
 }
 
 .errorIcon {
@@ -32,6 +32,7 @@
     margin-right: 4px;
   }
 }
+
 
 .errorPopover {
   :global {
@@ -153,6 +154,15 @@
     text-align: center;
     border-radius: 0 0 4px 4px;
   }
+  .ant-divider,.ant-divider-vertical {
+    margin: 0 3px;
+    display: inline-block;
+    height: 0.9em;
+    width: 1px;
+    vertical-align: middle;
+    position: relative;
+    top: -0.06em;
+  }
 }
 
 .divBorder {
@@ -181,6 +191,8 @@
     .ant-form-item-control-wrapper {
       flex: 1;
     }
+
+
   }
   .submitButtons {
     white-space: nowrap;
@@ -201,3 +213,7 @@
 .steps-action {
   margin-top: 24px;
 }
+
+
+
+
