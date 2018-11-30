@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from '../edit/style.less';
+import {message} from "antd/lib/index";
 
 const { Panel } = Collapse;
 const BillSourceOption = ['招标', '合伙人', '其他'];
@@ -88,6 +89,7 @@ class ProjectEditModal extends PureComponent {
     width: '100%',
     BillSourceOptionData: ``,
     BillSourceValue: ``,
+    ProTypeOptionData:``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -96,6 +98,25 @@ class ProjectEditModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  handleProTypeOption = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cusApplication/getDict', // 接口
+      payload: {
+        dictTypeId: '1821fe9feef711e89655186024a65a7c', // 数据类型id
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            ProTypeOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
+    });
+  }; // 根据数据中的数据，动态加载业务来源的Option
 
   handleBillSourceChange = () => {
     const optionData = BillSourceOption.map((data, index) => {
@@ -130,7 +151,7 @@ class ProjectEditModal extends PureComponent {
       rowInfo,
     } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { BillSourceOptionData, BillSourceValue } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -474,7 +495,7 @@ class ProjectEditModal extends PureComponent {
                 </Col>
               </Row>
               <Collapse defaultActiveKey={['1', '2', '3']}>
-                {`${rowInfo.projectType}` === `工程造价业务项目` && (
+
                   <Panel header="工程造价业务项目" key="1">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
@@ -532,8 +553,8 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-                )}
-                {`${rowInfo.projectType}` === `可研报告` && (
+
+
                   <Panel header="可研报告" key="2">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
@@ -591,8 +612,8 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-                )}
-                {`${rowInfo.projectType}` === `招标代理业务项目` && (
+
+
                   <Panel header="招标代理业务项目" key="3">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
@@ -661,7 +682,7 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-                )}
+
               </Collapse>
             </Form>
           </Card>

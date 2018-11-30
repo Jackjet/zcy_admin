@@ -284,7 +284,11 @@ export default class ProjectList extends PureComponent {
   showViewMessage = (flag, record) => {
     this.setState({
       projectTabsVisible: !!flag,
-      rowInfo: record,
+      rowInfo: {
+        ...record,
+        projectType: `招标代理业务项目`,
+        BillSource: `工程造价`,
+      },
     });
   }; // 项目基本信息查看方法 带入当前行数据
   handleDeleteClick = () => {

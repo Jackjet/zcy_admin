@@ -1,4 +1,5 @@
-import { queryMessage } from '../services/api';
+import { queryMessage, updateMessage } from '../services/api';
+
 
 export default {
   namespace: 'sysMessage',
@@ -20,6 +21,12 @@ export default {
         type: 'saveList',
         payload: response,
       });
+    },
+    *update({ payload ,callback}, { call }) {
+      const response = yield call(updateMessage, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
     },
   },
 

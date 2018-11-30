@@ -10,8 +10,8 @@ import {
   message,
 } from 'antd';
 import { connect } from 'dva';
-import ExecutorModal from './ExecutorModal';
-import styles from './style.less';
+import ExecutorModal from '../projectAssign/ExecutorModal';
+import styles from '../projectAssign/style.less';
 
 
 const { Search } = Input;
@@ -98,7 +98,7 @@ class ProAssignAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, proAssignAddVisible, handleProAssignAddVisible } = this.props;
+    const { form, dispatch, newProAssignAddVisible, handleNewProAssignVisible } = this.props;
     const { showPartnerVisible, executorVisible, executorMsg, deptMsg, proMsg } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll} = form;
     const parentMethods = {
@@ -117,7 +117,7 @@ class ProAssignAddModal extends PureComponent {
             payload: values,
             callback: (res) => {
               if(res.meta.status === '000000' ) {
-                handleProAssignAddVisible(false);
+                handleNewProAssignVisible(false);
               } else {
                 message.error(res.meta.errmsg);
               }
@@ -127,7 +127,7 @@ class ProAssignAddModal extends PureComponent {
       });
     };
     const resetDate = () =>{
-      handleProAssignAddVisible(false);
+      handleNewProAssignVisible(false);
       this.setState({
         showPartnerVisible: false,
         executorMsg: ``,
@@ -141,7 +141,7 @@ class ProAssignAddModal extends PureComponent {
         keyboard={false}
         title="新增项目指派"
         style={{top:20}}
-        visible={proAssignAddVisible}
+        visible={newProAssignAddVisible}
         width="35%"
         maskClosable={false}
         onOk={validate}
@@ -196,11 +196,15 @@ class ProAssignAddModal extends PureComponent {
               </Row>
               <Row className={styles['fn-mb-15']}>
                 <Col>
-                  <Form.Item {...formItemLayout} label="配合">
+                  <Form.Item {...formItemLayout} label="配合项目经理">
                     {getFieldDecorator('peihe', {
-                      rules: [{ required: false, message: '配合' }],
+                      rules: [{ required: false, message: '配合项目经理' }],
                     })(
-                      <Checkbox onChange={this.showPartner} />
+                      <Search
+                        readOnly
+                        placeholder="配合项目经理"
+                        onSearch={() => this.GetMsgVisible(true)}
+                      />
                     )}
                   </Form.Item>
                 </Col>

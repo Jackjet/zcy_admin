@@ -2,6 +2,7 @@ import React, {Fragment, PureComponent} from 'react';
 import moment from 'moment';
 import numeral from 'numeral';
 import { connect } from 'dva';
+import MessageModal from './MessageModal';
 import { Link, routerRedux } from 'dva/router';
 import DataSet from '@antv/data-set';
 import {
@@ -33,6 +34,10 @@ import ProjectAssignmentModal from '../projectassignment/AssignmentAddModal';
 import StandardTable from "../../components/MessageTable";
 
 
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const rankingListData = [];
@@ -104,6 +109,8 @@ export default class WorkplacePerson extends PureComponent {
        timeValue:"",
        pageCurrent: ``,
        pageSizeCurrent: ``,
+       messageInfoVisible: false,
+       rowInfo: ``,
      };
    //}
 
@@ -129,9 +136,8 @@ export default class WorkplacePerson extends PureComponent {
       payload:{
         page:1,
         pageSize:10,
-      }
+      },
     });
-
     this.getTimeValue();
   }
 
@@ -173,6 +179,47 @@ export default class WorkplacePerson extends PureComponent {
   handleScheduleAddVisible = flag => {
     this.setState({
       ScheduleAddVisible: !!flag,
+    });
+  };
+
+  // 控制项目信息弹窗
+  handleMessageInfoVisible = (flag) => {
+    this.setState({
+      messageInfoVisible: !!flag,
+    });
+  };
+
+  // 根据当前行的id, 查询对应的项目信息
+  GetMsgVisible = (flag, record) => {
+    this.props.dispatch({
+      type: 'sysMessage/update', // 接口修改项目接口
+      payload:{
+        id: record.id, // 点击行的项目id
+        status: 1,
+      },
+    });
+    this.props.dispatch({
+      type: 'sysMessage/fetchList',
+      payload:{
+        page:1,
+        pageSize:10,
+      },
+    });
+    this.props.dispatch({
+      type: 'cusApplication/fetch', // 接口修改项目接口
+      payload:{
+        id: '0489342eee0811e88aa5186024a65a7c',  // 点击行的项目id
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            rowInfo: res.data.list[0],
+            messageInfoVisible: !!flag,
+          });
+        }
+      },
     });
   };
 
@@ -391,6 +438,8 @@ export default class WorkplacePerson extends PureComponent {
       projectTemAuthVisible,
       projectAssigVisible,
       rangePickerValue,
+      messageInfoVisible,
+      rowInfo,
     } = this.state;
     const moreCharts = (
       <a onClick={() => this.handleLink()}>
@@ -497,6 +546,7 @@ export default class WorkplacePerson extends PureComponent {
       handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
       handleScheduleAddVisible: this.handleScheduleAddVisible,
+      handleMessageInfoVisible: this.handleMessageInfoVisible,
     };
 
     return (
@@ -572,10 +622,15 @@ export default class WorkplacePerson extends PureComponent {
                     data={messageData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
+                    rowClassName={(record, index) => record.status === 0 ?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
+                    onRow={(record) => {  // 表格行点击事件
+                      return {
+                        onDoubleClick: () => {
+                          this.GetMsgVisible(true, record)
+                        },
+                      };
+                    }}
                   />
-
-
-
                 </TabPane>
               </Tabs>
             </Card>
@@ -755,6 +810,7 @@ export default class WorkplacePerson extends PureComponent {
         />
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
         <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
+        <MessageModal  {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

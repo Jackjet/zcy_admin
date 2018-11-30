@@ -23,6 +23,7 @@ import {
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import MessageModal from './MessageModal';
+import NewProAssignAddModal from './ProAssignAddModal';
 import ProAssignAddModal from '../projectAssign/ProAssignAddModal';
 import ProjectAddModal from '../Project/ProInfoManage/ProAddModal';
 import ScheduleAddModal from '../schedule/ScheduleAddModal';
@@ -43,6 +44,10 @@ for (let i = 0; i < 7; i += 1) {
     total: 323234,
   });
 }
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 const status = ['未读', '已读'];
 const msgPriority = ['低','中','高'];
 const MsgType = ['通知','任务','更新消息','事物消息','即时消息','办公消息'];
@@ -108,6 +113,7 @@ export default class Workplace extends PureComponent {
        pageSizeCurrent: ``,
        rowInfo: {},
        rowTextColor: false,  //  false 表示未读  true 已读
+       newProAssignAddVisible: false, // 需要配合打开新的指派单modal
      };
    //}
 
@@ -196,8 +202,30 @@ export default class Workplace extends PureComponent {
     });
   };
 
+  // 需要配合打开新的指派单modal
+  handleNewProAssignVisible = (flag) => {
+    this.setState({
+      newProAssignAddVisible: !!flag,
+    });
+  };
+
   // 根据当前行的id, 查询对应的项目信息
   GetMsgVisible = (flag, record) => {
+
+    if(record.bizType){
+        if(record.bizType === 110){  // 新建项目
+
+        }else if(record.bizType === 80){ // 审批项目
+
+        }else if(record.bizType === 90){ // 审批客户
+
+        }else if(record.bizType === 100){ // 需要配合指派 打开新的指派单（项目名称，部门经理，项目经理，配合项目经理（带入上一次的指派单上的项目经理），说明，）
+          this.handleNewProAssignVisible(true);
+        }
+    }else {
+       // 提示消息
+    }
+
     this.props.dispatch({
       type: 'cusApplication/fetch', // 接口修改项目接口
       payload:{
@@ -361,6 +389,7 @@ export default class Workplace extends PureComponent {
       proAddVisible,
       proAssignAddVisible,
       messageInfoVisible,
+      newProAssignAddVisible,
       rowInfo,
     } = this.state;
 
@@ -530,6 +559,7 @@ export default class Workplace extends PureComponent {
     // 项目临时授权
     const parentMethods = {
       handleProAssignAddVisible: this.handleProAssignAddVisible,
+      handleNewProAssignVisible: this.handleNewProAssignVisible,
       handleProAddVisible: this.handleProAddVisible,
       handleProjectTemAuthAddVisible: this.handleProjectTemAuthAddVisible,
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
@@ -669,7 +699,7 @@ export default class Workplace extends PureComponent {
                     data={messageData}
                     columns={columns}
                     onChange={this.handleStandardTableChange}
-                    rowClassName={(record, index) => record.id ==='2dcdc8cef2c811e89ed5186024a65a7c'?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
+                    rowClassName={(record, index) => record.status === 0 ?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
                     onRow={(record) => {  // 表格行点击事件
                       return {
                         onDoubleClick: () => {
@@ -1250,6 +1280,7 @@ export default class Workplace extends PureComponent {
         />
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
         <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
+        <NewProAssignAddModal {...parentMethods} newProAssignAddVisible={newProAssignAddVisible} />
         <MessageModal  {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );

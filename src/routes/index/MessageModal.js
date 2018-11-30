@@ -124,7 +124,7 @@ class MessageModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting, messageInfoVisible, handleMessageInfoVisible, rowInfo } = this.props;
+    const { form, dispatch, submitting, messageInfoVisible, handleMessageInfoVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
     const { selectedKeys } = this.state;
     const validate = () => {
@@ -186,7 +186,6 @@ class MessageModal extends PureComponent {
                               <Form.Item {...formItemLayout} label={fieldLabels.name}>
                                 {getFieldDecorator('name', {
                                   rules: [{ required: true, message: '请输入项目名称' }],
-                                  initialValue: `${rowInfo.name}`,
                                 })(
                                   <Input
                                     readOnly
@@ -384,7 +383,6 @@ class MessageModal extends PureComponent {
                       <Form.Item {...formItemLayout} label="父组件id">
                         {getFieldDecorator('visitors', {
                           rules: [{ required: false, message: '父组件id' }],
-                          initialValue: `${rowInfo.id}`,
                         })(
                           <Input placeholder="请选择拜访对象" />
                         )}
@@ -394,7 +392,6 @@ class MessageModal extends PureComponent {
                       <Form.Item {...formItemLayout} label="父组件linkman">
                         {getFieldDecorator('visitors', {
                           rules: [{ required: false, message: '父组件linkman' }],
-                          initialValue: `${rowInfo.linkman}`,
                         })(
                           <Input placeholder="请选择拜访对象" />
                         )}
@@ -404,7 +401,6 @@ class MessageModal extends PureComponent {
                       <Form.Item {...formItemLayout} label="父组件name">
                         {getFieldDecorator('visitors', {
                           rules: [{ required: false, message: '父组件name' }],
-                          initialValue: `${rowInfo.name}`,
                         })(
                           <Input placeholder="请选择拜访对象" />
                         )}
@@ -414,7 +410,6 @@ class MessageModal extends PureComponent {
                       <Form.Item {...formItemLayout} label="父组件number">
                         {getFieldDecorator('visitType', {
                           rules: [{ required: false, message: '父组件number' }],
-                          initialValue: `${rowInfo.number}`,
                         })(
                           <Input placeholder="请选择拜访方式" />
                         )}

@@ -23,6 +23,16 @@ export async function queryMessage(params) {
   });
 }
 
+export async function updateMessage(params) {
+  return request('/api/message/update', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
 export async function queryRule(params) {
   return request(`/api/rule?${stringify(params)}`);
 }
