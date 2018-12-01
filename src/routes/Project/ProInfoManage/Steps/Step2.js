@@ -33,28 +33,29 @@ import {getRoutes} from "../../../../utils/utils";
 
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
-for (let i = 0; i < 5; i+=1) {
+for (let i = 0; i < 5; i++) {
   if(i=0){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--项目经理---土建`,
     });
-  }else if(i=1){
+  }
+  if(i=1){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--分管领导---装饰`,
     });
-  }else if(i=2){
+  }if(i=2){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---安装`,
     });
-  }else if(i=3){
+  }if(i=3){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---市政`,
     });
-  }else if(i=4){
+  }if(i=4){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---绿化`,
@@ -144,6 +145,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+const { Option } = Select;
 const { Panel } = Collapse;
 const { Step } = Steps;
 const {Content, Sider} = Layout;
@@ -269,7 +271,7 @@ class Step2 extends React.PureComponent {
             label=""
           >
             <Button style={{ left: 400 }}>
-              保存
+              上一步
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

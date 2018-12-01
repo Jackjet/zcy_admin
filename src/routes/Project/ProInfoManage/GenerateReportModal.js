@@ -58,6 +58,7 @@ class GenerateReportModal extends PureComponent {
     selectedKeys: [],
     targetKeys: [],
     enterReportVisible: false, // 报告确认弹窗
+    reportNum: null,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -79,6 +80,25 @@ class GenerateReportModal extends PureComponent {
     })
   };
 
+  handleGenerateReportNum = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/generateReportNum',
+      payload: {},
+      callback: (res) => {
+        console.log(res.data.list);
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            reportNum: res.data.list,
+          });
+          message.success("报告号获取完成!");
+        }
+      },
+    });
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -90,19 +110,26 @@ class GenerateReportModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, generateReportVisible, handleGenerateReportVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { selectedKeys, enterReportVisible } = this.state;
+    const { selectedKeys, enterReportVisible, reportNum } = this.state;
     const validate = () => {
-      this.handleEnterReportVisible(true);
-      /*validateFieldsAndScroll((error, values) => {
+      validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
           dispatch({
-            type: 'rule/add',
+            type: 'report/add',
             payload: values,
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                this.handleEnterReportVisible(true);
+                message.success('新增完成!');
+              } else {
+                message.error(res.meta.errmsg);
+              }
+            },
           });
           message.success('添加成功bbb');
         }
-      });*/
+      });
     };
     const parentMethods = {
       handleEnterReportVisible: this.handleEnterReportVisible,
@@ -110,7 +137,7 @@ class GenerateReportModal extends PureComponent {
     };
     return (
       <Modal
-        destroyOnClose="true"
+       /* destroyOnClose="true"*/
         keyboard={false}
         title="生成报告"
         style={{ top: 20 }}
@@ -128,33 +155,33 @@ class GenerateReportModal extends PureComponent {
             <Form layout="horizontal">
               <Row>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label="标题">
-                    {getFieldDecorator('visitors', {
-                      rules: [{ required: false, message: '标题' }],
+                  <Form.Item {...formItemLayout} label="报告标题">
+                    {getFieldDecorator('name', {
+                      rules: [{ required: false, message: '报告标题' }],
                     })(
-                      <Input placeholder="请选择输入标题" />
+                      <Input placeholder="请选择输入报告标题" />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item {...formItemLayout} label="项目名">
-                    {getFieldDecorator('visitType', {
-                      rules: [{ required: false, message: '项目名' }],
+                  <Form.Item {...formItemLayout} label="项目名称">
+                    {getFieldDecorator('projectName', {
+                      rules: [{ required: false, message: '项目名称' }],
                     })(
-                      <Input placeholder="请输入项目名" />
+                      <Input placeholder="请输入项目名称" />
                     )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label="报告号">
-                    {getFieldDecorator('visitType', {
+                    {getFieldDecorator('number', {
                       rules: [{ required: false, message: '报告号' }],
+                      initialValue: reportNum !== null ? reportNum: "",
                     })(
                       <Search
-                        readOnly
                         placeholder="自动生成报告号"
                         enterButton="生成报告号"
-                        onSearch={value => console.log(value)}
+                        onSearch={() =>this.handleGenerateReportNum()} // 生成报告号
                       />
                     )}
                   </Form.Item>
@@ -172,14 +199,14 @@ class GenerateReportModal extends PureComponent {
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label="送审金额">
-                        {getFieldDecorator('contractCode')(
+                        {getFieldDecorator('trialAmount')(
                           <Input style={{ width: '100%' }} placeholder="送审金额" />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={8} push={1}>
-                      <Form.Item {...formItemLayout} label="核减额">
-                        {getFieldDecorator('partner')(
+                      <Form.Item {...formItemLayout} label="净核减金额">
+                        {getFieldDecorator('reductionAmount')(
                           <Input style={{ width: '100%' }} placeholder="核减额" />
                         )}
                       </Form.Item>
@@ -201,8 +228,8 @@ class GenerateReportModal extends PureComponent {
                       </Form.Item>
                     </Col>
                     <Col span={8} push={1}>
-                      <Form.Item {...formItemLayout} label="核定或预算总造价">
-                        {getFieldDecorator('partner')(
+                      <Form.Item {...formItemLayout} label="审定金额">
+                        {getFieldDecorator('auditAmount')(
                           <Input style={{ width: '100%' }} placeholder="核定或预算总造价" />
                         )}
                       </Form.Item>
@@ -347,7 +374,7 @@ class GenerateReportModal extends PureComponent {
               <Row>
                 <Col>
                   <Form.Item label="工程概况">
-                    {getFieldDecorator('visitors', {
+                    {getFieldDecorator('description', {
                       rules: [{ required: false, message: '工程概况' }],
                     })(
                       <TextArea placeholder="请输入工程概况" rows={4} />
@@ -358,7 +385,7 @@ class GenerateReportModal extends PureComponent {
               <Row>
                 <Col>
                   <Form.Item label="审核依据">
-                    {getFieldDecorator('visitors', {
+                    {getFieldDecorator('auditBasic', {
                       rules: [{ required: false, message: '审核依据' }],
                     })(
                       <TextArea placeholder="请输入审核依据" rows={4} />
@@ -369,7 +396,7 @@ class GenerateReportModal extends PureComponent {
               <Row>
                 <Col>
                   <Form.Item label="审核说明">
-                    {getFieldDecorator('visitors', {
+                    {getFieldDecorator('auditDesc', {
                       rules: [{ required: false, message: '审核说明' }],
                     })(
                       <TextArea placeholder="请输入审核说明" rows={4} />
@@ -380,7 +407,7 @@ class GenerateReportModal extends PureComponent {
               <Row>
                 <Col>
                   <Form.Item label="审核核增(减)原因">
-                    {getFieldDecorator('visitors', {
+                    {getFieldDecorator('auditReasons', {
                       rules: [{ required: false, message: '审核核增(减)原因' }],
                     })(
                       <TextArea placeholder="请输入审核核增(减)原因" rows={4} />
@@ -391,7 +418,7 @@ class GenerateReportModal extends PureComponent {
               <Row>
                 <Col>
                   <Form.Item label="与合同价相比增减情况分析">
-                    {getFieldDecorator('visitors', {
+                    {getFieldDecorator('analysis', {
                       rules: [{ required: false, message: '与合同价相比增减情况分析' }],
                     })(
                       <TextArea placeholder="请输入与合同价相比增减情况分析" rows={4} />
