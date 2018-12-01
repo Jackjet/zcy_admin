@@ -218,7 +218,14 @@ onOpenChange = openKeys => {
     }
   };
 
-  handleSelectRows = rows => {
+  download = (record) =>{
+
+    location.href= record.url;
+
+  };
+
+
+    handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
@@ -308,7 +315,7 @@ onOpenChange = openKeys => {
     const columns = [
       {
         title: '编码',
-        dataIndex: 'dictID',
+        dataIndex: 'number',
       },
       {
         title: '表格名称',
@@ -321,11 +328,11 @@ onOpenChange = openKeys => {
 
       {
         title: '操作',
-        render: () => (
+        render: (text, record) => (
           <Fragment>
             <a href="">预览</a>
             <Divider type="vertical" />
-            <a href="">下载</a>
+            <a href={record.url} download={record.name}>下载</a>
             <Divider type="vertical" />
             <a href="">删除</a>
             <Divider type="vertical" />
