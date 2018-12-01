@@ -33,12 +33,35 @@ import ReportViewModal from '../select/ReportViewModal';
 import styles from '../list/Style.less';
 
 const mockData = [];
-for (let i = 0; i < 10; i += 1) {
-  mockData.push({
-    key: i.toString(),
-    title: `人员${i + 1}`,
-  });
-}
+for (let i = 0; i < 5; i++) {
+  if(i=0){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--项目经理---土建`,
+    });
+  }
+  if(i=1){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--分管领导---装饰`,
+    });
+  }if(i=2){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---安装`,
+    });
+  }if(i=3){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---市政`,
+    });
+  }if(i=4){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---绿化`,
+    });
+  }
+};
 const { TreeNode } = Tree;
 const fileList = [
   {

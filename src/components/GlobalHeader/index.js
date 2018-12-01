@@ -12,6 +12,10 @@ export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
+
+
+
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -43,6 +47,7 @@ export default class GlobalHeader extends PureComponent {
     });
     return groupBy(newNotices, 'type');
   }
+
   toggle = () => {
     const { collapsed, onCollapse } = this.props;
     onCollapse(!collapsed);
@@ -74,6 +79,7 @@ export default class GlobalHeader extends PureComponent {
       onNoticeVisibleChange,
       onMenuClick,
       onNoticeClear,
+      handleMenuClick,
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -106,9 +112,20 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
-
+        <div className={styles.left}>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={['2']}
+            style={{ lineHeight: '64px' }}
+            onClick={handleMenuClick}
+          >
+            <Menu.Item key="center">消息中心</Menu.Item>
+            <Menu.Item key="pro">工程</Menu.Item>
+            <Menu.Item key="3">招标</Menu.Item>
+          </Menu>
+        </div>
         <div className={styles.right}>
-
           <span className={`${styles.action} ${styles.search}`} > 今天是{moment().format('llll')} </span>
           {/* <HeaderSearch
             className={`${styles.action} ${styles.search}`}
@@ -166,9 +183,7 @@ export default class GlobalHeader extends PureComponent {
               <span className={`${styles.action} ${styles.account}`}>
                 <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
                 <span className={styles.name}>{currentUser.name}</span>
-
               </span>
-
             </Dropdown>
           ) : (
             <Spin size="small" style={{ marginLeft: 8 }} />
