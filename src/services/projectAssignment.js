@@ -42,4 +42,18 @@ export async function deleteProjectAssignment(params) {
   });
 }
 
+// 项目指派通过id查info
+export async function getInfoById(params) {
+  return request('/api/projectAssignment/getInfoById', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
+
+
 

@@ -33,11 +33,34 @@ import {getRoutes} from "../../../../utils/utils";
 
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
-for (let i = 0; i < 10; i+=1) {
-  mockData.push({
-    key: i.toString(),
-    title: `人员${i + 1}`,
-  });
+for (let i = 0; i < 5; i+=1) {
+  if(i=0){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--项目经理---土建`,
+    });
+  }else if(i=1){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--分管领导---装饰`,
+    });
+  }else if(i=2){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---安装`,
+    });
+  }else if(i=3){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---市政`,
+    });
+  }else if(i=4){
+    mockData.push({
+      key: i.toString(),
+      title: `人员${i + 1}--职员---绿化`,
+    });
+  }
+
 };
 const { TextArea } = Input;
 const { TreeNode } = Tree;
@@ -179,17 +202,6 @@ class Step2 extends React.PureComponent {
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
-          <Row>
-            <Col span={23} pull={5}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
           <Row className={styles['fn-mb-15']}>
             <Col span={5} offset={6}>
               <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
@@ -256,8 +268,8 @@ class Step2 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }}>
-              上一步
+            <Button style={{ left: 400 }}>
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

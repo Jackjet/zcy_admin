@@ -132,3 +132,11 @@ Any Contribution of following ways will be welcome:
     进入static/css文件中，打开css文件搜索https，
     替换css中所有涉及到https://at.alicdn.com...的url，替换为拷贝后的iconfont的相对路径
     注意：替换中原url中涉及到的.eot、.woff后缀需要保留，替换为../iconfont/iconfont.eot、../iconfont/iconfont.woff等
+    
+    
+  2018/11/30
+    登录问题描述：如果帐号是15857112486登录，工作台路径应该为PersonWorkplace,
+    当时前端服务重新启动后，工作台的路径为workplace,但是帐号还是原先登录的158帐号.
+    
+    客户消息发给188帐号，发送者当前登录用户，接受者188的帐号
+    workplace审批界面动态加载基本信息

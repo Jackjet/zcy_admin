@@ -250,15 +250,6 @@ class Step6 extends React.PureComponent {
                 })(<Input placeholder="请输入银行账户" className={styles['fn-mb-15']} />)}
               </Form.Item>
             </Col>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label='工程造价咨询表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
           </Row>
           <Form.Item
             style={{ marginBottom: 8 }}
@@ -271,8 +262,8 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }}>
-              上一步
+            <Button style={{ left: 400 }}>
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

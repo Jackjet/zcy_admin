@@ -495,8 +495,7 @@ class ProjectEditModal extends PureComponent {
                 </Col>
               </Row>
               <Collapse defaultActiveKey={['1', '2', '3']}>
-
-                  <Panel header="工程造价业务项目" key="1">
+                <Panel header="工程造价业务项目" key="1">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label="项目个数">
@@ -553,9 +552,7 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-
-
-                  <Panel header="可研报告" key="2">
+                <Panel header="可研报告" key="2">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={8}>
                         <Form.Item {...formItemLayout} label="项目个数">
@@ -612,9 +609,7 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-
-
-                  <Panel header="招标代理业务项目" key="3">
+                <Panel header="招标代理业务项目" key="3">
                     <Row className={styles['fn-mb-15']}>
                       <Col span={12}>
                         <Form.Item {...formItemLayout} label="招标公告发布">
@@ -682,7 +677,6 @@ class ProjectEditModal extends PureComponent {
                       </Col>
                     </Row>
                   </Panel>
-
               </Collapse>
             </Form>
           </Card>

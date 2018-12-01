@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu';
 import StandardTable from '../../../components/StandardTable/index';
+import GenerateReportModal from './GenerateReportModal';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from '../list/Style.less';
 import ProjectAddModal from './ProAddModal';
@@ -92,6 +93,7 @@ export default class ProjectList extends PureComponent {
     openKey: '',
     selectedKey:'',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
+    generateReportVisible: false,
   };
 
   componentDidMount() {
@@ -218,6 +220,11 @@ export default class ProjectList extends PureComponent {
   }; // 获取当前选中的行
 
 
+  handleGenerateReportVisible = (flag) => {
+    this.setState({
+      generateReportVisible: !!flag,
+    });
+  };
 
   handleProAddVisible = flag => {
     if (this.state.choiceTypeKey) {
@@ -552,6 +559,7 @@ export default class ProjectList extends PureComponent {
       projectProcessAddVisible,
       appraisalVisible,
       signatureAddVisible,
+      generateReportVisible,
     } = this.state;
     const columns = [
       {
@@ -689,6 +697,7 @@ export default class ProjectList extends PureComponent {
       handleProjectProcessAddVisible: this.handleProjectProcessAddVisible,
       handleAppraisalVisible: this.handleAppraisalVisible,
       handleSignatureAddVisible: this.handleSignatureAddVisible,
+      handleGenerateReportVisible: this.handleGenerateReportVisible,
     };
     return (
       <PageHeaderLayout>
@@ -715,6 +724,13 @@ export default class ProjectList extends PureComponent {
                   >
                     新建
                   </Button>
+                  {/*<Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() => this.handleGenerateReportVisible(true)}
+                  >
+                    测试项目生成
+                  </Button>*/}
                   {selectedRows.length > 0 && (
                     <span>
                       <Button
@@ -758,6 +774,7 @@ export default class ProjectList extends PureComponent {
         <ProjectProcessAddModal {...parentMethods} projectProcessAddVisible={projectProcessAddVisible} />
         <AppraisalList {...parentMethods} appraisalVisible={appraisalVisible} />
         <SignatureAddModal {...parentMethods} signatureAddVisible={signatureAddVisible} />
+        <GenerateReportModal {...parentMethods} generateReportVisible={generateReportVisible} />
       </PageHeaderLayout>
     );
   }

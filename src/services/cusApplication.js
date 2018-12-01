@@ -64,5 +64,18 @@ export async function getDictByCondition(params) {
   });
 }
 
+// 通过id查info
+export async function getInfoById(params) {
+  return request('/api/cusApplication/getInfoById', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
+
 
 

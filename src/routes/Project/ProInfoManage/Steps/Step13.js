@@ -437,17 +437,6 @@ class Step13 extends React.PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row className={styles['fn-mb-15']}>
-                <Col span={11} push={1}>
-                  <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                    {getFieldDecorator('contractCode')(
-                      <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                        {BillTableOptionTable}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
               <Card title="会商内容与会商意见" bordered={false}>
                 {getFieldDecorator('members', {
                   initialValue: tableData,
@@ -466,8 +455,8 @@ class Step13 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }}>
-              上一步
+            <Button style={{ left: 400 }}>
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

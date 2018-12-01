@@ -123,14 +123,14 @@ class Step1 extends PureComponent {
     ProTypeOptionData: [], // 项目类型option
     TestOption:``,
     ProTypeValue: ``,
-    BillTableOptionTable:``,
     submitProcessVisible: false,
   };
   componentDidMount() {
     this.handleBillSourceOption();
     this.handleProTypeOption();
-    this.handleBillTableOptionTable();
   }
+
+  // 根据数据中的数据，动态加载业务来源的Option
   handleBillSourceOption = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -148,19 +148,9 @@ class Step1 extends PureComponent {
         }
       },
     });
-  }; // 根据数据中的数据，动态加载业务来源的Option
+  };
 
-  handleBillTableOptionTable = () => {
-    const optionData = BillTable.map((data, index) => {
-      const val = `${data}`;
-      const keyNum = `${index}`;
-      return <Option key={keyNum} value={val}>{val}</Option>;
-    });
-    this.setState({
-      BillTableOptionTable: optionData,
-    });
-  }; // 根据数据中的数据，动态加载业务来源的Option
-
+  // 根据数据中的数据，动态加载业务来源的Option
   handleProTypeOption = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -178,7 +168,7 @@ class Step1 extends PureComponent {
         }
       },
     });
-  }; // 根据数据中的数据，动态加载业务来源的Option
+  };
 
   handleSubmitProcessVisible = flag => {
     this.setState({
@@ -186,13 +176,19 @@ class Step1 extends PureComponent {
     });
   };
 
+  // 获取业务来源的Option的value对应的name
   handleGetBillSourceValue = (val) =>{
     console.log(val);
-    this.setState({
-      BillSourceValue: val,
+    this.state.BillSourceOptionData.forEach(item =>{
+      if (val === item.id) {
+        this.setState({
+          BillSourceValue: item.name,
+        });
+      }
     });
-  }; // 获取业务来源的Option的值
+  };
 
+  // 获取项目类型的Option的value对应的name
   handleProTypeSourceValue = (val) =>{
     console.log(val);
     this.state.ProTypeOptionData.forEach(item =>{
@@ -202,14 +198,13 @@ class Step1 extends PureComponent {
         });
       }
     });
-
-  }; // 获取业务来源的Option的值
+  };
 
 
   render() {
     const { form, dispatch, loading, submitting, handleNext } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeValue, BillTableOptionTable, submitProcessVisible } = this.state;
+    const { BillSourceValue, ProTypeValue, submitProcessVisible } = this.state;
     const parentMethods = {
       handleSubmitProcessVisible: this.handleSubmitProcessVisible,
     };
@@ -299,6 +294,7 @@ class Step1 extends PureComponent {
                 })(
                   <Search
                     placeholder="请选择客户"
+
                     style={{ width: 200 }}
                   />
                 )}
@@ -311,7 +307,7 @@ class Step1 extends PureComponent {
                 })(
                   <div>
                     <Input  placeholder="请选择客户联系人" style={{ width: '63%' }} />
-                    <Divider type="vertical" className={styles['ant-verticalHz']}/>
+                    <Divider type="vertical" className={styles['ant-verticalHz']} />
                     <a>新增联系人</a>
                   </div>
                 )}

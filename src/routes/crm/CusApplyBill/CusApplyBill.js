@@ -43,6 +43,8 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
+// 设置message信息配置
 message.config({
   top: 100, // 提示框弹出位置
   duration: 3, // 自动关闭延时，单位秒
@@ -88,12 +90,12 @@ export default class CusApplyBill extends PureComponent {
     selectedRows: [],  // 选中的行
     formValues: {}, // 表单的结果集
     rowInfo: {},  // 当前操作行的数据
-    openKeys: ['sub1'],  // 左边菜单树的起始状态
     pageCurrent:``, // 当前页
     pageSizeCurrent:``, // 当前页大小
-    linkmanOptionData: [],
+    linkmanOptionData: [], // 联系人下拉列表数据
   };
 
+  // 生命周期方法 加载页面
   componentDidMount() {
     this.handleLinkManTypeChange();
     const { dispatch } = this.props;
@@ -109,8 +111,9 @@ export default class CusApplyBill extends PureComponent {
         }
       },
     });
-  } // 生命周期方法 加载页面
+  }
 
+  // 公共列表组建分页
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -136,8 +139,9 @@ export default class CusApplyBill extends PureComponent {
       type: 'cusApplication/fetch',
       payload: params,
     });
-  }; // 公共列表组建分页
+  };
 
+  // 查询方法
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -166,8 +170,9 @@ export default class CusApplyBill extends PureComponent {
         },
       });
     });
-  }; // 查询方法
+  };
 
+  // 搜索(重置)方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -185,14 +190,16 @@ export default class CusApplyBill extends PureComponent {
         }
       },
     });
-  }; // 搜索(重置)方法
+  };
 
+  // 普通高级搜索切换方法
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
-  }; // 普通高级搜索切换方法
+  };
 
+  // 信息单个删除方法
   handleDeleteMsg =(flag, record)=> {
     const { dispatch } = this.props;
     dispatch({
@@ -221,16 +228,14 @@ export default class CusApplyBill extends PureComponent {
 
       },
     });
-  }; // 信息单个删除方法
+  };
 
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   }; // 获取选中的行
-
-
-
+  
   handleLinkManTypeChange = (optionData) => {
     this.setState({
       linkmanOptionData: optionData,

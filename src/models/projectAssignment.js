@@ -1,4 +1,4 @@
-import { addProjectAssignment, queryProjectAssignment,updateProjectAssignment ,deleteProjectAssignment  } from '../services/projectAssignment';
+import { addProjectAssignment, queryProjectAssignment,updateProjectAssignment ,deleteProjectAssignment, getInfoById  } from '../services/projectAssignment';
 
 export default {
   namespace: 'projectAssignment',
@@ -39,6 +39,12 @@ export default {
     },
     *remove({ payload, callback }, { call}) {
       const response = yield call(deleteProjectAssignment, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *getInfoById({ payload, callback }, { call}) {
+      const response = yield call(getInfoById, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

@@ -134,6 +134,12 @@ class Step4 extends React.PureComponent {
     targetKeys: [],
     selectedRows:``,
     BillTableOptionTable:``,
+    fileList: [{
+      uid: '-1',
+      name: 'xxx.png',
+      status: 'done',
+      url: 'http://www.baidu.com/xxx.png',
+    }],
   };
   componentDidMount() {
     this.handleBillTableOptionTable();
@@ -201,11 +207,43 @@ class Step4 extends React.PureComponent {
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
 
+  handleChange = (info) => {
+    let fileList = info.fileList;
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    fileList = fileList.slice(-2);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+      }
+      return file;
+    });
+
+    // 3. Filter successfully uploaded files according to response from server
+    fileList = fileList.filter((file) => {
+      if (file.response) {
+        return file.response.status === 'success';
+      }
+      return true;
+    });
+
+    this.setState({ fileList });
+  }
+
 
   render() {
     const { form, project: { data }, dispatch, submitting, loading } = this.props;
     const { selectedKeys, selectedRows, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
+    const props = {
+      action: '//jsonplaceholder.typicode.com/posts/',
+      onChange: this.handleChange,
+      multiple: true,
+    };
     const onPrev = () => {
       dispatch(routerRedux.push('/project/projectStart/result'));
     };
@@ -218,18 +256,7 @@ class Step4 extends React.PureComponent {
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
-          <Row>
-            <Col span={23} pull={5}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
+          {/*<Row>
             <Col>
               <Form.Item label="项目实施计划安排">
                 {getFieldDecorator('zhipaiCode')(
@@ -246,6 +273,15 @@ class Step4 extends React.PureComponent {
                 )}
               </Form.Item>
             </Col>
+          </Row>*/}
+          <Row>
+            <Col span={23} push={3}>
+              <Upload {...props} fileList={this.state.fileList}>
+                <Button>
+                  <Icon type="upload" /> 上传方案
+                </Button>
+              </Upload>
+            </Col>
           </Row>
           <Form.Item
             style={{ marginBottom: 8 }}
@@ -258,11 +294,11 @@ class Step4 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ marginLeft: 8, left: 400 }}>
-              上一步
+            <Button style={{ marginLeft: 8, left: 400 }}>
+              打印
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
-              提交
+              下载
             </Button>
           </Form.Item>
         </Form>

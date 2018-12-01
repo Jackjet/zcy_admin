@@ -66,6 +66,11 @@ class ExecutorModal extends PureComponent {
     selectedRows: [], // 获取选中的行的集合
     pageCurrent: ``,
     pageSizeCurrent: ``,
+    data:{
+      list:[{name:"部门经理",number:15857112486}, {name:"分管领导",number:18888888888}, {name:"职员",number:16666666666}],
+      pagination: {},
+      total:'',
+    },
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -200,28 +205,41 @@ class ExecutorModal extends PureComponent {
   } // 简单查询
 
   render() {
-    const { cusApplication: { data }, loading, executorVisible, handleExecutorVisible } = this.props;
-    const { selectedKeys, selectedRows } = this.state;
+    const { loading, executorVisible, handleExecutorVisible, inputParamName } = this.props;
+    const { selectedKeys, selectedRows, data } = this.state;
     const validate = () => {
      const nameVal =  selectedRows.map(row => row.name);
-     this.props.handleGetExecutorMsg(nameVal);
-     this.props.handleDeptMsg(nameVal);
-     this.props.handleProMsg(nameVal);
+     const numberVal =  selectedRows.map(row => row.number);
+     const arrayList = [];
+     for (let i =0; i<nameVal.length; i+=1) {
+       arrayList.push({
+         name: Object.values(nameVal)[0],
+         number: Object.values(numberVal)[0],
+       })
+     }
+     console.log(arrayList);
+     if (inputParamName === 'partner') {
+       this.props.handleGetExecutorMsg(arrayList);
+     } else if (inputParamName === 'departmentId'){
+       this.props.handleDeptMsg(arrayList);
+     } else if (inputParamName === 'projectId') {
+       this.props.handleProMsg(arrayList);
+     }
      handleExecutorVisible(false);
     };
     const columns = [
       {
-        title: '项目编号',
+        title: '人员编号',
         dataIndex: 'number',
         width: 150,
         fixed: 'left',
       },
       {
-        title: '项目名称',
+        title: '人员名称',
         dataIndex: 'name',
       },
       {
-        title: '负责人',
+        title: '职能',
         dataIndex: 'linkman',
       },
       {

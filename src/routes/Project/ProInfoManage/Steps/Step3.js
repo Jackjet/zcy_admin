@@ -159,7 +159,7 @@ class Step3 extends React.PureComponent {
       headers: {
         authorization: 'authorization-text',
       },
-      showUploadList:false,
+      showUploadList:true,
       onChange:this.handleOnChange,
     };
     const uploadColumns = [{
@@ -239,14 +239,14 @@ class Step3 extends React.PureComponent {
         <Form layout="horizontal" className={styles.stepForm}>
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='底稿'>
+              <Form.Item {...formItemLayout} label='委托方资料'>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+                  rules: [{ required: false, message: '委托方资料' }],
                 })(
                   <div>
                     <Upload {...uploadProps}>
                       <Button>
-                        <Icon type="upload" /> 底稿
+                        <Icon type="upload" /> 委托方资料
                       </Button>
                     </Upload>
                     <br />
@@ -255,14 +255,14 @@ class Step3 extends React.PureComponent {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='文档'>
+              <Form.Item {...formItemLayout} label='成果资料'>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+                  rules: [{ required: false, message: '成果资料' }],
                 })(
                   <div>
                     <Upload {...uploadProps}>
                       <Button>
-                        <Icon type="upload" /> 文档
+                        <Icon type="upload" /> 成果资料
                       </Button>
                     </Upload>
                   </div>
@@ -270,14 +270,14 @@ class Step3 extends React.PureComponent {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='图片'>
+              <Form.Item {...formItemLayout} label='图片/视频'>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+                  rules: [{ required: false, message: '图片/视频' }],
                 })(
                   <div>
                     <Upload {...uploadProps}>
                       <Button>
-                        <Icon type="upload" /> 图片
+                        <Icon type="upload" /> 图片/视频
                       </Button>
                     </Upload>
                   </div>
@@ -314,8 +314,8 @@ class Step3 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }} >
-              上一步
+            <Button style={{ left: 400 }} >
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

@@ -38,7 +38,7 @@ import Step10 from './Steps/Step10';
 import Step11 from './Steps/Step11';
 import Step12 from './Steps/Step12';
 import Step13 from './Steps/Step13';
-
+import ApprovalManage from './Steps/ApprovalManage';
 import ChoiceCusModal from '../add/ChoiceCusModal';
 import ConstructUnitModal from '../add/ConstructUnitModal';
 import EditableCell from '../../../components/EditableTable/index';
@@ -502,12 +502,9 @@ class ProjectAddModal extends PureComponent {
 
                     {(
                       choiceTypeKey === `3` && (
-                        <Steps current={current} className={styles.steps} >
-                          {StepOption3.map(item => <Step key={item.title} title={item.title} onClick={() => this.handleCallBack(StepOption3, item)} />)}
-                        </Steps>
+                        <ApprovalManage />
                       )
                     )}
-
                   </div>
                   <div className={styles["steps-action"]}>
                     {(
