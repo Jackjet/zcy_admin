@@ -1,4 +1,4 @@
-import { queryBillTable, addBillTable, updateBillTable,deleteBillTable,getDictTreeByTypeId } from '../services/billTable';
+import { queryBillTable, addBillTable, updateBillTable,deleteBillTable,getDictTreeByTypeId,downloadFile } from '../services/billTable';
 
 export default {
   namespace: 'billTable',
@@ -48,6 +48,13 @@ export default {
         callback(response); // 返回结果
       }
     },
+    *downloadfile({ payload, callback }, { call}) {
+      const response = yield call(downloadFile, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+
   },
 
   reducers: {

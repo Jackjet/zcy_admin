@@ -205,7 +205,7 @@ class Step2 extends React.PureComponent {
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
           <Row className={styles['fn-mb-15']}>
-            <Col span={5} offset={6}>
+            <Col span={5} offset={4}>
               <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
                 {getFieldDecorator('assignor', {
 
@@ -236,7 +236,7 @@ class Step2 extends React.PureComponent {
                 )}
               </Form.Item>
             </Col>
-            <Col span={13} >
+            <Col span={13} className={styles.personlocationn}>
               <Form.Item >
                 {getFieldDecorator('personal', {
                 })(

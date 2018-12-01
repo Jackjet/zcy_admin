@@ -206,7 +206,7 @@ class Step6 extends React.PureComponent {
 
   onChangeTotalProgress = (proProgress, jiheProgress) => {
     this.setState({
-      totalProgressPro: proProgress*0.6+jiheProgress*0.4,
+      totalProgressPro: proProgress/10*(0.7*10)+jiheProgress/10*(0.4*10),
     })
   };
 

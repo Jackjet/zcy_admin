@@ -1,4 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'dva';
 import {
   Row,
@@ -218,10 +219,26 @@ onOpenChange = openKeys => {
     }
   };
 
-  download = (record) =>{
+  view = (record) =>{
+    const w=window.open('about:blank');
+    w.location.href=record.url;
+  }
 
-    location.href= record.url;
-
+// 下载 数据处理函数
+  downloadFile = (record) =>{
+    // 结合隐藏form表单进行react和post接口下载数据
+    let divElement = document.getElementById('downloadDiv');
+    ReactDOM.render(
+      <form action="http://127.0.0.1:1801/api/fileUpload/downloadFile" method="post" target="_blank">
+        <input name="fileName" type="text" value={record.name} />     // 变量参数值
+        <input name="downurl" type="text" value={record.url} />
+      </form>,
+      divElement
+    );
+    ReactDOM.findDOMNode(divElement)
+      .querySelector('form')
+      .submit();
+    ReactDOM.unmountComponentAtNode(divElement);
   };
 
 
@@ -330,9 +347,9 @@ onOpenChange = openKeys => {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a href="">预览</a>
+            <a onClick={() => this.view(record)}>预览</a>
             <Divider type="vertical" />
-            <a href={record.url} download={record.name}>下载</a>
+            <a href={record.url} download={record.name}>下载</a>  {/*onClick={() => this.downloadFile(record)}*/}
             <Divider type="vertical" />
             <a href="">删除</a>
             <Divider type="vertical" />
@@ -369,6 +386,9 @@ onOpenChange = openKeys => {
               />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
+              {/* 隐藏的div Dom结构，用于存放临时form*/}
+              <div id="downloadDiv" style={{ display: 'none' }} />
+
               <div className={styles.tableList}>
                 <div className={styles.tableListForm}>{this.renderForm()}</div>
                 <div className={styles.tableListOperator}>

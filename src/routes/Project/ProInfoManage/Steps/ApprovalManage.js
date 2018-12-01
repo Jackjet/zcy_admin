@@ -229,23 +229,24 @@ class ApprovalManage extends PureComponent {
               >
                 <Card>
                   <Row>
-                    <Col span={23}>
+                    <Col span={24}>
                       <Form.Item {...formItemLayout} label={fieldLabels.name}>
                         {getFieldDecorator('name', {
                           rules: [{ required: false, message: '请输入项目名称' }],
                         })(
-                          <Input placeholder="请输入项目名称" style={{width:'140%'}} />
+                          <Input placeholder="请输入项目名称" style={{width:'100%'}} />
                         )}
                       </Form.Item>
                     </Col>
                   </Row>
-                  <Row className={styles['fn-mb-15']}>
+                  <Row>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.type}>
                         {getFieldDecorator('type', {
                           rules: [{ required: false, message: '请选择项目类别' }],
                         })(
                           <Select
+                            style={{width: 150}}
                             onChange={this.handleProTypeSourceValue}
                             placeholder="请选择项目类别"
                             getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -255,23 +256,23 @@ class ApprovalManage extends PureComponent {
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={8} push={1}>
                       <Form.Item {...formItemLayout} label={fieldLabels.years}>
                         {getFieldDecorator('year', {
                           rules: [{ required: false, message: '请选择年度' }],
                           initialValue: '2018',
                         })(
-                          <Input  placeholder="请选择年度"  />
+                          <Input style={{width: 150}}  placeholder="请选择年度"  />
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={8} push={1}>
                       <Form.Item {...formItemLayout} label={fieldLabels.status}>
                         {getFieldDecorator('status', {
                           rules: [{ required: false, message: '请选择项目状态' }],
                           initialValue: '新建',
                         })(
-                          <Input  placeholder="请选择项目状态" />
+                          <Input style={{width: 150}} placeholder="请选择项目状态" />
                         )}
                       </Form.Item>
                     </Col>
@@ -282,26 +283,26 @@ class ApprovalManage extends PureComponent {
                         {getFieldDecorator('number', {
                           rules: [{ required: false, message: '请输入项目编码' }],
                         })(
-                          <Input  placeholder="自动带出" />
+                          <Input style={{width: 150}} placeholder="自动带出" />
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={8} push={1}>
                       <Form.Item {...formItemLayout} label={fieldLabels.customer}>
                         {getFieldDecorator('customer', {
                           rules: [{ required: false, message: '请选择客户' }],
                         })(
-                          <Search placeholder="请选择客户" />
+                          <Search style={{width: 150  }} placeholder="请选择客户" />
                         )}
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={8} >
                       <Form.Item {...formItemLayout} label="客户联系人">
                         {getFieldDecorator('linkman', {
                           rules: [{ required: false, message: '请选择客户联系人' }],
                         })(
                           <div>
-                            <Input placeholder="请选择客户联系人"  />
+                            <Input style={{width: 105}} placeholder="请选择客户联系人"  />
                             <Divider type="vertical" className={styles['ant-verticalHz']} />
                             <a>新增联系人</a>
                           </div>
@@ -315,7 +316,7 @@ class ApprovalManage extends PureComponent {
                         {getFieldDecorator('company', {
                           rules: [{ required: false, message: '负责公司' }],
                         })(
-                          <Input  placeholder="负责公司" style={{ width: '100%' }} />
+                          <Input  placeholder="负责公司" style={{width: 150}} />
                         )}
                       </Form.Item>
                     </Col>
@@ -324,7 +325,7 @@ class ApprovalManage extends PureComponent {
                         {getFieldDecorator('fzperson', {
                           rules: [{ required: false, message: '项目负责人' }],
                         })(
-                          <Input  placeholder="负责公司" style={{ width: '100%' }} />
+                          <Input  placeholder="负责公司" style={{width: 150}} />
                         )}
                       </Form.Item>
                     </Col>
@@ -333,7 +334,7 @@ class ApprovalManage extends PureComponent {
                         {getFieldDecorator('fzperson', {
                           rules: [{ required: false, message: '项目部门' }],
                         })(
-                          <Input  placeholder="自动带出" style={{ width: '100%' }} />
+                          <Input  placeholder="自动带出" style={{width: 150}} />
                         )}
                       </Form.Item>
                     </Col>
@@ -344,7 +345,7 @@ class ApprovalManage extends PureComponent {
                         {getFieldDecorator('fee', {
                           rules: [{ required: false, message: '请输入项目费用' }],
                         })(
-                          <Input  placeholder="请输入项目费用" style={{ width: '100%' }} />
+                          <Input  placeholder="请输入项目费用" style={{width: 150}} />
                         )}
                       </Form.Item>
                     </Col>
@@ -356,7 +357,7 @@ class ApprovalManage extends PureComponent {
                           <Select
                             onChange={this.handleGetBillSourceValue}
                             placeholder="请选择业务来源"
-                            style={{ width: 200 }}
+                            style={{width: 150}}
                             getPopupContainer={triggerNode => triggerNode.parentNode}
                           >
                             {this.state.BillSourceOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
@@ -369,7 +370,7 @@ class ApprovalManage extends PureComponent {
                         <Col span={8}>
                           <Form.Item {...formItemLayout} label='合伙人'>
                             {getFieldDecorator('partner')(
-                              <Input style={{ width: '100%' }} placeholder="合伙人" />
+                              <Input style={{width: 150}} placeholder="合伙人" />
                             )}
                           </Form.Item>
                         </Col>
@@ -383,7 +384,7 @@ class ApprovalManage extends PureComponent {
                         })(
                           <Search
                             placeholder="施工单位"
-                            style={{ width: 200 }}
+                            style={{width: 150}}
                           />
                         )}
                       </Form.Item>
@@ -392,7 +393,7 @@ class ApprovalManage extends PureComponent {
                       <Form.Item {...formItemLayout} label='合同编号'>
                         {getFieldDecorator('contractCode')(
                           <div>
-                            <Input  style={{ width: '68%' }} placeholder="合同编号" />
+                            <Input  style={{width: 100}} placeholder="合同编号" />
                             <Divider type="vertical"  />
                             <a>新增合同</a>
                           </div>
@@ -405,14 +406,14 @@ class ApprovalManage extends PureComponent {
                       <Form.Item {...formItemLayout} label='开始时间'>
                         {getFieldDecorator('startDate', {
                         })(
-                          <Input  style={{ width: '100%' }} placeholder="请输入开始时间" />
+                          <Input  style={{width: 150}} placeholder="请输入开始时间" />
                         )}
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label="结束时间">
                         {getFieldDecorator('endDate')(
-                          <Input  style={{ width: '100%' }} placeholder="请输入结束时间" />
+                          <Input  style={{width: 150}} placeholder="请输入结束时间" />
                         )}
                       </Form.Item>
                     </Col>
@@ -678,26 +679,7 @@ class ApprovalManage extends PureComponent {
                       </Row>
                     </div>
                   )}
-                  <Form.Item
-                    style={{ marginBottom: 8 }}
-                    wrapperCol={{
-                      xs: { span: 24, offset: 0 },
-                      sm: {
-                        span: formItemLayout.wrapperCol.span,
-                        offset: formItemLayout.labelCol.span,
-                      },
-                    }}
-                    label=""
-                  >
-                      <span>
-                        <Button type="primary" loading={submitting} style={{ left: 400 }}>
-                          保存
-                        </Button>
-                        <Button type="primary" onClick={() => this.handleSubmitProcessVisible(true)} style={{ marginLeft: 8, left: 400 }}>
-                          提交
-                        </Button>
-                      </span>
-                  </Form.Item>
+
                 </Card>
               </TabPane>
               <TabPane
@@ -715,41 +697,15 @@ class ApprovalManage extends PureComponent {
               <Panel header="审批意见" key="2">
                 <Row>
                   <Col lg={12} md={24} sm={24}>
-                    <Form.Item {...formItemLayout} label="父组件id">
+                    <Form.Item {...formItemLayout} label="审批意见">
                       {getFieldDecorator('visitors', {
-                        rules: [{ required: false, message: '父组件id' }],
+                        rules: [{ required: false, message: '审批意见' }],
                       })(
-                        <Input placeholder="请选择拜访对象" />
+                        <TextArea rows={3}  placeholder="请输入审批意见" />
                       )}
                     </Form.Item>
                   </Col>
-                  <Col lg={12} md={24} sm={24}>
-                    <Form.Item {...formItemLayout} label="父组件linkman">
-                      {getFieldDecorator('visitors', {
-                        rules: [{ required: false, message: '父组件linkman' }],
-                      })(
-                        <Input placeholder="请选择拜访对象" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col lg={12} md={24} sm={24}>
-                    <Form.Item {...formItemLayout} label="父组件name">
-                      {getFieldDecorator('visitors', {
-                        rules: [{ required: false, message: '父组件name' }],
-                      })(
-                        <Input placeholder="请选择拜访对象" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                  <Col lg={12} md={24} sm={24}>
-                    <Form.Item {...formItemLayout} label="父组件number">
-                      {getFieldDecorator('visitType', {
-                        rules: [{ required: false, message: '父组件number' }],
-                      })(
-                        <Input placeholder="请选择拜访方式" />
-                      )}
-                    </Form.Item>
-                  </Col>
+
                 </Row>
               </Panel>
             </Collapse>

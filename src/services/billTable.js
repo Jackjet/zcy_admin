@@ -52,6 +52,17 @@ export async function getDictTreeByTypeId(params) {
   });
 }
 
+// 所有树菜单数据字典类型
+export async function downloadFile(params) {
+  return request('/api/fileUpload/downloadFile', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
 
 
 
