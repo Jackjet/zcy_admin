@@ -23,6 +23,7 @@ import {
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
 import MessageModal from './MessageModal';
+import CusApplyApprovalModal from './CusApplyApprovalModal';
 import NewProAssignAddModal from './ProAssignAddModal';
 import ProAssignAddModal from '../projectAssign/ProAssignAddModal';
 import ProjectAddModal from '../Project/ProInfoManage/ProAddModal';
@@ -87,11 +88,12 @@ function callback(key) {
   }
 }
 
-@connect(({ project, activities, chart,sysMessage,loading }) => ({
+@connect(({ project, projectAssignment, activities, chart,sysMessage,loading }) => ({
   project,
   activities,
   chart,
   sysMessage,
+  projectAssignment,
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
   projectMessage: loading.effects['sysMessage/fetchList'],
@@ -114,6 +116,9 @@ export default class Workplace extends PureComponent {
        rowInfo: {},
        rowTextColor: false,  //  false 表示未读  true 已读
        newProAssignAddVisible: false, // 需要配合打开新的指派单modal
+       proAssignInfo: null,
+       cusApplyApprovalVisible: false, // 客户审批界面
+       cusApplyInfo: null,
      };
    //}
 
@@ -195,6 +200,32 @@ export default class Workplace extends PureComponent {
     });
   };
 
+  handleCusApplyApprovalVisible = (flag, sourceId) => {
+    if (sourceId != null) {
+      this.props.dispatch({
+        type: 'cusApplication/getInfoById',
+        payload:{
+          id: sourceId,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.alertMsg);
+          } else {
+            console.log(res.data.list);
+            this.setState({
+              cusApplyInfo: res.data.list,
+              cusApplyApprovalVisible: !!flag,
+            });
+          }
+        },
+      });
+    } else {
+      this.setState({
+        cusApplyApprovalVisible: !!flag,
+      });
+    }
+  };
+
   // 控制项目信息弹窗
   handleMessageInfoVisible = (flag) => {
     this.setState({
@@ -203,30 +234,67 @@ export default class Workplace extends PureComponent {
   };
 
   // 需要配合打开新的指派单modal
-  handleNewProAssignVisible = (flag) => {
-    this.setState({
-      newProAssignAddVisible: !!flag,
-    });
+  handleNewProAssignVisible = (flag, sourceId) => {
+    if (sourceId != null) {
+      this.props.dispatch({
+        type: 'projectAssignment/getInfoById',
+        payload:{
+          id: sourceId,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.alertMsg);
+          } else {
+            console.log(res.data.list);
+            this.setState({
+              proAssignInfo: res.data.list,
+              newProAssignAddVisible: !!flag,
+            });
+          }
+        },
+      });
+    } else {
+        this.setState({
+          newProAssignAddVisible: !!flag,
+        });
+    }
+
   };
 
   // 根据当前行的id, 查询对应的项目信息
   GetMsgVisible = (flag, record) => {
-
+    this.props.dispatch({
+      type: 'sysMessage/update', // 接口修改项目接口
+      payload:{
+        id: record.id, // 点击行的项目id
+        status: 1,
+      },
+    });
     if(record.bizType){
         if(record.bizType === 110){  // 新建项目
+
+          this.handleProAddVisible(true);
 
         }else if(record.bizType === 80){ // 审批项目
 
         }else if(record.bizType === 90){ // 审批客户
-
+          this.handleCusApplyApprovalVisible(true, record.sourceId);
         }else if(record.bizType === 100){ // 需要配合指派 打开新的指派单（项目名称，部门经理，项目经理，配合项目经理（带入上一次的指派单上的项目经理），说明，）
-          this.handleNewProAssignVisible(true);
+          this.handleNewProAssignVisible(true, record.sourceId);
         }
     }else {
        // 提示消息
     }
 
     this.props.dispatch({
+      type: 'sysMessage/fetchList',
+      payload:{
+        page:1,
+        pageSize:10,
+      },
+    });
+
+    /*this.props.dispatch({
       type: 'cusApplication/fetch', // 接口修改项目接口
       payload:{
         id: '0489342eee0811e88aa5186024a65a7c',  // 点击行的项目id
@@ -241,7 +309,7 @@ export default class Workplace extends PureComponent {
           });
         }
       },
-    });
+    });*/
   };
 
   handleRangePickerChange = rangePickerValue => {
@@ -266,6 +334,23 @@ export default class Workplace extends PureComponent {
 
   handleViewInfo = () => {
     console.log("双击了");
+  };
+
+  pushCenterMsg = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'project/fetchNotice',
+    });
+    dispatch({
+      type: 'activities/fetchList',
+    });
+    dispatch({
+      type: 'sysMessage/fetchList',
+      payload:{
+        page:1,
+        pageSize:10,
+      },
+    });
   };
 
   isActive(type) {
@@ -378,6 +463,8 @@ export default class Workplace extends PureComponent {
 
 
 
+
+
   render() {
     const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading } = this.props;
     const {
@@ -391,6 +478,9 @@ export default class Workplace extends PureComponent {
       messageInfoVisible,
       newProAssignAddVisible,
       rowInfo,
+      proAssignInfo,
+      cusApplyApprovalVisible,
+      cusApplyInfo,
     } = this.state;
 
     const columns = [
@@ -412,6 +502,7 @@ export default class Workplace extends PureComponent {
             value: 20,
           },
         ],
+        width: 100,
         onFilter: (value, record) => record.priority.toString() === value,
         render(val) {
           if(val === 20){
@@ -431,8 +522,13 @@ export default class Workplace extends PureComponent {
         dataIndex: 'title',
       },
       {
+        title: '内容',
+        dataIndex: 'body',
+      },
+      {
         title: '发送时间',
         dataIndex: 'sendTime',
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '发送人',
@@ -441,6 +537,7 @@ export default class Workplace extends PureComponent {
       {
         title: '状态',
         dataIndex: 'status',
+        width: 150,
         filters: [
           {
             text: status[0],
@@ -565,6 +662,7 @@ export default class Workplace extends PureComponent {
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
       handleScheduleAddVisible: this.handleScheduleAddVisible,
       handleMessageInfoVisible: this.handleMessageInfoVisible,
+      handleCusApplyApprovalVisible: this.handleCusApplyApprovalVisible,
     };
 
     return (
@@ -647,7 +745,7 @@ export default class Workplace extends PureComponent {
             >
               <Tabs
                 defaultActiveKey="notice"
-                onChange={this.callback}
+                onChange={this.pushCenterMsg}
                 tabBarExtraContent={moreMessage}
               >
                 <TabPane
@@ -693,6 +791,7 @@ export default class Workplace extends PureComponent {
                     </span>
                   }
                   key="projctMes"
+                  onTabClick={() => this.handleMessageInfoVisible(true)}
                 >
                   <StandardTable
                     loading={projectMessage}
@@ -1280,8 +1379,9 @@ export default class Workplace extends PureComponent {
         />
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
         <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
-        <NewProAssignAddModal {...parentMethods} newProAssignAddVisible={newProAssignAddVisible} />
-        <MessageModal  {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
+        <NewProAssignAddModal {...parentMethods} newProAssignAddVisible={newProAssignAddVisible} proAssignInfo={proAssignInfo} />
+        <MessageModal {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
+        <CusApplyApprovalModal {...parentMethods} cusApplyApprovalVisible={cusApplyApprovalVisible} cusApplyInfo={cusApplyInfo} />
       </PageHeaderLayout>
     );
   }

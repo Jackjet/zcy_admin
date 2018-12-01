@@ -1,4 +1,4 @@
-import { addCusApplication, queryCusApplication,updateCusApplication ,deleteCusApplication, statusCancelCancel, getDictByCondition  } from '../services/cusApplication';
+import { addCusApplication, queryCusApplication,updateCusApplication ,deleteCusApplication, statusCancelCancel, getDictByCondition, getInfoById  } from '../services/cusApplication';
 
 export default {
   namespace: 'cusApplication',
@@ -51,6 +51,12 @@ export default {
     },
     *getDict({ payload, callback }, { call }) {
       const response = yield call(getDictByCondition, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
+    *getInfoById({ payload, callback }, { call }) {
+      const response = yield call(getInfoById, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

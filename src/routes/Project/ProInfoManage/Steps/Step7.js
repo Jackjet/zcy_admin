@@ -254,17 +254,6 @@ class Step7 extends React.PureComponent {
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
             <Col>
               <Form.Item label="事由">
                 {getFieldDecorator('zhipaiCode')(
@@ -308,8 +297,8 @@ class Step7 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }}>
-              上一步
+            <Button style={{ left: 400 }}>
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

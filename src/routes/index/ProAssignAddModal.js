@@ -41,8 +41,11 @@ class ProAssignAddModal extends PureComponent {
     executorVisible: false,
     rowInfo:{},
     executorMsg:``,
-    deptMsg:``,
     proMsg:``,
+    deptMsg:``,
+    deptVal:``,
+    proVal:``,
+    inputParamName:``,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -63,15 +66,19 @@ class ProAssignAddModal extends PureComponent {
     });
   };
 
-  handleProMsg = (text) => {
+  // 控制项目信息弹窗
+  handleProMsg = (arrayList) => {
     this.setState({
-      proMsg: text,
+      proMsg: arrayList[0].name,
+      proVal: arrayList[0].number,
     });
   };
 
-  handleDeptMsg = (text) => {
+  // 控制部门信息弹窗
+  handleDeptMsg = (arrayList) => {
     this.setState({
-      deptMsg: text,
+      deptMsg: arrayList[0].name,
+      deptVal: arrayList[0].number,
     });
   };
 
@@ -82,10 +89,17 @@ class ProAssignAddModal extends PureComponent {
     });
   };
 
+  /*handeleChangePartnerName = () => {
+    if(this.props.proAssignInfo.partner === "16666666666") {
+      return "职员";
+    }
+  };*/
+
   // 根据当前行的id, 查询对应的项目信息
-  GetMsgVisible = (flag) => {
+  GetMsgVisible = (flag, obj) => {
     this.setState({
       executorVisible: !!flag,
+      inputParamName: obj,
     });
   };
 
@@ -98,8 +112,8 @@ class ProAssignAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, newProAssignAddVisible, handleNewProAssignVisible } = this.props;
-    const { showPartnerVisible, executorVisible, executorMsg, deptMsg, proMsg } = this.state;
+    const { form, dispatch, newProAssignAddVisible, handleNewProAssignVisible, proAssignInfo }  = this.props;
+    const { showPartnerVisible, executorVisible, executorMsg, deptMsg, proMsg, inputParamName } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll} = form;
     const parentMethods = {
       handleExecutorVisible: this.handleExecutorVisible,
@@ -110,14 +124,21 @@ class ProAssignAddModal extends PureComponent {
     };
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
+        const valiValues = {
+          ...values,
+          uid: JSON.parse(localStorage.getItem("user")).id,
+          leaderId: this.state.deptVal,
+          proManagerId: this.state.proVal,
+          partner: values.partner === "职员"?"16666666666":values.partner === "分管领导"?"18888888888":values.partner === "15857112486"?"项目经理" :"",
+        };
         if (!error) {
           // submit the values
           dispatch({
             type: 'projectAssignment/add',
-            payload: values,
+            payload: valiValues,
             callback: (res) => {
               if(res.meta.status === '000000' ) {
-                handleNewProAssignVisible(false);
+                handleNewProAssignVisible(false, null);
               } else {
                 message.error(res.meta.errmsg);
               }
@@ -127,7 +148,8 @@ class ProAssignAddModal extends PureComponent {
       });
     };
     const resetDate = () =>{
-      handleNewProAssignVisible(false);
+      console.log(this.props.proAssignInfo);
+      handleNewProAssignVisible(false, null);
       this.setState({
         showPartnerVisible: false,
         executorMsg: ``,
@@ -156,6 +178,7 @@ class ProAssignAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.projectName}>
                     {getFieldDecorator('name', {
                       rules: [{ required: false, message: '请输入项目名称' }],
+                      initialValue: proAssignInfo == null? "" : proAssignInfo.name,
                     })(
                       <Input placeholder="请输入项目名称" style={{width:'100%'}} />
                     )}
@@ -172,7 +195,7 @@ class ProAssignAddModal extends PureComponent {
                       <Search
                         readOnly
                         placeholder="部门经理"
-                        onSearch={() => this.GetMsgVisible(true)}
+                        onSearch={() => this.GetMsgVisible(true,"departmentId")}
                       />
                     )}
                   </Form.Item>
@@ -188,7 +211,7 @@ class ProAssignAddModal extends PureComponent {
                       <Search
                         readOnly
                         placeholder="项目经理"
-                        onSearch={() => this.GetMsgVisible(true)}
+                        onSearch={() => this.GetMsgVisible(true,"projectId")}
                       />
                     )}
                   </Form.Item>
@@ -197,8 +220,9 @@ class ProAssignAddModal extends PureComponent {
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label="配合项目经理">
-                    {getFieldDecorator('peihe', {
+                    {getFieldDecorator('cooperateManager', {
                       rules: [{ required: false, message: '配合项目经理' }],
+                      initialValue: proAssignInfo == null? "" :  proAssignInfo.partner === "16666666666"?"职员":proAssignInfo.partner === "18888888888"?"分管领导":"项目经理",
                     })(
                       <Search
                         readOnly
@@ -209,24 +233,6 @@ class ProAssignAddModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              {(showPartnerVisible === true )&&(
-                <Row className={styles['fn-mb-15']}>
-                  <Col>
-                    <Form.Item {...formItemLayout} label="合伙人">
-                      {getFieldDecorator('partner', {
-                        rules: [{ required: false, message: '合伙人' }],
-                        initialValue: executorMsg,
-                      })(
-                        <Search
-                          readOnly
-                          placeholder="请选择合伙人"
-                          onSearch={() => this.GetMsgVisible(true)}
-                        />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </Row>
-              )}
               <Row className={styles['fn-mb-15']}>
                 <Col>
                   <Form.Item {...formItemLayout} label={fieldLabels.explain}>
@@ -240,7 +246,7 @@ class ProAssignAddModal extends PureComponent {
               </Row>
             </Form>
           </Card>
-          <ExecutorModal  {...parentMethods} executorVisible={executorVisible} />
+          <ExecutorModal  {...parentMethods} executorVisible={executorVisible} inputParamName={inputParamName} />
         </div>
       </Modal>
 

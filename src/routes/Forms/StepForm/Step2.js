@@ -83,9 +83,6 @@ class Step2 extends React.PureComponent {
           <Button type="primary" onClick={onValidateForm} loading={submitting}>
             提交
           </Button>
-          <Button onClick={onPrev} style={{ marginLeft: 8 }}>
-            上一步
-          </Button>
         </Form.Item>
       </Form>
     );

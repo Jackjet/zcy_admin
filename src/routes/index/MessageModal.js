@@ -147,7 +147,7 @@ class MessageModal extends PureComponent {
       <Modal
         destroyOnClose="true"
         keyboard={false}
-        title="项目信息详情"
+        title="项目信息审批"
         style={{ top: 20 }}
         // 对话框是否可见
         visible={messageInfoVisible}
@@ -169,12 +169,12 @@ class MessageModal extends PureComponent {
           <Card>
             <Form layout="horizontal">
               <Collapse defaultActiveKey={['1']} >
-                <Panel header="项目信息" key="1">
+                <Panel header="信息及流程图" key="1">
                   <Tabs defaultActiveKey="1">
                     <TabPane
                       tab={
                         <span>
-                          <Icon type="copy" />基本信息
+                          <Icon type="copy" />项目基本信息
                         </span>
                       }
                       key="1"

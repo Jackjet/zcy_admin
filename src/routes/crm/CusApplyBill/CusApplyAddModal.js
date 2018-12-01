@@ -84,27 +84,28 @@ class CusApplyAddModal extends PureComponent {
           // }
           // submit the values
           dispatch({
-              type: 'cusApplication/add',
-              payload: {
-                ...values,
-                status: 1,
+            type: 'cusApplication/add',
+            payload: {
+              ...values,
+              status: 1,
+              uid: JSON.parse(localStorage.getItem("user")).id,
+            },
+            callback: (res) => {
+              if(res.meta.status === '000000' ) {
+                dispatch({
+                  type: 'cusApplication/fetch',
+                  payload: {
+                    page: 1,
+                    pageSize: 10,
+                  },
+                });
+                handleCusApplyAddVisible(false, true);
+                message.success('新增完成!');
+              } else {
+                message.error(res.meta.errmsg);
+              }
               },
-              callback: (res) => {
-                if(res.meta.status === '000000' ) {
-                  dispatch({
-                    type: 'cusApplication/fetch',
-                    payload: {
-                      page: 1,
-                      pageSize: 10,
-                    },
-                  });
-                  handleCusApplyAddVisible(false, true);
-                  message.success('新增完成!');
-                } else {
-                  message.error(res.meta.errmsg);
-                }
-              },
-            });
+          });
         }
       });
     };

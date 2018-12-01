@@ -250,18 +250,6 @@ class Step6 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={21} pull={3}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{

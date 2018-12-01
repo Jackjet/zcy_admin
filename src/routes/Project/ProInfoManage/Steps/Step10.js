@@ -252,17 +252,6 @@ class Step6 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={21} pull={3}>
-              <Form.Item {...formItemLayout} label='工程造价咨询业务表'>
-                {getFieldDecorator('contractCode')(
-                  <Select onChange={this.handleBillTableOptionTable} placeholder="工程造价咨询业务表" style={{ width: 200 }} >
-                    {BillTableOptionTable}
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
           <Row className={styles['fn-mb-15']}>
             <Col span={24} pull={4}>
               <Form.Item {...formItemLayout} label="备注">
@@ -285,8 +274,8 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button onClick={onPrev} style={{ left: 400 }}>
-              上一步
+            <Button style={{ left: 400 }}>
+              保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交

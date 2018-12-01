@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '../../components/StandardTable/index';
 import styles from './Style.less';
-import picture from './test.png';
+import picture from './proApproval.png';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

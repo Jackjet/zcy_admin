@@ -23,7 +23,9 @@ import {
 } from 'antd';
 import { Chart, Axis, Geom, Tooltip, Coord, Label, Legend, Guide } from 'bizcharts';
 import { Bar } from '../../components/Charts';
+import NewProAssignAddModal from './ProAssignAddModal';
 import ProAssignAddModal from '../projectAssign/ProAssignAddModal';
+import CusApplyApprovalModal from './CusApplyApprovalModal';
 import ProjectAddModal from '../Project/ProInfoManage/ProAddModal';
 import ScheduleAddModal from '../schedule/ScheduleAddModal';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -111,6 +113,11 @@ export default class WorkplacePerson extends PureComponent {
        pageSizeCurrent: ``,
        messageInfoVisible: false,
        rowInfo: ``,
+       rowTextColor: false,  //  false 表示未读  true 已读
+       newProAssignAddVisible: false, // 需要配合打开新的指派单modal
+       proAssignInfo: null,
+       cusApplyApprovalVisible: false, // 客户审批界面
+       cusApplyInfo: null,
      };
    //}
 
@@ -182,11 +189,71 @@ export default class WorkplacePerson extends PureComponent {
     });
   };
 
+  handleProAssignAddVisible = flag => {
+    this.setState({
+      proAssignAddVisible: !!flag,
+    });
+  };
+
+  handleCusApplyApprovalVisible = (flag, sourceId) => {
+    if (sourceId != null) {
+      this.props.dispatch({
+        type: 'cusApplication/getInfoById',
+        payload:{
+          id: sourceId,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.alertMsg);
+          } else {
+            console.log(res.data.list);
+            this.setState({
+              cusApplyInfo: res.data.list,
+              cusApplyApprovalVisible: !!flag,
+            });
+          }
+        },
+      });
+    } else {
+      this.setState({
+        cusApplyApprovalVisible: !!flag,
+      });
+    }
+  };
+
   // 控制项目信息弹窗
   handleMessageInfoVisible = (flag) => {
     this.setState({
       messageInfoVisible: !!flag,
     });
+  };
+
+  // 需要配合打开新的指派单modal
+  handleNewProAssignVisible = (flag, sourceId) => {
+    if (sourceId != null) {
+      this.props.dispatch({
+        type: 'projectAssignment/getInfoById',
+        payload:{
+          id: sourceId,
+        },
+        callback: res => {
+          if (res.meta.status !== '000000') {
+            message.error(res.meta.alertMsg);
+          } else {
+            console.log(res.data.list);
+            this.setState({
+              proAssignInfo: res.data.list,
+              newProAssignAddVisible: !!flag,
+            });
+          }
+        },
+      });
+    } else {
+      this.setState({
+        newProAssignAddVisible: !!flag,
+      });
+    }
+
   };
 
   // 根据当前行的id, 查询对应的项目信息
@@ -198,6 +265,21 @@ export default class WorkplacePerson extends PureComponent {
         status: 1,
       },
     });
+    if(record.bizType){
+      if(record.bizType === 110){  // 新建项目
+
+        this.handleProAddVisible(true);
+
+      }else if(record.bizType === 80){ // 审批项目
+
+      }else if(record.bizType === 90){ // 审批客户
+        this.handleCusApplyApprovalVisible(true, record.sourceId);
+      }else if(record.bizType === 100){ // 需要配合指派 打开新的指派单（项目名称，部门经理，项目经理，配合项目经理（带入上一次的指派单上的项目经理），说明，）
+        this.handleNewProAssignVisible(true, record.sourceId)
+      }
+    }else {
+      // 提示消息
+    }
     this.props.dispatch({
       type: 'sysMessage/fetchList',
       payload:{
@@ -205,7 +287,7 @@ export default class WorkplacePerson extends PureComponent {
         pageSize:10,
       },
     });
-    this.props.dispatch({
+    /*this.props.dispatch({
       type: 'cusApplication/fetch', // 接口修改项目接口
       payload:{
         id: '0489342eee0811e88aa5186024a65a7c',  // 点击行的项目id
@@ -220,7 +302,7 @@ export default class WorkplacePerson extends PureComponent {
           });
         }
       },
-    });
+    });*/
   };
 
   // 项目新增显示隐藏方法
@@ -230,11 +312,6 @@ export default class WorkplacePerson extends PureComponent {
     });
   };
 
-  handleProAssignAddVisible = flag => {
-    this.setState({
-      proAssignAddVisible: !!flag,
-    });
-  };
 
   handleRangePickerChange = rangePickerValue => {
     this.setState({
@@ -369,6 +446,23 @@ export default class WorkplacePerson extends PureComponent {
 
 
   render() {
+    const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading  } = this.props;
+    const {
+      ScheduleAddVisible,
+      projectTemAuthVisible,
+      projectAssigVisible,
+      rangePickerValue,
+      timeValue,
+      proAddVisible,
+      proAssignAddVisible,
+      currentUser,
+      messageInfoVisible,
+      newProAssignAddVisible,
+      rowInfo,
+      proAssignInfo,
+      cusApplyApprovalVisible,
+      cusApplyInfo,
+    } = this.state;
     const columns = [
       {
         title: '优先级',
@@ -389,13 +483,13 @@ export default class WorkplacePerson extends PureComponent {
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          if(val ==20){
+          if(val === 20){
             return <Badge status={msgPriority[2]} text={msgPriority[2]} />;
           }
-          if(val ==10){
+          if(val === 10){
             return <Badge status={msgPriority[1]} text={msgPriority[1]} />;
           }
-          if(val ==0){
+          if(val === 0){
             return <Badge status={msgPriority[0]} text={msgPriority[0]} />;
           }
         },
@@ -403,6 +497,10 @@ export default class WorkplacePerson extends PureComponent {
       {
         title: '主题',
         dataIndex: 'title',
+      },
+      {
+        title: '内容',
+        dataIndex: 'body',
       },
       {
         title: '发送时间',
@@ -432,15 +530,6 @@ export default class WorkplacePerson extends PureComponent {
       },
     ];
 
-    const {currentUser,timeValue, proAddVisible, proAssignAddVisible} =  this.state;
-    const {
-      ScheduleAddVisible,
-      projectTemAuthVisible,
-      projectAssigVisible,
-      rangePickerValue,
-      messageInfoVisible,
-      rowInfo,
-    } = this.state;
     const moreCharts = (
       <a onClick={() => this.handleLink()}>
         <span style={{ paddingRight: 15 }}>更多图表</span>
@@ -451,7 +540,6 @@ export default class WorkplacePerson extends PureComponent {
         <span style={{ paddingRight: 15 }}>更多</span>{' '}
       </a>
     );
-    const { sysMessage : { messageData },activitiesLoading,projectMessage, chart, loading  } = this.props;
     const { salesData } = chart;
     const salesExtra = (
       <div className={styles.salesExtraWrap}>
@@ -547,6 +635,8 @@ export default class WorkplacePerson extends PureComponent {
       handleProjectAssignmentAddVisible: this.handleProjectAssignmentAddVisible,
       handleScheduleAddVisible: this.handleScheduleAddVisible,
       handleMessageInfoVisible: this.handleMessageInfoVisible,
+      handleCusApplyApprovalVisible: this.handleCusApplyApprovalVisible,
+      handleNewProAssignVisible: this.handleNewProAssignVisible,
     };
 
     return (
@@ -811,6 +901,8 @@ export default class WorkplacePerson extends PureComponent {
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
         <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
         <MessageModal  {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
+        <NewProAssignAddModal {...parentMethods} newProAssignAddVisible={newProAssignAddVisible} proAssignInfo={proAssignInfo} />
+        <CusApplyApprovalModal cusApplyApprovalVisible={cusApplyApprovalVisible} cusApplyInfo={cusApplyInfo} />
       </PageHeaderLayout>
     );
   }

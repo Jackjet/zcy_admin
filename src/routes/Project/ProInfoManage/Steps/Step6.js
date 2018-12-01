@@ -20,8 +20,10 @@ import {
   message,
   Slider,
   Progress,
+  InputNumber,
 } from 'antd';
 import moment from "moment/moment";
+import GenerateReportModal from '../GenerateReportModal';
 import { routerRedux } from 'dva/router';
 import styles from './style.less';
 
@@ -119,6 +121,8 @@ const formItemLayout = {
   },
 };
 
+
+
 @Form.create()
 class Step6 extends React.PureComponent {
   state = {
@@ -127,6 +131,10 @@ class Step6 extends React.PureComponent {
     ProTypeOptionData:``,
     TestOption:``,
     ProTypeValue:``,
+    proProgress:0,
+    jiheProgress:0,
+    totalProgressPro: 0,
+    generateReportVisible: false,
   };
   componentDidMount() {
     this.handleBillSourceOption();
@@ -170,10 +178,43 @@ class Step6 extends React.PureComponent {
   }; // 获取业务来源的Option的值
 
 
+   onChangeProgressPro = (value) => {
+    console.log('changed', value);
+    this.setState({
+      proProgress: value,
+    })
+  };
+
+   // 报告显示
+  handleGenerateReportVisible = (flag) => {
+    if (this.state.totalProgressPro !== 100){
+      message.warning("项目总进度为完成至100%");
+      return false;
+    } else {
+      this.setState({
+        generateReportVisible: !!flag,
+      });
+    }
+  };
+
+  onChangeProgressJihe = (value) => {
+    console.log('changed', value);
+    this.setState({
+      jiheProgress: value,
+    })
+  };
+
+  onChangeTotalProgress = (proProgress, jiheProgress) => {
+    this.setState({
+      totalProgressPro: proProgress*0.6+jiheProgress*0.4,
+    })
+  };
+
+
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue } = this.state;
+    const { generateReportVisible, BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, jiheProgress, proProgress, totalProgressPro } = this.state;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -193,6 +234,11 @@ class Step6 extends React.PureComponent {
         }
       });
     };
+
+    const parentMethods = {
+      handleGenerateReportVisible: this.handleGenerateReportVisible,
+    };
+
     const marks = {
       0: '0%',
       20: '20%',
@@ -215,78 +261,87 @@ class Step6 extends React.PureComponent {
                   {getFieldDecorator('contractCode', {
                     rules: [{ required: false, message: '项目总进度' }],
                   })(
-                    <div>
-                      <Progress percent={80} status="active" strokeColor />
-                    </div>
+                    <Progress percent={totalProgressPro} strokeColor />
                   )}
                 </Form.Item>
               </Col>
             </Row>
             <Row>
               <Col span={23} pull={3}>
-                <Form.Item {...formItemLayout} label="资料上传">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '资料上传' }],
+                <Form.Item {...formItemLayout} label="工程量计算">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '工程量计算' }],
+                    initialValue:100,
                   })(
-                    <div>
-                      <Slider marks={marks} step={null} defaultValue={50} />
-                    </div>
+                    <Progress percent={proProgress} strokeColor />
                   )}
                 </Form.Item>
               </Col>
-              <Col span={12} >
-                <Form.Item {...formItemLayout} label="修改人">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '修改人' }],
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
                   })(
-                    <Input placeholder='修改人' />
+                    <InputNumber
+                      min={0}
+                      max={100}
+                      step={10}
+                      formatter={value => `${value}%`}
+                      parser={value => value.replace('%', '')}
+                      onChange={this.onChangeProgressPro}
+                    />
                   )}
                 </Form.Item>
               </Col>
-              <Col span={12} pull={1} >
-                <Form.Item {...formItemLayout} label="修改时间">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '修改时间' }],
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
+                    rules: [{ required: false, message: '说明' }],
                   })(
-                    <Input placeholder='修改时间' />
+                    <Input placeholder='说明' />
                   )}
                 </Form.Item>
               </Col>
             </Row>
             <Row>
               <Col span={23} pull={3}>
-                <Form.Item {...formItemLayout} label="实施方案">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '实施方案' }],
+                <Form.Item {...formItemLayout} label="项目组稽核">
+                  {getFieldDecorator('jihe', {
+                    rules: [{ required: false, message: '项目组稽核' }],
                   })(
-                    <div>
-                      <Slider marks={marks} step={null} defaultValue={30} />
-                    </div>
+                    <Progress percent={jiheProgress} strokeColor />
                   )}
                 </Form.Item>
               </Col>
-              <Col span={12} >
-                <Form.Item {...formItemLayout} label="修改人">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '修改人' }],
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishjihe', {
+                    rules: [{ required: false, message: '已完成' }],
                   })(
-                    <Input placeholder='修改人' />
+                    <InputNumber
+                      min={0}
+                      max={100}
+                      step={10}
+                      formatter={value => `${value}%`}
+                      parser={value => value.replace('%', '')}
+                      onChange={this.onChangeProgressJihe}
+                    />
                   )}
                 </Form.Item>
               </Col>
-              <Col span={12} pull={1} >
-                <Form.Item {...formItemLayout} label="修改时间">
-                  {getFieldDecorator('contractCode', {
-                    rules: [{ required: false, message: '修改时间' }],
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('jiheShuoming', {
+                    rules: [{ required: false, message: '说明' }],
                   })(
-                    <Input placeholder='修改时间' />
+                    <Input placeholder='说明' />
                   )}
                 </Form.Item>
               </Col>
             </Row>
           </Card>
 
-          <Collapse defaultActiveKey={['1','2','3']} >
+       {/*   <Collapse defaultActiveKey={['1','2','3']} >
             <Panel header="结算" key="1">
               <Row className={styles['fn-mb-15']}>
                 <Col span={8}>
@@ -412,7 +467,7 @@ class Step6 extends React.PureComponent {
                 </Col>
               </Row>
             </Panel>
-          </Collapse>
+          </Collapse>*/}
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{
@@ -424,11 +479,15 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} style={{ left: 400 }}>
-              提交
+            <Button onClick={this.onChangeTotalProgress(proProgress, jiheProgress)} style={{ left: 400 }}>
+              保存
+            </Button>
+            <Button type="primary" onClick={() =>this.handleGenerateReportVisible(true)} style={{ marginLeft: 8,  left: 400 }}>
+              编辑报告
             </Button>
           </Form.Item>
         </Form>
+        <GenerateReportModal {...parentMethods} generateReportVisible={generateReportVisible} />
       </Card>
     );
   }
