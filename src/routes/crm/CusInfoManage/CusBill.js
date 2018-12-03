@@ -261,7 +261,7 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 客户查看界面
+  // 隐藏和显示 <客户> 查看界面
   handleCustomerViewVisible = (flag, reocrd) => {
     this.setState({
       customerViewVisible: !!flag,
@@ -413,11 +413,11 @@ export default class CustomerList extends PureComponent {
         title: '操作',
         width: 200,
         fixed: 'right',
-        render: (text, record, index) => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看</a>
+            <a onClick={() => this.handleCustomerViewVisible(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+            <a onClick={() => this.handleCustomerEditVisible(true, record)}>编辑</a>
             {record.status === 1 && (
               <span>
                 <Divider type="vertical" />
@@ -439,11 +439,11 @@ export default class CustomerList extends PureComponent {
       },
     ];
 
-    const ParentMethods = {
+    const parentMethods = {
       handleCustomerAddVisible: this.handleCustomerAddVisible,
       handleCustomerEditVisible: this.handleCustomerEditVisible,
       handleContactsVisible: this.handleContactsVisible,
-      handleTabsViewVisible: this.handleTabsViewVisible,
+      handleCustomerViewVisible: this.handleCustomerViewVisible,
       /*handleCustomerDistributionVisible: this.handleCustomerDistributionVisible,*/
     };
     return (
@@ -500,10 +500,10 @@ export default class CustomerList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CusAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
-        <CusEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
-        <CusViewTabs {...ParentMethods} customerViewVisible={customerViewVisible} rowInfo={rowInfo} />
+        <CusAddModal {...parentMethods} customerAddVisible={customerAddVisible} />
+        <CusEditModal {...parentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
+        <ContactsAddModal {...parentMethods} contactsVisible={contactsVisible} />
+        <CusViewTabs {...parentMethods} customerViewVisible={customerViewVisible} rowInfo={rowInfo} />
         {/*<CusDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />*/}
       </PageHeaderLayout>
     );

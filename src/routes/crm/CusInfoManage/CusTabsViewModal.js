@@ -216,8 +216,8 @@ class CustomerViewTabs extends PureComponent {
       form,
       dispatch,
       submitting,
-      tabsViewVisible,
-      handleTabsViewVisible,
+      customerViewVisible,
+      handleCustomerViewVisible,
       rowInfo,
       rule: { data },
       loading,
@@ -239,13 +239,14 @@ class CustomerViewTabs extends PureComponent {
             type: 'rule/add',
             payload: values,
           });
-          message.success('添加成功bbb');
+          handleCustomerViewVisible(false);
+          message.success('添加成功');
         }
       });
     };
-    const cancelDate = () => {
+    const cancel = () => {
       form.resetFields();
-      handleTabsViewVisible(false);
+      handleCustomerViewVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -484,11 +485,11 @@ class CustomerViewTabs extends PureComponent {
         keyboard={false}
         title="客户基本信息查看"
         style={{ top: 20 }}
-        visible={tabsViewVisible}
+        visible={customerViewVisible}
         width="80%"
         maskClosable={false}
         onOk={validate}
-        onCancel={cancelDate}
+        onCancel={cancel}
         footer={
           <Button type="primary" onClick={validate}>知道了</Button>
         }  // 在button外面加上数据，会报迭代没有设置key属性值
