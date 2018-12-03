@@ -32,6 +32,8 @@ const { Option } = Select;
 const { confirm } = Modal;
 const { Content, Sider } = Layout;
 const FormItem = Form.Item;
+
+// 遍历key 用于table组件的分页器
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -59,20 +61,20 @@ export default class CustomerList extends PureComponent {
   state = {
     customerAddVisible: false,  // 客户增加状态
     customerEditVisible: false,  // 客户编辑状态
+    customerViewVisible: false,  // 客户查看状态
     contactsVisible: false,  // 联系人状态
-    tabsViewVisible: false,  // 客户查看状态
     /*customerDistributionVisible: false, // 客户分配*/
     selectedRows: [],  // 选中的行
     formValues: {}, // 接收查询输入框的值
     rowInfo: {}, // 当前操作行的数据
-    pageCurrent:``, // 当前行
-    pageSizeCurrent:``, // 当前页大小
+
     orgTreeMenu:[],
     openKey: '',
     selectedKey:'',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
+  // 生命周期方法 加载页面
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -99,38 +101,33 @@ export default class CustomerList extends PureComponent {
         }
       },
     });
-  }  // 生命周期方法 加载页面
+  }
 
+  // 分页器分页方法
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
     const params = {
       page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
-    this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
-    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
       type: 'cusInfoManage/fetch',
       payload: params,
     });
-  }; // 分页器
+  };
 
+  // 搜索重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -146,11 +143,11 @@ export default class CustomerList extends PureComponent {
         } else {
           message.success('重置完成!');
         }
-
       },
     });
-  }; // 搜索重置方法
+  };
 
+  // 选中行删除方法
   handleDeleteMoreClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -164,7 +161,7 @@ export default class CustomerList extends PureComponent {
         dispatch({
           type: 'company/remove',
           payload: {
-            no: selectedRows.map(row => row.no).join(','),
+            ids: selectedRows.map(row => row.id).join(','),
           },
         });
         message.success('删除成功');
@@ -176,9 +173,10 @@ export default class CustomerList extends PureComponent {
     this.setState({
       selectedRows: [],
     });
-  };  // 选中行删除方法
+  };
 
-  showDeleteMessage =(flag, record)=> {
+  // 信息单个删除方法
+  handleDeleteMsg =(flag, record)=> {
     const { dispatch } = this.props;
     dispatch({
       type: 'cusInfoManage/remove',
@@ -196,8 +194,8 @@ export default class CustomerList extends PureComponent {
           dispatch({
             type: 'cusInfoManage/fetch',
             payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
+              page: res.data.pagination.page,
+              pageSize: res.data.pagination.pageSize,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -206,14 +204,16 @@ export default class CustomerList extends PureComponent {
 
       },
     });
-  }; // 信息单个删除方法
+  };
 
+  // 获取选中的行
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  }; // 获取选中的行
+  };
 
+  // 查询方法
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -234,39 +234,23 @@ export default class CustomerList extends PureComponent {
           } else {
             this.setState({
               selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
             });
             message.success('查询完成!');
           }
         },
       });
     });
-  }; // 查询方法
+  };
 
-  handleCustomerEditVisible = flag => {
+  // 隐藏和显示 <客户> 编辑界面
+  handleCustomerEditVisible = (flag, record )=> {
     this.setState({
       customerEditVisible: !!flag,
+      rowInfo: record,
     });
-    if(!flag){
-      this.props.dispatch({
-        type: 'cusInfoManage/fetch',
-        payload: {
-          page: this.state.pageCurrent,
-          pageSize: this.state.pageSizeCurrent,
-        },
-        callback: (res) => {
-          if(res.meta.status === '000000' ) {
+  };
 
-          } else {
-            message.error(res.meta.errmsg);  // 返回错误信息
-            // this.props.data = res.data;
-          }
-        },
-      })
-    }
-  }; // 隐藏和显示客户编辑界面
-
+  // 隐藏和显示 <联系人> 增加界面
   handleContactsVisible = flag => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
@@ -275,11 +259,13 @@ export default class CustomerList extends PureComponent {
     this.setState({
       contactsVisible: !!flag,
     });
-  }; // 隐藏和显示联系人增加界面
+  };
 
-  handleTabsViewVisible = flag => {
+  // 客户查看界面
+  handleCustomerViewVisible = (flag, reocrd) => {
     this.setState({
-      tabsViewVisible: !!flag,
+      customerViewVisible: !!flag,
+      rowInfo: record,
     });
   };
 
@@ -288,20 +274,6 @@ export default class CustomerList extends PureComponent {
       customerDistributionVisible: !!flag,
     });
   }; // 客户分配*/
-
-  showEditMessage = (flag, record) => {
-    this.setState({
-      customerEditVisible: !!flag,
-      rowInfo: record,
-    });
-  }; // 弹窗展示当前行的数据
-
-  showViewMessage = (flag, text, record) => {
-    this.setState({
-      tabsViewVisible: !!flag,
-      rowInfo: record,
-    });
-  };
 
   menuClick = e => {
     console.log(e.key);
@@ -351,7 +323,7 @@ export default class CustomerList extends PureComponent {
       customerAddVisible,
       customerEditVisible,
       contactsVisible,
-      tabsViewVisible,
+      customerViewVisible,
       /*customerDistributionVisible,*/
       rowInfo,
     } = this.state;
@@ -434,7 +406,7 @@ export default class CustomerList extends PureComponent {
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          return <Badge status={statusMap[val-1]} text={status[val-1]} />;
+          return <Badge status={statusMap[val]} text={status[val]} />;
         },
       },
       {
@@ -459,7 +431,7 @@ export default class CustomerList extends PureComponent {
               </span>
             )}
             <Divider type="vertical" />
-            <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+            <Popconfirm title="确认删除?" onConfirm={() =>this.handleDeleteMsg(true, record)} okText="是" cancelText="否">
               <a>删除</a>
             </Popconfirm>
           </Fragment>
@@ -531,7 +503,7 @@ export default class CustomerList extends PureComponent {
         <CusAddModal {...ParentMethods} customerAddVisible={customerAddVisible} />
         <CusEditModal {...ParentMethods} customerEditVisible={customerEditVisible} rowInfo={rowInfo} />
         <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
-        <CusViewTabs {...ParentMethods} tabsViewVisible={tabsViewVisible} rowInfo={rowInfo} />
+        <CusViewTabs {...ParentMethods} customerViewVisible={customerViewVisible} rowInfo={rowInfo} />
         {/*<CusDistributionModal {...ParentMethods} customerDistributionVisible={customerDistributionVisible} />*/}
       </PageHeaderLayout>
     );

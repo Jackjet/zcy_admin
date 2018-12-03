@@ -269,6 +269,16 @@ export default class Workplace extends PureComponent {
         id: record.id, // 点击行的项目id
         status: 1,
       },
+      callback: () => {
+        this.props.dispatch({
+          type: 'sysMessage/fetchList',
+          payload:{
+            page:1,
+            pageSize:10,
+          },
+        });
+      },
+
     });
     if(record.bizType){
         if(record.bizType === 110){  // 新建项目
@@ -286,13 +296,7 @@ export default class Workplace extends PureComponent {
        // 提示消息
     }
 
-    this.props.dispatch({
-      type: 'sysMessage/fetchList',
-      payload:{
-        page:1,
-        pageSize:10,
-      },
-    });
+
 
     /*this.props.dispatch({
       type: 'cusApplication/fetch', // 接口修改项目接口

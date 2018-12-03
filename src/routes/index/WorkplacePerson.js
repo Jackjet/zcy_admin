@@ -228,6 +228,23 @@ export default class WorkplacePerson extends PureComponent {
     });
   };
 
+  pushCenterMsg = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'project/fetchNotice',
+    });
+    dispatch({
+      type: 'activities/fetchList',
+    });
+    dispatch({
+      type: 'sysMessage/fetchList',
+      payload:{
+        page:1,
+        pageSize:10,
+      },
+    });
+  };
+
   // 需要配合打开新的指派单modal
   handleNewProAssignVisible = (flag, sourceId) => {
     if (sourceId != null) {
@@ -264,6 +281,15 @@ export default class WorkplacePerson extends PureComponent {
         id: record.id, // 点击行的项目id
         status: 1,
       },
+      callback: () => {
+        this.props.dispatch({
+          type: 'sysMessage/fetchList',
+          payload:{
+            page:1,
+            pageSize:10,
+          },
+        });
+      },
     });
     if(record.bizType){
       if(record.bizType === 110){  // 新建项目
@@ -280,13 +306,6 @@ export default class WorkplacePerson extends PureComponent {
     }else {
       // 提示消息
     }
-    this.props.dispatch({
-      type: 'sysMessage/fetchList',
-      payload:{
-        page:1,
-        pageSize:10,
-      },
-    });
     /*this.props.dispatch({
       type: 'cusApplication/fetch', // 接口修改项目接口
       payload:{
@@ -505,6 +524,7 @@ export default class WorkplacePerson extends PureComponent {
       {
         title: '发送时间',
         dataIndex: 'sendTime',
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
         title: '发送人',
@@ -660,7 +680,7 @@ export default class WorkplacePerson extends PureComponent {
             >
               <Tabs
                 defaultActiveKey="notice"
-                onChange={this.callback}
+                onChange={this.pushCenterMsg}
                 tabBarExtraContent={moreMessage}
               >
                 <TabPane

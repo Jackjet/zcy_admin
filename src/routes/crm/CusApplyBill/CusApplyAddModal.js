@@ -3,9 +3,6 @@ import { Form, Col, Row, Input, Select, Modal, Card, message } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
-const linkmanTypeOption = {"1":"工程", "2":"招标", "3":"采购"};
-const statusOption = {"1":"待审核", "2":"审核中", "3":"已审核"};
-
 const { Option } = Select;
 const fieldLabels = {
   cusApplyCode: '客户编号',
@@ -30,19 +27,18 @@ class CusApplyAddModal extends PureComponent {
   state = {
     width: '100%',
     linkmanOption: [],
+    currentUserInfo:JSON.parse(localStorage.getItem("user")),
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleLinkManTypeChange();
-    console.log(this.props.linkmanOptionData);
-
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
   handleLinkManTypeChange = () => {
-    const {dispatch,handleLinkManTypeChange} = this.props;
+    const {dispatch,handleLinkManType} = this.props;
     dispatch({
       type: 'cusApplication/getDict',
       payload: {
@@ -52,12 +48,9 @@ class CusApplyAddModal extends PureComponent {
         if(res.meta.status !== "000000"){
           message.error(res.meta.errmsg);
         } else {
-          handleLinkManTypeChange(res.data.list);
-          const optionData = res.data.list.map((data) => {
-            return <Option key={data.id} value={data.id}>{data.name}</Option>;
-          });
+          handleLinkManType(res.data.list);
           this.setState({
-            linkmanOption: optionData,
+            linkmanOption: res.data.list,
           });
         }
       },
@@ -78,17 +71,17 @@ class CusApplyAddModal extends PureComponent {
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          // if (values.linkmanTypeId === `请选择`) {
-          //   message.error("请选择业务联系人类别");
-          //   return false;
-          // }
+           if (values.linkmanTypeId === `请选择`) {
+             message.warning("请选择业务联系人类别");
+            return false;
+           }
           // submit the values
           dispatch({
             type: 'cusApplication/add',
             payload: {
               ...values,
               status: 1,
-              uid: JSON.parse(localStorage.getItem("user")).id,
+              uid: this.state.currentUserInfo.id,
             },
             callback: (res) => {
               if(res.meta.status === '000000' ) {
@@ -99,7 +92,7 @@ class CusApplyAddModal extends PureComponent {
                     pageSize: 10,
                   },
                 });
-                handleCusApplyAddVisible(false, true);
+                handleCusApplyAddVisible(false);
                 message.success('新增完成!');
               } else {
                 message.error(res.meta.errmsg);
@@ -110,11 +103,11 @@ class CusApplyAddModal extends PureComponent {
       });
     };
     const onCancel = () => {
-      handleCusApplyAddVisible(false, false);
+      handleCusApplyAddVisible(false);
     };
     return (
       <Modal
-       /* destroyOnClose="true"*/
+        destroyOnClose="true"
         keyboard={false}
         title="客户申请单信息新增"
         style={{ top: 20 }}
@@ -161,7 +154,7 @@ class CusApplyAddModal extends PureComponent {
                     initialValue:`请选择`,
                   })(
                     <Select placeholder="请选择联系人业务性质" style={{ width: 200 }}>
-                      {linkmanOption}
+                      {linkmanOption.map((data) => <Option key={data.id} value={data.id}>{data.name}</Option>)}
                     </Select>
                   )}
                 </Form.Item>

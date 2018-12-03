@@ -75,11 +75,11 @@ const menuData = [
     icon: 'folder-add',
     path: 'project',
     children: [
-      {
+      /*{
         key: 'projectStart',
         name: '项目启动',
         path: 'projectStart',
-      },
+      },*/
       {
         key: 'projectInfoMange',
         name: '项目信息管理',
@@ -125,7 +125,7 @@ const menuData = [
       },*/
     ],
   },
-  {
+  /*{
     name: '项目管理备份',
     icon: 'folder-add',
     path: 'projectBAK',
@@ -140,12 +140,12 @@ const menuData = [
         name: '项目信息管理',
         path: 'projectInfoManageBAK',
       },
-      /*{
+      /!*{
         key: 'signatureInfoManage',
         name: '签章信息管理',
         path: 'signatureInfoManage',
-      },*/
-      /* {
+      },*!/
+      /!* {
          key: 'workplanList',
          name: '工时计划管理',
          path: 'workplan',
@@ -163,23 +163,23 @@ const menuData = [
          ],
          // hideInBreadcrumb: true,
          // hideInMenu: true,
-       },*/
-      /* {
+       },*!/
+      /!* {
          key: 'workrocord',
          name: '项目工作记录',
          path: 'workplan1',
          // hideInBreadcrumb: true,
          // hideInMenu: true,
-       },*/
-      /* {
+       },*!/
+      /!* {
          key: 'projectDestroy',
          name: '项目销毁',
          path: 'projectDestroy',
          // hideInBreadcrumb: true,
          // hideInMenu: true,
-       },*/
+       },*!/
     ],
-  },
+  },*/
   {
     name: '考评管理',
     icon: 'folder-add',

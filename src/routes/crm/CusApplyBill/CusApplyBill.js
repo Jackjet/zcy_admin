@@ -16,20 +16,17 @@ import {
   Layout,
   Popconfirm,
 } from 'antd';
-import moment from "moment/moment";
 import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import CustomerApplyAddModal from './CusApplyAddModal';
-import CustomerApplyViewTabs from './CusApplyTabsViewModal.js';
+import CustomerApplyViewModal from './CusApplyViewModal.js';
 import EditableTable from '../../EditableTable/EditableTable';
 import ContactsAddModal from '../CusInfoManage/ContactsAddModal';
 import CustomerApplyEditModal from './CusApplyEditModal';
 
 
 const { confirm } = Modal;
-const { Option } = Select;
-const { RangePicker } = DatePicker;
 const { Content } = Layout;
 const FormItem = Form.Item;
 
@@ -38,7 +35,7 @@ const statusMap = ['default','processing','success' ];
 const linkmanTypeValue = ['工程', '招标', '采购'];
 const statusValue = ['待审核', '审核中', '已审核'];
 
-
+// table分页器遍历key通过","隔开。
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -84,20 +81,18 @@ export default class CusApplyBill extends PureComponent {
   state = {
     cusApplyAddVisible: false, // 客户增加状态
     cusApplyEditVisible: false, // 客户编辑状态
-    cusApplyTabsViewVisible: false,  // 客户查看状态
+    cusApplyViewVisible: false,  // 客户查看状态
     contactsVisible: false,  // 联系人状态
     salesVisible: false,   // 业务员状态
     selectedRows: [],  // 选中的行
     formValues: {}, // 表单的结果集
     rowInfo: {},  // 当前操作行的数据
-    pageCurrent:``, // 当前页
-    pageSizeCurrent:``, // 当前页大小
-    linkmanOptionData: [], // 联系人下拉列表数据
+    linkmanOptionData: null, // 联系人下拉列表数据
   };
 
   // 生命周期方法 加载页面
   componentDidMount() {
-    this.handleLinkManTypeChange();
+    this.handleLinkManType();
     const { dispatch } = this.props;
     dispatch({
       type: 'cusApplication/fetch',
@@ -128,16 +123,19 @@ export default class CusApplyBill extends PureComponent {
       ...formValues,
       ...filters,
     };
-    this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
-    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
       type: 'cusApplication/fetch',
       payload: params,
+    });
+  };
+
+  // 获取选中的行
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
     });
   };
 
@@ -155,15 +153,16 @@ export default class CusApplyBill extends PureComponent {
       });
       dispatch({
         type: 'cusApplication/fetch',
-        payload: values,
+        payload: {
+          ...values,
+          keyWord: values.keyWord,
+        },
         callback: (res) => {
           if(res.meta.status !== '000000'){
             message.error(res.meta.errmsg);  // 返回错误信息
           } else {
             this.setState({
               selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
             });
             message.success('查询完成!');
           }
@@ -192,13 +191,6 @@ export default class CusApplyBill extends PureComponent {
     });
   };
 
-  // 普通高级搜索切换方法
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  };
-
   // 信息单个删除方法
   handleDeleteMsg =(flag, record)=> {
     const { dispatch } = this.props;
@@ -218,42 +210,89 @@ export default class CusApplyBill extends PureComponent {
           dispatch({
             type: 'cusApplication/fetch',
             payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
+              pageSize: res.data.pagination.pageSize,
+              page: res.data.pagination.page,
               keyWord: this.state.formValues.keyWord,
             },
           });
           message.success('删除成功!');
         }
-
       },
     });
   };
 
-  handleSelectRows = rows => {
-    this.setState({
-      selectedRows: rows,
+  // 选中行批量删除方法
+  handleDeleteMoreClick = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    if (!selectedRows) return;
+    confirm({
+      title: `确认删除?`,
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            ids: selectedRows.map(row => row.id).join(','),
+          },
+        });
+        message.success('删除成功');
+        this.setState({
+          selectedRows: [],
+        });
+      },
+      onCancel() {
+        message.warning(`未删除`);
+      },
     });
-  }; // 获取选中的行
-  
-  handleLinkManTypeChange = (optionData) => {
-    this.setState({
-      linkmanOptionData: optionData,
-    }); // 接收子页面查询到的下拉列表的optionData值
   };
 
+  // 接收子页面查询到的下拉列表的optionData值
+  handleLinkManType = (optionData) => {
+    this.setState({
+      linkmanOptionData: optionData,
+    });
+  };
+
+  // 隐藏和显示 <客户增加> 界面
   handleCusApplyAddVisible = flag => {
     this.setState({
       cusApplyAddVisible: !!flag,
     });
-  }; // 隐藏和显示客户增加界面
+  };
 
-  handleCusApplyEditVisible = flag => {
+  // 隐藏和显示 <客户编辑> 界面
+  handleCusApplyEditVisible = (flag, record) => {
     this.setState({
       cusApplyEditVisible: !!flag,
+      rowInfo: {
+        ...record,
+        keyWord: this.state.formValues.keyWord,
+      },
     });
-  }; // 隐藏和显示客户编辑界面
+  };
 
+  // 隐藏和显示 <客户申请查看> 界面
+  handleCusApplyViewVisible = (flag, record) => {
+    const validData = {
+      ...record,
+      status: statusValue[record.status],
+      linkmanTypeId: this.state.linkmanOptionData.map((params) => {
+        if(record.linkmanTypeId === params.id){
+          return params.name;
+        }
+        return "";
+      }),
+    };
+    this.setState({
+      cusApplyViewVisible: !!flag,
+      rowInfo: validData,
+    });
+  };
+
+  // 隐藏和显示 <联系人增加> 界面
   handleContactsVisible = flag => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
@@ -262,14 +301,9 @@ export default class CusApplyBill extends PureComponent {
     this.setState({
       contactsVisible: !!flag,
     });
-  }; // 隐藏和显示联系人增加界面
+  };
 
-  handleCusApplyTabsViewVisible = flag => {
-    this.setState({
-      cusApplyTabsViewVisible: !!flag,
-    });
-  }; // 隐藏和显示客户申请查看Tabs
-
+  // 隐藏和显示 <业务员申请查看> Tabs
   handleSalesVisible = flag => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
@@ -278,18 +312,9 @@ export default class CusApplyBill extends PureComponent {
     this.setState({
       salesVisible: !!flag,
     });
-  }; // 隐藏和显示业务员申请查看Tabs
+  };
 
-  showEditMessage = (flag, record) => {
-    this.setState({
-      cusApplyEditVisible: !!flag,
-      rowInfo: {
-        ...record,
-        keyWord: this.state.formValues.keyWord,
-      },
-    });
-  }; // 编辑modal传送当前行的数据
-
+  // 提交客户申请单
   handleCancelCancel = (record) => {
     const { dispatch } = this.props;
     dispatch({
@@ -297,7 +322,7 @@ export default class CusApplyBill extends PureComponent {
       payload: {
         id: record.id,
         key: record.key,
-        status: 2,
+        status: 1,
       },
       callback: ( res ) => {
         if (res.meta.status !== "000000") {
@@ -309,8 +334,8 @@ export default class CusApplyBill extends PureComponent {
           dispatch({
             type: 'cusApplication/fetch',
             payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
+              page: res.data.pagination.page,
+              pageSize: res.data.pagination.page,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -318,19 +343,9 @@ export default class CusApplyBill extends PureComponent {
         }
       },
     });
-  }; // 提交客户申请单
+  };
 
-  showViewMessage = (flag, record) => {
-    this.setState({
-      cusApplyTabsViewVisible: !!flag,
-      rowInfo: {
-        ...record,
-        status: statusValue[record.status-1],
-        linkmanTypeId: linkmanTypeValue[record.linkmanTypeId],
-      },
-    });
-  };  // 弹窗查看当前行的数据
-
+  // 查询组建
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -357,7 +372,7 @@ export default class CusApplyBill extends PureComponent {
         </Row>
       </Form>
     );
-  } // 简单查询
+  }
 
   render() {
     const { cusApplication: { data }, loading } = this.props;
@@ -366,7 +381,7 @@ export default class CusApplyBill extends PureComponent {
       cusApplyAddVisible,
       cusApplyEditVisible,
       contactsVisible,
-      cusApplyTabsViewVisible,
+      cusApplyViewVisible,
       salesVisible,
       rowInfo,
       linkmanOptionData,
@@ -392,21 +407,18 @@ export default class CusApplyBill extends PureComponent {
         dataIndex: 'linkmanTypeId',
         filters: [
           {
-            text: 1,
-            value: 0,
+            text: linkmanTypeValue[0],
+            value: '58f2741fed4311e88ac1186024a65a7c',
           },
           {
-            text: 2,
-            value: 1,
+            text: linkmanTypeValue[1],
+            value: '6a921d2aed4311e88ac1186024a65a7c',
           },
           {
-            text: 3,
-            value: 2,
+            text: linkmanTypeValue[2],
+            value: '8f1a1844ed4311e88ac1186024a65a7c',
           },
         ],
-        /*filters:() => {
-          return  [ {text:1, value:2 } ]
-        },*/
         onFilter: (value, record) => record.linkmanTypeId.toString() === value,
         render(val) {
           let linkmanTypeData = "";
@@ -446,7 +458,7 @@ export default class CusApplyBill extends PureComponent {
         ],
         onFilter: (value, record) => record.status.toString() === value,
         render(val) {
-          return <Badge status={statusMap[val-1]} text={statusValue[val-1]} />;
+          return <Badge status={statusMap[val]} text={statusValue[val]} />;
         },
       },
       {
@@ -455,12 +467,12 @@ export default class CusApplyBill extends PureComponent {
         fixed: 'right',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
+            <a onClick={() => this.handleCusApplyViewVisible(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+            <a onClick={() => this.handleCusApplyEditVisible(true, record)}>编辑</a>
             <Divider type="vertical" />
             {
-              ( record.status === 1 || record.status === 3) && (
+              ( record.status === 0 ) && (  // 根据状态显示功能按钮
                 <span>
                   <a onClick={() => this.handleCancelCancel(record)}>提交</a>
                   <Divider type="vertical" />
@@ -475,13 +487,14 @@ export default class CusApplyBill extends PureComponent {
       },
     ];
 
-    const ParentMethods = {
+    // 父组件与子组件数据数据传递方法
+    const parentMethods = {
       handleCusApplyAddVisible: this.handleCusApplyAddVisible,
       handleCusApplyEditVisible: this.handleCusApplyEditVisible,
       handleContactsVisible: this.handleContactsVisible,
-      handleCusApplyTabsViewVisible: this.handleCusApplyTabsViewVisible,
+      handleCusApplyViewVisible: this.handleCusApplyViewVisible,
       handleSalesVisible: this.handleSalesVisible,
-      handleLinkManTypeChange:this.handleLinkManTypeChange,
+      handleLinkManType:this.handleLinkManType,
     };
 
     return (
@@ -502,7 +515,7 @@ export default class CusApplyBill extends PureComponent {
                     </Button>
                     {selectedRows.length > 1 && (
                       <span>
-                        <Button type="primary" onClick={() => this.handleDeleteMoreClick(true)}>
+                        <Button type="primary" >
                           批量删除
                         </Button>
                       </span>
@@ -521,11 +534,11 @@ export default class CusApplyBill extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <CustomerApplyAddModal {...ParentMethods} cusApplyAddVisible={cusApplyAddVisible} linkmanOptionData={linkmanOptionData} />
-        <CustomerApplyViewTabs {...ParentMethods} cusApplyTabsViewVisible={cusApplyTabsViewVisible} rowInfo={rowInfo} />
-        <CustomerApplyEditModal{...ParentMethods} cusApplyEditVisible={cusApplyEditVisible} rowInfo={rowInfo} />
-        <ContactsAddModal {...ParentMethods} contactsVisible={contactsVisible} />
-        <SalesManage {...ParentMethods} salesVisible={salesVisible} />
+        <CustomerApplyAddModal {...parentMethods} cusApplyAddVisible={cusApplyAddVisible} linkmanOptionData={linkmanOptionData} />
+        <CustomerApplyViewModal {...parentMethods} cusApplyViewVisible={cusApplyViewVisible} rowInfo={rowInfo} />
+        <CustomerApplyEditModal{...parentMethods} cusApplyEditVisible={cusApplyEditVisible} rowInfo={rowInfo} />
+        <ContactsAddModal {...parentMethods} contactsVisible={contactsVisible} />
+        <SalesManage {...parentMethods} salesVisible={salesVisible} />
       </PageHeaderLayout>
     );
   }

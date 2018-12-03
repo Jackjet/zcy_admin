@@ -90,12 +90,13 @@ export const getRouterData = app => {
       name:'工作台',
     },
 
+
     '/crm/customerApply': {
-      component: dynamicWrapper(app, ['cusApplication'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
+      component: dynamicWrapper(app, ['cusApplication', 'cusInfoManage'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
       name:'客户申请单',
     },
     '/crm/customer': {
-      component: dynamicWrapper(app, ['cusInfoManage'], () => import('../routes/crm/CusInfoManage/CusBill')),
+      component: dynamicWrapper(app, ['cusInfoManage', 'cusApplication'], () => import('../routes/crm/CusInfoManage/CusBill')),
       name:'客户信息管理',
     },
     '/crm/business': {
@@ -106,6 +107,8 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['visit'], () => import('../routes/crm/VisitManage/VisitList')),
       name:'拜访管理',
     },
+
+
     '/system/billTable': {
       component: dynamicWrapper(app, ['billTable'], () => import('../routes/BillTable/list/BillTable')),
       name: '业务用表',
@@ -304,7 +307,7 @@ export const getRouterData = app => {
       name: '项目信息启动(备份)',
     },*/
     '/project/projectInfoMange': {
-      component: dynamicWrapper(app, ['company','cusApplication'], () => import('../routes/Project/ProInfoManage/ProjectList')),
+      component: dynamicWrapper(app, ['company','cusApplication','report'], () => import('../routes/Project/ProInfoManage/ProjectList')),
       name: '项目信息管理',
     },
     /*'/project/projectStart': {

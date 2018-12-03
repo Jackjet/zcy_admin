@@ -94,22 +94,21 @@ class CusApplyViewTabs extends PureComponent {
     const { TabPane } = Tabs;
     const {
       form,
-      dispatch,
-      cusApplyTabsViewVisible,
-      handleCusApplyTabsViewVisible,
+      cusApplyViewVisible,
+      handleCusApplyViewVisible,
       rowInfo,
       rule: { data },
       loading,
     } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll } = form;
+    const { getFieldDecorator } = form;
     const {
       selectedRows,
     } = this.state;
     const validate = () => {
-      handleCusApplyTabsViewVisible(false);
+      handleCusApplyViewVisible(false, "");
     };
-    const cancelDate = () => {
-      handleCusApplyTabsViewVisible(false);
+    const cancel = () => {
+      handleCusApplyViewVisible(false, "");
     };
     const columnsProcedure = [
       {
@@ -147,11 +146,11 @@ class CusApplyViewTabs extends PureComponent {
         keyboard={false}
         title="客户申请单查看"
         style={{ top: 20 }}
-        visible={cusApplyTabsViewVisible}
+        visible={cusApplyViewVisible}
         width="80%"
         maskClosable={false}
         onOk={validate}
-        onCancel={cancelDate}
+        onCancel={cancel}
         footer={
           <Button type="primary" onClick={validate}>知道了</Button>
         }  // 在button外面加上数据，会报迭代没有设置key属性值

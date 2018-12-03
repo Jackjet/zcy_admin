@@ -26,7 +26,9 @@ export default class ProjectsRepository extends PureComponent {
     KnowledgeViewVisible: false,
   }
   componentDidMount() {
+/*
     this.fetchMore();
+*/
   }
 
   handleFormSubmit = () => {
