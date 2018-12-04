@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -11,20 +10,20 @@ import {
   Select,
   Icon,
   Button,
-  Dropdown,
   Menu,
   DatePicker,
-  Modal,
   message,
+  Badge,
   Divider,
+  Layout,
+  Modal,
 } from 'antd';
-import StandardTable from '../../components/StandardTable/index';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import StandardTable from '../../../../components/StandardTable/index';
+import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
 import styles from './style.less';
-import ContractAddModal from './ContractAddModal.js';
-import ContractViewTabs from './ContractViewTabs.js';
-import ContractEditModal from './ContractEditModal.js';
 
+const { confirm } = Modal;
+const { Content, Sider } = Layout;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -32,29 +31,57 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+const statusMap = [
+  'success',
+  'error',
+  'default',
+  'processing',
+  'warning',
+  'default',
+  'processing',
+  'warning',
+  'error',
+];
+const status = [
+  '收款完成',
+  '备忘',
+  '经理审批',
+  '盖章',
+  '稽核审批',
+  '生成报告号',
+  '转职复核',
+  '主签复核',
+  '已销毁',
+];
 
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-export default class Contract extends PureComponent {
+export default class ProjectArchives extends PureComponent {
   state = {
-    contractVisible: false,
-    contractEditVisible: false,
-    contractTabsVisible: false,
+    projectVisible: false,
+    projectApplyAddVisible: false,
+    projectChildrenAddVisible: false,
+    projectEditVisible: false,
+    projectTabsVisible: false,
     expandForm: false,
     selectedRows: [],
-    rowInfo:{},
+    choiceTypeKey: '0',
+    choiceTypeValue: '',
+    rowInfo: {},
     formValues: {},
     openKeys: ['sub1'],
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'rule/fetch',
     });
   }
+
   onOpenChange = openKeys => {
     const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -65,6 +92,7 @@ export default class Contract extends PureComponent {
       });
     }
   };
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -90,18 +118,25 @@ export default class Contract extends PureComponent {
       payload: params,
     });
   };
+
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
     });
+    dispatch({
+      type: 'rule/fetch',
+      payload: {},
+    });
   };
+
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
   };
+
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -122,15 +157,20 @@ export default class Contract extends PureComponent {
           },
         });
         break;
+      case 'view':
+        this.handleProjectViewVisible(true);
+        break;
       default:
         break;
     }
   };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
+
   handleSearch = e => {
     e.preventDefault();
 
@@ -154,6 +194,104 @@ export default class Contract extends PureComponent {
       });
     });
   };
+
+  handleProjectVisible = flag => {
+    if (this.state.choiceTypeKey === '0') {
+      message.config({
+        top: 100,
+        duration: 2,
+        maxCount: 1,
+      });
+      message.warning('请选择工程类别');
+      return false;
+    } else {
+      this.setState({
+        projectVisible: !!flag,
+      });
+    }
+  };
+  handleProjectApplyAddVisible = flag => {
+    this.setState({
+      projectApplyAddVisible: !!flag,
+    });
+  };
+
+  showProjectApplyAddVisible = (flag, record) => {
+    this.setState({
+      projectApplyAddVisible: !!flag,
+      rowInfo: record,
+    });
+  };
+
+  handleProjectChildrenAddVisible = flag => {
+    this.setState({
+      projectChildrenAddVisible: !!flag,
+    });
+  };
+
+  handleProjectEditVisible = flag => {
+    this.setState({
+      projectEditVisible: !!flag,
+    });
+  };
+
+  handleProjectTabsVisible = flag => {
+    this.setState({
+      projectTabsVisible: !!flag,
+    });
+  };
+
+  handleAdd = fields => {
+    this.props.dispatch({
+      type: 'rule/add',
+      payload: {
+        description: fields.desc,
+      },
+    });
+
+    message.success('添加成功');
+    this.setState({
+      projectVisible: false,
+    });
+  };
+
+  rootSubmenuKeys = ['sub1'];
+
+  handleGetMenuValue = MenuValue => {
+    this.setState({
+      choiceTypeKey: MenuValue.key,
+      choiceTypeValue: MenuValue.item.props.children,
+    });
+  };
+
+  treeMenu() {
+    const { SubMenu } = Menu;
+    return (
+      <Menu
+        mode="inline"
+        openKeys={this.state.openKeys}
+        onOpenChange={this.onOpenChange}
+        style={{ width: 140 }}
+        onClick={this.handleGetMenuValue}
+      >
+        <SubMenu
+          key="sub1"
+          title={
+            <span>
+              <span>项目类别</span>
+            </span>
+          }
+        >
+          <Menu.Item key="0">全部</Menu.Item>
+          <Menu.Item key="1">工程造价业务项目</Menu.Item>
+          <Menu.Item key="2">可研报告</Menu.Item>
+          <Menu.Item key="3">招标代理业务项目</Menu.Item>
+          <Menu.Item key="4">司法鉴定</Menu.Item>
+        </SubMenu>
+      </Menu>
+    );
+  }
+
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -172,107 +310,80 @@ export default class Contract extends PureComponent {
       },
     });
   };
-  handleContractVisible = flag => {
+
+  showViewMessage = (flag, record) => {
     this.setState({
-      contractVisible: !!flag,
+      projectTabsVisible: !!flag,
+      rowInfo: record,
     });
   };
 
-  handleContractEditVisible = flag => {
+  showEditMessage = (flag, record) => {
     this.setState({
-      contractEditVisible: !!flag,
+      projectEditVisible: !!flag,
+      rowInfo: record,
     });
   };
 
-  handleContractTabsVisible = flag => {
-    this.setState({
-      contractTabsVisible: !!flag,
-    });
-  };
-  handleAdd = fields => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: fields.desc,
+  handleDestroyApply = record => {
+    const { dispatch } = this.props;
+    confirm({
+      title: `申请删除项目编码为：${record.projectCode}`,
+      content: (
+        <div>
+          <p>项目名称:{record.projectName}</p>
+          <p>销毁人:{record.projectName}</p>
+          <p>销毁时间:{moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+        </div>
+      ),
+      keyboard: false,
+      cancelText: '取消',
+      okText: '确定',
+      onOk() {
+        dispatch({
+          type: 'rule/remove',
+          payload: {
+            no: record.no,
+          },
+        });
+        message.success('申请成功');
       },
+      onCancel() {},
     });
-
-    message.success('添加成功');
     this.setState({
-      contractVisible: false,
-    });
-  };
-  rootSubmenuKeys = ['sub1'];
-
-  showViewMessage =(flag, record)=> {
-    this.setState({
-      contractTabsVisible: !!flag,
-      rowInfo: record,
+      selectedRows: [],
     });
   };
 
-  showEditMessage =(flag, record)=> {
-    this.setState({
-      contractEditVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-  treemenu() {
-    const SubMenuTree = Menu.SubMenu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 140 }}
-      >
-        <SubMenuTree
-          key="sub1"
-          title={
-            <span>
-              <span>合同类别</span>
-            </span>
-          }
-        >
-          <Menu.Item key="工程造价业务项目">工程造价业务项目</Menu.Item>
-          <Menu.Item key="2">可研报告</Menu.Item>
-          <Menu.Item key="3">招标代理业务项目</Menu.Item>
-        </SubMenuTree>
-      </Menu>
-    );
-  }
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
-            <FormItem label="合同编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入合同编码" />)}
+          <Col md={8} sm={24}>
+            <FormItem label="编号名称">
+              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="合同名称">
-              {getFieldDecorator('contractName')(<Input placeholder="合同名称" />)}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="项目">
-              {getFieldDecorator('project', {
-                rules: [{ required: true, message: '请输入项目' }],
+          <Col md={8} sm={24}>
+            <FormItem label="年度">
+              {getFieldDecorator('years', {
+                rules: [{ required: true, message: '请选择年度' }],
               })(
-                <Select placeholder="请输入" style={{ width: 200 }}>
+                <Select placeholder="请选择年度" style={{ width: 200 }}>
                   <Option value="xiao">请选择</Option>
-                  <Option value="z">工程造价业务项目</Option>
-                  <Option value="f">招标代理业务项目</Option>
-                  <Option value="fd">打包项目</Option>
-                  <Option value="sn">2010年免审批工程造价、招投标项目</Option>
+                  <Option value="z">2018</Option>
+                  <Option value="f">2019</Option>
+                  <Option value="fd">2020</Option>
+                  <Option value="sn">2021</Option>
+                  <Option value="zf">2022</Option>
+                  <Option value="sy">2023</Option>
+                  <Option value="jr">2024</Option>
                 </Select>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 搜索
@@ -280,8 +391,7 @@ export default class Contract extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 清空
               </Button>
-
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+              <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 高级搜索
               </Button>
             </span>
@@ -290,19 +400,20 @@ export default class Contract extends PureComponent {
       </Form>
     );
   }
+
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="合同编码">
-              {getFieldDecorator('contractCode')(<Input placeholder="请输入" />)}
+            <FormItem label="编码名称">
+              {getFieldDecorator('no')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="合同名称">
-              {getFieldDecorator('contractName')(<Input placeholder="请输入" />)}
+            <FormItem label="负责人">
+              {getFieldDecorator('pinyin')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
 
@@ -367,136 +478,82 @@ export default class Contract extends PureComponent {
       </Form>
     );
   }
+
   renderForm() {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
   render() {
     const { rule: { data }, loading } = this.props;
-    const { selectedRows, contractVisible, contractEditVisible, contractTabsVisible, rowInfo } = this.state;
+    const {
+      selectedRows,
+      projectVisible,
+      projectApplyAddVisible,
+      projectTabsVisible,
+      rowInfo,
+      projectEditVisible,
+      projectChildrenAddVisible,
+      choiceTypeValue,
+    } = this.state;
 
     const columns = [
       {
-        title: '合同编码',
-        dataIndex: 'contractCode',
-        width: 100,
-        align: 'center',
+        title: '项目编号',
+        dataIndex: 'projectCode',
       },
       {
-        title: '合同标题',
-        dataIndex: 'contractName',
-        width: 100,
-        align: 'center',
+        title: '项目名称',
+        dataIndex: 'projectName',
       },
       {
-        title: '对方企业',
-        dataIndex: 'partnerEnterprise',
-        align: 'center',
-      },
-      {
-        title: '负责人',
+        title: '销毁人',
         dataIndex: 'linkman',
-        align: 'center',
       },
       {
-        title: '业务类别',
-        dataIndex: 'businessType',
-        align: 'center',
+        title: '销毁时间',
+        dataIndex: 'projectStatus',
       },
       {
-        title: '签订时间',
-        dataIndex: 'signTime',
-        align: 'center',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-      {
-        title: '开始时间',
-        dataIndex: 'startTime',
-        align: 'center',
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-      {
-        title: '结束时间',
-        dataIndex: 'endTime',
-        align: 'center',
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      },
-
-      {
-        title: '总金额',
-        dataIndex: 'totalAmount',
-        align: 'center',
-      },
-
-      {
-        title: '操作',
-        align: 'center',
-        render: (text,record) => (
-          <Fragment>
-            <a onClick={() =>this.showViewMessage(true, record)} >查看</a>
-            <Divider type="vertical" />
-            <a onClick={() =>this.showEditMessage(true, record)} >编辑</a>
-            <Divider type="vertical" />
-            <a onClick={this.handleDeleteClick} >删除</a>
-          </Fragment>
-        ),
+        title: '备注',
+        dataIndex: 'company',
       },
     ];
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
-
-    const contractTabsMethods = {
-      handleContractTabsVisible: this.handleContractTabsVisible,
-    };
-    const contractAddMethods = {
+    const projectAddMethods = {
       handleAdd: this.handleAdd,
-      handleContractVisible: this.handleContractVisible,
+      handleProjectVisible: this.handleProjectVisible,
     };
-    const contractEditMethods = {
-      handleContractEditVisible: this.handleContractEditVisible,
+
+    const projectApplyAddMethods = {
+      handleProjectApplyAddVisible: this.handleProjectApplyAddVisible,
+    };
+    const projectChildrenAddMethods = {
+      handleProjectChildrenAddVisible: this.handleProjectChildrenAddVisible,
+    };
+
+    const projectTabsMethods = {
+      handleProjectTabsVisible: this.handleProjectTabsVisible,
+    };
+    const projectEditMethods = {
+      handleProjectEditVisible: this.handleProjectEditVisible,
     };
 
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <div className={styles.leftBlock}>{this.treemenu()}</div>
-          <div className={styles.rightBlock}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
-              <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={() => this.handleContractVisible(true)}>
-                  新建
-                </Button>
-                {selectedRows.length > 0 && (
-                  <span>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        批量操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )}
-              </div>
-              <StandardTable scroll={{ x: 1500}}
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
+          <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <StandardTable
+              scroll={{ x: 1500 }}
+              selectedRows={selectedRows}
+              loading={loading}
+              data={data}
+              columns={columns}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+            />
           </div>
         </Card>
-        <ContractAddModal {...contractAddMethods} contractVisible={contractVisible} />
-        <ContractViewTabs {...contractTabsMethods} contractTabsVisible={contractTabsVisible} rowInfo={rowInfo} />
-        <ContractEditModal {...contractEditMethods} contractEditVisible={contractEditVisible} rowInfo={rowInfo} />
       </PageHeaderLayout>
     );
   }

@@ -22,7 +22,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import styles from '../../list/Style.less';
+import styles from './style.less';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

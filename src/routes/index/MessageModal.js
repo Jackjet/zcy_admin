@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import ProcedureList from '../Contract/ProcedureProject';
-import styles from '../Project/list/Style.less';
+import styles from './style.less';
 
 const mockData = [];
 for (let i = 0; i < 10; i += 1) {

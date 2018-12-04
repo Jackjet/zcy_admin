@@ -19,7 +19,7 @@ import {
   Divider,
 } from 'antd';
 import StandardTable from '../../components/StandardTable/index';
-import styles from './Style.less';
+import styles from './style.less';
 import picture from './proApproval.png';
 
 const FormItem = Form.Item;

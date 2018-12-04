@@ -27,7 +27,7 @@ import {
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import styles from '../../list/Style.less';
+import styles from './style.less';
 import NotFound from "../../../Exception/404";
 import {getRoutes} from "../../../../utils/utils";
 

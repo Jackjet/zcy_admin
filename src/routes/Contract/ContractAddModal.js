@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import ContractTemplateModal from './ContractTemplateModal';
-import styles from '../Project/add/style.less';
+import styles from '../Project/ProInfoManage/style.less';
 
 const { Search }= Input;
 const RadioGroup = Radio.Group;

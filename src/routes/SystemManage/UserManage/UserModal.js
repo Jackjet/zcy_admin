@@ -19,6 +19,7 @@ import { connect } from 'dva';
 import moment from "moment/moment";
 import styles from './UserListAdd.less';
 
+const { Search } = Input;
 const { Option } = Select;
 const { TextArea } = Input;
 const fieldLabels = {
@@ -238,7 +239,11 @@ class UserModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.personId}>
                         {getFieldDecorator('personId', {
                           rules: [{ required: true, message: '请选择用户实名' }],
-                        })(<Input placeholder="请选择用户实名" />)}
+                        })(
+                          <Search
+                            placeholder="请选择用户实名"
+                          />
+                        )}
                       </Form.Item>
                     </Col>
 

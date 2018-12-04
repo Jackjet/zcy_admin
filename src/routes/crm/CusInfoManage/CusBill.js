@@ -262,7 +262,7 @@ export default class CustomerList extends PureComponent {
   };
 
   // 隐藏和显示 <客户> 查看界面
-  handleCustomerViewVisible = (flag, reocrd) => {
+  handleCustomerViewVisible = (flag, record) => {
     this.setState({
       customerViewVisible: !!flag,
       rowInfo: record,

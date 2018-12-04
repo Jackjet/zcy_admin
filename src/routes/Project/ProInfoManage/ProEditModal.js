@@ -19,7 +19,7 @@ import {
   Divider,
 } from 'antd';
 import { connect } from 'dva';
-import styles from '../edit/style.less';
+import styles from './style.less';
 import {message} from "antd/lib/index";
 
 const { Panel } = Collapse;

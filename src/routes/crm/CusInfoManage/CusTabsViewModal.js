@@ -20,8 +20,8 @@ import { connect } from 'dva';
 import StandardTable from '../../../components/StandardTable';
 import VisitListViewModal from '../VisitManage/VisitListViewModal.js';
 import Salesman from './Salesman.js';
-import ProjectInfo from '../../Project/select/ProjectInfo';
-import ContractViewInfo from '../../Project/select/ContractInfo';
+import ProjectInfo from './ProjectInfo';
+import ContractViewInfo from './ContractInfo';
 import styles from './style.less';
 
 const industry = [

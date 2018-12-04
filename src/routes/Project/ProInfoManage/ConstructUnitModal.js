@@ -24,15 +24,12 @@ const fieldLabels = {
   remarks: '备注',
 };
 
-
-
 @connect(({ rule, loading }) => ({
   rule,
   loading: loading.models.rule,
 }))
 @Form.create()
-class ContractTemplateModal extends PureComponent {
-
+class ConstructUnitModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -44,11 +41,10 @@ class ContractTemplateModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleGiveValue = (text) => {
-    this.props.handleGetContractTemplateValue(text);
-    this.props.handleContractTemplateVisible(false);
+  handleGiveValue = text => {
+    this.props.handleGetConstructUnitValue(text);
+    this.props.handleConstructUnitVisible(false);
   };
-
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -58,7 +54,13 @@ class ContractTemplateModal extends PureComponent {
   };
 
   render() {
-    const { form, dispatch, submitting , contractTemplateVisible, handleContractTemplateVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      constructUnitVisible,
+      handleConstructUnitVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -69,13 +71,13 @@ class ContractTemplateModal extends PureComponent {
             type: 'rule/add',
             payload: values,
           });
-          handleContractTemplateVisible(false);
+          handleConstructUnitVisible(false);
         }
       });
     };
     const onCancel = () => {
       form.resetFields();
-      handleContractTemplateVisible(false);
+      handleConstructUnitVisible(false);
     };
     const errors = getFieldsError();
     const getErrorInfo = () => {
@@ -116,39 +118,47 @@ class ContractTemplateModal extends PureComponent {
         </span>
       );
     };
-    const data = [{
-      key: '1',
-      name: '义务至诚',
-      age: 32,
-      address: '111',
-    }, {
-      key: '2',
-      name: '大义务',
-      age: 42,
-      address: '222',
-    }, {
-      key: '3',
-      name: '大杭州',
-      age: 32,
-      address: '333',
-    }];
-    const columns = [{
-      title: '合同模版',
-      dataIndex: 'name',
-      render: (text) => <a onDoubleClick={() =>this.handleGiveValue(text)}>{text}</a>,
-    }, {
-      title: '合同类型',
-      dataIndex: 'age',
-    }, {
-      title: 'Address',
-      dataIndex: 'address',
-    }];
+    const data = [
+      {
+        key: '1',
+        name: '义务至诚施工单位',
+        age: 32,
+        address: '111',
+      },
+      {
+        key: '2',
+        name: '大义务施工单位',
+        age: 42,
+        address: '222',
+      },
+      {
+        key: '3',
+        name: '大杭州施工单位',
+        age: 32,
+        address: '333',
+      },
+    ];
+    const columns = [
+      {
+        title: '施工单位',
+        dataIndex: 'name',
+        render: text => <a onDoubleClick={() => this.handleGiveValue(text)}>{text}</a>,
+      },
+      {
+        title: '字段A',
+        dataIndex: 'age',
+      },
+      {
+        title: '字段B',
+        dataIndex: 'address',
+      },
+    ];
 
     return (
       <Modal
-        title="合同模版选择"
+        title="施工单位选择"
         style={{ top: 180 }}
-        visible={contractTemplateVisible}
+        visible={constructUnitVisible}
         width="30%"
         maskClosable={false}
         onOk={validate}
@@ -160,9 +170,11 @@ class ContractTemplateModal extends PureComponent {
             <Table
               columns={columns}
               dataSource={data}
-              onRow={(record) => {
+              onRow={record => {
                 return {
-                  onClick: () => {this.handleGiveValue(record.name)},
+                  onClick: () => {
+                    this.handleGiveValue(record.name);
+                  },
                 };
               }}
             />
@@ -175,4 +187,4 @@ class ContractTemplateModal extends PureComponent {
 export default connect(({ global, loading }) => ({
   collapsed: global.collapsed,
   submitting: loading.effects['form/submitAdvancedForm'],
-}))(Form.create()(ContractTemplateModal));
+}))(Form.create()(ConstructUnitModal));

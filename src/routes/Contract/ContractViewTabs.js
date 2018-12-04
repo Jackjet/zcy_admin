@@ -22,10 +22,10 @@ import { connect } from 'dva';
 import moment from "moment/moment";
 import StandardTable from '../../components/StandardTable/index';
 import ProcedureList from './ProcedureProject.js';
-import ReceiptPlanAddModal from '../Project/add/ReceiptPlanAddModal';
-import ReceiptPlanEditModal from '../Project/edit/ReceiptPlanEditModal';
-import ReceiptPlanViewModal from '../Project/select/ReceiptPlanViewModal';
-import styles from '../Project/contractTabsInfo/style.less';
+import ReceiptPlanAddModal from './ReceiptPlanAddModal';
+import ReceiptPlanEditModal from './ReceiptPlanEditModal';
+import ReceiptPlanViewModal from './ReceiptPlanViewModal';
+import styles from './style.less';
 
 
 const statusMap = ['default', 'processing', 'success', 'error'];

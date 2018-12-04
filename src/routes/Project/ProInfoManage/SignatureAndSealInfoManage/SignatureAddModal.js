@@ -1,8 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Col, Row, Input, Select, DatePicker, Modal, Popover, message, Icon } from 'antd';
+import {
+  Card,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  DatePicker,
+  Modal,
+  Popover,
+  message,
+  Icon,
+} from 'antd';
 import { connect } from 'dva';
 import styles from '../style.less';
-
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -46,7 +57,13 @@ class ProjectPlanAddModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, submitting, projectPlanAddVisible, handleProjectPlanAddVisible } = this.props;
+    const {
+      form,
+      dispatch,
+      submitting,
+      signatureAddVisible,
+      handleSignatureAddVisible,
+    } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
@@ -58,7 +75,7 @@ class ProjectPlanAddModal extends PureComponent {
           });
           message.success('添加成功');
         }
-        handleProjectPlanAddVisible(false);
+        handleSignatureAddVisible(false);
       });
     };
     const errors = getFieldsError();
@@ -102,70 +119,60 @@ class ProjectPlanAddModal extends PureComponent {
     };
     return (
       <Modal
-        title="项目计划新增"
+        title="签章申请新增"
         style={{ top: 20 }}
         // 对话框是否可见
-        visible={projectPlanAddVisible}
+        visible={signatureAddVisible}
         width="40%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleProjectPlanAddVisible(false)}
+        onCancel={() => handleSignatureAddVisible(false)}
       >
         <div>
           <Card>
             <Form layout="horizontal">
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="阶段">
-                    {getFieldDecorator('projectCode', {
-                      rules: [{ required: true, message: '阶段' }],
-                    })(
-                      <Input placeholder="阶段" />
-                    )}
+                  <Form.Item {...formItemLayout} label="签章项目">
+                    {getFieldDecorator('signatureProject', {
+                      rules: [{ required: true, message: '签章项目' }],
+                    })(<Input placeholder="签章项目" />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="开始时间">
-                    {getFieldDecorator('startDate', {
-                      rules: [{ required: true, message: '开始时间' }],
-                    })(
-                      <Input placeholder="开始时间" style={{ width: 200 }} />
-                    )}
+                  <Form.Item {...formItemLayout} label="签章时间">
+                    {getFieldDecorator('signatureDate', {
+                      rules: [{ required: true, message: '签章时间' }],
+                    })(<Input placeholder="签章时间" />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="结束时间">
-                    {getFieldDecorator('endDate', {
-                      rules: [{ required: true, message: '结束时间' }],
-                    })(
-                      <Input placeholder="结束时间" style={{ width: 200 }} />
-                    )}
+                  <Form.Item {...formItemLayout} label="项目环节">
+                    {getFieldDecorator('link', {
+                      rules: [{ required: true, message: '项目环节' }],
+                    })(<Input placeholder="项目环节" />)}
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="实际完成时间">
-                    {getFieldDecorator('logContent', {
-                      rules: [{ required: true, message: '实际完成时间' }],
-                    })(
-                      <Input placeholder="实际完成时间" style={{ width: 200 }} />
-                    )}
+                  <Form.Item {...formItemLayout} label="签章人">
+                    {getFieldDecorator('signaturer', {
+                      rules: [{ required: true, message: '签章人' }],
+                    })(<Input placeholder="签章人" />)}
                   </Form.Item>
                 </Col>
               </Row>
 
               <Row>
                 <Col lg={24} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="备注">
-                    {getFieldDecorator('beizhu')(
-                      <Input placeholder="备注" style={{ width: 200 }} />
-                    )}
+                  <Form.Item {...formItemLayout} label="签章事由">
+                    {getFieldDecorator('signatureEvent')(<TextArea placeholder="签章事由" />)}
                   </Form.Item>
                 </Col>
               </Row>

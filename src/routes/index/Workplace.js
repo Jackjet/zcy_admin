@@ -626,11 +626,11 @@ export default class Workplace extends PureComponent {
         </div>
         <div className={styles.statItem}>
           <p>合同金额</p>
-          <p>2,000,000</p>
+          <p>2,000</p>
         </div>
         <div className={styles.statItem}>
           <p>应收款金额</p>
-          <p>2,223,000</p>
+          <p>2,223</p>
         </div>
       </div>
     );

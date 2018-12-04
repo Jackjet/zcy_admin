@@ -23,7 +23,7 @@ import PageLeftTreeMenu from '../../components/PageLeftTreeMenu/index';
 import StandardTable from '../../components/StandardTable/index';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import router from './configDataMenu';
-import styles from './Style.less';
+import styles from './style.less';
 import ContractAddModal from './ContractAddModal.js';
 import ContractViewTabs from './ContractViewTabs.js';
 import ContractEditModal from './ContractEditModal.js';

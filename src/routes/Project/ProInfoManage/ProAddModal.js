@@ -39,10 +39,10 @@ import Step11 from './Steps/Step11';
 import Step12 from './Steps/Step12';
 import Step13 from './Steps/Step13';
 import ApprovalManage from './Steps/ApprovalManage';
-import ChoiceCusModal from '../add/ChoiceCusModal';
-import ConstructUnitModal from '../add/ConstructUnitModal';
+import ChoiceCusModal from './ChoiceCusModal';
+import ConstructUnitModal from './ConstructUnitModal';
 import EditableCell from '../../../components/EditableTable/index';
-import styles from '../add/style.less';
+import styles from './style.less';
 
 
 const { Step } = Steps;

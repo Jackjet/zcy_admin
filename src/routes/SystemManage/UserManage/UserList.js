@@ -89,6 +89,7 @@ export default class UserList extends PureComponent {
       },
       callback: res => {
         if (res.meta.status !== '000000') {
+          message.error(res.meta.errmsg);
         } else {
           //
         }

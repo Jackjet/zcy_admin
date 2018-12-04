@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../../components/StandardTable';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import EditableCell from '../../EditableTable/EditableCell';
+import EditableCell from '../../../../components/EditableTable';
 import styles from './Style.less';
 
 const { Option } = Select;

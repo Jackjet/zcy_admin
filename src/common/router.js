@@ -2,8 +2,6 @@ import { createElement } from 'react';
 import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
-import ProjectsRepository from "../routes/KnowledgeBase/ProjectsRepository";
-import ProjectArchives from "../routes/Project/ProjectArchives/ProjectArchives";
 
 let routerDataCache;
 
@@ -135,7 +133,7 @@ export const getRouterData = app => {
     },
 
     '/project/signatureInfoManage': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/SignatureAndSealInfoManage/SignatureBill')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/ProInfoManage/SignatureAndSealInfoManage/SignatureBill')),
       name: '签章信息管理',
     },
     '/contractManager/ContractInfo': {
@@ -150,10 +148,6 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Contract/ContractList')),
       name: '项目计划',
     },
-    '/project/workPlanManage/workDiary': {
-      component: dynamicWrapper(app, [], () => import('../routes/Project/list/WorkDiary')),
-      name: '工作日记',
-    },
     '/schedule/workStatement': {
       component: dynamicWrapper(app, [], () => import('../routes/schedule/WorkStatement')),
       name: '工作报告',
@@ -163,7 +157,7 @@ export const getRouterData = app => {
       name: '项目工作记录',
     },
     '/project/projectDestroy': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/ProjectArchives/ProjectArchives')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Project/ProInfoManage/ProjectArchives/ProjectArchives')),
       name: '项目销毁',
     },
 
@@ -297,23 +291,10 @@ export const getRouterData = app => {
     '/form/step-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
     },
-
-    /*'/projectBAK/projectInfoManageBAK': {
-      component: dynamicWrapper(app, ['company','cusApplication','report'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectList')),
-      name: '项目信息管理(备份)',
-    },*/
-    /*'/projectBAK/projectStartBAK': {
-      component: dynamicWrapper(app, ['company','project'], () => import('../routes/ProjectBAK/ProInfoManage/ProjectStart')),
-      name: '项目信息启动(备份)',
-    },*/
     '/project/projectInfoMange': {
       component: dynamicWrapper(app, ['company','cusApplication','report'], () => import('../routes/Project/ProInfoManage/ProjectList')),
       name: '项目信息管理',
     },
-    /*'/project/projectStart': {
-      component: dynamicWrapper(app, ['company','project'], () => import('../routes/Project/ProInfoManage/ProjectStart')),
-      name: '项目信息启动',
-    },*/
 
     '/project/projectStart/info': {
       name: '项目基本信息',
@@ -449,9 +430,6 @@ export const getRouterData = app => {
     },
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
-    },
-    '/test': {
-      component: dynamicWrapper(app, [], () => import('../routes/Test/Slider')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

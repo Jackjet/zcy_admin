@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Select, DatePicker, Modal, Popover, message, Icon } from 'antd';
 import { connect } from 'dva';
-import styles from '../../add/style.less';
+import styles from '../style.less';
 
 
 const { Option } = Select;

@@ -27,7 +27,7 @@ import {
 import moment from 'moment/moment';
 import StandardTable from 'components/StandardTable';
 import { connect } from 'dva';
-import styles from '../add/style.less';
+import styles from './style.less';
 
 const getValue = obj =>
   Object.keys(obj)
