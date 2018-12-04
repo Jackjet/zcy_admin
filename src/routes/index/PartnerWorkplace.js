@@ -97,38 +97,38 @@ function callback(key) {
   activitiesLoading: loading.effects['activities/fetchList'],
   projectMessage: loading.effects['sysMessage/fetchList'],
 }))
-export default class WorkplacePerson extends PureComponent {
-   //constructor(props){
-     //super(props);
-     state = {
-       projectTemAuthVisible: false,
-       projectAssigVisible: false,
-       ScheduleAddVisible: false,
-       proAddVisible: false,
-       proAssignAddVisible: false,
-       rangePickerValue: getTimeDistance('year'),
-       currentUser: JSON.parse(localStorage.getItem("user")),
-       timeValue:"",
-       pageCurrent: ``,
-       pageSizeCurrent: ``,
-       messageInfoVisible: false,
-       rowInfo: ``,
-       rowTextColor: false,  //  false 表示未读  true 已读
-       newProAssignAddVisible: false, // 需要配合打开新的指派单modal
-       proAssignInfo: null,
-       cusApplyApprovalVisible: false, // 客户审批界面
-       cusApplyInfo: null,
-     };
-   //}
+export default class PartnerWorkplace extends PureComponent {
+  //constructor(props){
+  //super(props);
+  state = {
+    projectTemAuthVisible: false,
+    projectAssigVisible: false,
+    ScheduleAddVisible: false,
+    proAddVisible: false,
+    proAssignAddVisible: false,
+    rangePickerValue: getTimeDistance('year'),
+    currentUser: JSON.parse(localStorage.getItem("user")),
+    timeValue:"",
+    pageCurrent: ``,
+    pageSizeCurrent: ``,
+    messageInfoVisible: false,
+    rowInfo: ``,
+    rowTextColor: false,  //  false 表示未读  true 已读
+    newProAssignAddVisible: false, // 需要配合打开新的指派单modal
+    proAssignInfo: null,
+    cusApplyApprovalVisible: false, // 客户审批界面
+    cusApplyInfo: null,
+  };
+  //}
 
   componentDidMount() {
     console.log(this.props);
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("user"));
-   /* if(!user.name){
-      dispatch(routerRedux.push("/user/login"));
-      return;
-    }*/
+    /* if(!user.name){
+       dispatch(routerRedux.push("/user/login"));
+       return;
+     }*/
     dispatch({
       type: 'project/fetchNotice',
     });
@@ -606,6 +606,14 @@ export default class WorkplacePerson extends PureComponent {
           <p>实施项目</p>
           <p>50</p>
         </div>
+        <div className={styles.statItem}>
+          <p>分管项目</p>
+          <p>80</p>
+        </div>
+        <div className={styles.statItem}>
+          <p>应收账款</p>
+          <p>2000</p>
+        </div>
       </div>
     );
 
@@ -702,6 +710,7 @@ export default class WorkplacePerson extends PureComponent {
                       };
                     }}
                   />
+
                 </TabPane>
                 <TabPane
                   tab={
@@ -740,6 +749,18 @@ export default class WorkplacePerson extends PureComponent {
         <Card className={styles.cardstyle}>
           <Row gutter={20}>
             <Col xl={4} md={6} sm={8} xs={12}>
+              <a
+                className={styles['shortcut-box3']}
+                type="primary"
+                onClick={() => this.handleProAssignAddVisible(true)}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>项目指派</h5>
+              </a>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
               <Link
                 className={styles['shortcut-box2']}
                 to="/project/projectinfo"
@@ -749,6 +770,18 @@ export default class WorkplacePerson extends PureComponent {
                   <Icon className={styles.iconhz} type="star" />
                 </div>
                 <h5>实施项目信息管理</h5>
+              </Link>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <Link
+                className={styles['shortcut-box2']}
+                to="/project/projectinfo"
+                onClick={this.handleArea}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>分管项目信息管理</h5>
               </Link>
             </Col>
             <Col xl={4} md={6} sm={8} xs={12}>
@@ -773,6 +806,42 @@ export default class WorkplacePerson extends PureComponent {
                   <Icon className={styles.iconhz} type="star" />
                 </div>
                 <h5>费用申请单</h5>
+              </Link>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <Link
+                className={styles['shortcut-box2']}
+                to="/project/projectinfo"
+                onClick={this.handleArea}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>应收账款</h5>
+              </Link>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <Link
+                className={styles['shortcut-box2']}
+                to="/project/projectinfo"
+                onClick={this.handleArea}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>申请开票</h5>
+              </Link>
+            </Col>
+            <Col xl={4} md={6} sm={8} xs={12}>
+              <Link
+                className={styles['shortcut-box2']}
+                to="/project/projectinfo"
+                onClick={this.handleArea}
+              >
+                <div>
+                  <Icon className={styles.iconhz} type="star" />
+                </div>
+                <h5>劳务分配</h5>
               </Link>
             </Col>
           </Row>

@@ -25,11 +25,12 @@ import {
   Table,
   InputNumber,
 } from 'antd';
-import StandardTable from 'components/StandardTable';
+import StandardTable from 'components/StandardTableNoTotal';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import NotFound from "../../../Exception/404";
 import {getRoutes} from "../../../../utils/utils";
+import {message} from "antd/lib/index";
 
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
@@ -39,8 +40,13 @@ for (let i = 0; i < 10; i+=1) {
     title: `人员${i + 1}`,
   });
 };
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 const { TextArea } = Input;
 const { TreeNode } = Tree;
+const { Option } = Select;
 const fileList = [
   {
     uid: -1,
@@ -63,54 +69,6 @@ const props2 = {
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
-const fieldLabels = {
-  ProjectCode:'项目编码',
-  ReportName: '报告名称',
-  type: '项目类别',
-  years: '年度',
-  name: '项目名称',
-  dateRange: '生效日期',
-  cuslink: '客户联系人',
-  customer: '客户',
-  url: '网站主页',
-  taxcode: '税务登记号',
-  fzcompany: '负责公司',
-  fzperson: '项目负责人',
-  fee: '项目费用',
-  startdate: '开始日期',
-  enddate: '结束日期',
-  biztype: '业务类别',
-  content: '项目内容',
-  address: '详细地址',
-  remark: '备注',
-  status: '状态',
-  jfw: '交付物',
-  demand: '客户需求',
-  attachment: '附件',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
-  contractCode: '合同编码',
-  contractType: '合同类别',
-  projectName: '项目名称',
-  contractStatus: '合同性质',
-  contractTitle: '合同标题',
-  dfCompany: '对方公司',
-  authorizedAgent: '客户授权代理人',
-  PartyAcompany: '甲方公司',
-  PartyBcompany: '乙方公司',
-  fatherContract: '父合同',
-  signDate: '签订日期',
-  paymentMethod: '付款方式',
-  businessType: '业务类别',
-  contractSignPlace: '合同签订地点',
-  contractSubject: '合同标的',
-  startDate: '开始日期',
-  endDate: '结束日期',
-  totalAmount: '合同金额',
-};
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -124,19 +82,60 @@ const formItemLayout = {
 const { Panel } = Collapse;
 const { Step } = Steps;
 const {Content, Sider} = Layout;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 @Form.create()
 class Step3 extends React.PureComponent {
   state = {
     BillTableOptionTable:``,
+    selectedRows: '',
   };
 
   componentDidMount() {
     this.handleBillTableOptionTable();
+    this.props.dispatch({
+      type: 'dict/fetch',
+      payload: {
+        dictTypeId: '75fee2a2f7dc11e8a95800ff3d8180ed',
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error(res.meta.errmsg); // 返回错误信息
+        }
+      },
+    });
   }
+
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    const { dispatch } = this.props;
+    const { formValues } = this.state;
+
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+
+    const params = {
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+      dictTypeId: '75fee2a2f7dc11e8a95800ff3d8180ed',
+    };
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    dispatch({
+      type: 'dict/fetch',
+      payload: params,
+    });
+  };
+
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
+    });
+  };
 
   handleBillTableOptionTable = () => {
     const optionData = BillTable.map((data, index) => {
@@ -150,9 +149,10 @@ class Step3 extends React.PureComponent {
   }; // 根据数据中的数据，动态加载业务来源的Option
 
   render() {
-    const { dispatch, submitting, form} = this.props;
+    const { dict: { data }, dispatch, submitting, form, loading} = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillTableOptionTable } = this.state;
+    const { BillTableOptionTable, selectedRows } = this.state;
+    const pVal = "我方提供的下述资料是真实、合法、完整的，愿意承担提供资料失实等责任。";
     const uploadProps = {
       name: 'file',
       action: '//jsonplaceholder.typicode.com/posts/',
@@ -162,63 +162,32 @@ class Step3 extends React.PureComponent {
       showUploadList:true,
       onChange:this.handleOnChange,
     };
-    const uploadColumns = [{
-      title: '文件名称',
+    const columns = [{
+      title: '序号',
+      dataIndex: 'number',
+      key: 'number',
+      sorter: (a, b) => a.number < b.number,
+    }, {
+      title: '提供资料内容',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a>{text}</a>,
+    }, {
+      title: '份/册/页',
+      dataIndex: 'version',
+      key: 'version',
+    }, {
+        title: '是否原件',
+        dataIndex: 'yuanjian',
+        key: 'yuanjian',
     }, {
       title: '操作',
-      dataIndex: 'age',
-      key: 'age',
-      render: text => <a>{text}</a>,
-    }, {
-      title: '版本',
-      dataIndex: 'address',
-      key: 'address',
-      render: text => <a>{text}</a>,
+      render: (text, record) => (
+        <Fragment>
+          <a>上传</a>
+        </Fragment>
+      ),
     }];
-    const uploadData = [{
-      key: '1',
-      name: '文件1',
-      age: '在线编辑',
-      address: '3.0',
-    }, {
-      key: '2',
-      name: '文件2',
-      age: '在线编辑',
-      address: '2.0',
-    }, {
-      key: '3',
-      name: '文件3',
-      age: '在线编辑',
-      address: '1.0',
-    }];
-    const columnsProcess = [
-      {
-        title: '项目频度',
-        dataIndex: 'projectRate',
-      },
-      {
-        title: '计划时间',
-        dataIndex: 'planDate',
-      },
-      {
-        title: '工程阶段',
-        dataIndex: 'stage',
-      },
-      {
-        title: '问题',
-        dataIndex: 'problem',
-      },
-      {
-        title: '协助',
-        dataIndex: 'assist',
-      },
-    ];
-    const onPrev = () =>{
-      this.props.dispatch(routerRedux.push('/project/projectStart/confirm'));
-    };
+
     const onValidateForm = e => {
       e.preventDefault();
       validateFields((err, values) => {
@@ -239,45 +208,32 @@ class Step3 extends React.PureComponent {
         <Form layout="horizontal" className={styles.stepForm}>
           <Row className={styles['fn-mb-15']}>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='委托方资料'>
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '委托方资料' }],
+              <Form.Item {...formItemLayout} label='委托人'>
+                {getFieldDecorator('weituoperson', {
+                  rules: [{ required: false, message: '委托人' }],
                 })(
-                  <div>
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 委托方资料
-                      </Button>
-                    </Upload>
-                    <br />
-                  </div>
+                  <Input placeholder="委托人" />
                 )}
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='成果资料'>
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '成果资料' }],
+              <Form.Item {...formItemLayout} label='项目名称'>
+                {getFieldDecorator('name', {
+                  rules: [{ required: false, message: '项目名称' }],
                 })(
-                  <div>
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 成果资料
-                      </Button>
-                    </Upload>
-                  </div>
+                  <Input  placeholder="项目名称" />
                 )}
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='图片/视频'>
+              <Form.Item {...formItemLayout} label='资料交接清单'>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '图片/视频' }],
+                  rules: [{ required: false, message: '资料交接清单' }],
                 })(
                   <div>
                     <Upload {...uploadProps}>
                       <Button>
-                        <Icon type="upload" /> 图片/视频
+                        <Icon type="upload" /> 上传
                       </Button>
                     </Upload>
                   </div>
@@ -285,22 +241,27 @@ class Step3 extends React.PureComponent {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col span={6} push={2}>
-              <Form.Item {...formItemLayout} lable="文档列表">
-                {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '请输入单位名称' }],
+          <Row className={styles['fn-mb-15']}>
+            <Col span={23} pull={5}>
+              <Form.Item {...formItemLayout} label='委托方承诺'>
+                {getFieldDecorator('chengnuo', {
+                  rules: [{ required: false, message: '委托方承诺' }],
                 })(
-                  <div style={{marginTop: -25}}>
-                    <Table
-                      showHeader={false}
-                      pagination={false}
-                      columns={uploadColumns}
-                      dataSource={uploadData}
-                    />
-                  </div>
+                  <p>{pVal}</p>
                 )}
               </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <StandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
             </Col>
           </Row>
           <Form.Item
@@ -314,7 +275,7 @@ class Step3 extends React.PureComponent {
             }}
             label=""
           >
-            <Button style={{ left: 400 }} >
+            <Button type="primary" style={{ left: 400 }} >
               保存
             </Button>
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
@@ -328,8 +289,8 @@ class Step3 extends React.PureComponent {
     );
   }
 }
-export default connect(({ form, loading }) => ({
-  submitting: loading.effects['form/submitStepForm'],
-  data: form.step,
-}))(Step3);
+export default connect(({ dict, loading }) => ({
+  dict,
+  loading: loading.models.dict,
+}))(Form.create()(Step3));
 

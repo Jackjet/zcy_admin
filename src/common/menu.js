@@ -1,10 +1,35 @@
 import { isUrl } from '../utils/utils';
+import ProManageWorkplace from "../routes/index/ProManageWorkplace";
 
 const menuData = [
   {
     name: '工作台',
     icon: 'desktop',
     path: 'workplace',
+    children: [],
+  },
+  {
+    name: '合伙人工作台',
+    icon: 'desktop',
+    path: 'PartnerWorkplace',
+    children: [],
+  },
+  {
+    name: '员工工作台',
+    icon: 'desktop',
+    path: 'WorkplacePerson',
+    children: [],
+  },
+  {
+    name: '项目经理工作台',
+    icon: 'desktop',
+    path: 'ProManageWorkplace',
+    children: [],
+  },
+  {
+    name: '部门经理工作台',
+    icon: 'desktop',
+    path: 'DeptWorkplace',
     children: [],
   },
   {

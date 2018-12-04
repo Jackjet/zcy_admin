@@ -38,27 +38,32 @@ for (let i = 0; i < 5; i++) {
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--项目经理---土建`,
+      name: `人员${i + 1}--项目经理---土建`,
     });
   }
   if(i=1){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--分管领导---装饰`,
+      name: `人员${i + 1}--项目经理---土建`,
     });
   }if(i=2){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---安装`,
+      name: `人员${i + 1}--项目经理---土建`,
     });
   }if(i=3){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---市政`,
+      name: `人员${i + 1}--项目经理---土建`,
     });
   }if(i=4){
     mockData.push({
       key: i.toString(),
       title: `人员${i + 1}--职员---绿化`,
+      name: `人员${i + 1}--项目经理---土建`,
     });
   }
 
@@ -168,6 +173,11 @@ class Step2 extends React.PureComponent {
     this.setState({ targetKeys: nextTargetKeys });
   };
 
+  renderItem = (item) => {
+    return (
+     item.title
+    );
+  };
   handleBillTableOptionTable = () => {
     const optionData = BillTable.map((data, index) => {
       const val = `${data}`;
@@ -205,38 +215,7 @@ class Step2 extends React.PureComponent {
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
           <Row className={styles['fn-mb-15']}>
-            <Col span={5} offset={4}>
-              <Form.Item {...formItemLayout} label={fieldLabels.assignor}>
-                {getFieldDecorator('assignor', {
-
-                })(
-                  <div className={styles.divBorder}>
-                    <Tree defaultExpandAll>
-                      <TreeNode title="杭州至诚" key="0-0">
-                        <TreeNode title="管理层1" key="0-0-0" >
-                          <TreeNode title="员工1" key="0-0-0-0"  />
-                          <TreeNode title="员工2" key="0-0-0-1" />
-                        </TreeNode>
-                        <TreeNode title="管理层2" key="0-0-1">
-                          <TreeNode title="小卒1" key="0-0-1-0" />
-                          <TreeNode title="小卒2" key="0-0-1-1" />
-                        </TreeNode>
-                      </TreeNode>
-                      <TreeNode title="义务至诚" key="0-1">
-                        <TreeNode title="董事会" key="0-1-0" >
-                          <TreeNode title="主管1" key="0-1-0-0"  />
-                          <TreeNode title="主管2" key="0-1-0-1" />
-                        </TreeNode>
-                        <TreeNode title="财务部" key="0-1-1">
-                          <TreeNode title="会计1" key="0-1-1-0" />
-                        </TreeNode>
-                      </TreeNode>
-                    </Tree>
-                  </div>
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={13} className={styles.personlocationn}>
+            <Col span={24} className={styles.personlocationn}>
               <Form.Item >
                 {getFieldDecorator('personal', {
                 })(
@@ -245,14 +224,10 @@ class Step2 extends React.PureComponent {
                       dataSource={mockData}
                       titles={['可选人员', '已选人员']}
                       targetKeys={this.state.targetKeys}
-                      listStyle={{
-                        width: 200,
-                        height: 200,
-                      }}
-                      selectedKeys={selectedKeys}
+                      showSearch
                       onChange={this.handleChange}
-                      onSelectChange={this.handleSelectChange}
-                      render={item => item.title}
+                      onSearch={this.handleSearch}
+                      render={this.renderItem}
                     />
                   </div>
                 )}

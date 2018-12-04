@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
+import DeptWorkplace from "../routes/index/DeptWorkplace";
 
 let routerDataCache;
 
@@ -86,6 +87,23 @@ export const getRouterData = app => {
     '/PersonWorkplace': {
       component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/WorkplacePerson')),
       name:'工作台',
+    },
+
+    '/PartnerWorkplace': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/PartnerWorkplace')),
+      name:'合伙人工作台',
+    },
+    '/DeptWorkplace': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/DeptWorkplace')),
+      name:'部门经理工作台',
+    },
+    '/WorkplacePerson': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/WorkplacePerson')),
+      name:'员工工作台',
+    },
+    '/ProManageWorkplace': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/ProManageWorkplace')),
+      name:'项目经理工作台',
     },
 
 
@@ -306,7 +324,7 @@ export const getRouterData = app => {
     },
     '/project/projectStart/result': {
       name: '项目资料上传',
-      component: dynamicWrapper(app, ['project'], () => import('../routes/Project/ProInfoManage/Steps/Step3')),
+      component: dynamicWrapper(app, ['dict'], () => import('../routes/Project/ProInfoManage/Steps/Step3')),
     },
     '/project/projectStart/process': {
       name: "项目过程管理",

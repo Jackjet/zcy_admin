@@ -25,12 +25,15 @@ import {
   Table,
   InputNumber,
 } from 'antd';
-import StandardTable from 'components/StandardTable';
+import StandardTable from 'components/StandardTableNoTotal';
+import TableForm from "./TableFormDemo";
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
+import ChangePlanModal from './ChangePlanModal';
 import styles from './style.less';
 import NotFound from "../../../Exception/404";
 import {getRoutes} from "../../../../utils/utils";
 
+const tableData = [];
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {
@@ -63,54 +66,6 @@ const props2 = {
   defaultFileList: [...fileList],
   className: styles['upload-list-inline'],
 };
-const fieldLabels = {
-  ProjectCode:'项目编码',
-  ReportName: '报告名称',
-  type: '项目类别',
-  years: '年度',
-  name: '项目名称',
-  dateRange: '生效日期',
-  cuslink: '客户联系人',
-  customer: '客户',
-  url: '网站主页',
-  taxcode: '税务登记号',
-  fzcompany: '负责公司',
-  fzperson: '项目负责人',
-  fee: '项目费用',
-  startdate: '开始日期',
-  enddate: '结束日期',
-  biztype: '业务类别',
-  content: '项目内容',
-  address: '详细地址',
-  remark: '备注',
-  status: '状态',
-  jfw: '交付物',
-  demand: '客户需求',
-  attachment: '附件',
-  companyName:'单位名称',
-  companyAddress:'单位地址',
-  taxNumber:'税号',
-  openAccountBank:'开户银行',
-  bankAccount:'银行账户',
-  contractCode: '合同编码',
-  contractType: '合同类别',
-  projectName: '项目名称',
-  contractStatus: '合同性质',
-  contractTitle: '合同标题',
-  dfCompany: '对方公司',
-  authorizedAgent: '客户授权代理人',
-  PartyAcompany: '甲方公司',
-  PartyBcompany: '乙方公司',
-  fatherContract: '父合同',
-  signDate: '签订日期',
-  paymentMethod: '付款方式',
-  businessType: '业务类别',
-  contractSignPlace: '合同签订地点',
-  contractSubject: '合同标的',
-  startDate: '开始日期',
-  endDate: '结束日期',
-  totalAmount: '合同金额',
-};
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -134,6 +89,7 @@ class Step4 extends React.PureComponent {
     targetKeys: [],
     selectedRows:``,
     BillTableOptionTable:``,
+    changePlanVisible: false,
     fileList: [{
       uid: '-1',
       name: 'xxx.png',
@@ -160,6 +116,12 @@ class Step4 extends React.PureComponent {
     });
   }
 
+  handleChangePlanVisible = (flag) => {
+    this.setState({
+      changePlanVisible: !!flag,
+    });
+  };
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -168,7 +130,7 @@ class Step4 extends React.PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
+    const { formValues } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -182,10 +144,6 @@ class Step4 extends React.PureComponent {
       ...formValues,
       ...filters,
     };
-    this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
-    });
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
@@ -195,6 +153,12 @@ class Step4 extends React.PureComponent {
       payload: params,
     });
   }; // 分页器的下一页 第几页 方法
+
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
+    });
+  };
 
   handleBillTableOptionTable = () => {
     const optionData = BillTable.map((data, index) => {
@@ -206,6 +170,7 @@ class Step4 extends React.PureComponent {
       BillTableOptionTable: optionData,
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
+
 
   handleChange = (info) => {
     let fileList = info.fileList;
@@ -232,49 +197,247 @@ class Step4 extends React.PureComponent {
     });
 
     this.setState({ fileList });
-  }
+  };
 
 
   render() {
     const { form, project: { data }, dispatch, submitting, loading } = this.props;
-    const { selectedKeys, selectedRows, BillTableOptionTable } = this.state;
+    const { selectedKeys, selectedRows, BillTableOptionTable, changePlanVisible } = this.state;
     const { getFieldDecorator, validateFields } = form;
+    const pVal = "1.本表一式三份（项目负责人、部门经理、稽核室各一份）。2.项目负责人、部门经理或公司领导任何一人认为项目须经公司技术负责人审批的，均在工作交办单或本表内签署意见，由公司技术负责人审定批准后实施。";
+    const parentMethods = {
+      handleChangePlanVisible: this.handleChangePlanVisible,
+    };
     const props = {
       action: '//jsonplaceholder.typicode.com/posts/',
       onChange: this.handleChange,
       multiple: true,
     };
-    const onPrev = () => {
-      dispatch(routerRedux.push('/project/projectStart/result'));
-    };
     const onValidateForm = e => {
       e.preventDefault();
-      validateFields((err, values) => {
-        this.props.dispatch(routerRedux.push('/project/projectStart/createContract'));
-      });
     };
+    const columns1 = [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+      },
+      {
+        title: '分工内容',
+        dataIndex: 'body',
+      },
+      {
+        title: '备注',
+        dataIndex: 'remake',
+      },
+    ];
+    const columns2 = [
+      {
+        title: '阶段',
+        dataIndex: 'name',
+      },
+      {
+        title: '开始时间',
+        dataIndex: 'startTime',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'endTime',
+      },
+      {
+        title: '计划',
+        dataIndex: 'remake',
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+      },
+    ];
     return (
       <div>
         <Form layout="horizontal" className={styles.stepForm}>
-          {/*<Row>
-            <Col>
-              <Form.Item label="项目实施计划安排">
-                {getFieldDecorator('zhipaiCode')(
-                  <TextArea placeholder="项目实施计划安排" style={{ minHeight: 32 }} rows={4} />
+
+          <Row className={styles['fn-mb-15']}>
+            <Col span={12} >
+              <Form.Item {...formItemLayout} label="项目名称">
+                {getFieldDecorator('name', {
+                  rules: [{ required: false, message: '项目名称' }],
+                })(
+                  <Input
+                    placeholder="项目名称"
+                    style={{ width: 150 }}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label='项目计划编号'>
+                {getFieldDecorator('code')(
+                  <Input  style={{ width: 150 }} placeholder="项目计划编号" />
                 )}
               </Form.Item>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <Form.Item label="咨询操作过程中重点、难点的具体实施措施">
-                {getFieldDecorator('zhipaiCode')(
-                  <TextArea placeholder="咨询操作过程中重点、难点的具体实施措施" style={{ minHeight: 32 }} rows={4} />
+          <Row className={styles['fn-mb-15']}>
+            <Col span={12} >
+              <Form.Item {...formItemLayout} label="项目总投资">
+                {getFieldDecorator('touzi', {
+                  rules: [{ required: false, message: '项目总投资' }],
+                })(
+                  <Input
+                    placeholder="项目总投资"
+                    style={{ width: 150 }}
+                  />
                 )}
               </Form.Item>
             </Col>
-          </Row>*/}
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label='实施方案编制依据'>
+                {getFieldDecorator('touziyiju')(
+                  <Input style={{ width: 150 }} placeholder="咨询合同、操作规范及委托人各项要求" />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className={styles['fn-mb-15']}>
+            <Col span={21} pull={3}>
+              <Form.Item {...formItemLayout} label="咨询范围、咨询目标">
+                {getFieldDecorator('name', {
+                  rules: [{ required: false, message: '咨询范围、咨询目标' }],
+                })(
+                  <Input  placeholder="填写内容与交办单一致" style={{width:'100%'}} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className={styles['fn-mb-15']}>
+            <Col span={12} >
+              <Form.Item {...formItemLayout} label="项目负责人">
+                {getFieldDecorator('fuzeren', {
+                  rules: [{ required: false, message: '项目负责人' }],
+                })(
+                  <Input
+                    placeholder="项目负责人"
+                    style={{ width: 150 }}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item {...formItemLayout} label="咨询报告初稿时间">
+                {getFieldDecorator('touziyiju')(
+                  <Input style={{ width: 150 }} placeholder="咨询报告初稿时间" />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className={styles['fn-mb-15']}>
+            <Col span={12} >
+              <Form.Item {...formItemLayout} label="编制日期">
+                {getFieldDecorator('banzhidate', {
+                  rules: [{ required: false, message: '编制日期' }],
+                })(
+                  <Input
+                    placeholder="编制日期"
+                    style={{ width: 150 }}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className={styles['fn-mb-15']}>
+            <Col span={24} >
+              <Form.Item label="咨询操作过程中重点、难点的具体实施措施">
+                {getFieldDecorator('banzhidate', {
+                  rules: [{ required: false, message: '咨询操作过程中重点、难点的具体实施措施' }],
+                })(
+                  <TextArea
+                    placeholder="咨询操作过程中重点、难点的具体实施措施"
+                    style={{ width: "100%" }}
+                    rows={4}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Divider orientation="left">咨询人员组成及分工:</Divider>
           <Row>
+            <Col>
+              <StandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={mockData}
+                columns={columns1}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="项目实施计划安排">
+                {getFieldDecorator('anpai', {
+                  rules: [{ required: false, message: '项目实施计划安排' }],
+                  initialValue: tableData,
+                })(
+                  <TableForm />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Divider />
+          <Row>
+            <Col>
+              <Collapse defaultActiveKey={['1']} >
+                <Panel header="审批意见" key="1">
+                  <Form.Item label="部门经理审批意见">
+                    {getFieldDecorator('banzhidate', {
+                      rules: [{ required: false, message: '部门经理审批意见' }],
+                    })(
+                      <TextArea
+                        placeholder="部门经理审批意见"
+                        style={{ width: "100%" }}
+                        rows={2}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item label="企业领导审批意见">
+                    {getFieldDecorator('banzhidate', {
+                      rules: [{ required: false, message: '企业领导审批意见' }],
+                    })(
+                      <TextArea
+                        placeholder="企业领导审批意见"
+                        style={{ width: "100%" }}
+                        rows={2}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item label="技术负责人审批意见">
+                    {getFieldDecorator('banzhidate', {
+                      rules: [{ required: false, message: '技术负责人审批意见' }],
+                    })(
+                      <TextArea
+                        placeholder="技术负责人审批意见"
+                        style={{ width: "100%" }}
+                        rows={2}
+                      />
+                    )}
+                  </Form.Item>
+                </Panel>
+              </Collapse>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Item label="注">
+                {getFieldDecorator('anpai', {
+                  rules: [{ required: false, message: '注' }],
+                })(
+                  <p>{pVal}</p>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+         {/* <Row>
             <Col span={23} push={3}>
               <Upload {...props} fileList={this.state.fileList}>
                 <Button>
@@ -282,7 +445,7 @@ class Step4 extends React.PureComponent {
                 </Button>
               </Upload>
             </Col>
-          </Row>
+          </Row>*/}
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{
@@ -294,14 +457,15 @@ class Step4 extends React.PureComponent {
             }}
             label=""
           >
-            <Button style={{ marginLeft: 8, left: 400 }}>
-              打印
+            <Button type="primary" style={{ marginLeft: 8, left: 400 }}>
+              提交
             </Button>
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
-              下载
+            <Button type="primary" onClick={() => this.handleChangePlanVisible(true)} loading={submitting} style={{ marginLeft: 8, left: 400 }}>
+              变更
             </Button>
           </Form.Item>
         </Form>
+        <ChangePlanModal {...parentMethods} changePlanVisible={changePlanVisible} />
       </div>
     );
   }

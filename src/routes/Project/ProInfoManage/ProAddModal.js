@@ -437,9 +437,9 @@ class ProjectAddModal extends PureComponent {
       handleNext: this.handleNext,
     } ;
     const StepOption1 = [
-      { title: '项目信息', content: <Step1 {...stepMethods} />},
+      { title: '项目信息', content: <Step1 {...stepMethods} messageClickData={this.props.messageClickData} />},
       { title: '人员分配', content: <Step2 {...stepMethods} />},
-      { title: '资料上传', content: <Step3 {...stepMethods} />},
+      { title: '资料交接清单', content: <Step3 {...stepMethods} />},
       { title: '实施方案', content: <Step4 {...stepMethods} />},
     ];
     const StepOption2 = [

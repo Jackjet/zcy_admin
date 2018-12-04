@@ -111,14 +111,13 @@ export default class Workplace extends PureComponent {
        rangePickerValue: getTimeDistance('year'),
        currentUser: JSON.parse(localStorage.getItem("user")),
        timeValue:"",
-       pageCurrent: ``,
-       pageSizeCurrent: ``,
        rowInfo: {},
        rowTextColor: false,  //  false 表示未读  true 已读
        newProAssignAddVisible: false, // 需要配合打开新的指派单modal
        proAssignInfo: null,
        cusApplyApprovalVisible: false, // 客户审批界面
        cusApplyInfo: null,
+       messageClickData: null, // 双击message传递消息的id
      };
    //}
 
@@ -158,10 +157,6 @@ export default class Workplace extends PureComponent {
     window.scrollTo(0, 0);
   };
 
-  handleClick = () => {
-    console.log(11111111111111);
-  };
-
   handleArea = () => {
     window.scrollTo(0, 0);
   };
@@ -188,9 +183,22 @@ export default class Workplace extends PureComponent {
   };
 
   // 项目新增显示隐藏方法
-  handleProAddVisible = flag => {
-    this.setState({
-      proAddVisible: !!flag,
+  handleProAddVisible = (flag,val) => {
+    this.props.dispatch({
+      type: 'projectAssignment/getInfoById',
+      payload:{
+        id: val,
+      },
+      callback: res => {
+        if (res.meta.status !== '000000') {
+          message.error(res.meta.alertMsg);
+        } else {
+          this.setState({
+            messageClickData: res.data.list,
+            proAddVisible: !!flag,
+          });
+        }
+      },
     });
   };
 
@@ -278,13 +286,10 @@ export default class Workplace extends PureComponent {
           },
         });
       },
-
     });
     if(record.bizType){
         if(record.bizType === 110){  // 新建项目
-
-          this.handleProAddVisible(true);
-
+          this.handleProAddVisible(true, record.sourceId);
         }else if(record.bizType === 80){ // 审批项目
 
         }else if(record.bizType === 90){ // 审批客户
@@ -334,10 +339,6 @@ export default class Workplace extends PureComponent {
     /* this.props.dispatch({
       type: 'chart/fetchSalesData',
     });*/
-  };
-
-  handleViewInfo = () => {
-    console.log("双击了");
   };
 
   pushCenterMsg = () => {
@@ -402,7 +403,7 @@ export default class Workplace extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
+    const { formValues } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -414,16 +415,9 @@ export default class Workplace extends PureComponent {
       ...formValues,
       ...filters,
     };
-
-    this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
-    });
-
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
       type: 'user/fetch', // 翻页时，上一页下一页刷新列表
       payload: params,
@@ -485,6 +479,7 @@ export default class Workplace extends PureComponent {
       proAssignInfo,
       cusApplyApprovalVisible,
       cusApplyInfo,
+      messageClickData,
     } = this.state;
 
     const columns = [
@@ -772,9 +767,20 @@ export default class Workplace extends PureComponent {
                   }
                   key="bellMes"
                 >
-                  <List loading={activitiesLoading} size="large">
-                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
-                  </List>
+                  <StandardTable
+                    loading={projectMessage}
+                    data={messageData}
+                    columns={columns}
+                    onChange={this.handleStandardTableChange}
+                    rowClassName={(record, index) => record.status === 0 ?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
+                    onRow={(record) => {  // 表格行点击事件
+                      return {
+                        onDoubleClick: () => {
+                          this.GetMsgVisible(true, record)
+                        },
+                      };
+                    }}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -797,20 +803,9 @@ export default class Workplace extends PureComponent {
                   key="projctMes"
                   onTabClick={() => this.handleMessageInfoVisible(true)}
                 >
-                  <StandardTable
-                    loading={projectMessage}
-                    data={messageData}
-                    columns={columns}
-                    onChange={this.handleStandardTableChange}
-                    rowClassName={(record, index) => record.status === 0 ?styles.csbsTypes:''} // 根据是否已读状态改变行字体属性
-                    onRow={(record) => {  // 表格行点击事件
-                      return {
-                        onDoubleClick: () => {
-                          this.GetMsgVisible(true, record)
-                        },
-                      };
-                    }}
-                  />
+                  <List loading={activitiesLoading} size="large">
+                    <div className={styles.activitiesList}>{this.renderActivities()}</div>
+                  </List>
                 </TabPane>
               </Tabs>
             </Card>
@@ -1382,7 +1377,7 @@ export default class Workplace extends PureComponent {
           projectAssigVisible={projectAssigVisible}
         />
         <ProAssignAddModal {...parentMethods} proAssignAddVisible={proAssignAddVisible} />
-        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} />
+        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} messageClickData={messageClickData} />
         <NewProAssignAddModal {...parentMethods} newProAssignAddVisible={newProAssignAddVisible} proAssignInfo={proAssignInfo} />
         <MessageModal {...parentMethods} messageInfoVisible={messageInfoVisible} rowInfo={rowInfo} />
         <CusApplyApprovalModal {...parentMethods} cusApplyApprovalVisible={cusApplyApprovalVisible} cusApplyInfo={cusApplyInfo} />

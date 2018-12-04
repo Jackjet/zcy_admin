@@ -22,9 +22,9 @@ import StandardTable from '../../../components/StandardTable/index';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './style.less';
 import CusAddModal from './CusAddModal';
-import CusViewTabs from './CusTabsViewModal.js';
+import CusViewTabs from './CusViewModal.js';
 import ContactsAddModal from './ContactsAddModal';
-import CusDistributionModal from './CustomerDistributionModal';
+import CusDistributionModal from './CusDistributionModal';
 import CusEditModal from './CusEditModal';
 
 const { RangePicker } = DatePicker;
@@ -246,7 +246,19 @@ export default class CustomerList extends PureComponent {
   handleCustomerEditVisible = (flag, record )=> {
     this.setState({
       customerEditVisible: !!flag,
-      rowInfo: record,
+      rowInfo: {
+        ...record,
+      },
+    });
+  };
+
+  // 隐藏和显示 <客户> 查看界面
+  handleCustomerViewVisible = (flag, record) => {
+    this.setState({
+      customerViewVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
@@ -261,20 +273,13 @@ export default class CustomerList extends PureComponent {
     });
   };
 
-  // 隐藏和显示 <客户> 查看界面
-  handleCustomerViewVisible = (flag, record) => {
-    this.setState({
-      customerViewVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
  /* handleCustomerDistributionVisible = flag => {
     this.setState({
       customerDistributionVisible: !!flag,
     });
   }; // 客户分配*/
 
+  // 左边组织架构点击方法
   menuClick = e => {
     console.log(e.key);
     this.setState({

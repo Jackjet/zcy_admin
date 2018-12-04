@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import ExecutorModal from './ExecutorModal';
+
 import styles from './style.less';
 
 
@@ -102,6 +103,12 @@ class ProAssignAddModal extends PureComponent {
 
   // 根据当前行的id, 查询对应的项目信息
   GetMsgVisible = (flag, obj) => {
+    this.props.dispatch({
+      type: 'person/fetch',
+      payload: {
+        inputType: obj,
+      },
+    });
     this.setState({
       executorVisible: !!flag,
       inputParamName: obj,
@@ -199,7 +206,7 @@ class ProAssignAddModal extends PureComponent {
                       <Search
                         readOnly
                         placeholder="部门经理"
-                        onSearch={() => this.GetMsgVisible(true, 'departmentId')}
+                        onSearch={() => this.GetMsgVisible(true, 'leaderId')}
                       />
                     )}
                   </Form.Item>
@@ -215,7 +222,7 @@ class ProAssignAddModal extends PureComponent {
                       <Search
                         readOnly
                         placeholder="项目经理"
-                        onSearch={() => this.GetMsgVisible(true, 'projectId')}
+                        onSearch={() => this.GetMsgVisible(true, 'proManagerId')}
                       />
                     )}
                   </Form.Item>

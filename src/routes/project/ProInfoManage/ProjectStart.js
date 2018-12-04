@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { Card, Form, Icon, Menu, Layout, Steps } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from '../list/Style.less';
+import styles from './style.less';
 import NotFound from '../../Exception/404';
 import { getRoutes } from '../../../utils/utils';
 

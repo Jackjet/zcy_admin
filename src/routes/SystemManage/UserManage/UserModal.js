@@ -17,6 +17,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
+import UserRealNameModal from "./UserRealNameModal";
 import styles from './UserListAdd.less';
 
 const { Search } = Input;
@@ -54,7 +55,9 @@ class UserModal extends PureComponent {
   state = {
     width: '90%',
     previewVisible: false,
+    userRealNameVisible: false,
     previewImage: '',
+    inputValidData: null,
     treeData:[{
       title: 'Node1',
       value: '0-0',
@@ -106,6 +109,19 @@ class UserModal extends PureComponent {
 
   };
 
+  // 用户实名弹窗
+  handleUserRealNameVisible = (flag) => {
+    this.setState({
+      userRealNameVisible: !!flag,
+    })
+  };
+
+  handleGetRealName = (callVal) => {
+    this.setState({
+      inputValidData:callVal,
+    })
+  };
+
   handlePreview = file => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
@@ -132,7 +148,7 @@ class UserModal extends PureComponent {
     }
   };
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileList, userRealNameVisible, inputValidData } = this.state;
     const { form, dispatch, PersonAddVisible, handlePersonAddVisible, choiceTypeKey, choiceTypeValue } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
     const validate = () => {
@@ -165,6 +181,10 @@ class UserModal extends PureComponent {
     };
     const onCancel = () => {
       handlePersonAddVisible(false);
+    };
+    const parentMethod = {
+      handleUserRealNameVisible: this.handleUserRealNameVisible,
+      handleGetRealName: this.handleGetRealName,
     };
     const uploadButton = (
       <div>
@@ -239,9 +259,11 @@ class UserModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.personId}>
                         {getFieldDecorator('personId', {
                           rules: [{ required: true, message: '请选择用户实名' }],
+                          initialValue: inputValidData === null? "" : inputValidData[0].name,
                         })(
                           <Search
                             placeholder="请选择用户实名"
+                            onSearch={() => this.handleUserRealNameVisible(true)}
                           />
                         )}
                       </Form.Item>
@@ -381,6 +403,7 @@ class UserModal extends PureComponent {
               </Row>
             </Form>
           </Card>
+          <UserRealNameModal {...parentMethod} userRealNameVisible={userRealNameVisible} />
         </div>
       </Modal>
     );

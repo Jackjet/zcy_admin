@@ -22,16 +22,16 @@ import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu';
 import StandardTable from '../../../components/StandardTable/index';
 import GenerateReportModal from './GenerateReportModal';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import styles from '../list/Style.less';
+import styles from './style.less';
 import ProjectAddModal from './ProAddModal';
 import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal';
 import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal';
 import ProjectApplyAddModal from './ProjectApprovalLinkModal';
-import ProjectChildrenAddModal from '../add/ProjectChildrenAddModal';
-import ProjectViewTabs from '../projectTabsInfo/ProjectViewTabs';
+import ProjectChildrenAddModal from './ProjectChildrenAddModal';
+import ProjectViewTabs from './ProjectViewModal';
 import ProjectEditModal from './ProEditModal';
 import AppraisalList from './Appraisal/AppraisalList';
-import SignatureAddModal from '../SignatureAndSealInfoManage/SignatureAddModal';
+import SignatureAddModal from './SignatureAndSealInfoManage/SignatureAddModal';
 
 const { confirm } = Modal;
 const { Content, Sider } = Layout;
@@ -94,6 +94,7 @@ export default class ProjectList extends PureComponent {
     selectedKey:'',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
     generateReportVisible: false,
+    messageClickData: null,
   };
 
   componentDidMount() {
@@ -560,12 +561,13 @@ export default class ProjectList extends PureComponent {
       appraisalVisible,
       signatureAddVisible,
       generateReportVisible,
+      messageClickData,
     } = this.state;
     const columns = [
       {
         title: '项目编号',
         dataIndex: 'number',
-        width: 150,
+        width: 90,
         fixed: 'left',
         render: (text, record) => (
           <Fragment>
@@ -656,8 +658,6 @@ export default class ProjectList extends PureComponent {
 
       {
         title: '操作',
-        width: 300,
-        fixed: 'right',
         render: (text, record) => (
           <Fragment>
             <a onClick={() => this.showProjectApplyAddVisible(true, record)}>审批环节</a>
@@ -765,7 +765,7 @@ export default class ProjectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
+        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} choiceTypeValue={choiceTypeValue} messageClickData={messageClickData} rowInfo={rowInfo} />
         <ProjectChildrenAddModal{...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal{...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />

@@ -14,12 +14,13 @@ import {
   Popover,
   Tree,
   Button,
+  Layout,
 } from 'antd';
 import { connect } from 'dva';
 import moment from "moment/moment";
-import StandardTable from '../../components/ExecutorTable';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu';
+import StandardTable from '../../../components/ExecutorTable';
 import styles from './style.less';
-
 
 
 const getValue = obj =>
@@ -33,6 +34,7 @@ for (let i = 0; i < 10; i += 1) {
     title: `人员${i + 1}`,
   });
 }
+const { Content, Sider } = Layout;
 const { TreeNode } = Tree;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -58,10 +60,14 @@ const formItemLayout = {
   },
 };
 
-class ExecutorModal extends PureComponent {
+class UserRealNameModal extends PureComponent {
   state = {
     width: '90%',
     selectedRows: [], // 获取选中的行的集合
+    orgTreeMenu:[],
+    openKey: '',
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
     data:{
       list:[{name:"部门经理",number:15857112486}, {name:"分管领导",number:18888888888}, {name:"职员",number:16666666666}],
       pagination: {},
@@ -73,6 +79,18 @@ class ExecutorModal extends PureComponent {
     this.props.dispatch({
       type: 'person/fetch',
       payload: {},
+    });
+    this.props.dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({
+            orgTreeMenu : res.data.list,
+          });
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
     });
   }
   componentWillUnmount() {
@@ -170,6 +188,20 @@ class ExecutorModal extends PureComponent {
     }
   };
 
+
+  menuClick = e => {
+    console.log(e.key);
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
+
   // 简单查询
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -199,63 +231,40 @@ class ExecutorModal extends PureComponent {
   }
 
   render() {
-    const { person:{ data }, loading, executorVisible, handleExecutorVisible, inputParamName } = this.props;
+    const { person:{ data }, loading, userRealNameVisible, handleUserRealNameVisible } = this.props;
     const { selectedRows } = this.state;
     const validate = () => {
-     const nameVal =  selectedRows.map(row => row.name);
-     const numberVal =  selectedRows.map(row => row.number);
-     const arrayList = [];
-     for (let i =0; i<nameVal.length; i+=1) {
-       arrayList.push({
-         name: Object.values(nameVal)[0],
-         number: Object.values(numberVal)[0],
-       })
-     }
-     if (inputParamName === 'partner') {
-       this.props.handleGetExecutorMsg(arrayList);
-     } else if (inputParamName === 'leaderId'){
-       this.props.handleDeptMsg(arrayList);
-     } else if (inputParamName === 'proManagerId') {
-       this.props.handleProMsg(arrayList);
-     }
-     handleExecutorVisible(false);
+      const nameVal =  selectedRows.map(row => row.name);
+      const numberVal =  selectedRows.map(row => row.number);
+      const arrayList = [];
+      for (let i =0; i<nameVal.length; i+=1) {
+        arrayList.push({
+          name: Object.values(nameVal)[0],
+          number: Object.values(numberVal)[0],
+        })
+      }
+      this.props.handleGetRealName(arrayList);
+      handleUserRealNameVisible(false);
+    };
+    const cancel = () => {
+      handleUserRealNameVisible(false);
     };
     const columns = [
       {
-        title: '人员编号',
+        title: '编号',
         dataIndex: 'number',
-        width: 150,
-        fixed: 'left',
       },
       {
-        title: '人员名称',
+        title: '名称',
         dataIndex: 'name',
       },
       {
-        title: '职能',
+        title: '部门',
+        dataIndex: 'departmentId',
+      },
+      {
+        title: '职位',
         dataIndex: 'post',
-      },
-      {
-        title: '负责公司',
-        dataIndex: 'company',
-      },
-      {
-        title: '项目费用',
-        dataIndex: 'fee',
-      },
-      {
-        title: '客户名称',
-        dataIndex: 'cusName',
-      },
-      {
-        title: '客户联系人',
-        dataIndex: 'cusLinkmen',
-      },
-      {
-        title: '执行时间',
-        dataIndex: 'updatedAt',
-        sorter: true,
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
     ];
     return (
@@ -265,27 +274,40 @@ class ExecutorModal extends PureComponent {
         title="人员组织列表"
         style={{ top: 20 }}
         // 对话框是否可见
-        visible={executorVisible}
-        width="80%"
+        visible={userRealNameVisible}
+        width="70%"
         // 点击蒙层是否允许关闭
         maskClosable={false}
         onOk={validate}
-        onCancel={() => handleExecutorVisible(false)}
+        onCancel={cancel}
       >
         <div>
           <Card>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-              <StandardTable
-                scroll={{ x: 1500 }}
-                selectedRows={selectedRows}
-                loading={loading}
-                data={data}
-                columns={columns}
-                onSelectRow={this.handleSelectRows}
-                onChange={this.handleStandardTableChange}
-              />
-            </div>
+            <Layout style={{ padding: '24px 0', background: '#fff' }}>
+              <Sider width={140} style={{ background: '#fff' }}>
+                <PageLeftTreeMenu
+                  menus={this.state.orgTreeMenu}
+                  onClick={this.menuClick}
+                  mode="inline"
+                  selectedKeys={[this.state.selectedKey]}
+                  openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                  onOpenChange={this.openMenu}
+                />
+              </Sider>
+              <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                <div className={styles.tableList}>
+                  <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+                  <StandardTable
+                    selectedRows={selectedRows}
+                    loading={loading}
+                    data={data}
+                    columns={columns}
+                    onSelectRow={this.handleSelectRows}
+                    onChange={this.handleStandardTableChange}
+                  />
+                </div>
+              </Content>
+            </Layout>
           </Card>
         </div>
       </Modal>
@@ -296,4 +318,4 @@ class ExecutorModal extends PureComponent {
 export default connect(({ person, loading }) => ({
   person,
   loading: loading.models.person,
-}))(Form.create()(ExecutorModal));
+}))(Form.create()(UserRealNameModal));

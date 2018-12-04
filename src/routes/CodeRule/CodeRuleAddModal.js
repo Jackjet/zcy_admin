@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
-
+import EditableCell from '../EditableTable/EditableCell';
 
 const CheckboxGroup = Checkbox.Group;
 const mockData = [];
@@ -31,7 +31,7 @@ for (let i = 0; i < 10; i+=1) {
     title: `人员${i + 1}`,
   });
 };
-import EditableCell from '../EditableTable/EditableCell';
+
 
 const { Search } = Input;
 const { TreeNode } = Tree;

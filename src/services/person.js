@@ -2,7 +2,7 @@ import request from '../utils/request';
 
 // 人员查询
 export async function queryPerson(params) {
-  return request('/api/company/getCompanyInfosByCondition', {
+  return request('/api/person/getPersonByCondition', {
     method: 'POST',
     body: params,
   });
