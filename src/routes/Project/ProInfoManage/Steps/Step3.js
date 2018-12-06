@@ -225,29 +225,31 @@ class Step3 extends React.PureComponent {
                 )}
               </Form.Item>
             </Col>
+          </Row>
+          <Row>
             <Col span={8}>
-              <Form.Item {...formItemLayout} label='资料交接清单'>
+              <Form.Item {...formItemLayout} label=''>
                 {getFieldDecorator('companyName', {
-                  rules: [{ required: false, message: '资料交接清单' }],
+                  rules: [{ required: false, message: '' }],
+                })(
+                  <Button type="primary" >
+                    打印表格
+                  </Button>
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item {...formItemLayout} label=''>
+                {getFieldDecorator('companyName', {
+                  rules: [{ required: false, message: '' }],
                 })(
                   <div>
                     <Upload {...uploadProps}>
                       <Button>
-                        <Icon type="upload" /> 上传
+                        <Icon type="upload" /> 资料交接清单上传
                       </Button>
                     </Upload>
                   </div>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={23} pull={5}>
-              <Form.Item {...formItemLayout} label='委托方承诺'>
-                {getFieldDecorator('chengnuo', {
-                  rules: [{ required: false, message: '委托方承诺' }],
-                })(
-                  <p>{pVal}</p>
                 )}
               </Form.Item>
             </Col>
@@ -275,13 +277,9 @@ class Step3 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" style={{ left: 400 }} >
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               保存
             </Button>
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
-              提交
-            </Button>
-
           </Form.Item>
         </Form>
       </div>

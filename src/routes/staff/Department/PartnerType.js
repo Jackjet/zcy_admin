@@ -14,7 +14,7 @@ import {
   Divider,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './Style.less';
+import styles from './style.less';
 
 const fieldLabels = {
   commissionType: '提成比例类别',

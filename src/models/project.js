@@ -1,5 +1,4 @@
-import { updatePerson, queryPerson, removePersonById, addPerson, removePersonByCondition, statusCancelCancel, statusCancel } from '../services/person';
-import {queryProjectNotice} from '../services/api';
+import { updateProInfo, queryProInfo, removeProInfoById, addProInfo, removeProInfoByCondition, statusCancelCancel, getDictByCondition } from '../services/proInfo';
 
 export default {
   namespace: 'project',
@@ -18,7 +17,7 @@ export default {
 
   effects: {
     *fetch({ payload ,callback}, { call, put }) {
-      const response = yield call(queryPerson, payload);
+      const response = yield call(queryProInfo, payload);
       if (response.meta.status === '000000') {
         yield put({
           type: 'save',
@@ -31,27 +30,27 @@ export default {
     },
 
     *update({ payload ,callback}, { call }) {
-      const response = yield call(updatePerson, payload);
+      const response = yield call(updateProInfo, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
 
     *add({ payload, callback }, { call}) {
-      const response = yield call(addPerson, payload);
+      const response = yield call(addProInfo, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
 
     *remove({ payload, callback }, { call }) {
-      const response = yield call(removePersonById, payload);
+      const response = yield call(removeProInfoById, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
     *removeMore({ payload, callback }, { call }) {
-      const response = yield call(removePersonByCondition, payload);
+      const response = yield call(removeProInfoByCondition, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
@@ -68,15 +67,12 @@ export default {
         callback(response); // 返回结果
       }
     },
-
-  /*  *fetchNotice(_, { call, put }) {
-      const response = yield call(queryProjectNotice);
-      yield put({
-        type: 'saveNotice',
-        payload: Array.isArray(response) ? response : [],
-      });
-    },*/
-
+    *getDict({ payload, callback }, { call }) {
+      const response = yield call(getDictByCondition, payload);
+      if (callback && typeof callback === 'function') {
+        callback(response); // 返回结果
+      }
+    },
   },
   reducers: {
     save(state, action) {

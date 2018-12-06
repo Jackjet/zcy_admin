@@ -16,7 +16,7 @@ import {
   Tabs,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './UserListAdd.less';
+import styles from './style.less';
 
 const { TabPane } = Tabs;
 const { Option } = Select;

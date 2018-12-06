@@ -268,9 +268,9 @@ class Step6 extends React.PureComponent {
             </Row>
             <Row>
               <Col span={23} pull={3}>
-                <Form.Item {...formItemLayout} label="工程量计算">
+                <Form.Item {...formItemLayout} label="工程量编审">
                   {getFieldDecorator('gongchengliang', {
-                    rules: [{ required: false, message: '工程量计算' }],
+                    rules: [{ required: false, message: '工程量编审' }],
                     initialValue:100,
                   })(
                     <Progress percent={proProgress} strokeColor />
@@ -283,14 +283,14 @@ class Step6 extends React.PureComponent {
                     rules: [{ required: false, message: '已完成' }],
                   })(
                     <InputNumber
+                      placeholder="请输入"
                       min={0}
                       max={100}
                       step={10}
-                      formatter={value => `${value}%`}
-                      parser={value => value.replace('%', '')}
                       onChange={this.onChangeProgressPro}
                     />
                   )}
+                  <span>%</span>
                 </Form.Item>
               </Col>
               <Col span={16} pull={4}>
@@ -305,9 +305,9 @@ class Step6 extends React.PureComponent {
             </Row>
             <Row>
               <Col span={23} pull={3}>
-                <Form.Item {...formItemLayout} label="项目组稽核">
+                <Form.Item {...formItemLayout} label="清单编审套价">
                   {getFieldDecorator('jihe', {
-                    rules: [{ required: false, message: '项目组稽核' }],
+                    rules: [{ required: false, message: '清单编审套价' }],
                   })(
                     <Progress percent={jiheProgress} strokeColor />
                   )}
@@ -319,19 +319,278 @@ class Step6 extends React.PureComponent {
                     rules: [{ required: false, message: '已完成' }],
                   })(
                     <InputNumber
+                      placeholder="请输入"
                       min={0}
                       max={100}
                       step={10}
-                      formatter={value => `${value}%`}
-                      parser={value => value.replace('%', '')}
                       onChange={this.onChangeProgressJihe}
                     />
                   )}
+                  <span>%</span>
                 </Form.Item>
               </Col>
               <Col span={16} pull={4}>
                 <Form.Item {...formItemLayout} label="说明">
                   {getFieldDecorator('jiheShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="自校">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '自校' }],
+                    initialValue:100,
+                  })(
+                    <Progress percent={proProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressPro}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="工程量核对">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '工程量编审核对' }],
+                    initialValue:100,
+                  })(
+                    <Progress percent={proProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressPro}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="清单套价核对">
+                  {getFieldDecorator('jihe', {
+                    rules: [{ required: false, message: '清单编审套价核对' }],
+                  })(
+                    <Progress percent={jiheProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishjihe', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressJihe}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('jiheShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="自校">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '自校' }],
+                    initialValue:100,
+                  })(
+                    <Progress percent={proProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressPro}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="修改工程量">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '修改工程量' }],
+                    initialValue:100,
+                  })(
+                    <Progress percent={proProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressPro}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="修改套价">
+                  {getFieldDecorator('jihe', {
+                    rules: [{ required: false, message: '修改套价' }],
+                  })(
+                    <Progress percent={jiheProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishjihe', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressJihe}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('jiheShuoming', {
+                    rules: [{ required: false, message: '说明' }],
+                  })(
+                    <Input placeholder='说明' />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={23} pull={3}>
+                <Form.Item {...formItemLayout} label="自校">
+                  {getFieldDecorator('gongchengliang', {
+                    rules: [{ required: false, message: '自校' }],
+                    initialValue:100,
+                  })(
+                    <Progress percent={proProgress} strokeColor />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} push={2} >
+                <Form.Item {...formItemLayout} label="已完成">
+                  {getFieldDecorator('finishPro', {
+                    rules: [{ required: false, message: '已完成' }],
+                  })(
+                    <InputNumber
+                      placeholder="请输入"
+                      min={0}
+                      max={100}
+                      step={10}
+                      onChange={this.onChangeProgressPro}
+                    />
+                  )}
+                  <span>%</span>
+                </Form.Item>
+              </Col>
+              <Col span={16} pull={4}>
+                <Form.Item {...formItemLayout} label="说明">
+                  {getFieldDecorator('proShuoming', {
                     rules: [{ required: false, message: '说明' }],
                   })(
                     <Input placeholder='说明' />

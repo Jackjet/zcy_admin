@@ -28,7 +28,7 @@ import ProjectPlanAddModal from './ProjectPlan/ProjectPlanAddModal';
 import ProjectProcessAddModal from './ProjectProcess/ProjectProcessAddModal';
 import ProjectApplyAddModal from './ProjectApprovalLinkModal';
 import ProjectChildrenAddModal from './ProjectChildrenAddModal';
-import ProjectViewTabs from './ProjectViewModal';
+import ProjectViewTabs from './ProViewModal';
 import ProjectEditModal from './ProEditModal';
 import AppraisalList from './Appraisal/AppraisalList';
 import SignatureAddModal from './SignatureAndSealInfoManage/SignatureAddModal';
@@ -67,9 +67,9 @@ const status = [
   '完成',
 ];
 
-@connect(({ cusApplication, loading }) => ({
-  cusApplication,
-  loading: loading.models.cusApplication,
+@connect(({ project, loading }) => ({
+  project,
+  loading: loading.models.project,
 }))
 @Form.create()
 export default class ProjectList extends PureComponent {
@@ -94,12 +94,14 @@ export default class ProjectList extends PureComponent {
     selectedKey:'',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
     generateReportVisible: false,
+    messageClickData: null,
   };
 
+  // 加载组建时,加载列表数据
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'cusApplication/fetch',
+      type: 'project/fetch',
       payload: {
         page: 1,
         pageSize: 10,
@@ -122,8 +124,9 @@ export default class ProjectList extends PureComponent {
         }
       },
     });
-  } // 加载组建时,加载列表数据
+  }
 
+  // 分页器上一页下一页方法，刷新页面
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -135,7 +138,7 @@ export default class ProjectList extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
@@ -145,11 +148,12 @@ export default class ProjectList extends PureComponent {
     }
 
     dispatch({
-      type: 'cusApplication/fetch',
+      type: 'project/fetch',
       payload: params,
     });
-  }; // 分页器上一页下一页方法，刷新页面
+  };
 
+  // 页表查询方法
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -167,8 +171,9 @@ export default class ProjectList extends PureComponent {
         payload: values,
       });
     });
-  }; // 页表查询方法
+  };
 
+  // 重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -179,13 +184,14 @@ export default class ProjectList extends PureComponent {
       type: 'rule/fetch',
       payload: {},
     });
-  }; // 重置方法
+  };
 
+  // 简单查询和高级查询切换
   toggleForm = () => {
     this.setState({
       expandForm: !this.state.expandForm,
     });
-  }; // 简单查询和高级查询切换
+  };
 
   handleMenuClick = e => {
     const { dispatch } = this.props;
@@ -226,6 +232,7 @@ export default class ProjectList extends PureComponent {
     });
   };
 
+  // 项目新增显示隐藏方法
   handleProAddVisible = flag => {
     if (this.state.choiceTypeKey) {
       this.setState({
@@ -240,54 +247,74 @@ export default class ProjectList extends PureComponent {
       message.warning('请选择工程类别');
       return false;
     }
-  }; // 项目新增显示隐藏方法
+  };
+
+  // 审批环节显示隐藏方法
   handleProjectApplyAddVisible = flag => {
     this.setState({
       projectApplyAddVisible: !!flag,
     });
-  }; // 审批环节显示隐藏方法
+  };
+
+  // 审批环节显示隐藏方法 并 传参数
   showProjectApplyAddVisible = (flag, record) => {
     this.setState({
       projectApplyAddVisible: !!flag,
       rowInfo: record,
     });
-  }; // 审批环节显示隐藏方法 并 传参数
+  };
+
+  // 项目计划显示隐藏方法
   handleProjectPlanAddVisible = flag => {
     this.setState({
       projectPlanAddVisible: !!flag,
     });
-  }; // 项目计划显示隐藏方法
+  };
+
+  // 项目新增过程汇报方法
   handleProjectProcessAddVisible = flag => {
     this.setState({
       projectProcessAddVisible: !!flag,
     });
-  }; // 项目新增过程汇报方法
+  };
+
+  // 项目新增子项目方法
   handleProjectChildrenAddVisible = flag => {
     this.setState({
       projectChildrenAddVisible: !!flag,
     });
-  }; // 项目新增子项目方法
+  };
+
+  // 考评启动方法
   handleAppraisalVisible = flag => {
     this.setState({
       appraisalVisible: !!flag,
     });
-  }; // 考评启动方法
+  };
+
+  // 项目编辑方法
   handleProjectEditVisible = flag => {
     this.setState({
       projectEditVisible: !!flag,
     });
-  }; // 项目编辑方法
+  };
+
+  // 项目编辑方法 带入当前行数据
   showEditMessage = (flag, record) => {
     this.setState({
       projectEditVisible: !!flag,
       rowInfo: record,
     });
-  }; // 项目编辑方法 带入当前行数据
+  };
+
+  // 项目基本信息查看方法
   handleProjectTabsVisible = flag => {
     this.setState({
       projectTabsVisible: !!flag,
     });
-  }; // 项目基本信息查看方法
+  };
+
+  // 项目基本信息查看方法 带入当前行数据
   showViewMessage = (flag, record) => {
     this.setState({
       projectTabsVisible: !!flag,
@@ -297,7 +324,7 @@ export default class ProjectList extends PureComponent {
         BillSource: `工程造价`,
       },
     });
-  }; // 项目基本信息查看方法 带入当前行数据
+  };
   handleDeleteClick = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -545,7 +572,7 @@ export default class ProjectList extends PureComponent {
   } // 简单查询高级查询切换
 
   render() {
-    const { cusApplication: { data }, loading } = this.props;
+    const { project: { data }, loading } = this.props;
     const {
       selectedRows,
       proAddVisible,
@@ -560,12 +587,13 @@ export default class ProjectList extends PureComponent {
       appraisalVisible,
       signatureAddVisible,
       generateReportVisible,
+      messageClickData,
     } = this.state;
     const columns = [
       {
         title: '项目编号',
         dataIndex: 'number',
-        width: 150,
+        width: 90,
         fixed: 'left',
         render: (text, record) => (
           <Fragment>
@@ -656,8 +684,6 @@ export default class ProjectList extends PureComponent {
 
       {
         title: '操作',
-        width: 300,
-        fixed: 'right',
         render: (text, record) => (
           <Fragment>
             <a onClick={() => this.showProjectApplyAddVisible(true, record)}>审批环节</a>
@@ -765,7 +791,7 @@ export default class ProjectList extends PureComponent {
             </Content>
           </Layout>
         </Card>
-        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} choiceTypeValue={choiceTypeValue} rowInfo={rowInfo} />
+        <ProjectAddModal {...parentMethods} proAddVisible={proAddVisible} choiceTypeValue={choiceTypeValue} messageClickData={messageClickData} rowInfo={rowInfo} />
         <ProjectChildrenAddModal{...parentMethods} projectChildrenAddVisible={projectChildrenAddVisible} />
         <ProjectViewTabs {...parentMethods} projectTabsVisible={projectTabsVisible} rowInfo={rowInfo} />
         <ProjectEditModal{...parentMethods} projectEditVisible={projectEditVisible} rowInfo={rowInfo} />
