@@ -16,8 +16,10 @@ import {
   Checkbox,
 } from 'antd';
 import { connect } from 'dva';
+import TableForm from "./TableFormDemo";
 import styles from './style.less';
 
+const tableData=[];
 const mockData = [];
 for (let i = 0; i < 10; i += 1) {
   mockData.push({
@@ -56,6 +58,8 @@ class ChangePlanModal extends PureComponent {
     width: '90%',
     selectedKeys: [],
     targetKeys: [],
+    showPartnerVisible: 0,
+    showChange: 0,
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -64,8 +68,41 @@ class ChangePlanModal extends PureComponent {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
 
-  handleChange = targetKeys => {
-    this.setState({ targetKeys });
+  // 勾选配合展示合伙人选择框
+  showPartner = (e) => {
+    if (e.target.value === true) {
+      this.setState({
+        showPartnerVisible: 0,
+      })
+    } else if (e.target.value === false) {
+      this.setState({
+        showPartnerVisible: 1,
+      })
+    }
+
+  };
+
+  // 勾选配合展示合伙人选择框
+  showChange = (e) => {
+    if (e.target.value === true) {
+      this.setState({
+        showChange: 0,
+      })
+    } else if (e.target.value === false) {
+      this.setState({
+        showChange: 1,
+      })
+    }
+  };
+
+  renderItem = (item) => {
+    return (
+      item.title
+    );
+  };
+
+  handleChange = (nextTargetKeys) => {
+    this.setState({ targetKeys: nextTargetKeys });
   };
 
   resizeFooterToolbar = () => {
@@ -79,7 +116,7 @@ class ChangePlanModal extends PureComponent {
   render() {
     const { form, dispatch, submitting, changePlanVisible, handleChangePlanVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { selectedKeys } = this.state;
+    const { selectedKeys, showPartnerVisible, showChange } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -110,6 +147,7 @@ class ChangePlanModal extends PureComponent {
         maskClosable={false}
         onOk={validate}
         onCancel={cancel}
+        okText="提交"
       >
         <div>
           <Card>
@@ -117,7 +155,7 @@ class ChangePlanModal extends PureComponent {
               <Row>
                 <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label="委托人">
-                    {getFieldDecorator('weituoren', {
+                    {getFieldDecorator('weituoperson', {
                       rules: [{ required: false, message: '委托人' }],
                     })(
                       <Input placeholder="委托人" />
@@ -126,7 +164,8 @@ class ChangePlanModal extends PureComponent {
                 </Col>
                 <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label="项目名称">
-                    {getFieldDecorator('name', {
+                    {getFieldDecorator('biangeng' +
+                      '', {
                       rules: [{ required: false, message: '项目名称' }],
                     })(
                       <Input placeholder="项目名称" />
@@ -134,22 +173,94 @@ class ChangePlanModal extends PureComponent {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
+              <Row className={styles['fn-mb-15']}>
+                <Col lg={12} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label="变更理由">
+                    {getFieldDecorator('person', {
+                      rules: [{ required: false, message: '变更理由' }],
+                    })(
+                      <TextArea placeholder="变更理由" rows={3}  />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              {/*<Row>
                 <Col lg={12} md={24} sm={24}>
                   <Form.Item {...formItemLayout} label="变更">
-                    {getFieldDecorator('weituoren', {
+                    {getFieldDecorator('biangeng', {
                       rules: [{ required: false, message: '变更' }],
                     })(
                       <CheckboxGroup options={plainOptions} />
                     )}
                   </Form.Item>
                 </Col>
+              </Row>*/}
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formItemLayout} label="人员变更">
+                    {getFieldDecorator('person', {
+                      rules: [{ required: false, message: '人员变更' }],
+                      initialValue: false,
+                    })(
+                      <Checkbox onChange={this.showPartner} />
+                    )}
+                  </Form.Item>
+                </Col>
               </Row>
+              {(showPartnerVisible === 1 )&&(
+                <Row className={styles['fn-mb-15']}>
+                  <Col>
+                    <Form.Item {...formItemLayout}>
+                      {getFieldDecorator('partner', {
+                        rules: [{ required: false, message: '' }],
+                      })(
+                        <Transfer
+                          dataSource={mockData}
+                          titles={['可选人员', '已选人员']}
+                          targetKeys={this.state.targetKeys}
+                          showSearch
+                          onChange={this.handleChange}
+                          onSearch={this.handleSearch}
+                          render={this.renderItem}
+                        />
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              )}
+
+              <Row className={styles['fn-mb-15']}>
+                <Col>
+                  <Form.Item {...formItemLayout} label="计划变更">
+                    {getFieldDecorator('plan', {
+                      rules: [{ required: false, message: '计划变更' }],
+                      initialValue: false,
+                    })(
+                      <Checkbox onChange={this.showChange} />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              {(showChange === 1 )&&(
+                <Row className={styles['fn-mb-15']}>
+                  <Col>
+                    <Form.Item {...formItemLayout} label="">
+                      {getFieldDecorator('partner', {
+                        rules: [{ required: false, message: '' }],
+                        initialValue: tableData,
+                      })(
+                        <TableForm />
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+              )}
               <Row>
-                <Col lg={12} md={24} sm={24}>
-                  <Form.Item {...formItemLayout} label="是否同意变更考核时间">
+                <Col lg={24} md={24} sm={24}>
+                  <Form.Item {...formItemLayout} label="变更考核时间">
                     {getFieldDecorator('weituoren', {
-                      rules: [{ required: false, message: '是否同意变更考核时间' }],
+                      rules: [{ required: false, message: '变更考核时间' }],
+                      initialValue: '否',
                     })(
                       <CheckboxGroup options={plainOptions2} />
                     )}

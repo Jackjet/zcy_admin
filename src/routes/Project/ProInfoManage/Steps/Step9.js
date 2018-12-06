@@ -19,9 +19,12 @@ import {
   Card,
   InputNumber,
   message,
+  Table,
+  Badge,
 } from 'antd';
 import moment from "moment/moment";
 import { routerRedux } from 'dva/router';
+import DemoModal from './DemoModal';
 import styles from './style.less';
 
 const BillTable = ['建设项目造价咨询工作交办单','委托人提供资料交接清单','工程咨询过程资料交接登记表'];
@@ -127,6 +130,8 @@ class Step6 extends React.PureComponent {
     TestOption:``,
     ProTypeValue:``,
     BillTableOptionTable:``,
+    visitAddVisible: false,
+    buttonVisible: false,
   };
   componentDidMount() {
     this.handleBillSourceOption();
@@ -143,6 +148,12 @@ class Step6 extends React.PureComponent {
       BillSourceOptionData: optionData,
     });
   }; // 根据数据中的数据，动态加载业务来源的Option
+
+  handleClickButton = () => {
+    this.setState({
+      buttonVisible: true,
+    })
+  };
 
   handleProTypeOption = () => {
     const ProTypeValues = Object.values(ProTypeOption);
@@ -170,6 +181,12 @@ class Step6 extends React.PureComponent {
     });
   }; // 获取业务来源的Option的值
 
+  handleVisitAddVisible = (flag) => {
+    this.setState({
+      visitAddVisible: !!flag,
+    });
+  };
+
   handleBillTableOptionTable = () => {
     const optionData = BillTable.map((data, index) => {
       const val = `${data}`;
@@ -185,30 +202,87 @@ class Step6 extends React.PureComponent {
   render() {
     const { form, dispatch, loading, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
-    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable } = this.state;
+    const { BillSourceOptionData, BillSourceValue, ProTypeOptionData, ProTypeValue, BillTableOptionTable, buttonVisible, visitAddVisible } = this.state;
+    const data = [{number: "函_001",name:"项目001"},{number: "报告_002",name:"项目001"}];
+    const parentMethods = {
+      handleVisitAddVisible: this.handleVisitAddVisible,
+    };
+    const rowSelection = {
+      type: "checkbox",
+    };
+    const expandedRowRender = () => {
+      const columns1= [
+        { title: '标题', dataIndex: 'title', key: 'title' },
+        { title: '文件名', dataIndex: 'fileName', key: 'fileName' },
+      ];
+
+      const data1 = [{title:"首页"},{title:"扉页"},{title:"报告"},{title:"定案表"},{title:"结算/预算书（根据项目的业务类别自动判断）"},{title:"其他说明材料"}];
+      return (
+        <Table
+          columns={columns1}
+          dataSource={data1}
+          pagination={false}
+          rowSelection={rowSelection}
+        />
+      );
+    };
+
+    const columns = [
+      {
+        title: '编号',
+        dataIndex: 'number',
+        render:(val) => (
+          <a onClick={() => this.handleVisitAddVisible(true)}>{val}</a>
+        ),
+      },
+      {
+        title: '打印份数',
+        dataIndex: 'name',
+        render(val) {
+          return (
+            <span>
+              <Input style={{ width:20 }} />++<Input style={{ width:20 }} />
+            </span>
+          );
+        },
+      },
+      {
+        title: '打印次数',
+        dataIndex: 'remake',
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+        render() {
+          return (
+            <Checkbox>
+              重新打印
+            </Checkbox>
+          )
+        },
+      },
+    ];
     const onValidateForm = () => {
       validateFields((err, values) => {
-        if (!err) {
-          /*dispatch({
-            type: 'person/add',
-            payload: values,
-            callback: (res) => {
-              if(res.meta.status !== "000000"){
-                message.error(res.meta.errmsg);
-              } else {
-                message.success("提交成功!");
 
-              }
-            },
-          });*/
-          dispatch(routerRedux.push('/project/projectStart/projectFile'));
-        }
       });
     };
     return (
       <Card>
         <Form layout="horizontal">
-          <Row className={styles['fn-mb-15']}>
+          <Row>
+            <Col>
+              <Table
+                pagination={false}
+                dataSource={data}
+                columns={columns}
+                rowSelection={rowSelection}
+                expandedRowRender={expandedRowRender}
+              />
+              <p>前面框是送出份数，后面框是存档份数，函件子表默认展开</p>
+            </Col>
+          </Row>
+          {/*<Row className={styles['fn-mb-15']}>
             <Col span={12}>
               <Form.Item {...formItemLayout} label="报告名称">
                 {getFieldDecorator('ReportName', {
@@ -249,7 +323,7 @@ class Step6 extends React.PureComponent {
                 )}
               </Form.Item>
             </Col>
-          </Row>
+          </Row>*/}
           <Form.Item
             style={{ marginBottom: 8 }}
             wrapperCol={{
@@ -261,11 +335,16 @@ class Step6 extends React.PureComponent {
             }}
             label=""
           >
-            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
-              提交
+            <Checkbox onChange={this.onChange}>有其他材料需要合并装订</Checkbox>
+            <Button type="primary" onClick={this.handleClickButton} loading={submitting} style={{ marginLeft: 8}}>
+              提交打印
+            </Button>
+            <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8 }}>
+              修改报告
             </Button>
           </Form.Item>
         </Form>
+        <DemoModal {...parentMethods} visitAddVisible={visitAddVisible} />
       </Card>
     );
   }

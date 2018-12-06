@@ -1,5 +1,6 @@
 import { isUrl } from '../utils/utils';
 import ProManageWorkplace from "../routes/index/ProManageWorkplace";
+import LogisticsWorkplace from "../routes/index/LogisticsWorkplace";
 
 const menuData = [
   {
@@ -30,6 +31,12 @@ const menuData = [
     name: '部门经理工作台',
     icon: 'desktop',
     path: 'DeptWorkplace',
+    children: [],
+  },
+  {
+    name: '后勤工作台',
+    icon: 'desktop',
+    path: 'LogisticsWorkplace',
     children: [],
   },
   {

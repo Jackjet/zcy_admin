@@ -15,8 +15,8 @@ import {
   Divider,
 } from 'antd';
 import { connect } from 'dva';
-import StandardTable from '../../../../components/StandardTable/index';
-import AuthorityView from '../Role/AuthorityView';
+import StandardTable from '../../../../components/StandardTable';
+import AuthorityView from './AuthorityView';
 import styles from '../style.less';
 
 const mockData = [];

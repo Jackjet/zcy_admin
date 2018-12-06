@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import StandardTable from '../../../../components/StandardTable';
 import PageHeaderLayout from '../../../../layouts/PageHeaderLayout';
-import styles from './style.less';
+import styles from '../style.less';
 import OrgRangeAddModal from './OrgRangeAddModal';
 
 

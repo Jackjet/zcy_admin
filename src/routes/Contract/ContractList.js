@@ -233,35 +233,9 @@ export default class ContractList extends PureComponent {
     });
   };
   handleContractVisible = flag => {
-    if(this.state.choiceTypeKey === 0) {
-      message.config({
-        top: 100,
-        duration: 2,
-        maxCount: 1,
-      });
-      message.warning('请选择合同类别');
-      return false;
-    }
     this.setState({
       contractTypeVisible: !!flag,
-    });if (!flag) {
-      this.props.dispatch({
-        type: 'contract/fetch',
-        payload: {
-          page: 1,
-          pageSize: 10,
-        },
-        callback: res => {
-          if (res.meta.status !== '000000') {
-            message.error(res.meta.errmsg); // 返回错误信息
-            // this.props.data = res.data;
-          } else {
-            message.success('公司更新成功!');
-          }
-        },
-      });
-    }
-
+    });
   };
 
   handleContractTypeVisible = flag => {
@@ -273,7 +247,7 @@ export default class ContractList extends PureComponent {
   handleContractAddVisible = flag => {
     this.setState({
       contractAddVisible: !!flag,
-    })
+    });
     if (!flag) {
       this.props.dispatch({
         type: 'contract/fetch',

@@ -18,7 +18,7 @@ import {
 import { connect } from 'dva';
 import moment from "moment/moment";
 import UserRealNameModal from "./UserRealNameModal";
-import styles from './UserListAdd.less';
+import styles from './style.less';
 
 const { Search } = Input;
 const { Option } = Select;

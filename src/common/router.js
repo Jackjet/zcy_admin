@@ -3,6 +3,7 @@ import dynamic from 'dva/dynamic';
 import pathToRegexp from 'path-to-regexp';
 import { getMenuData } from './menu';
 import DeptWorkplace from "../routes/index/DeptWorkplace";
+import Archives from "../routes/index/Archives";
 
 let routerDataCache;
 
@@ -105,7 +106,22 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/ProManageWorkplace')),
       name:'项目经理工作台',
     },
-
+    '/LogisticsWorkplace': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/LogisticsWorkplace')),
+      name:'后勤工作台',
+    },
+    '/Printing': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/Printing')),
+      name:'打印',
+    },
+    '/Archives': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/Archives')),
+      name:'档案',
+    },
+    '/Seal': {
+      component: dynamicWrapper(app, ['chart','sysMessage','projectAssignment','cusApplication'], () => import('../routes/index/Seal')),
+      name:'盖章',
+    },
 
     '/crm/customerApply': {
       component: dynamicWrapper(app, ['cusApplication', 'cusInfoManage'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
@@ -130,7 +146,7 @@ export const getRouterData = app => {
       name: '业务用表',
     },
     '/system/dictManage': {
-      component: dynamicWrapper(app, ['dict'], () => import('../routes/SystemManage/list/Dict')),
+      component: dynamicWrapper(app, ['dict'], () => import('../routes/SystemManage/Dict/Dict')),
       name: '数据字典',
     },
     '/projectAllow/projectAllocation': {
@@ -142,7 +158,7 @@ export const getRouterData = app => {
       name: '跨部门跨公司指派单',
     },
     '/system/dictType': {
-      component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/list/DictType')),
+      component: dynamicWrapper(app, ['dictType'], () => import('../routes/SystemManage/DictType/DictType')),
       name: '数据字典类型',
     },
     '/system/userManage': {
@@ -281,10 +297,10 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['list'], () => import('../routes/notice/NoticeList')),
     },
     '/HR/organize': {
-      component: dynamicWrapper(app, ['company'], () => import('../routes/staff/OrgManage/list/OrgUnitList')),
+      component: dynamicWrapper(app, ['company'], () => import('../routes/staff/OrgManage/OrgUnitList')),
     },
     '/HR/department': {
-      component: dynamicWrapper(app, ['dept'], () => import('../routes/staff/Department/DepartmentList')),
+      component: dynamicWrapper(app, ['dept'], () => import('../routes/staff/Department/DetList')),
     },
     '/HR/staff': {
       component: dynamicWrapper(app, ['person'], () => import('../routes/staff/PersonManage/PersonManageList')),
@@ -296,9 +312,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
     },
     '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
-        import('../routes/Dashboard/Workplace')
-      ),
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),
       // hideInBreadcrumb: true,
       // name: '工作台',
       // authority: 'admin',

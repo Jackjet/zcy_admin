@@ -297,9 +297,7 @@ class Step7 extends React.PureComponent {
             }}
             label=""
           >
-            <Button style={{ left: 400 }}>
-              保存
-            </Button>
+
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
               提交
             </Button>

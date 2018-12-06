@@ -458,6 +458,9 @@ class Step4 extends React.PureComponent {
             label=""
           >
             <Button type="primary" style={{ marginLeft: 8, left: 400 }}>
+              预览
+            </Button>
+            <Button type="primary" style={{ marginLeft: 8, left: 400 }}>
               提交
             </Button>
             <Button type="primary" onClick={() => this.handleChangePlanVisible(true)} loading={submitting} style={{ marginLeft: 8, left: 400 }}>

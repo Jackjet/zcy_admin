@@ -16,7 +16,7 @@ import {
   TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './UserListAdd.less';
+import styles from './style.less';
 import moment from "moment/moment";
 
 const { Option } = Select;

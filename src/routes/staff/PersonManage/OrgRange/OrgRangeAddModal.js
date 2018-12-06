@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Card, Form, Col, Row, Input, Select, DatePicker, Transfer, Modal, Icon, message, Popover, Tree } from 'antd';
 import { connect } from 'dva';
-import styles from './style.less';
+import styles from '../style.less';
 
 const mockData = [];
 for (let i = 0; i < 10; i+=1) {

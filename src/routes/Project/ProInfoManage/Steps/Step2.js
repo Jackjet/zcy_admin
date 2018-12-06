@@ -167,6 +167,10 @@ class Step2 extends React.PureComponent {
 
   componentDidMount() {
     this.handleBillTableOptionTable();
+    this.props.dispatch({
+      type: 'person/fetch',
+      payload: {},
+    })
   }
 
   handleChange = (nextTargetKeys) => {
@@ -190,12 +194,13 @@ class Step2 extends React.PureComponent {
   }; // 根据数据中的数据，动态加载业务来源的Option
 
   render() {
-    const { form, data, dispatch, submitting } = this.props;
+    const { person: {data}, form, dispatch, submitting } = this.props;
     const { selectedKeys, BillTableOptionTable } = this.state;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
       dispatch(routerRedux.push('/project/projectStart/info'));
     };
+   /* const validData = data.data.list;*/
     const onValidateForm = e => {
       e.preventDefault();
       validateFields((err, values) => {
@@ -203,7 +208,6 @@ class Step2 extends React.PureComponent {
           dispatch({
             type: 'form/submitStepForm',
             payload: {
-              ...data,
               ...values,
             },
           });
@@ -219,17 +223,15 @@ class Step2 extends React.PureComponent {
               <Form.Item >
                 {getFieldDecorator('personal', {
                 })(
-                  <div>
-                    <Transfer
-                      dataSource={mockData}
-                      titles={['可选人员', '已选人员']}
-                      targetKeys={this.state.targetKeys}
-                      showSearch
-                      onChange={this.handleChange}
-                      onSearch={this.handleSearch}
-                      render={this.renderItem}
-                    />
-                  </div>
+                  <Transfer
+                    dataSource={mockData}
+                    titles={['可选人员', '已选人员']}
+                    targetKeys={this.state.targetKeys}
+                    showSearch
+                    onChange={this.handleChange}
+                    onSearch={this.handleSearch}
+                    render={this.renderItem}
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -245,11 +247,11 @@ class Step2 extends React.PureComponent {
             }}
             label=""
           >
-            <Button style={{ left: 400 }}>
+            {/*<Button style={{ left: 400 }}>
               上一步
-            </Button>
+            </Button>*/}
             <Button type="primary" onClick={onValidateForm} loading={submitting} style={{ marginLeft: 8,  left: 400 }}>
-              提交
+              保存
             </Button>
           </Form.Item>
         </Form>
@@ -258,7 +260,7 @@ class Step2 extends React.PureComponent {
   }
 }
 
-export default connect(({ form, loading }) => ({
-  submitting: loading.effects['form/submitStepForm'],
-  data: form.step,
+export default connect(({ person, loading }) => ({
+  person,
+  loading: loading.models.person,
 }))(Step2);

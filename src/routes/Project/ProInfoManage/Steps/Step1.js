@@ -47,9 +47,8 @@ const formItemLayout = {
 class Step1 extends PureComponent {
   state = {
     BillSourceOptionData: [],  // 业务来源类型option
-    BillSourceValue:``,
+    BillSourceValue:``, //
     ProTypeOptionData: [], // 项目类型option
-    TestOption:``,
     ProTypeValue: ``,
     submitProcessVisible: false,
   };
@@ -62,7 +61,7 @@ class Step1 extends PureComponent {
   handleBillSourceOption = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'cusApplication/getDict', // 接口
+      type: 'project/getDict', // 接口
       payload: {
         dictTypeId: 'be407dc3eefc11e89655186024a65a7c', // 数据类型id
       },
@@ -82,7 +81,7 @@ class Step1 extends PureComponent {
   handleProTypeOption = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'cusApplication/getDict', // 接口
+      type: 'project/getDict', // 接口
       payload: {
         dictTypeId: '1821fe9feef711e89655186024a65a7c', // 数据类型id
       },
@@ -140,7 +139,7 @@ class Step1 extends PureComponent {
       validateFields((err, values) => {
         if (!err) {
           dispatch({
-            type: 'cusApplication/add',
+            type: 'project/add',
             payload: values,
             callback: (res) => {
               if(res.meta.status !== "000000"){
@@ -171,6 +170,33 @@ class Step1 extends PureComponent {
             </Col>
           </Row>
           <Row className={styles['fn-mb-15']}>
+            <Col span={8}>
+              <Form.Item {...formItemLayout} label="客户">
+                {getFieldDecorator('customer', {
+                  rules: [{ required: false, message: '请选择客户' }],
+                })(
+                  <Search
+                    placeholder="请选择客户"
+                    style={{ width: 150 }}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={16}>
+              <Form.Item {...formItemLayout} label="联系人">
+                {getFieldDecorator('linkman', {
+                  rules: [{ required: false, message: '请选择联系人' }],
+                })(
+                  <div>
+                    <Input  placeholder="请选择联系人" style={{ width: '68%' }} />
+                    <Divider type="vertical" className={styles['ant-verticalHz']} />
+                    <a>新增联系人</a>
+                  </div>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row className={styles['fn-mb-15']}>
             <Col span={8} >
               <Form.Item {...formItemLayout} label="项目类别">
                 {getFieldDecorator('type', {
@@ -194,33 +220,6 @@ class Step1 extends PureComponent {
                     <Input  style={{ width: '68%' }} placeholder="合同" />
                     <Divider type="vertical"  />
                     <a>新增合同</a>
-                  </div>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row className={styles['fn-mb-15']}>
-            <Col span={8}>
-              <Form.Item {...formItemLayout} label="客户">
-                {getFieldDecorator('customer', {
-                  rules: [{ required: false, message: '请选择客户' }],
-                })(
-                  <Search
-                    placeholder="请选择客户"
-                    style={{ width: 150 }}
-                  />
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={16}>
-              <Form.Item {...formItemLayout} label="联系人">
-                {getFieldDecorator('linkman', {
-                  rules: [{ required: false, message: '请选择联系人' }],
-                })(
-                  <div>
-                    <Input  placeholder="请选择联系人" style={{ width: '68%' }} />
-                    <Divider type="vertical" className={styles['ant-verticalHz']} />
-                    <a>新增联系人</a>
                   </div>
                 )}
               </Form.Item>
@@ -445,6 +444,7 @@ class Step1 extends PureComponent {
   }
 }
 
-export default connect(({ dept, loading }) => ({
-  submitting: loading.effects['dept/add'],
+export default connect(({ project, loading }) => ({
+  project,
+  submitting: loading.effects['project/add'],
 }))(Form.create()(Step1));

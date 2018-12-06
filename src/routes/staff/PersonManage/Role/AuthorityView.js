@@ -11,7 +11,7 @@ import {
   Col,
 } from 'antd';
 import { connect } from 'dva';
-import styles from '../UserListAdd.less';
+import styles from '../style.less';
 
 
 const formItemLayout = {
