@@ -162,7 +162,7 @@ export const getRouterData = app => {
       name: '数据字典类型',
     },
     '/system/userManage': {
-      component: dynamicWrapper(app, ['user'], () => import('../routes/SystemManage/UserManage/UserList')),
+      component: dynamicWrapper(app, ['user','userPerm','userRole'], () => import('../routes/SystemManage/UserManage/UserList')),
       name: '用户管理',
     },
 
@@ -472,11 +472,11 @@ export const getRouterData = app => {
       name:"编码规则",
     },
     '/system/authorization/Obj': {
-      component: dynamicWrapper(app, [], () => import('../routes/Authorization/Obj/ObjManageList')),
+      component: dynamicWrapper(app, ['permItem'], () => import('../routes/Authorization/PermItem/PermItemList')),
       name:"权限对象",
     },
     '/system/authorization/Role': {
-      component: dynamicWrapper(app, [], () => import('../routes/Authorization/Role/RoleManageList')),
+      component: dynamicWrapper(app, ['role','rolePerm','userRole','user'], () => import('../routes/Authorization/Role/RoleManageList')),
       name:"角色管理",
     },
 

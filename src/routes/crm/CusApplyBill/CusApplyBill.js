@@ -52,7 +52,7 @@ message.config({
 // 设置业务员
 const SalesManage = Form.create()(props => {
   const { salesVisible, handleSalesVisible } = props;
-  const okHandle = () => {
+  const  okHandle = () => {
     handleSalesVisible();
   };
   return (
@@ -63,7 +63,7 @@ const SalesManage = Form.create()(props => {
       width="40%"
       maskClosable={false}
       onOk={okHandle}
-      onCancel={() => handleSalesVisible()}
+      onCancel={() => handleSalesVisible(false)}
     >
       <div className={styles.editPerson}>
         <EditableTable />
@@ -211,7 +211,7 @@ export default class CusApplyBill extends PureComponent {
             type: 'cusApplication/fetch',
             payload: {
               pageSize: res.data.pagination.pageSize,
-              page: res.data.pagination.page,
+              page: res.data.pagination.current,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -334,8 +334,8 @@ export default class CusApplyBill extends PureComponent {
           dispatch({
             type: 'cusApplication/fetch',
             payload: {
-              page: res.data.pagination.page,
-              pageSize: res.data.pagination.page,
+              page: res.data.pagination.current,
+              pageSize: res.data.pagination.pageSize,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -422,7 +422,7 @@ export default class CusApplyBill extends PureComponent {
         onFilter: (value, record) => record.linkmanTypeId.toString() === value,
         render(val) {
           let linkmanTypeData = "";
-          if(linkmanOptionData){
+          if(linkmanOptionData) {
             linkmanTypeData  =  linkmanOptionData.map((params) => {
               if(val === params.id){
                 return params.name;
@@ -513,10 +513,17 @@ export default class CusApplyBill extends PureComponent {
                     >
                       新建客户
                     </Button>
-                    {selectedRows.length > 1 && (
+                    {selectedRows.length > 0 && (
                       <span>
                         <Button type="primary" >
                           批量删除
+                        </Button>
+                        <Button
+                          icon="plus"
+                          type="primary"
+                          onClick={() => this.handleSalesVisible(true)}
+                        >
+                          新建业务员
                         </Button>
                       </span>
                     )}

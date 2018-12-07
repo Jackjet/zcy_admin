@@ -15,12 +15,13 @@ import {
   Layout,
   Badge,
   Modal,
+  Table,
 } from 'antd';
 import moment from 'moment/moment';
 import PageLeftTreeMenu from "../../../components/PageLeftTreeMenu";
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-import PersonAddModal from './UserModal';
+import PersonAddModal from './UserAddModal';
 import PersonViewModal from './UserViewModal';
 import PersonEditModal from './UserEditModal';
 import DistributionRoleModal from './Role/DistributionRoleModal';
@@ -31,9 +32,9 @@ import OrgRangeBill from './OrgRange/OrgRangeBill';
 import styles from './style.less';
 
 message.config({
-  top: 100,
-  duration: 2,
-  maxCount: 1,
+  top: 100, // 提示框弹出位置
+  duration: 3, // 自动关闭延时，单位秒
+  maxCount: 1, // 最大显示数目
 });
 const { confirm } = Modal;
 const { Content, Sider } = Layout;
@@ -88,6 +89,7 @@ export default class UserList extends PureComponent {
         pageSize: 10,
       },
       callback: res => {
+        console.log(res.data);
         if (res.meta.status !== '000000') {
           message.error(res.meta.errmsg);
         } else {
@@ -128,7 +130,7 @@ export default class UserList extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
+    const { formValues } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -140,11 +142,6 @@ export default class UserList extends PureComponent {
       ...formValues,
       ...filters,
     };
-
-    this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
-    });
 
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
@@ -305,8 +302,6 @@ export default class UserList extends PureComponent {
           } else {
             this.setState({
               selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
             });
             message.success('查询完成!');
           }
@@ -315,7 +310,7 @@ export default class UserList extends PureComponent {
     });
   }; // 查询方法
 
-  handlePersonAddVisible = flag => {
+  handlePersonAddVisible = (flag)=> {
     this.setState({
       PersonAddVisible: !!flag,
     });
@@ -335,13 +330,16 @@ export default class UserList extends PureComponent {
       BatchDisRoleVisible: !!flag,
     });
   };
-  handleDistributionAuthorityVisible = flag => {
+  handleDistributionAuthorityVisible = (flag, selectedRows) => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
     this.setState({
       DistributionAuthorityVisible: !!flag,
+      rowInfo:{
+        ...selectedRows,
+      },
     });
   };
   handleBatchDisAuthorityVisible = flag => {
@@ -378,13 +376,16 @@ export default class UserList extends PureComponent {
     });
   };
 
-  handleDistributionRoleVisible = flag => {
+  handleDistributionRoleVisible = (flag, record) => {
     if (this.state.selectedRows.length > 1) {
       message.warning('不支持多行选择');
       return false;
     }
     this.setState({
       DistributionRoleVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
@@ -405,11 +406,7 @@ export default class UserList extends PureComponent {
           });
           dispatch({
             type: 'user/fetch',
-            payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
-              keyWord: this.state.formValues.keyWord,
-            },
+            payload: {},
           });
           message.success('人员删除成功!');
         }
@@ -434,16 +431,7 @@ export default class UserList extends PureComponent {
         });
         dispatch({
           type: 'user/fetch',
-          payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
-            keyWord: this.state.formValues.keyWord,
-          },
-        });
-        message.config({
-          top: 100, // 提示框弹出位置
-          duration: 3, // 自动关闭延时，单位秒
-          maxCount: 1, // 最大显示数目
+          payload: {},
         });
         message.success('人员启用成功!');
       },
@@ -527,6 +515,7 @@ export default class UserList extends PureComponent {
       OrgRangeBillVisible,
       choiceTypeKey,
       choiceTypeValue,
+      billTableTypeTree,
     } = this.state;
     const columns = [
       {
@@ -582,6 +571,8 @@ export default class UserList extends PureComponent {
             <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
             <Divider type="vertical" />
             <a onClick={() => this.showDeleteMessage(true, record)}>删除</a>
+            {/*<Divider type="vertical" />
+            <a onClick={() => this.handleDistributionRoleVisible(true, record)}>分配角色</a>*/}
           </Fragment>
         ),
       },
@@ -635,17 +626,17 @@ export default class UserList extends PureComponent {
                   >
                     新建
                   </Button>
-                  {selectedRows.length > 0 && (
+                  {selectedRows.length > -1 && (
                     <span>
                       <Button
                         type="primary"
-                        onClick={() => this.handleDistributionAuthorityVisible(true)}
+                        onClick={() => this.handleDistributionAuthorityVisible(true, selectedRows)}
                       >
                         分配权限
                       </Button>
                       <Button
                         type="primary"
-                        onClick={() => this.handleDistributionRoleVisible(true)}
+                        onClick={() => this.handleDistributionRoleVisible(true, selectedRows)}
                       >
                         分配角色
                       </Button>
@@ -672,7 +663,12 @@ export default class UserList extends PureComponent {
               </div>
             </Content>
           </Layout>
-          <PersonAddModal {...parentMethods} PersonAddVisible={PersonAddVisible} choiceTypeValue={choiceTypeValue} choiceTypeKey={choiceTypeKey} />
+          <PersonAddModal
+            {...parentMethods}
+            PersonAddVisible={PersonAddVisible}
+            choiceTypeValue={choiceTypeValue}
+            choiceTypeKey={choiceTypeKey}
+          />
           <PersonViewModal
             {...parentMethods}
             PersonViewVisible={PersonViewVisible}
@@ -686,11 +682,13 @@ export default class UserList extends PureComponent {
           <DistributionRoleModal
             {...parentMethods}
             DistributionRoleVisible={DistributionRoleVisible}
+            rowInfo={rowInfo}
           />
           <BatchDisRoleModal {...parentMethods} BatchDisRoleVisible={BatchDisRoleVisible} />
           <DistributionAuthorityModal
             {...parentMethods}
             DistributionAuthorityVisible={DistributionAuthorityVisible}
+            rowInfo={rowInfo}
           />
           <BatchDisAuthorityModal
             {...parentMethods}

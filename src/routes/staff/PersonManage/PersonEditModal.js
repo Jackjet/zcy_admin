@@ -116,13 +116,24 @@ class PersonEditModal extends PureComponent {
           dispatch({
             type: 'person/add',
             payload: values,
+            callback:(res)=>{
+              if (res.meta.status !== "000000"){
+                message.error(res.data.alert_msg);
+              } else {
+                dispatch({
+                  type: 'person/fetch',
+                  payload: {},
+                });
+                handlePersonEditVisible(false);
+                message.success('用户修改成功!');
+              }
+            },
           });
-          handlePersonEditVisible(false);
-          message.success('成功申请用户');
+
         }
       });
     };
-    const onCancel = () => {
+    const cancel = () => {
       handlePersonEditVisible(false);
     };
     const uploadButton = (
@@ -141,7 +152,7 @@ class PersonEditModal extends PureComponent {
         width="60%"
         maskClosable={false}
         onOk={validate}
-        onCancel={onCancel}
+        onCancel={cancel}
         okText="提交"
       >
         <div>
@@ -154,6 +165,7 @@ class PersonEditModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.account}>
                         {getFieldDecorator('account', {
                           rules: [{ required: true, message: '请输入帐号' }],
+                          initialValue: rowInfo.account,
                         })(<Input placeholder="请输入帐号" />)}
                       </Form.Item>
                     </Col>
@@ -161,6 +173,7 @@ class PersonEditModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.employeeNumber}>
                         {getFieldDecorator('employeeNumber', {
                           rules: [{ required: true, message: '请输入工号' }],
+                          initialValue: rowInfo.employeeNumber,
                         })(<Input placeholder="请输入工号" />)}
                       </Form.Item>
                     </Col>
@@ -170,6 +183,7 @@ class PersonEditModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.name}>
                         {getFieldDecorator('name', {
                           rules: [{ required: true, message: '请选择姓名' }],
+                          initialValue: rowInfo.name,
                         })(<Input placeholder="请选择姓名" />)}
                       </Form.Item>
                     </Col>
@@ -289,7 +303,7 @@ class PersonEditModal extends PureComponent {
                 </Col>
                 <Col span={8}>
                   <Form.Item {...formItemLayout} label={fieldLabels.station}>
-                    {getFieldDecorator('station', {
+                    {getFieldDecorator('post', {
                       rules: [{ required: true, message: '请选择所属岗位' }],
                     })(
                       <Select placeholder="请选择所属岗位">

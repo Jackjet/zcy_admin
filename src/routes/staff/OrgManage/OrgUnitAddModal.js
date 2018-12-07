@@ -96,17 +96,19 @@ class OrgUnitAddModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
-  resizeFooterToolbar = () => {
-    const sider = document.querySelectorAll('.ant-layout-sider')[0];
-    const width = `calc(100% - ${sider.style.width})`;
-    if (this.state.width !== width) {
-      this.setState({ width:width });
-    }
-  };
+
 
   onOrgTreeSelectChange = (value) => {
     console.log(value);
 
+  };
+
+  resizeFooterToolbar = () => {
+    const sider = document.querySelectorAll('.ant-layout-sider')[0];
+    const width = `calc(100% - ${sider.style.width})`;
+    if (this.state.width !== width) {
+      this.setState({ width });
+    }
   };
 
 
@@ -121,10 +123,14 @@ class OrgUnitAddModal extends PureComponent {
               type: 'company/add',
               payload: values,
               callback: (res) => {
-                if(res.meta.status === '000000' ) {
-                  handleOrgUnitAddVisible(false);
+                if(res.meta.status !== '000000' ) {
+                  message.error(res.data.alert_msg);
                 } else {
-                  message.error(res.meta.errmsg);
+                  dispatch({
+                    type: 'company/fetch',
+                    payload: {},
+                  });
+                  handleOrgUnitAddVisible(false);
                 }
               },
             });
@@ -132,7 +138,7 @@ class OrgUnitAddModal extends PureComponent {
           }
         });
     };
-    const cancelDate = () => {
+    const cancel = () => {
       handleOrgUnitAddVisible(false);
     };
 
@@ -147,7 +153,7 @@ class OrgUnitAddModal extends PureComponent {
         width="55%"
         maskClosable={false}
         onOk={validate}
-        onCancel={cancelDate}
+        onCancel={cancel}
         okText='提交'
       >
         <Card>
@@ -174,8 +180,7 @@ class OrgUnitAddModal extends PureComponent {
                       placeholder="请选择上级组织"
                       treeDefaultExpandAll
                       onChange={this.onOrgTreeSelectChange}
-                    >
-                    </TreeSelect>
+                    />
                   )}
                 </Form.Item>
               </Col>
@@ -361,7 +366,5 @@ class OrgUnitAddModal extends PureComponent {
   }
 }
 
-export default connect(({ global, loading }) => ({
-  collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+export default connect(() => ({
 }))(Form.create()(OrgUnitAddModal));

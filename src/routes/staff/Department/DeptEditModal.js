@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Modal } from 'antd';
+import { Card, Form, Icon, Col, Row, DatePicker, Input, Select, Popover, Modal, message,TreeSelect } from 'antd';
 import { connect } from 'dva';
 
 import styles from './style.less';
@@ -21,13 +21,45 @@ const formItemLayout = {
 class DepartmentEditModal extends PureComponent {
   state = {
     width: '100%',
+    treeData: [],
+    deptOptionData: []
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({treeData : res.data.list});
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
+    dispatch({
+      type: 'dept/fetch', // 接口
+      payload: {},
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            deptOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -57,7 +89,13 @@ class DepartmentEditModal extends PureComponent {
               ...values,
             },
             callback: res => {
-              if (res.meta.status === '000000') {
+              if (res.meta.status !== '000000') {
+               message.error(res.data.alert_msg);
+              } else {
+                dispatch({
+                  type: 'dept/fetch',
+                  payload: {},
+                });
                 handleDepartmentEditVisible(false);
               }
             },
@@ -88,9 +126,11 @@ class DepartmentEditModal extends PureComponent {
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="部门名称">
                   {getFieldDecorator('name', {
-                    rules: [{ required: true, message: '请输入部门名称' }],
-                    initialValue: `${rowInfo.name}`,
-                  })(<Input placeholder="请输入部门名称" />)}
+                    rules: [{ required: true, message: '请输入组织名称' }],
+                    initialValue: rowInfo.name,
+                  })(
+                    <Input placeholder="请输入组织编码" />
+                  )}
                 </Form.Item>
               </Col>
 
@@ -98,12 +138,17 @@ class DepartmentEditModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="上级部门">
                   {getFieldDecorator('parentId', {
                     rules: [{ required: true, message: '请选择上级部门' }],
-                    initialValue: `至诚`,
+                    initialValue: rowInfo.parentId,
                   })(
-                    <Select>
-                      <Option value="g">至诚</Option>
-                      <Option value="y">事务所有限公司</Option>
+                    <Select
+                      onChange={this.handleDeptSourceValue}
+                      placeholder="请选择上级部门"
+                      style={{ width: 150 }}
+                      getPopupContainer={triggerNode => triggerNode.parentNode}
+                    >
+                      {this.state.deptOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                     </Select>
+
                   )}
                 </Form.Item>
               </Col>
@@ -112,21 +157,24 @@ class DepartmentEditModal extends PureComponent {
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="部门编码">
                   {getFieldDecorator('number', {
-                    rules: [{ required: true, message: '请输入部门编码' }],
-                    initialValue: `${rowInfo.number}`,
-                  })(<Input placeholder="请输入部门编码" />)}
+                    rules: [{ required: true, message: '请输入组织编码' }],
+                    initialValue: rowInfo.number,
+                  })(<Input placeholder="请输入组织编码" />)}
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('isBranch', {
-                    rules: [{ required: true, message: '是否分公司' }],
-                    initialValue: `否`,
+                <Form.Item {...formItemLayout} label="所属组织">
+                  {getFieldDecorator('orgId', {
+                    rules: [{ required: true, message: '所属组织' }],
+                    initialValue: rowInfo.orgId,
                   })(
-                    <Select>
-                      <Option value="0">否</Option>
-                      <Option value="1">是</Option>
-                    </Select>
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={this.state.treeData}
+                      placeholder="请选择上级组织"
+                      treeDefaultExpandAll
+                      onChange={this.onOrgTreeSelectChange}
+                    />
                   )}
                 </Form.Item>
               </Col>

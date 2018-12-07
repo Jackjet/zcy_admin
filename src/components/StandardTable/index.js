@@ -77,7 +77,7 @@ class StandardTable extends PureComponent {
       showTotal: this.showTotal ,
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSizeOptions:['10','20','30','40','50'],
+      pageSizeOptions:['3','10','20','30','40','50'],
       total: total,
       ...pagination,
     };

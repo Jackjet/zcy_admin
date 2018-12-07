@@ -40,6 +40,9 @@ class DepartmentViewModal extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -82,9 +85,9 @@ class DepartmentViewModal extends PureComponent {
               </Col>
 
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="上级组织">
+                <Form.Item {...formItemLayout} label="上级部门">
                   {getFieldDecorator('parentId', {
-                    rules: [{ required: true, message: '请选择上级组织' }],
+                    rules: [{ required: true, message: '请选择上级部门' }],
                     initialValue: `${rowInfo.parentId}`,
                   })(<Input readOnly />)}
                 </Form.Item>
@@ -100,10 +103,10 @@ class DepartmentViewModal extends PureComponent {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('isBranch', {
-                    rules: [{ required: true, message: '是否分公司' }],
-                    initialValue: `${rowInfo.isBranch}`,
+                <Form.Item {...formItemLayout} label="上级组织">
+                  {getFieldDecorator('orgId', {
+                    rules: [{ required: true, message: '上级组织' }],
+                    initialValue: `${rowInfo.orgId}`,
                   })(<Input readOnly />)}
                 </Form.Item>
               </Col>

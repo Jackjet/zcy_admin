@@ -8,6 +8,7 @@ export async function queryDept(params) {
   });
 }
 
+
 // 部门更新
 export async function updateDept(params) {
   return request('/api/dept/updateDept', {

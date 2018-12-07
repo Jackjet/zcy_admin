@@ -1,7 +1,7 @@
-import { updateCompany, queryCompany, removeCompanyById, addCompany, removeCompanyByCondition, statusCancelCancel,getLeftTreeMenu, getInfoById } from '../services/company';
+import { queryRole, updateRole, addRole, removeRole, statusCancelCancel, statusCancel, getRoleById} from '../services/role';
 
 export default {
-  namespace: 'company',
+  namespace: 'role',
 
   state: {
     data: {
@@ -13,7 +13,7 @@ export default {
 
   effects: {
     *fetch({ payload ,callback}, { call, put }) {
-      const response = yield call(queryCompany, payload);
+      const response = yield call(queryRole, payload);
       if (response.meta.status === '000000') {
         yield put({
           type: 'save',
@@ -24,35 +24,28 @@ export default {
         callback(response); // 返回结果
       }
     },
-    *getLeftTreeMenu({ callback }, { call}) {
-      const response = yield call(getLeftTreeMenu);
+    *getRoleById({ payload ,callback}, { call }) {
+      const response = yield call(getRoleById, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
-
     *update({ payload ,callback}, { call }) {
-      const response = yield call(updateCompany, payload);
+      const response = yield call(updateRole, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
     },
 
     *add({ payload, callback }, { call}) {
-      const response = yield call(addCompany, payload);
+      const response = yield call(addRole, payload);
       if (callback && typeof callback === 'function') {
           callback(response); // 返回结果
       }
     },
 
     *remove({ payload, callback }, { call }) {
-      const response = yield call(removeCompanyById, payload);
-      if (callback && typeof callback === 'function') {
-        callback(response); // 返回结果
-      }
-    },
-    *removeMore({ payload, callback }, { call }) {
-      const response = yield call(removeCompanyByCondition, payload);
+      const response = yield call(removeRole, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }
@@ -64,13 +57,7 @@ export default {
       }
     },
     *cancel({ payload, callback }, { call }) {
-      const response = yield call(statusCancelCancel, payload);
-      if (callback && typeof callback === 'function') {
-        callback(response); // 返回结果
-      }
-    },
-    *getInfoById({ payload, callback }, { call }) {
-      const response = yield call(getInfoById, payload);
+      const response = yield call(statusCancel, payload);
       if (callback && typeof callback === 'function') {
         callback(response); // 返回结果
       }

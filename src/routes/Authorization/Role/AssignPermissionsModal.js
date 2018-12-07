@@ -11,21 +11,11 @@ import {
   Popover,
   Modal,
   Transfer,
+  message,
 } from 'antd';
 import { connect } from 'dva';
+import styles from './style.less';
 
-import styles from './Style.less';
-
-const mockData = [];
-for (let i = 0; i < 20; i += 1) {
-  mockData.push({
-    key: i.toString(),
-    title: `${i + 1}`,
-    description: `description of content${i + 1}`,
-  });
-}
-
-const targetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -40,11 +30,42 @@ const formItemLayout = {
 class AssignPermissionsModal extends PureComponent {
   state = {
     width: '100%',
-    targetKeys,
+    targetKeys: [],
     selectedKeys: [],
+    permItemData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'permItem/fetch',
+      payload: {},
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else {
+          this.setState({
+            permItemData: res.data.list,
+          });
+        }
+      },
+    });
+    this.props.dispatch({
+      type: 'rolePerm/fetch',
+      payload: {},
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else {
+          const resVal = res.data.list;
+          if (resVal) {
+            this.setState({
+              targetKeys: resVal.map(item => item.permId ),
+            })
+          }
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -53,6 +74,7 @@ class AssignPermissionsModal extends PureComponent {
   handleChange = (nextTargetKeys, direction, moveKeys) => {
     this.setState({ targetKeys: nextTargetKeys });
   };
+
   handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
@@ -65,76 +87,82 @@ class AssignPermissionsModal extends PureComponent {
     }
   };
   render() {
+    const { permItemData } = this.state;
     const {
       form,
       dispatch,
-      submitting,
       AssignPermissionsVisible,
       handleAssignPermissionsVisible,
+      rowInfo,
     } = this.props;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
+    const mockData = [];
+    for (let i = 0; i < permItemData.length; i += 1) {
+      mockData.push({
+        key: permItemData[i].id,
+        name: permItemData[i].name,
+      });
+    }
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
-          // submit the values
+          const arrayList = [];
+          for (let i =0; i<Object.values(values)[0].length; i+=1) {
+            arrayList.push({
+              permId: Object.values(values)[0][i],
+              roleId: rowInfo.id,
+            })
+          }
           dispatch({
-            type: 'form/submitAdvancedForm',
-            payload: values,
+            type: 'rolePerm/add',
+            payload: arrayList,
+            callback: res => {
+              if (res.meta.status !== '000000') {
+                message.error(res.data.alert_msg);
+              } else {
+                dispatch({
+                  type: 'role/fetch',
+                  payload: {},
+                });
+                message.success("权限分配成功");
+                handleAssignPermissionsVisible(false);
+              }
+            },
           });
-          form.resetFields();
-          handleAssignPermissionsVisible(false);
+
+
+
         }
       });
     };
     const cancelDate = () => {
-      form.resetFields();
+      this.props.dispatch({
+        type: 'rolePerm/fetch',
+        payload: {},
+        callback: (res) => {
+          if (res.meta.status !== "000000") {
+            message.error(res.data.alert_msg);
+          } else {
+            const resVal = res.data.list;
+            if (resVal) {
+              this.setState({
+                targetKeys: resVal.map(item => item.permId ),
+              })
+            }
+          }
+        },
+      });
       handleAssignPermissionsVisible(false);
     };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
-      });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
-    };
+
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="分配权限"
         style={{ top: 20 }}
         visible={AssignPermissionsVisible}
-        width="35%"
+        width="60%"
         maskClosable={false}
         onOk={validate}
         onCancel={cancelDate}
@@ -145,21 +173,21 @@ class AssignPermissionsModal extends PureComponent {
             <Row className={styles['fn-mb-15']}>
               <Col span={23} push={5}>
                 <Form.Item {...formItemLayout}>
-                  {getFieldDecorator('code', {
-                    rules: [{ required: true, message: '自动生成' }],
+                  {getFieldDecorator('permItemHave', {
+                    rules: [{ required: true, message: '数据未改动，请直接关闭' }],
                   })(
                     <Transfer
                       dataSource={mockData}
                       titles={['可授权', '已分配']}
                       listStyle={{
-                        width: 120,
-                        height: 150,
+                        width: 200,
+                        height: 200,
                       }}
                       targetKeys={this.state.targetKeys}
                       selectedKeys={this.state.selectedKeys}
                       onChange={this.handleChange}
                       onSelectChange={this.handleSelectChange}
-                      render={item => item.title}
+                      render={item => item.name}
                     />
                   )}
                 </Form.Item>
@@ -172,7 +200,5 @@ class AssignPermissionsModal extends PureComponent {
   }
 }
 
-export default connect(({ global, loading }) => ({
-  collapsed: global.collapsed,
-  submitting: loading.effects['form/submitAdvancedForm'],
+export default connect(() => ({
 }))(Form.create()(AssignPermissionsModal));

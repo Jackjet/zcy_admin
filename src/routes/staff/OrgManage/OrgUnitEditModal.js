@@ -10,6 +10,8 @@ import {
   Select,
   Popover,
   Modal,
+  message,
+  TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
 
@@ -34,14 +36,32 @@ class OrgUnitEditModal extends PureComponent {
   state = {
     width: '100%',
     isBranchOptionData: '',
+    treeData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
     this.handleProjectChange();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({treeData : res.data.list});
+          this.props.handleGetBackVal(res);
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  };
 
   handleProjectChange = () => {
     const optionData = isBranchOption.map((data, index) => {
@@ -62,7 +82,7 @@ class OrgUnitEditModal extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch, OrgUnitEditVisible, handleOrgUnitEditVisible, rowInfo } = this.props;
+    const { form, dispatch, OrgUnitEditVisible, handleOrgUnitEditVisible, rowInfo, currentPagination } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
     const { isBranchOptionData } = this.state;
     const validate = () => {
@@ -72,12 +92,18 @@ class OrgUnitEditModal extends PureComponent {
           dispatch({
             type: 'company/update',
             payload: {
-              id: rowInfo.id,
-              key: rowInfo.key,
               ...values,
+              id: rowInfo.id,
+              uid: JSON.parse(localStorage.getItem("user")).id,
             },
             callback: (res) => {
-              if(res.meta.status === '000000' ) {
+              if(res.meta.status !== '000000' ) {
+                message.error(res.meta.alert_msg)
+              } else {
+                dispatch({
+                  type: 'company/fetch',
+                  payload: {},
+                });
                 handleOrgUnitEditVisible(false);
               }
             },
@@ -117,11 +143,17 @@ class OrgUnitEditModal extends PureComponent {
 
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="上级组织">
-                  {getFieldDecorator('parentOrg', {
+                  {getFieldDecorator('parentId', {
                     rules: [{ required: true, message: '请选择上级组织' }],
-                    initialValue:`至诚`,
+                    initialValue: rowInfo.parentId,
                   })(
-                    <Input  />
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={this.state.treeData}
+                      placeholder="请选择上级组织"
+                      treeDefaultExpandAll
+                      onChange={this.onOrgTreeSelectChange}
+                    />
                   )}
                 </Form.Item>
               </Col>
@@ -144,7 +176,8 @@ class OrgUnitEditModal extends PureComponent {
                     initialValue:`${rowInfo.isBranch}`,
                   })(
                     <Select placeholder="是否分公司" >
-                      {isBranchOptionData}
+                      <Option key={1} value="1">是</Option>
+                      <Option key={0} value="0">否</Option>
                     </Select>
                   )}
                 </Form.Item>

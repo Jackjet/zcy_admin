@@ -2,7 +2,7 @@ import request from '../utils/request';
 
 // 组织查询
 export async function queryCompany(params) {
-  return request('/api/company/getCompanyInfosByCondition', {
+  return request('/api/company/getCompanyByCondition', {
     method: 'POST',
     body: params,
   });
@@ -14,10 +14,19 @@ export async function getLeftTreeMenu() {
   });
 }
 
+export async function getInfoById(params) {
+  return request('/api/company/getCompanyById', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
 
 // 组织更新
 export async function updateCompany(params) {
-  return request('/api/company/updateCompany', {
+  return request('/api/company/update', {
     method: 'POST',
     body: {
       ...params,
@@ -28,7 +37,7 @@ export async function updateCompany(params) {
 
 // 组织新建
 export async function addCompany(params) {
-  return request('/api/company/saveCompany', {
+  return request('/api/company/save', {
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +48,7 @@ export async function addCompany(params) {
 
 // 组织删除
 export async function removeCompanyById(params) {
-  return request('/api/company/deleteCompanyById', {
+  return request('/api/company/delete', {
     method: 'POST',
     body: {
       ...params,

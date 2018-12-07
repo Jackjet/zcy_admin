@@ -10,7 +10,7 @@ export async function queryPerson(params) {
 
 // 人员更新
 export async function updatePerson(params) {
-  return request('/api/user/updateUser', {
+  return request('/api/user/update', {
     method: 'POST',
     body: {
       ...params,
@@ -21,7 +21,7 @@ export async function updatePerson(params) {
 
 // 人员新建
 export async function addPerson(params) {
-  return request('/api/user/saveUser', {
+  return request('/api/person/save', {
     method: 'POST',
     body: {
       ...params,
@@ -32,7 +32,7 @@ export async function addPerson(params) {
 
 // 人员删除
 export async function removePersonById(params) {
-  return request('/api/user/updateUser', {
+  return request('/api/person/delete', {
     method: 'POST',
     body: {
       ...params,

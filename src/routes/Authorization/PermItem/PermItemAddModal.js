@@ -16,7 +16,7 @@ const formItemLayout = {
   },
 };
 
-class RoleManageAddModal extends PureComponent {
+class PermItemAddModal extends PureComponent {
   state = {
     width: '100%',
   };
@@ -37,8 +37,8 @@ class RoleManageAddModal extends PureComponent {
     const {
       form,
       dispatch,
-      RoleManageAddVisible,
-      handleRoleManageAddVisible,
+      permItemAddVisible,
+      handlePermItemAddVisible,
       currentPagination,
     } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
@@ -46,9 +46,8 @@ class RoleManageAddModal extends PureComponent {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           // submit the values
-          console.log(values);
           dispatch({
-            type: 'role/add',
+            type: 'permItem/add',
             payload:{
               ...values,
               uid: JSON.parse(localStorage.getItem("user")).id,
@@ -58,13 +57,10 @@ class RoleManageAddModal extends PureComponent {
                 message.error(res.data.alert_msg);
               } else {
                 dispatch({
-                  type: 'role/fetch',
-                  payload: {
-                    page:1,
-                    pageSize:currentPagination.pageSize,
-                  },
+                  type: 'permItem/fetch',
+                  payload: {},
                 });
-                handleRoleManageAddVisible(false);
+                handlePermItemAddVisible(false);
               }
             },
           });
@@ -72,15 +68,15 @@ class RoleManageAddModal extends PureComponent {
       });
     };
     const cancel = () => {
-      handleRoleManageAddVisible(false);
+      handlePermItemAddVisible(false);
     };
     return (
       <Modal
         destroyOnClose="true"
         keyboard={false}
-        title="角色信息新增"
+        title="权限对象"
         style={{ top: 20 }}
-        visible={RoleManageAddVisible}
+        visible={permItemAddVisible}
         width="30%"
         maskClosable={false}
         onOk={validate}
@@ -93,7 +89,7 @@ class RoleManageAddModal extends PureComponent {
               <Col span={23} pull={1}>
                 <Form.Item {...formItemLayout} label="编码">
                   {getFieldDecorator('number', {
-                    rules: [{ required: true, message: '自动生成' }],
+                    rules: [{ required: false, message: '自动生成' }],
                   })(<Input placeholder="自动生成" />)}
                 </Form.Item>
               </Col>
@@ -102,7 +98,7 @@ class RoleManageAddModal extends PureComponent {
               <Col span={23} pull={1}>
                 <Form.Item {...formItemLayout} label="名称">
                   {getFieldDecorator('name', {
-                    rules: [{ required: true, message: '请输入名称' }],
+                    rules: [{ required: false, message: '请输入名称' }],
                   })(<Input placeholder="请输入名称" />)}
                 </Form.Item>
               </Col>
@@ -111,7 +107,7 @@ class RoleManageAddModal extends PureComponent {
               <Col span={23} pull={1}>
                 <Form.Item {...formItemLayout} label="说明">
                   {getFieldDecorator('remark', {
-                    rules: [{ required: true, message: '请输入说明' }],
+                    rules: [{ required: false, message: '请输入说明' }],
                   })(<TextArea placeholder="请输入说明" />)}
                 </Form.Item>
               </Col>
@@ -124,4 +120,4 @@ class RoleManageAddModal extends PureComponent {
 }
 
 export default connect(() => ({
-}))(Form.create()(RoleManageAddModal));
+}))(Form.create()(PermItemAddModal));

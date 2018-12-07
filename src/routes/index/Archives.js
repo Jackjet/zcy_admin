@@ -220,7 +220,7 @@ export default class Archives extends PureComponent {
             type: 'cusApplication/fetch',
             payload: {
               pageSize: res.data.pagination.pageSize,
-              page: res.data.pagination.page,
+              page: res.data.pagination.current,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -343,8 +343,8 @@ export default class Archives extends PureComponent {
           dispatch({
             type: 'cusApplication/fetch',
             payload: {
-              page: res.data.pagination.page,
-              pageSize: res.data.pagination.page,
+              page: res.data.pagination.current,
+              pageSize: res.data.pagination.pageSize,
               keyWord: this.state.formValues.keyWord,
             },
           });

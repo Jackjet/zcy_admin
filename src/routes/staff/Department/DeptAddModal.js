@@ -14,6 +14,7 @@ import {
   Table,
   Popconfirm,
   message,
+  TreeSelect,
 } from 'antd';
 import { connect } from 'dva';
 import PartnerType from './PartnerType';
@@ -56,9 +57,35 @@ class DepartmentAddModal extends PureComponent {
     partnerTypeValue: '杭州至诚云',
     width: '100%',
     count: 2,
+    treeData:[],
+    deptOptionData: [], // 所有部门集合
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({treeData : res.data.list});
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
+    dispatch({
+      type: 'dept/fetch', // 接口
+      payload: {},
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            deptOptionData: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -104,6 +131,11 @@ class DepartmentAddModal extends PureComponent {
     });
   };
 
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -114,7 +146,7 @@ class DepartmentAddModal extends PureComponent {
   render() {
     const { form, dispatch, DepartmentAddVisible, handleDepartmentAddVisible } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
-    const { partnerTypeValue, partnerTypeVisible } = this.state;
+    const { partnerTypeVisible } = this.state;
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -123,10 +155,14 @@ class DepartmentAddModal extends PureComponent {
             type: 'dept/add',
             payload: values,
             callback: res => {
-              if (res.meta.status === '000000') {
-                handleDepartmentAddVisible(false);
+              if (res.meta.status !== '000000') {
+                message.error(res.data.alert_msg);
               } else {
-                message.error(res.meta.errmsg);
+                dispatch({
+                  type: 'dept/fetch',
+                  payload: {},
+                });
+                handleDepartmentAddVisible(false);
               }
             },
           });
@@ -172,6 +208,7 @@ class DepartmentAddModal extends PureComponent {
     ];
     const parentMethods = {
       handlePartnerTypeVisible: this.handlePartnerTypeVisible,
+      handlePartnerTypeValue: this.handlePartnerTypeValue,
     };
     return (
       <Modal
@@ -193,21 +230,26 @@ class DepartmentAddModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="部门名称">
                   {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请输入组织名称' }],
-                    initialValue: `${partnerTypeValue}`,
-                  })(<Search placeholder="合伙人类型" onSearch={this.handlePartnerTypeVisible} />)}
+                  })(
+                    <Input placeholder="请输入组织编码" />
+                  )}
                 </Form.Item>
               </Col>
 
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="上级部门">
                   {getFieldDecorator('parentId', {
-                    rules: [{ required: true, message: '请选择上级组织' }],
-                    initialValue: `至诚`,
+                    rules: [{ required: true, message: '请选择上级部门' }],
                   })(
-                    <Select placeholder="请选择上级组织">
-                      <Option value={1}>义务至诚</Option>
-                      <Option value={0}>杭州至诚</Option>
+                    <Select
+                      onChange={this.handleDeptSourceValue}
+                      placeholder="请选择上级部门"
+                      style={{ width: 150 }}
+                      getPopupContainer={triggerNode => triggerNode.parentNode}
+                    >
+                      {this.state.deptOptionData.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                     </Select>
+
                   )}
                 </Form.Item>
               </Col>
@@ -221,15 +263,17 @@ class DepartmentAddModal extends PureComponent {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item {...formItemLayout} label="是否分公司">
-                  {getFieldDecorator('iscompany', {
-                    rules: [{ required: true, message: '是否分公司' }],
-                    initialValue: `否`,
+                <Form.Item {...formItemLayout} label="所属组织">
+                  {getFieldDecorator('orgId', {
+                    rules: [{ required: true, message: '所属组织' }],
                   })(
-                    <Select>
-                      <Option value="0">否</Option>
-                      <Option value="1">是</Option>
-                    </Select>
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={this.state.treeData}
+                      placeholder="请选择上级组织"
+                      treeDefaultExpandAll
+                      onChange={this.onOrgTreeSelectChange}
+                    />
                   )}
                 </Form.Item>
               </Col>

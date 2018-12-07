@@ -61,6 +61,9 @@ export default class OrgUnitList extends PureComponent {
     openKey: '', // 打开的父节点的key
     selectedKey:'',
     firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
+    currentPagination: [], // 获取当前行和页大小
+
+    callBackVal: [], // 用于接受子组建查询出值的列表集合
   };
 
   // 加载左侧树和展示列表界面
@@ -69,46 +72,30 @@ export default class OrgUnitList extends PureComponent {
     dispatch({
       type: 'company/getLeftTreeMenu',
       callback: (res) => {
-        if(res.meta.status === '000000' ) {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.data.alert_msg);
+        } else {
           this.setState({
             orgTreeMenu : res.data.list,
           });
-        } else {
-          message.error(res.data.alert_msg);
         }
       },
     });
     dispatch({
       type: 'company/fetch',
-      payload: {
-        page: 1,
-        pageSize: 10,
-      },
+      payload: {},
       callback: (res) => {
         if(res.meta.status !== '000000' ) {
           message.error(res.data.alert_msg);
         }
-       },
+      },
     });
   }
 
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  }; // 左边树收起其他展开的所有菜单
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub1']; // 左边菜单树叶子的key
-
+  // 分页器的下一页 第几页 方法
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
-
+    const { formValues } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -121,20 +108,24 @@ export default class OrgUnitList extends PureComponent {
       ...formValues,
       ...filters,
     };
+
     this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
+      currentPagination: {
+        page: pagination.current,
+        pageSize: pagination.pageSize,
+      },
     });
+
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
       type: 'company/fetch',
       payload: params,
     });
-  }; // 分页器的下一页 第几页 方法
+  };
 
+  // 搜索的重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -146,22 +137,16 @@ export default class OrgUnitList extends PureComponent {
       payload: {},
       callback: (res) => {
         if(res.meta.status !== "000000"){
-          message.error(res.meta.errmsg);
+          message.error(res.data.alert_msg);
         } else {
           message.success('重置完成!');
         }
-
       },
     });
 
-  }; // 搜索的重置方法
+  };
 
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  }; // 简单查询和高级搜索切换
-
+  // 批量操作中的删除操作方法(暂定)
   handleMenuClick = e => {
     const thisParam = this;
     const nameCompany = thisParam.state.selectedRows.map(row => row.name ).join(`,\n`);
@@ -205,14 +190,16 @@ export default class OrgUnitList extends PureComponent {
       default:
         break;
     }
-  }; // 批量操作中的删除操作方法
+  };
 
+  // 控制选中的行的方法
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
-  }; // 控制选中的行的方法
+  };
 
+  // 查询方法
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -223,6 +210,7 @@ export default class OrgUnitList extends PureComponent {
       };
       this.setState({
         formValues: values,
+        selectedKey: '',
       });
       dispatch({
         type: 'company/fetch',
@@ -231,96 +219,48 @@ export default class OrgUnitList extends PureComponent {
           if(res.meta.status !== '000000'){
             message.error(res.meta.errmsg);  // 返回错误信息
           } else {
-            this.setState({
-              selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
-            });
             message.success('查询完成!');
           }
         },
       });
     });
-  }; // 查询方法
+  };
 
-  handleTreeMenuClick = e => {
-    console.log('click ', e);
-    this.setState({
-      currentTreekey: e.key,
-    });
-  }; // 左边菜单树点击方法
-
+  // 公司 <新增> modal显隐方法
   handleOrgUnitAddVisible = flag => {
     this.setState({
       OrgUnitAddVisible: !!flag,
     });
-    if(!flag){
-      this.props.dispatch({
-        type: 'company/fetch',
-        payload: {
-          page: this.state.pageCurrent,
-          pageSize: this.state.pageSizeCurrent,
-        },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
-          }
-        },
-      })
-    }
-  }; // 公司新增modal显隐方法
+  };
 
-  handleOrgUnitViewVisible = flag => {
+  // 公司 <查看> modal显隐方法
+  handleOrgUnitViewVisible = (flag, record) => {
     this.setState({
       OrgUnitViewVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
-  }; // 公司查看modal显隐方法
+  };
 
-  handleOrgUnitEditVisible = flag => {
+  // 公司 <编辑> modal显隐方法
+  handleOrgUnitEditVisible = (flag, record) => {
     this.setState({
       OrgUnitEditVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
-    if(!flag){
-      this.props.dispatch({
-        type: 'company/fetch',
-        payload: {
-          page: 1,
-          pageSize: 10,
-        },
-        callback: (res) => {
-          if(res.meta.status !== '000000' ) {
-            message.error(res.meta.errmsg);  // 返回错误信息
-            // this.props.data = res.data;
-          } else {
-            message.success("公司更新成功!")
-          }
-        },
-      })
-    }
-  }; // 公司编辑modal显隐方法
+  };
 
-  showViewMessage =(flag, record)=> {
-
-    this.setState({
-      OrgUnitViewVisible: !!flag,
-      rowInfo: record,
-    });
-  }; // 公司查看modal显隐方法并且传当前行的数据
-
-  showEditMessage =(flag, record)=> {
-    this.setState({
-      OrgUnitEditVisible: !!flag,
-      rowInfo: record,
-    });
-  }; // 公司编辑modal显隐方法并且传当前行的数据
-
-  showDeleteMessage =(flag, record)=> {
+  // 公司 <删除> 单个方法
+  handleDeleteMsg =(flag, record)=> {
     const { dispatch } = this.props;
     dispatch({
       type: 'company/remove',
       payload: {
         id: record.id,
-        deleteFlag: 0,
+        uid:JSON.parse(localStorage.getItem("user")).id,
       },
       callback: ( res ) => {
         if (res.meta.status !== "000000") {
@@ -331,26 +271,22 @@ export default class OrgUnitList extends PureComponent {
           });
           dispatch({
             type: 'company/fetch',
-            payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
-              keyWord: this.state.formValues.keyWord,
-            },
+            payload: {},
           });
           message.success('公司删除成功!');
         }
-
       },
     });
-  }; // 公司信息单个删除方法
+  };
 
+  // 公司状态 <启用> 方法
   handleCancelCancel = (record) => {
-
     const { dispatch } = this.props;
     dispatch({
       type: 'company/cancelCancel',
       payload: {
         id:record.id,
+        uid:JSON.parse(localStorage.getItem("user")).id,
         status: 1,
       },
       callback: (res) => {
@@ -363,8 +299,8 @@ export default class OrgUnitList extends PureComponent {
           dispatch({
             type: 'company/fetch',
             payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
+              page: this.state.currentPagination.page,
+              pageSize: this.state.currentPagination.pageSize,
               keyWord: this.state.formValues.keyWord,
             },
           });
@@ -373,8 +309,9 @@ export default class OrgUnitList extends PureComponent {
       },
     });
 
-  }; // 公司状态启用方法
+  };
 
+  // 公司状态禁用方法
   handleCancel = (record) => {
     const { dispatch } = this.props;
     dispatch({
@@ -382,6 +319,7 @@ export default class OrgUnitList extends PureComponent {
       payload: {
         id:record.id,
         status: 0,
+        uid:JSON.parse(localStorage.getItem("user")).id,
       },
       callback: (res) => {
         if(res.meta.status !== '000000'){
@@ -393,19 +331,32 @@ export default class OrgUnitList extends PureComponent {
         dispatch({
           type: 'company/fetch',
           payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
+            page: this.state.currentPagination.page,
+            pageSize: this.state.currentPagination.pageSize,
             keyWord: this.state.formValues.keyWord,
           },
         });
-        message.warning('编码规则已禁用!');
+        message.warning('公司已禁用!');
       },
     });
 
-  }; // 公司状态禁用方法
+  };
 
+  // 暂时有问题
   menuClick = e => {
     console.log(e.key);
+    this.props.dispatch({
+      type: 'company/fetch',
+      payload: {
+        parentId: e.key,
+      },
+      callback: (res) => {
+        console.log(res);
+        if(res.meta.status !== '000000' ) {
+          message.error(res.data.alert_msg);
+        }
+      },
+    });
     this.setState({
       selectedKey: e.key,
     });
@@ -417,33 +368,14 @@ export default class OrgUnitList extends PureComponent {
     })
   };
 
+  handleGetBackVal = (val) => {
+    console.log(val);
+    this.setState({
+      callBackVal: val,
+    });
+  };
 
-  treeMenu() {
-    const { SubMenu } = Menu;
-    return (
-      <Menu
-        mode="inline"
-        onClick={this.handleTreeMenuClick}
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>至诚集团</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">浙江至诚会计师事务所有限公司</Menu.Item>
-          <Menu.Item key="2">杭州至诚税务师事务所有限公司</Menu.Item>
-          <Menu.Item key="3">浙江中嘉资产评估有限公司</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  } // 左边树显示方法
-
+  // 查询控件
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -470,15 +402,11 @@ export default class OrgUnitList extends PureComponent {
         </Row>
       </Form>
     );
-  } // 简单查询样式显示
-
-  renderForm() {
-    return this.renderSimpleForm();
-  } // 切换回简单查询方法
+  }
 
   render() {
     const { company: { data }, loading } = this.props;
-    const { selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo } = this.state;
+    const { callBackVal, selectedRows, OrgUnitAddVisible, OrgUnitViewVisible, OrgUnitEditVisible, rowInfo, currentPagination } = this.state;
     const columns = [
       {
         title: '组织编号',
@@ -487,6 +415,23 @@ export default class OrgUnitList extends PureComponent {
       {
         title: '组织名称',
         dataIndex: 'name',
+      },
+      {
+        title: '上级组织',
+        dataIndex: 'parentId',
+        /*render(text) {
+          let dataVal = "";
+          if(val){
+            dataVal  =  val.map((params) => {
+              if(val === params.key){
+                return params.title;
+              }
+              return "";
+            });
+          }else {
+            dataVal =  "";
+          }
+        }*/
       },
       {
         title: '电话',
@@ -547,14 +492,14 @@ export default class OrgUnitList extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, record)}>查看</a>
+            <a onClick={() => this.handleOrgUnitViewVisible(true, record)}>查看</a>
             {
             (statusText[record.status] === `提交` || statusText[record.status] === `禁用`) && (
               <span>
                 <Divider type="vertical" />
-                <a onClick={() => this.showEditMessage(true, record)} >编辑</a>
+                <a onClick={() => this.handleOrgUnitEditVisible(true, record)} >编辑</a>
                 <Divider type="vertical" />
-                <Popconfirm title="确认删除?" onConfirm={() =>this.showDeleteMessage(true, record)} okText="是" cancelText="否">
+                <Popconfirm title="确认删除?" onConfirm={() =>this.handleDeleteMsg(true, record)} okText="是" cancelText="否">
                   <a>删除</a>
                 </Popconfirm>
                 <Divider type="vertical" />
@@ -584,15 +529,14 @@ export default class OrgUnitList extends PureComponent {
       handleOrgUnitAddVisible: this.handleOrgUnitAddVisible,
       handleOrgUnitViewVisible: this.handleOrgUnitViewVisible,
       handleOrgUnitEditVisible: this.handleOrgUnitEditVisible,
+      handleGetBackVal: this.handleGetBackVal,
     };
     return (
       <div>
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-             {/* {this.treeMenu()}*/}
               <PageLeftTreeMenu
-                 /*menus={router.menus}*/
                 menus={this.state.orgTreeMenu}
                 onClick={this.menuClick}
                 mode="inline"
@@ -603,7 +547,7 @@ export default class OrgUnitList extends PureComponent {
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280}}>
               <div className={styles.tableList}>
-                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
                 <div className={styles.tableListOperator}>
                   <Button
                     icon="plus"
@@ -635,7 +579,7 @@ export default class OrgUnitList extends PureComponent {
           </Layout>
           <OrgUnitAddModal {...parentMethods} OrgUnitAddVisible={OrgUnitAddVisible} />
           <OrgUnitViewModal {...parentMethods} OrgUnitViewVisible={OrgUnitViewVisible} rowInfo={rowInfo} />
-          <OrgUnitEditModal {...parentMethods} OrgUnitEditVisible={OrgUnitEditVisible} rowInfo={rowInfo} />
+          <OrgUnitEditModal {...parentMethods} OrgUnitEditVisible={OrgUnitEditVisible} rowInfo={rowInfo} currentPagination={currentPagination} />
         </Card>
       </div>
     );

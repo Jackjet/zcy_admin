@@ -20,6 +20,7 @@ import {
 import moment from 'moment/moment';
 import StandardTable from '../../../components/StandardTable';
 import styles from './style.less';
+import PageLeftTreeMenu from '../../../components/PageLeftTreeMenu/index';
 import DepartmentAddModal from './DeptAddModal';
 import DepartmentViewModal from './DeptViewModal';
 import DepartmentEditModal from './DeptEditModal';
@@ -50,16 +51,29 @@ export default class DepartmentList extends PureComponent {
     DepartmentViewVisible: false,
     DepartmentEditVisible: false,
     rowInfo: ``,
-    expandForm: false,
     selectedRows: [],
     formValues: {},
-    openKeys: ['sub1'],
-    pageCurrent: ``,
-    pageSizeCurrent: ``,
+    currentPagination: [],
+    orgTreeMenu:[], // 左侧树形的集合
+    openKey: '', // 打开的父节点的key
+    selectedKey:'',
+    firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.data.alert_msg);
+        } else {
+          this.setState({
+            orgTreeMenu : res.data.list,
+          });
+        }
+      },
+    });
     dispatch({
       type: 'dept/fetch',
       payload: {
@@ -76,22 +90,9 @@ export default class DepartmentList extends PureComponent {
     });
   }
 
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
-
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues, pageCurrent, pageSizeCurrent } = this.state;
+    const { formValues } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -104,10 +105,14 @@ export default class DepartmentList extends PureComponent {
       ...formValues,
       ...filters,
     };
+
     this.setState({
-      pageCurrent: params.page,
-      pageSizeCurrent: params.pageSize,
+      currentPagination:{
+        page: pagination.current,
+        pageSize: pagination.pageSize,
+      },
     });
+
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
@@ -208,8 +213,6 @@ export default class DepartmentList extends PureComponent {
           } else {
             this.setState({
               selectedRows: [],
-              pageCurrent: 1,
-              pageSizeCurrent: res.data.pagination.pageSize,
             });
             message.success('查询完成!');
           }
@@ -222,20 +225,6 @@ export default class DepartmentList extends PureComponent {
     this.setState({
       DepartmentAddVisible: !!flag,
     });
-    if (!flag) {
-      this.props.dispatch({
-        type: 'dept/fetch',
-        payload: {
-          page: this.state.pageCurrent,
-          pageSize: this.state.pageSizeCurrent,
-        },
-        callback: res => {
-          if (res.meta.status !== '000000') {
-            message.error(res.meta.errmsg); // 返回错误信息
-          }
-        },
-      });
-    }
   };
 
   handleDepartmentViewVisible = flag => {
@@ -248,23 +237,6 @@ export default class DepartmentList extends PureComponent {
     this.setState({
       DepartmentEditVisible: !!flag,
     });
-    if (!flag) {
-      this.props.dispatch({
-        type: 'dept/fetch',
-        payload: {
-          page: 1,
-          pageSize: 10,
-        },
-        callback: res => {
-          if (res.meta.status !== '000000') {
-            message.error(res.meta.errmsg); // 返回错误信息
-            // this.props.data = res.data;
-          } else {
-            message.success('公司更新成功!');
-          }
-        },
-      });
-    }
   };
 
   showViewMessage = (flag, text, record) => {
@@ -288,6 +260,7 @@ export default class DepartmentList extends PureComponent {
       payload: {
         id: record.id,
         deleteFlag: 0,
+        uid: JSON.parse(localStorage.getItem("user")).id,
       },
       callback: res => {
         if (res.meta.status !== '000000') {
@@ -298,13 +271,9 @@ export default class DepartmentList extends PureComponent {
           });
           dispatch({
             type: 'dept/fetch',
-            payload: {
-              page: this.state.pageCurrent,
-              pageSize: this.state.pageSizeCurrent,
-              keyWord: this.state.formValues.keyWord,
-            },
+            payload: {},
           });
-          message.success('公司删除成功!');
+          message.success('部门删除成功!');
         }
       },
     });
@@ -327,11 +296,7 @@ export default class DepartmentList extends PureComponent {
         });
         dispatch({
           type: 'dept/fetch',
-          payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
-            keyWord: this.state.formValues.keyWord,
-          },
+          payload: {},
         });
         message.success('部门启用成功!');
       },
@@ -355,41 +320,37 @@ export default class DepartmentList extends PureComponent {
         });
         dispatch({
           type: 'dept/fetch',
-          payload: {
-            page: this.state.pageCurrent,
-            pageSize: this.state.pageSizeCurrent,
-            keyWord: this.state.formValues.keyWord,
-          },
+          payload: {},
         });
         message.warning('部门已禁用!');
       },
     });
   }; // 部门状态禁用方法
 
-  treeMenu() {
-    const { SubMenu } = Menu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>至诚</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">浙江至诚会计师事务所有限公司</Menu.Item>
-          <Menu.Item key="2">杭州至诚税务师事务所有限公司</Menu.Item>
-          <Menu.Item key="3">浙江中嘉资产评估有限公司</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
+  // 暂时有问题
+  menuClick = e => {
+    console.log(e.key);
+    this.props.dispatch({
+      type: 'dept/fetch',
+      payload: {
+        orgId: e.key,
+      },
+      callback: (res) => {
+        if(res.meta.status !== '000000' ) {
+          message.error(res.data.alert_msg);
+        }
+      },
+    });
+    this.setState({
+      selectedKey: e.key,
+    });
+  };
+  openMenu = v => {
+    this.setState({
+      openKey: v[v.length - 1],
+      firstHide: false,
+    })
+  };
 
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
@@ -416,9 +377,6 @@ export default class DepartmentList extends PureComponent {
       </Form>
     );
   }
-  renderForm() {
-    return this.renderSimpleForm();
-  }
 
   render() {
     const { dept: { data }, loading } = this.props;
@@ -442,6 +400,10 @@ export default class DepartmentList extends PureComponent {
       {
         title: '上级部门',
         dataIndex: 'parentId',
+      },
+      {
+        title: '所属组织',
+        dataIndex: 'orgId',
       },
       {
         title: '备注',
@@ -520,11 +482,18 @@ export default class DepartmentList extends PureComponent {
         <Card bordered={false}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Sider width={140} style={{ background: '#fff' }}>
-              {this.treeMenu()}
+              <PageLeftTreeMenu
+                menus={this.state.orgTreeMenu}
+                onClick={this.menuClick}
+                mode="inline"
+                selectedKeys={[this.state.selectedKey]}
+                openKeys={this.state.firstHide ? null : [this.state.openKey]}
+                onOpenChange={this.openMenu}
+              />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <div className={styles.tableList}>
-                <div className={styles.tableListForm}>{this.renderForm()}</div>
+                <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
                 <div className={styles.tableListOperator}>
                   <Button
                     icon="plus"

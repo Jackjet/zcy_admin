@@ -84,6 +84,7 @@ class UserModal extends PureComponent {
         url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
       },
     ],
+    userGroup: [], // 用户组
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -97,6 +98,22 @@ class UserModal extends PureComponent {
         }
       },
     });
+    this.props.dispatch({
+      type: 'cusApplication/getDict', // 接口
+      payload: {
+        dictTypeId: '84ef4a13ee0d11e88aa5186024a65a7c', // 数据类型id
+      },
+      callback: (res) => {
+        if(res.meta.status !== "000000"){
+          message.error(res.meta.errmsg);
+        } else {
+          this.setState({
+            userGroup: res.data.list, // 返回结果集给对应的状态
+          });
+        }
+      },
+    });
+
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -224,9 +241,15 @@ class UserModal extends PureComponent {
                       <Form.Item {...formItemLayout} label={fieldLabels.groupId}>
                         {getFieldDecorator('groupId', {
                           rules: [{ required: false, message: '请输入所属用户组' }],
-                          initialValue: choiceTypeValue,
                         })(
-                          <Input readOnly placeholder="请输入所属用户组" />
+                          <Select
+                            placeholder="请输入所属用户组"
+                            style={{ width: 150 }}
+                            getPopupContainer={triggerNode => triggerNode.parentNode}
+                          >
+                            {this.state.userGroup.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                          </Select>
+
                         )}
                       </Form.Item>
                     </Col>

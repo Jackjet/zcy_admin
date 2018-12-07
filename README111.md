@@ -140,3 +140,5 @@ Any Contribution of following ways will be welcome:
     
     客户消息发给188帐号，发送者当前登录用户，接受者188的帐号
     workplace审批界面动态加载基本信息
+  2018/12/6
+    在list页面的分页器方法中用定义的状态取到分析信息，传个编辑，新增界面，以及删除功能，用于刷新列表时，还是在当前页和页大小

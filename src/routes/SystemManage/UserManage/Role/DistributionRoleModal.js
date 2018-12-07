@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
 import {
   Form,
-  Icon,
   Col,
   Row,
   Input,
   Select,
-  Popover,
   Modal,
   Card,
   message,
@@ -17,28 +15,6 @@ import { connect } from 'dva';
 import AuthorityView from './AuthorityView';
 import styles from '../style.less';
 
-const mockData = [];
-for (let i = 0; i < 20; i+=1) {
-  mockData.push({
-    key: i.toString(),
-    title: `权限${i + 1}`,
-    description: `权限描述${i + 1}`,
-  });
-}
-
-const oriTargetKeys = mockData
-  .filter(item => +item.key % 3 > 1)
-  .map(item => item.key);
-const { Search } = Input;
-const { Option } = Select;
-const fieldLabels = {
-  cusApplyCode: '客户编号',
-  cusApplyName: '客户名称',
-  cusApplyNature: '联系人业务性质',
-  cusApplyStatus: '状态',
-  cusApplyMobilePhone: '移动电话',
-  cusApplyContacts: '联系人',
-};
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -53,12 +29,44 @@ const formItemLayout = {
 class DistributionRoleModal extends PureComponent {
   state = {
     width: '100%',
-    targetKeys: oriTargetKeys,
+    targetKeys: [],
     selectedKeys: [],
     AuthorityViewVisible: false,
+    roleData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'role/fetch',
+      payload: {},
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else {
+          this.setState({
+            roleData: res.data.list,
+          });
+        }
+      },
+    });
+    dispatch({
+      type: 'userRole/fetch',
+      payload: {},
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else {
+          const resVal = res.data.list;
+          if (resVal) {
+            this.setState({
+              targetKeys: resVal.map(item => item.roleId ),
+            })
+          }
+        }
+      },
+    });
+
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
@@ -92,7 +100,7 @@ class DistributionRoleModal extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <Form.Item {...formItemLayout} label="用户">
-              {getFieldDecorator('cusApplyCode', {
+              {getFieldDecorator('account', {
                 rules: [{ required: false, message: '请输入用户' }],
               })(
                 <Input readOnly placeholder="默认当前" style={{ width: 200 }} />
@@ -113,71 +121,75 @@ class DistributionRoleModal extends PureComponent {
   }
 
   render() {
-    const { form, dispatch, submitting , DistributionRoleVisible, handleDistributionRoleVisible} = this.props;
-    const { targetKeys, selectedKeys, AuthorityViewVisible } = this.state;
-    const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+    const { form, dispatch , DistributionRoleVisible, handleDistributionRoleVisible, rowInfo} = this.props;
+    const { targetKeys, selectedKeys, AuthorityViewVisible, roleData } = this.state;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
+    const mockData = [];
+    for (let i = 0; i < roleData.length; i += 1) {
+      mockData.push({
+        key: roleData[i].id,
+        name: roleData[i].name,
+      });
+    }
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
+        console.log(values);
         if (!error) {
-          // submit the values
+          const arrayList = [];
+          for (let i =0; i<Object.values(values)[0].length; i+=1) {
+            arrayList.push({
+              roleId: Object.values(values)[0][i],
+              userId: rowInfo.id,
+            })
+            console.log(arrayList);
+          }
+
           dispatch({
-            type: 'rule/add',
-            payload: values,
+            type: 'userRole/add',
+            payload: arrayList,
+            callback: res => {
+              if (res.meta.status !== '000000') {
+                message.error(res.data.alert_msg);
+              } else {
+                dispatch({
+                  type: 'user/fetch',
+                  payload: {},
+                });
+                message.success("角色分配成功");
+                handleDistributionRoleVisible(false);
+              }
+            },
           });
-          handleDistributionRoleVisible(false);
-          form.resetFields();
-          message.success('成功申请用户');
         }
       });
     };
     const onCancel = () => {
-      form.resetFields();
-      handleDistributionRoleVisible(false);
-    };
-    const errors = getFieldsError();
-    const getErrorInfo = () => {
-      const errorCount = Object.keys(errors).filter(key => errors[key]).length;
-      if (!errors || errorCount === 0) {
-        return null;
-      }
-      const scrollToField = fieldKey => {
-        const labelNode = document.querySelector(`label[for="${fieldKey}"]`);
-        if (labelNode) {
-          labelNode.scrollIntoView(true);
-        }
-      };
-      const errorList = Object.keys(errors).map(key => {
-        if (!errors[key]) {
-          return null;
-        }
-        return (
-          <li key={key} className={styles.errorListItem} onClick={() => scrollToField(key)}>
-            <Icon type="cross-circle-o" className={styles.errorIcon} />
-            <div className={styles.errorMessage}>{errors[key][0]}</div>
-            <div className={styles.errorField}>{fieldLabels[key]}</div>
-          </li>
-        );
+      this.props.dispatch({
+        type: 'userRole/fetch',
+        payload: {},
+        callback: (res) => {
+          if (res.meta.status !== "000000") {
+            message.error(res.data.alert_msg);
+          } else {
+            console.log(res.data);
+            const resVal = res.data.list;
+            if (resVal) {
+              this.setState({
+                targetKeys: resVal.map(item => item.roleId ),
+              })
+            }
+          }
+        },
       });
-      return (
-        <span className={styles.errorIcon}>
-          <Popover
-            title="表单校验信息"
-            content={errorList}
-            overlayClassName={styles.errorPopover}
-            trigger="click"
-            getPopupContainer={trigger => trigger.parentNode}
-          >
-            <Icon type="exclamation-circle" />
-          </Popover>
-          {errorCount}
-        </span>
-      );
+      handleDistributionRoleVisible(false);
     };
     const parentMethods = {
       handleAuthorityViewVisible: this.handleAuthorityViewVisible,
     };
     return (
       <Modal
+        destroyOnClose="true"
+        keyboard={false}
         title="分配角色"
         style={{ top: 20 }}
         visible={DistributionRoleVisible}
@@ -189,33 +201,38 @@ class DistributionRoleModal extends PureComponent {
       >
         <div>
           <Card>
-            <div className={styles.tableList}>
+            {/*<div className={styles.tableList}>
               <div className={styles.tableListForm}>
                 <div style={{marginLeft: 122}}>
                   {this.renderSimpleForm()}
                 </div>
               </div>
-            </div>
-            <Row className={styles['fn-mb-15']}>
-              <Col span={23} offset={4}>
-                <Card>
-                  <Transfer
-                    listStyle={{
-                      width: 300,
-                      height: 300,
-                    }}
-                    dataSource={mockData}
-                    titles={['可分配角色', '已分配角色']}
-                    targetKeys={targetKeys}
-                    selectedKeys={selectedKeys}
-                    onChange={this.handleChange}
-                    onSelectChange={this.handleSelectChange}
-                    onScroll={this.handleScroll}
-                    render={item => item.title}
-                  />
-                </Card>
-              </Col>
-            </Row>
+            </div>*/}
+            <Form layout="horizontal">
+              <Row className={styles['fn-mb-15']}>
+                <Col span={23} offset={4}>
+                  <Form.Item {...formItemLayout}>
+                    {getFieldDecorator('roleHave', {
+                      rules: [{ required: true, message: '数据未改动，请直接关闭' }],
+                    })(
+                      <Transfer
+                        listStyle={{
+                          width: 200,
+                          height: 200,
+                        }}
+                        dataSource={mockData}
+                        titles={['可分配角色', '已分配角色']}
+                        targetKeys={targetKeys}
+                        selectedKeys={selectedKeys}
+                        onChange={this.handleChange}
+                        onSelectChange={this.handleSelectChange}
+                        render={item => item.name}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
           </Card>
           <AuthorityView {...parentMethods} AuthorityViewVisible={AuthorityViewVisible} />
         </div>

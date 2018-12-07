@@ -194,7 +194,7 @@ export default class CustomerList extends PureComponent {
           dispatch({
             type: 'cusInfoManage/fetch',
             payload: {
-              page: res.data.pagination.page,
+              page: res.data.pagination.current,
               pageSize: res.data.pagination.pageSize,
               keyWord: this.state.formValues.keyWord,
             },

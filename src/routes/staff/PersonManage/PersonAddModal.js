@@ -15,7 +15,7 @@ import {
   Popover,
 } from 'antd';
 import { connect } from 'dva';
-import styles from './style.less'; 
+import styles from './style.less';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -109,17 +109,21 @@ class PersonAddModal extends PureComponent {
             type: 'person/add',
             payload: values,
             callback: res => {
-              if (res.meta.status === '000000') {
-                handlePersonAddVisible(false);
-              } else {
+              if (res.meta.status !== '000000') {
                 message.error(res.meta.errmsg);
+              } else {
+                dispatch({
+                  type: 'person/fetch',
+                  payload: {},
+                });
+                handlePersonAddVisible(false);
               }
             },
           });
         }
       });
     };
-    const onCancel = () => {
+    const cancel = () => {
       handlePersonAddVisible(false);
     };
     const uploadButton = (
@@ -138,7 +142,7 @@ class PersonAddModal extends PureComponent {
         width="60%"
         maskClosable={false}
         onOk={validate}
-        onCancel={onCancel}
+        onCancel={cancel}
         okText="提交"
       >
         <div>
@@ -149,7 +153,7 @@ class PersonAddModal extends PureComponent {
                   <Row>
                     <Col span={8}>
                       <Form.Item {...formItemLayout} label={fieldLabels.account}>
-                        {getFieldDecorator('account', {
+                        {getFieldDecorator('mobilePhone', {
                           rules: [{ required: true, message: '请输入帐号' }],
                         })(<Input placeholder="请输入帐号" />)}
                       </Form.Item>
@@ -176,8 +180,8 @@ class PersonAddModal extends PureComponent {
                           rules: [{ required: false, message: '请选择性别' }],
                         })(
                           <Select placeholder="请选择性别">
-                            <Option value="1">男</Option>
-                            <Option value="2">女</Option>
+                            <Option key={1} value="1">男</Option>
+                            <Option key={0} value="0">女</Option>
                           </Select>
                         )}
                       </Form.Item>
@@ -301,7 +305,9 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="入职时间">
                     {getFieldDecorator('entryTime', {
                       rules: [{ required: false, message: '请输入入职时间' }],
-                    })(<DatePicker placeholder="请输入入职时间" />)}
+                    })(
+                      <DatePicker placeholder="请输入入职时间" />
+                    )}
                   </Form.Item>
                 </Col>
               </Row>
@@ -312,8 +318,8 @@ class PersonAddModal extends PureComponent {
                       rules: [{ required: false, message: '请输入婚姻状况' }],
                     })(
                       <Select placeholder="请输入婚姻状况">
-                        <Option value="1">已婚</Option>
-                        <Option value="2">未婚</Option>
+                        <Option key={1} value="1">已婚</Option>
+                        <Option key={2} value="2">未婚</Option>
                       </Select>
                     )}
                   </Form.Item>

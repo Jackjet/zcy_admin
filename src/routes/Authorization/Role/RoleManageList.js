@@ -6,83 +6,73 @@ import {
   Card,
   Form,
   Input,
-  Select,
   Icon,
   Button,
   Dropdown,
   Menu,
-  DatePicker,
   message,
   Divider,
   Popconfirm,
 } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import styles from './Style.less';
+import styles from './style.less';
 import AssignPermissionsModal from './AssignPermissionsModal';
 import RoleManageAddModal from './RoleManageAddModal';
-import AssignRoleModal from './AssignRoleModal';
+import AssignUserModal from './AssignUserModal';
 import RoleManageViewModal from './RoleManageViewModal';
 import RoleManageEditModal from './RoleManageEditModal';
 
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ role, loading }) => ({
+  role,
+  loading: loading.models.role,
 }))
 @Form.create()
 export default class RoleManageList extends PureComponent {
   state = {
-    RoleManageAddVisible: false,
-    RoleManageViewVisible: false,
-    RoleManageEditVisible: false,
-    AssignPermissionsVisible: false,
-    AssignRoleVisible: false,
-    rowInfo: ``,
-    expandForm: false,
-    selectedRows: [],
-    formValues: {},
-    openKeys: ['sub1'],
+    RoleManageAddVisible: false, // 权限对象新增Modal显隐
+    RoleManageViewVisible: false, // 权限对象查看Modal显隐
+    RoleManageEditVisible: false, // 权限对象编辑Modal显隐
+    AssignPermissionsVisible: false, // 分配权限modal显隐
+    AssignUserVisible: false, // 分配角色modal显隐
+    rowInfo: null, // 操作按钮行的数据
+    selectedRows: [], // 选中的行
+    formValues: {}, // 查询输入框中的val
+    currentPagination: [], // 获取当前第几页和页大小
+   /* permList: [], // 点击分配权限关系modal时，获取当前角色有的权限的id集合*/
   };
 
+  // 加载页面时，加载数据
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'role/fetch',
+      payload: {},
+      callback: res => {
+        console.log(res.data);
+        if (res.meta.status !== '000000') {
+          message.error(res.data.alert_msg);
+        }
+      },
     });
   }
 
-  onOpenChange = openKeys => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
-    }
-  };
-
-  rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
-
+  // 分页器方法
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
+    const { formValues } = this.state; // 拿到搜索框中的值
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
@@ -90,13 +80,20 @@ export default class RoleManageList extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
+    this.setState({
+      currentPagination: {
+        page: pagination.current,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+      },
+    });
     dispatch({
-      type: 'rule/fetch',
+      type: 'role/fetch',
       payload: params,
     });
   };
 
+  // 重置方法
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -104,29 +101,22 @@ export default class RoleManageList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'role/fetch',
       payload: {},
     });
   };
 
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  };
-
+  // 批量操作方法 删除
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
-
     if (!selectedRows) return;
-
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'role/remove',
           payload: {
-            no: selectedRows.map(row => row.no).join(','),
+            ids: selectedRows.map(row => row.id).join(','),
           },
           callback: () => {
             this.setState({
@@ -140,130 +130,126 @@ export default class RoleManageList extends PureComponent {
     }
   };
 
+  // 选中的行
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
 
+  // 查询方法
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
+      console.log(values);
       dispatch({
-        type: 'rule/fetch',
+        type: 'role/fetch',
         payload: values,
       });
     });
   };
 
-  handleAssignPermissionsVisible = flag => {
+  // 分配权限modal显隐方法
+  handleAssignPermissionsVisible = (flag, record) => {
+    /*this.props.dispatch({
+      type: 'rolePerm/fetch',
+      payload: {},
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else {
+          const resVal = res.data.list;
+          if (resVal) {
+            this.setState({
+              permList: resVal.map(item => item.permId ),
+            })
+          }
+        }
+      },
+    });*/
     this.setState({
       AssignPermissionsVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
-  handleAssignRoleVisible = flag => {
+  // 分配用户modal显隐方法
+  handleAssignUserVisible = (flag,record) => {
     this.setState({
-      AssignRoleVisible: !!flag,
+      AssignUserVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
+  // 角色 <新增> modal显隐方法
   handleRoleManageAddVisible = flag => {
     this.setState({
       RoleManageAddVisible: !!flag,
     });
   };
 
-  handleRoleManageViewVisible = flag => {
+  // 角色 <查看> modal显隐方法
+  handleRoleManageViewVisible = (flag, record) => {
     this.setState({
       RoleManageViewVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
-  handleRoleManageEditVisible = flag => {
+  // 角色 <编辑> modal显隐方法
+  handleRoleManageEditVisible = (flag, record) => {
     this.setState({
       RoleManageEditVisible: !!flag,
+      rowInfo: {
+        ...record,
+      },
     });
   };
 
-  showViewMessage = (flag, text, record) => {
-    this.setState({
-      RoleManageViewVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-  showEditMessage = (flag, record) => {
-    this.setState({
-      RoleManageEditVisible: !!flag,
-      rowInfo: record,
-    });
-  };
-
-  showDeleteMessage = (flag, record) => {
+  // 角色 <删除> 方法
+  handleDeleteRoleManage = (flag, record) => {
     this.props.dispatch({
-      type: 'rule/remove',
+      type: 'role/remove',
       payload: {
-        organizeCode: record.organizeCode,
+        id: record.id,
+        uid: JSON.parse(localStorage.getItem("user")).id,
       },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-        message.success('删除成功!');
+      callback: (res) => {
+        if (res.meta.status === "000000") {
+          this.setState({
+            selectedRows: [],
+          });
+          message.success('删除成功!');
+          this.props.dispatch({
+            type: 'role/fetch',
+            payload: {
+              page: this.state.currentPagination.pageSize,
+              pageSize: this.state.currentPagination.pageSize,
+              keyWord: this.state.formValues.keyWord,
+            },
+          });
+        } else {
+          message.error(res.data.alert_msg);
+        }
       },
     });
   };
 
-  confirm = () => {
-    message.success('Click on Yes');
-  };
-
-  cancel = () => {
-    message.error('Click on No');
-  };
-
-  rootSubmenuKeys = ['sub1'];
-
-  treeMenu() {
-    const { SubMenu } = Menu;
-    return (
-      <Menu
-        mode="inline"
-        openKeys={this.state.openKeys}
-        onOpenChange={this.onOpenChange}
-        style={{ width: 130 }}
-      >
-        <SubMenu
-          key="sub1"
-          title={
-            <span>
-              <span>至诚</span>
-            </span>
-          }
-        >
-          <Menu.Item key="1">浙江至诚会计师事务所有限公司</Menu.Item>
-          <Menu.Item key="2">杭州至诚税务师事务所有限公司</Menu.Item>
-          <Menu.Item key="3">浙江中嘉资产评估有限公司</Menu.Item>
-        </SubMenu>
-      </Menu>
-    );
-  }
-
+  // 查询控件
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -271,7 +257,9 @@ export default class RoleManageList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="关键字">
-              {getFieldDecorator('no')(<Input placeholder="请输入编码名称" />)}
+              {getFieldDecorator('keyWord')(
+                <Input placeholder="关键字" />
+              )}
             </FormItem>
           </Col>
 
@@ -289,12 +277,8 @@ export default class RoleManageList extends PureComponent {
       </Form>
     );
   }
-  renderForm() {
-    return this.renderSimpleForm();
-  }
-
   render() {
-    const { rule: { data }, loading } = this.props;
+    const { role: { data }, loading } = this.props;
     const {
       selectedRows,
       RoleManageAddVisible,
@@ -302,42 +286,43 @@ export default class RoleManageList extends PureComponent {
       AssignPermissionsVisible,
       RoleManageEditVisible,
       rowInfo,
-      AssignRoleVisible,
+      AssignUserVisible,
+      currentPagination,
+      permList,
     } = this.state;
-
     const columns = [
       {
         title: '编号',
-        dataIndex: 'code',
+        dataIndex: 'number',
       },
       {
         title: '名称',
-        dataIndex: 'Name',
+        dataIndex: 'name',
       },
       {
-        title: '描述',
-        dataIndex: 'describe',
+        title: '说明',
+        dataIndex: 'remark',
       },
       {
         title: '操作',
-        render: (text, record, index) => (
+        render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.showViewMessage(true, text, record, index)}>查看权限</a>
+            <a onClick={() => this.handleRoleManageViewVisible(true, record)}>查看</a>
             <Divider type="vertical" />
-            <a onClick={() => this.showEditMessage(true, record)}>编辑</a>
+            <a onClick={() => this.handleRoleManageEditVisible(true, record)}>编辑</a>
             <Divider type="vertical" />
             <Popconfirm
               title="确认删除?"
-              onConfirm={() => this.showDeleteMessage(true, record)}
+              onConfirm={() => this.handleDeleteRoleManage(true, record)}
               okText="是"
               cancelText="否"
             >
               <a>删除</a>
             </Popconfirm>
             <Divider type="vertical" />
-            <a onClick={() => this.handleAssignPermissionsVisible(true)}>分配权限</a>
+            <a onClick={() => this.handleAssignPermissionsVisible(true, record)}>分配权限</a>
             <Divider type="vertical" />
-            <a onClick={() => this.handleAssignRoleVisible(true)}>分配用户</a>
+            <a onClick={() => this.handleAssignUserVisible(true, record)}>分配用户</a>
           </Fragment>
         ),
       },
@@ -354,8 +339,8 @@ export default class RoleManageList extends PureComponent {
       handleAssignPermissionsVisible: this.handleAssignPermissionsVisible,
     };
 
-    const AssignRoleMethods = {
-      handleAssignRoleVisible: this.handleAssignRoleVisible,
+    const AssignUserMethods = {
+      handleAssignUserVisible: this.handleAssignUserVisible,
     };
 
     const RoleManageAddMethods = {
@@ -375,7 +360,7 @@ export default class RoleManageList extends PureComponent {
         <Card bordered={false}>
           <div>
             <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderForm()}</div>
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <div className={styles.tableListOperator}>
                 <Button
                   icon="plus"
@@ -406,11 +391,18 @@ export default class RoleManageList extends PureComponent {
             <AssignPermissionsModal
               {...AssignPermissionsMethods}
               AssignPermissionsVisible={AssignPermissionsVisible}
+              rowInfo={rowInfo}
+              permList={permList}
             />
-            <AssignRoleModal {...AssignRoleMethods} AssignRoleVisible={AssignRoleVisible} />
+            <AssignUserModal
+              {...AssignUserMethods}
+              AssignUserVisible={AssignUserVisible}
+              rowInfo={rowInfo}
+            />
             <RoleManageAddModal
               {...RoleManageAddMethods}
               RoleManageAddVisible={RoleManageAddVisible}
+              currentPagination={currentPagination}
             />
             <RoleManageViewModal
               {...RoleManageViewMethods}
@@ -421,6 +413,7 @@ export default class RoleManageList extends PureComponent {
               {...RoleManageEditMethods}
               RoleManageEditVisible={RoleManageEditVisible}
               rowInfo={rowInfo}
+              currentPagination={currentPagination}
             />
           </div>
         </Card>

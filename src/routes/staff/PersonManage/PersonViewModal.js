@@ -153,6 +153,7 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="姓名">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请选择姓名' }],
+                      initialValue: rowInfo.name,
                     })(<Input readOnly placeholder="请选择姓名" />)}
                   </Form.Item>
                 </Col>
@@ -160,6 +161,7 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.rank}>
                     {getFieldDecorator('rank', {
                       rules: [{ required: true, message: '请选择职级' }],
+                      initialValue: rowInfo.rank,
                     })(<Input readOnly placeholder="请选择职级" />)}
                   </Form.Item>
                 </Col>
@@ -169,7 +171,7 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label={fieldLabels.branchOffice}>
                     {getFieldDecorator('branchOffice', {
                       rules: [{ required: true, message: '请选择所属分公司' }],
-                      initialValue: `${rowInfo.id}`,
+                      initialValue: `${rowInfo.branchOffice}`,
                     })(<Input placeholder="请选择所属分公司" />)}
                   </Form.Item>
                 </Col>
@@ -187,6 +189,7 @@ class PersonAddModal extends PureComponent {
                   <Form.Item {...formItemLayout} label="人员状态">
                     {getFieldDecorator('personStatus', {
                       rules: [{ required: true, message: '请选择人员状态' }],
+                      initialValue: `${rowInfo.personStatus}`,
                     })(<Input placeholder="请选择工作状态" />)}
                   </Form.Item>
                 </Col>

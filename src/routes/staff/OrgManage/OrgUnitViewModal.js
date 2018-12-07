@@ -7,10 +7,13 @@ import {
   Input,
   Modal,
   Button,
+  TreeSelect,
+  message,
 } from 'antd';
 import { connect } from 'dva';
 import styles from './style.less';
 
+const isBranchOption = ['否', '是'];
 const { TextArea } = Input;
 const formItemLayout = {
   labelCol: {
@@ -26,13 +29,30 @@ const formItemLayout = {
 class OrgUnitViewModal extends PureComponent {
   state = {
     width: '100%',
+    treeData: [],
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
+    this.props.dispatch({
+      type: 'company/getLeftTreeMenu',
+      callback: (res) => {
+        if(res.meta.status === '000000' ) {
+          this.setState({treeData : res.data.list});
+        } else {
+          message.error(res.meta.errmsg);
+        }
+      },
+    });
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
   }
+
+  onOrgTreeSelectChange = (value) => {
+    console.log(value);
+
+  };
+
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
     const width = `calc(100% - ${sider.style.width})`;
@@ -51,8 +71,9 @@ class OrgUnitViewModal extends PureComponent {
     };
     return (
       <Modal
+        destroyOnClose="true"
         keyboard={false}
-        title="组织机构基本信息查看"
+        title="组织机构信息查看"
         style={{ top: 20 }}
         visible={OrgUnitViewVisible}
         width="55%"
@@ -79,11 +100,17 @@ class OrgUnitViewModal extends PureComponent {
 
               <Col span={12}>
                 <Form.Item {...formItemLayout} label="上级组织">
-                  {getFieldDecorator('parentOrg', {
+                  {getFieldDecorator('parentId', {
+                    initialValue: rowInfo.parentId,
                     rules: [{ required: true, message: '请选择上级组织' }],
-                    initialValue:`至诚`,
                   })(
-                    <Input readOnly />
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={this.state.treeData}
+                      placeholder="请选择上级组织"
+                      treeDefaultExpandAll
+                      onChange={this.onOrgTreeSelectChange}
+                    />
                   )}
                 </Form.Item>
               </Col>
@@ -103,7 +130,7 @@ class OrgUnitViewModal extends PureComponent {
                 <Form.Item {...formItemLayout} label="是否分公司">
                   {getFieldDecorator('isBranch', {
                     rules: [{ required: true, message: '是否分公司' }],
-                    initialValue:`${rowInfo.isBranch}`,
+                    initialValue:isBranchOption[rowInfo.isBranch],
                   })(
                     <Input readOnly placeholder="请输入组织编码" />
                   )}
@@ -277,7 +304,5 @@ class OrgUnitViewModal extends PureComponent {
   }
 }
 
-export default connect(({ global, loading }) => ({
-  collapsed: global.collapsed,
-  submitting: loading.effects['company/fetch'],
+export default connect(() => ({
 }))(Form.create()(OrgUnitViewModal));
