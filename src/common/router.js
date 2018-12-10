@@ -124,7 +124,7 @@ export const getRouterData = app => {
     },
 
     '/crm/customerApply': {
-      component: dynamicWrapper(app, ['cusApplication', 'cusInfoManage'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
+      component: dynamicWrapper(app, ['cusApplication', 'cusInfoManage', 'user'], () => import('../routes/crm/CusApplyBill/CusApplyBill')),
       name:'客户申请单',
     },
     '/crm/customer': {

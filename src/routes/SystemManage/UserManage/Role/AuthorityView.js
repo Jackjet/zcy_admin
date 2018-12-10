@@ -9,6 +9,7 @@ import {
   Input,
   Row,
   Col,
+  Table,
 } from 'antd';
 import { connect } from 'dva';
 import styles from '../style.less';
@@ -73,8 +74,19 @@ class AuthorityView extends PureComponent {
     }
   };
   render() {
-    const { form, dispatch , AuthorityViewVisible, handleAuthorityViewVisible} = this.props;
+    const { form, dispatch , AuthorityViewVisible, handleAuthorityViewVisible, permItemList} = this.props;
     const { validateFieldsAndScroll, getFieldDecorator } = form;
+    const dataSource = permItemList;
+    const columns = [{
+      title: '权限id',
+      dataIndex: 'id',
+    }, {
+      title: '权限名称',
+      dataIndex: 'name',
+    }, {
+      title: '备注',
+      dataIndex: 'remark',
+    }];
     const validate = () => {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
@@ -90,6 +102,7 @@ class AuthorityView extends PureComponent {
       });
     };
     const onCancel = () => {
+      console.log(permItemList);
       form.resetFields();
       handleAuthorityViewVisible(false);
     };
@@ -109,11 +122,14 @@ class AuthorityView extends PureComponent {
             <Form layout="horizontal">
               <Row>
                 <Col>
-                  <Form.Item {...formItemLayout} label="已分配的权限">
+                  <Form.Item {...formItemLayout}>
                     {getFieldDecorator('workingCondition', {
                       rules: [{ required: true, message: '已分配的权限' }],
                     })(
-                      <TextArea placeholder="已分配的权限"  />
+                      <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                      />
                     )}
                   </Form.Item>
                 </Col>

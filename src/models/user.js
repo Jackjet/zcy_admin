@@ -62,7 +62,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload.data.list,
+        data: action.payload.data,
       };
     },
     saveCurrentUser(state, action) {

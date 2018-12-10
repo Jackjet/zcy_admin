@@ -33,6 +33,7 @@ class DistributionRoleModal extends PureComponent {
     selectedKeys: [],
     AuthorityViewVisible: false,
     roleData: [],
+    permItemList: [], // 权限集合
   };
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar);
@@ -50,22 +51,6 @@ class DistributionRoleModal extends PureComponent {
         }
       },
     });
-    dispatch({
-      type: 'userRole/fetch',
-      payload: {},
-      callback: (res) => {
-        if (res.meta.status !== "000000") {
-          message.error(res.data.alert_msg);
-        } else {
-          const resVal = res.data.list;
-          if (resVal) {
-            this.setState({
-              targetKeys: resVal.map(item => item.roleId ),
-            })
-          }
-        }
-      },
-    });
 
   }
   componentWillUnmount() {
@@ -80,9 +65,31 @@ class DistributionRoleModal extends PureComponent {
   };
 
   handleAuthorityViewVisible = flag => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userPerm/fetch',
+      payload: {
+        userId: this.props.getFieldValue('account'),
+       /* userId: '034',*/
+      },
+      callback: (res) => {
+        if (res.meta.status !== "000000") {
+          message.error(res.data.alert_msg);
+        } else if(res.data.list) {
+          this.setState({
+            permItemList: res.data.list,
+          })
+        }
+      },
+    });
     this.setState({
       AuthorityViewVisible: !!flag,
     });
+  };
+
+  // 穿梭框的查询
+  handleSearch = (dir, value) => {
+    console.log('search:', dir, value);
   };
 
   resizeFooterToolbar = () => {
@@ -102,6 +109,7 @@ class DistributionRoleModal extends PureComponent {
             <Form.Item {...formItemLayout} label="用户">
               {getFieldDecorator('account', {
                 rules: [{ required: false, message: '请输入用户' }],
+                initialValue: this.props.rowInfo.id,
               })(
                 <Input readOnly placeholder="默认当前" style={{ width: 200 }} />
               )}
@@ -121,8 +129,8 @@ class DistributionRoleModal extends PureComponent {
   }
 
   render() {
-    const { form, dispatch , DistributionRoleVisible, handleDistributionRoleVisible, rowInfo} = this.props;
-    const { targetKeys, selectedKeys, AuthorityViewVisible, roleData } = this.state;
+    const { form, dispatch , DistributionRoleVisible, handleDistributionRoleVisible, rowInfo, roleGroup} = this.props;
+    const { targetKeys, selectedKeys, AuthorityViewVisible, roleData, permItemList } = this.state;
     const { getFieldDecorator, validateFieldsAndScroll } = form;
     const mockData = [];
     for (let i = 0; i < roleData.length; i += 1) {
@@ -136,17 +144,20 @@ class DistributionRoleModal extends PureComponent {
         console.log(values);
         if (!error) {
           const arrayList = [];
-          for (let i =0; i<Object.values(values)[0].length; i+=1) {
+          for (let i =0; i<values.roleHave.length; i+=1) {
             arrayList.push({
-              roleId: Object.values(values)[0][i],
+              roleId:values.roleHave[i],
               userId: rowInfo.id,
-            })
-            console.log(arrayList);
+            });
           }
-
+          const params = {
+            roleHave: arrayList,
+            account: values.account,
+          };
+          console.log(params);
           dispatch({
             type: 'userRole/add',
-            payload: arrayList,
+            payload: params,
             callback: res => {
               if (res.meta.status !== '000000') {
                 message.error(res.data.alert_msg);
@@ -156,6 +167,9 @@ class DistributionRoleModal extends PureComponent {
                   payload: {},
                 });
                 message.success("角色分配成功");
+                this.setState({
+                  targetKeys: [],
+                });
                 handleDistributionRoleVisible(false);
               }
             },
@@ -164,22 +178,8 @@ class DistributionRoleModal extends PureComponent {
       });
     };
     const onCancel = () => {
-      this.props.dispatch({
-        type: 'userRole/fetch',
-        payload: {},
-        callback: (res) => {
-          if (res.meta.status !== "000000") {
-            message.error(res.data.alert_msg);
-          } else {
-            console.log(res.data);
-            const resVal = res.data.list;
-            if (resVal) {
-              this.setState({
-                targetKeys: resVal.map(item => item.roleId ),
-              })
-            }
-          }
-        },
+      this.setState({
+        targetKeys: [],
       });
       handleDistributionRoleVisible(false);
     };
@@ -193,7 +193,7 @@ class DistributionRoleModal extends PureComponent {
         title="分配角色"
         style={{ top: 20 }}
         visible={DistributionRoleVisible}
-        width="60%"
+        width="65%"
         maskClosable={false}
         onOk={validate}
         onCancel={onCancel}
@@ -201,13 +201,13 @@ class DistributionRoleModal extends PureComponent {
       >
         <div>
           <Card>
-            {/*<div className={styles.tableList}>
+            <div className={styles.tableList}>
               <div className={styles.tableListForm}>
                 <div style={{marginLeft: 122}}>
                   {this.renderSimpleForm()}
                 </div>
               </div>
-            </div>*/}
+            </div>
             <Form layout="horizontal">
               <Row className={styles['fn-mb-15']}>
                 <Col span={23} offset={4}>
@@ -217,16 +217,22 @@ class DistributionRoleModal extends PureComponent {
                     })(
                       <Transfer
                         listStyle={{
-                          width: 200,
-                          height: 200,
+                          width:  '45%',
+                          height: 300,
                         }}
                         dataSource={mockData}
                         titles={['可分配角色', '已分配角色']}
-                        targetKeys={targetKeys}
+                        targetKeys={targetKeys.length === 0 ?roleGroup:targetKeys}
                         selectedKeys={selectedKeys}
+                        showSearch
+                        onSearch={this.handleSearch}
                         onChange={this.handleChange}
                         onSelectChange={this.handleSelectChange}
-                        render={item => item.name}
+                        render={(item) => (
+                          <span style={{textAlign:'left'}}>
+                            <span style={{width: '40%'}}>{`${item.name}`}</span>
+                          </span>
+                        )}
                       />
                     )}
                   </Form.Item>
@@ -234,7 +240,7 @@ class DistributionRoleModal extends PureComponent {
               </Row>
             </Form>
           </Card>
-          <AuthorityView {...parentMethods} AuthorityViewVisible={AuthorityViewVisible} />
+          <AuthorityView {...parentMethods} AuthorityViewVisible={AuthorityViewVisible} permItemList={permItemList} />
         </div>
       </Modal>
     );
